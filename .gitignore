@@ -1,0 +1,69 @@
+# ---- Node / PNPM / Yarn / NPM ----
+node_modules/
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ---- Build artifacts ----
+dist/
+build/
+.out/
+.next/
+.nuxt/
+.svelte-kit/
+.storybook-out/
+
+# ---- Caches ----
+.vite/
+.eslintcache
+.parcel-cache/
+.cache/
+.turbo/
+.swc/
+
+# ---- TypeScript ----
+*.tsbuildinfo
+
+# ---- Environment files (keep examples) ----
+.env
+.env.*
+!.env.example
+
+# ---- Supabase (local/dev artifacts only) ----
+supabase/.temp/
+supabase/.branches/
+supabase/.env
+supabase/.env.*
+
+# Do NOT ignore migrations or SQL — they are part of source of truth
+# supabase/migrations/  # keep tracked
+# supabase/sql/         # keep tracked
+
+# ---- OS / Editor ----
+.DS_Store
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# ---- Test & coverage ----
+coverage/
+*.lcov
+junit.xml
+
+# ---- Archives & patches ----
+*.tgz
+*.zip
+*.tar
+*.tar.gz
+*.rar
+*.patch
+*.orig
+
+# ---- Misc ----
+Thumbs.db
+Desktop.ini
