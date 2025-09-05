@@ -40,7 +40,17 @@ export interface AnalysisResult {
   scenario_text: string;
   players: Player[];
   equilibrium: {
-    profile: Record<string, Record<string, number>>;
+    profile: Record<string, Record<string, {
+      value: number;
+      confidence: number;
+      sources: Array<{
+        id: string;
+        retrieval_id: string;
+        url: string;
+        passage_excerpt: string;
+        anchor_score: number;
+      }>;
+    }>>;
     stability: number;
     method: string;
     convergenceIteration?: number;

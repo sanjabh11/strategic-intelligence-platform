@@ -2,12 +2,13 @@
 // Routes to appropriate audience-specific component based on analysis data
 
 import React, { useState, useEffect } from 'react';
-import { Loader2, AlertCircle, Users, BookOpen, Microscope, School } from 'lucide-react';
+import { Loader2, AlertCircle, Users, BookOpen, Microscope, School, CheckCircle } from 'lucide-react';
 import { AudienceType, AudienceAnalysisData, AUDIENCE_CONFIGS } from '../../types/audience-views';
 import StudentView from './StudentView';
 import LearnerView from './LearnerView';
 import ResearcherView from './ResearcherView';
 import TeacherView from './TeacherView';
+import HumanReview from '../HumanReview';
 import SourceViewer from './SourceViewer';
 
 interface AudienceViewRouterProps {
@@ -111,6 +112,7 @@ const AudienceViewRouter: React.FC<AudienceViewRouterProps> = ({
               case 'learner': return <BookOpen className="w-5 h-5" />;
               case 'researcher': return <Microscope className="w-5 h-5" />;
               case 'teacher': return <School className="w-5 h-5" />;
+              case 'reviewer': return <CheckCircle className="w-5 h-5" />;
               default: return <Users className="w-5 h-5" />;
             }
           };
@@ -156,6 +158,8 @@ const AudienceViewRouter: React.FC<AudienceViewRouterProps> = ({
         return <ResearcherView {...commonProps} />;
       case 'teacher':
         return <TeacherView {...commonProps} />;
+      case 'reviewer':
+        return <HumanReview />;
       default:
         return (
           <div className="bg-slate-800 rounded-xl p-6 border border-yellow-500/20">

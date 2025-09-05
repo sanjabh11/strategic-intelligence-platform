@@ -56,6 +56,43 @@ async function getPendingReviews() {
   return data || []
 }
 
+// Enhanced detection for high-stakes geopolitical analyses that need review
+function detectHighStakesAnalysis(scenarioText: string, evidenceBacked: boolean, predictedImpact?: number): boolean {
+  // Check for geopolitical keywords
+  const geopoliticalKeywords = [
+    'war', 'conflict', 'invasion', 'sanctions', 'treaty', 'alliance', 'nuclear', 'military', 'terrorism',
+    'cyberattack', 'espionage', 'diplomacy', 'geopolitical', 'international', 'border', 'sovereignty',
+    'china', 'russia', 'iran', 'north korea', 'middle east', 'ukraine', 'taiwan'
+  ]
+
+  const hasGeopoliticalContent = geopoliticalKeywords.some(keyword =>
+    scenarioText?.toLowerCase().includes(keyword)
+  )
+
+  // Check for high predicted impact (if available)
+  const highImpact = predictedImpact !== undefined && predictedImpact > 0.7
+
+  // Flag if geopolitical AND either high impact OR not evidence-backed
+  return hasGeopoliticalContent && (!evidenceBacked || highImpact)
+}
+
+async function flagAnalysisForReview(analysisId: string, reason: string) {
+  const { error } = await supabaseAdmin
+    .from('analysis_runs')
+    .update({
+      status: 'under_review',
+      review_reason: reason
+    })
+    .eq('id', analysisId)
+
+  if (error) {
+    console.error('Failed to flag analysis for review:', error)
+    return false
+  }
+
+  return true
+}
+
 async function getAnalysisRun(analysisId: string) {
   const { data, error } = await supabaseAdmin
     .from('analysis_runs')
@@ -110,15 +147,49 @@ async function createHumanReview(analysisId: string, reviewerId: string, status:
 async function handleReviewQueue() {
   try {
     const reviews = await getPendingReviews()
-    return jsonResponse(200, {
-      ok: true,
-      reviews: reviews.map(review => ({
+
+    // Enrich with reviewer guidance
+    const enrichedReviews = await Promise.all(reviews.map(async review => {
+      const analysis = review.analysis_json
+      const isHighStakes = detectHighStakesAnalysis(
+        review.scenario_text || '',
+        analysis?.provenance?.evidence_backed || false,
+        // Try to determine impact from decision table or similar
+        analysis?.decision_table?.[0]?.payoff_estimate?.value || undefined
+      )
+
+      return {
         id: review.id,
         scenario_text: review.scenario_text?.slice(0, 200) + (review.scenario_text?.length > 200 ? '...' : ''),
         created_at: review.created_at,
         audience: review.audience,
-        summary: review.analysis_json?.summary?.text || null
-      }))
+        summary: analysis?.summary?.text || null,
+        decision_table: analysis?.decision_table || null,
+        expected_value_ranking: analysis?.expected_value_ranking || null,
+        review_reason: review.review_reason || 'High-stakes geopolitical analysis requiring human validation',
+        reviewer_guidance: isHighStakes ?
+          '🚨 HIGH PRIORITY: This analysis involves geopolitical factors. Verify claims, sources, and strategic implications before approval.' :
+          'Standard review: Check for logical consistency and appropriate sources.',
+        evidence_backed: analysis?.provenance?.evidence_backed || false,
+        retrieval_count: analysis?.provenance?.retrieval_count || 0,
+        analysis_json: analysis // Include full analysis for additional data
+      }
+    }))
+
+    return jsonResponse(200, {
+      ok: true,
+      reviews: enrichedReviews,
+      total_pending: enrichedReviews.length,
+      reviewer_prompt: `
+REVIEWER GUIDELINES:
+📋 Check for logical consistency in strategic analysis
+🔍 Verify sources and provenance are appropriate
+⚖️ Assess if conclusions are evidence-based
+🚨 Flag any geopolitical/national security implications
+❌ Reject if sources are insufficient or biased
+
+High-stakes analyses will be clearly marked with 🚨
+      `.trim()
     })
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e)

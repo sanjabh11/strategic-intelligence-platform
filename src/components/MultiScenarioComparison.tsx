@@ -358,9 +358,9 @@ const MultiScenarioComparison: React.FC<MultiScenarioComparisonProps> = ({
                     <div key={player} className="text-xs text-slate-400">
                       <span className="font-medium">{player}:</span> {
                         Object.entries(actions)
-                          .sort(([,a], [,b]) => b - a)
+                          .sort((a, b) => b[1] - a[1])
                           .slice(0, 1)[0]?.[0] || 'mixed'
-                      } ({(Object.entries(actions).sort(([,a], [,b]) => b - a)[0]?.[1] || 0) * 100).toFixed(0)}%)
+                      } ({(Object.entries(actions).sort((a, b) => b[1] - a[1])[0]?.[1] || 0) * 100).toFixed(0)}%)
                     </div>
                   ))}
                 </div>

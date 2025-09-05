@@ -74,6 +74,8 @@ interface EvidenceSource {
     mla: string;
     chicago: string;
   };
+  retrieval_id?: string; // ID from retrievals table for provenance
+  passage_excerpt?: string; // Specific passage used for seeding numeric values
   metadata?: {
     pageTitle: string;
     description?: string;
@@ -351,6 +353,8 @@ function convertToEvidenceSource(
       mla: `"${title}." ${domain.charAt(0).toUpperCase() + domain.slice(1)}, ${new Date().getFullYear()}, ${url}`,
       chicago: `${domain.charAt(0).toUpperCase() + domain.slice(1)}. "${title}." ${new Date().getFullYear()}. ${url}`
     },
+    retrieval_id: crypto.randomUUID(),
+    passage_excerpt: content.substring(0, 200) || 'No excerpt available',
     metadata: {
       pageTitle: firecrawlResponse.metadata?.title || title,
       description: firecrawlResponse.metadata?.description,

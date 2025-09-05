@@ -58,6 +58,227 @@ async function safeJsonParse(text: string) {
   }
 }
 
+// --- LLM Output Sanitization and Noise Detection ---
+function sanitizeLlmOutput(text: string): { sanitized: string, noiseDetected: boolean, patterns: string[] } {
+  if (!text) return { sanitized: text, noiseDetected: false, patterns: [] }
+
+  let sanitized = text.trim()
+  let noiseDetected = false
+  const patterns: string[] = []
+
+  // Remove common LLM prefixes/suffixes
+  const prefixesToRemove = [
+    /^Here are the results?[:.]/i,
+    /^Here's the analysis[:.]/i,
+    /^According to the data[:.]/i,
+    /^Based on the scenario[:.]/i,
+    /^JSON response[:.]/i,
+    /^```json\s*/,
+    /^\s*```/,
+    /```\s*$/
+  ]
+
+  const suffixesToRemove = [
+    /\n*$/,
+    /No more information available\./,
+    /For further details.*$/,
+    /I hope this helps!/,
+    /Let me know if you need more information/i
+  ]
+
+  // Apply prefix removal
+  for (const pattern of prefixesToRemove) {
+    if (pattern.test(sanitized)) {
+      sanitized = sanitized.replace(pattern, '').trim()
+      patterns.push(pattern.toString())
+      noiseDetected = true
+    }
+  }
+
+  // Apply suffix removal
+  for (const pattern of suffixesToRemove) {
+    if (pattern.test(sanitized)) {
+      sanitized = sanitized.replace(pattern, '').trim()
+      patterns.push(pattern.toString())
+      noiseDetected = true
+    }
+  }
+
+  // Detect browser extension patterns (common injection patterns)
+  const extensionPatterns = [
+    /youtube\.com\/watch\?v=/i,
+    /chrome-extension:\/\//i,
+    /moz-extension:\/\//i,
+    /loading.*script/i,
+    /injecting.*content/i,
+    /content script/i,
+    /extension.*loaded/i,
+    // Additional common browser extension patterns
+    /grammarly.*enabled/i,
+    /adblock.*detected/i,
+    /cookie.*consent/i,
+    /tracking.*protection/i,
+    /privacy.*extension/i,
+    /browser.*assistant/i,
+    /tab.*extension/i,
+    // Generic injection markers
+    /(\(adsbygoogle.*\)|googletagmanager\.com|gtag.*=|fbq.*=|window\.__tcfapi)/i
+  ]
+
+  for (const pattern of extensionPatterns) {
+    if (pattern.test(sanitized)) {
+      patterns.push(`extension_injection:${pattern.toString()}`)
+      noiseDetected = true
+    }
+  }
+
+  // Clean up markdown code blocks if any
+  if (sanitized.includes('```')) {
+    const codeBlockMatch = sanitized.match(/```(?:json)?\s*(\{[\s\S]*?\})\s*```/)
+    if (codeBlockMatch) {
+      sanitized = codeBlockMatch[1].trim()
+      patterns.push('markdown_code_block')
+      noiseDetected = true
+    }
+  }
+
+  return { sanitized, noiseDetected, patterns }
+}
+
+async function logThirdPartyNoise(request_id: string | null, patterns: string[], rawText: string) {
+  if (patterns.length === 0) return
+
+  try {
+    const timestamp = new Date().toISOString()
+    const noiseEvent = {
+      request_id,
+      detected_patterns: JSON.stringify(patterns),
+      raw_sample: rawText.slice(0, 500),
+      timestamp
+    }
+
+    await supabaseAdmin.from("third_party_noise").insert(noiseEvent)
+    console.warn(`Noise detected: ${patterns.join(", ")}`)
+
+    // Check for rate limiting (>10 per minute) and create dashboard alert
+    await checkThirdPartyNoiseRateAndAlert(patterns, timestamp)
+  } catch (e) {
+    console.error("Failed to log third_party_noise:", e)
+  }
+}
+
+async function checkThirdPartyNoiseRateAndAlert(patterns: string[], currentTimestamp: string) {
+  try {
+    const oneMinuteAgo = new Date(Date.now() - 60000).toISOString()
+
+    // Count noise events in the last minute
+    const { data: recentNoise, error } = await supabaseAdmin
+      .from("third_party_noise")
+      .select("detected_patterns")
+      .gte("timestamp", oneMinuteAgo)
+
+    if (error || !recentNoise) {
+      console.error("Failed to check noise rate:", error)
+      return
+    }
+
+    const noiseCount = recentNoise.length
+    const threshold = 10
+
+    if (noiseCount > threshold) {
+      console.warn(`ALERT: High third-party noise rate detected - ${noiseCount} events in last minute`)
+
+      // Create persistent dashboard alert
+      await createDashboardAlert({
+        alert_type: "third_party_interference",
+        severity: "high",
+        message: `Third-party extension interference detected: ${noiseCount} events per minute`,
+        metadata: {
+          noise_count: noiseCount,
+          threshold,
+          time_window: "1 minute",
+          patterns: patterns,
+          timestamp: currentTimestamp
+        }
+      })
+    }
+  } catch (e) {
+    console.error("Failed to check noise rate and alert:", e)
+  }
+}
+
+async function createDashboardAlert(alertData: any) {
+  try {
+    // This assumes there's a monitoring_alerts table
+    // If it doesn't exist, the insert will fail silently
+    await supabaseAdmin.from("monitoring_alerts").insert({
+      ...alertData,
+      created_at: new Date().toISOString(),
+      status: "active"
+    })
+  } catch (e) {
+    console.error("Failed to create dashboard alert:", e)
+  }
+}
+
+// Enhanced defensive JSON parsing with multiple strategies
+async function parseLlmOutput(text: string, request_id: string | null = null): Promise<{ ok: true, json: any, sanitized: boolean, patterns: string[] } | { ok: false, error: string, raw: string }> {
+  // Strategy 1: Parse as-is
+  try {
+    const parsed = JSON.parse(text.trim())
+    return { ok: true, json: parsed, sanitized: false, patterns: [] }
+  } catch (err1) {
+    // Strategy 2: Sanitize first
+    const { sanitized, noiseDetected, patterns } = sanitizeLlmOutput(text)
+
+    if (noiseDetected && request_id) {
+      await logThirdPartyNoise(request_id, patterns, text)
+    }
+
+    try {
+      const parsed = JSON.parse(sanitized)
+      return { ok: true, json: parsed, sanitized: noiseDetected, patterns }
+    } catch (err2) {
+      // Strategy 3: Find JSON boundaries more aggressively
+      const jsonStart = sanitized.indexOf('{')
+      const jsonEnd = sanitized.lastIndexOf('}')
+
+      if (jsonStart >= 0 && jsonEnd > jsonStart) {
+        try {
+          const extractedJson = sanitized.slice(jsonStart, jsonEnd + 1)
+          const parsed = JSON.parse(extractedJson)
+          return { ok: true, json: parsed, sanitized: true, patterns: ['aggressive_extraction'] }
+        } catch (err3) {
+          // Strategy 4: Remove lines that look like examples or comments
+          const lines = sanitized.split('\n').filter(line =>
+            !line.includes('//') &&
+            !line.match(/^\s*\*\//) &&
+            !line.match(/^\s*\/\*/) &&
+            !line.toLowerCase().includes('example')
+          )
+
+          try {
+            const cleaned = lines.join('\n')
+            const jsonStart2 = cleaned.indexOf('{')
+            const jsonEnd2 = cleaned.lastIndexOf('}')
+
+            if (jsonStart2 >= 0 && jsonEnd2 > jsonStart2) {
+              const finalJson = cleaned.slice(jsonStart2, jsonEnd2 + 1)
+              const parsed = JSON.parse(finalJson)
+              return { ok: true, json: parsed, sanitized: true, patterns: ['line_filtering', 'aggressive_extraction'] }
+            }
+          } catch (err4) {
+            // Final fallback
+            return { ok: false, error: "defensive_parsing_failed", raw: text.slice(0, 2000) }
+          }
+        }
+      }
+
+      return { ok: false, error: "json_extraction_failed", raw: text.slice(0, 2000) }
+    }
+  }
+}
+
 // --- EV Decision Table Computation ---
 function computeExpectedValues(decisionTable: any[], scenario: string) {
   if (!Array.isArray(decisionTable) || decisionTable.length === 0) {
@@ -254,6 +475,8 @@ function buildPrompt(audience: string, scenario: string, retrievals: any[], comp
   if (audience === "student") {
     return `You are a Strategic Intelligence Teaching Assistant. For any geopolitical or strategic scenario provided, produce a JSON-only response that is short, simple, and teaches a student. Output must validate against the provided JSON schema (student_output_schema). Never include prose outside the JSON — only produce the JSON object.
 
+IMPORTANT: For all numeric values, include sources with exact retrieval IDs, URLs, passage excerpts, and anchor scores. Use retrieval IDs from the provided retrievals. If no matching retrieval, mark as 'unknown'.
+
 Scenario: ${scenario}
 ${retrievalBlock}
 Constraints: produce a student-level deliverable.
@@ -265,7 +488,7 @@ Produce the following JSON exactly:
   "audience": "student",
   "one_paragraph_summary": {"text": "A concise summary of the scenario in simple terms."},
   "top_2_actions": [
-    {"action": "Action 1", "rationale": "Reasoning for action", "expected_outcome": {"value": 0.8, "confidence": 0.7, "sources": [{"id": "source1", "score": 0.9, "excerpt": "Excerpt"}]}}
+    {"action": "Action 1", "rationale": "Reasoning for action", "expected_outcome": {"value": 0.8, "confidence": 0.7, "sources": [{"id": "source1", "retrieval_id": "${retrievals[0]?.id || 'unknown'}", "url": "${retrievals[0]?.url || 'http://example.com'}", "passage_excerpt": "${retrievals[0]?.snippet?.substring(0,100) || 'N/A'}", "anchor_score": 0.9}]}}
   ],
   "key_terms": [{"term": "Key Term", "definition": "Definition"}],
   "two_quiz_questions": [{"q": "Question?", "answer": "Answer", "difficulty": "easy"}],
@@ -281,6 +504,9 @@ Produce the following JSON exactly:
 
     return `You are a Strategic Intelligence Tutor. Produce a JSON-only 'learner' report with decision table and solutions.
 
+IMPORTANT: Extract a list of key entities (countries, organizations, individuals, locations) involved in the scenario.
+For each numeric claim, include sources array containing retrieval_id and a short passage excerpt. If no retrieval supports claim, set evidence_backed=false and do not assert the number.
+
 Scenario: ${scenario}
 ${retrievalBlock}
 Assumptions: ${JSON.stringify({ seed: Date.now() })}
@@ -293,6 +519,9 @@ Include realistic payoff estimates and risk assessments based on the scenario.`
 
     return `You are a Strategic Research Assistant. Produce a JSON-only research package with reproducible artifacts.
 
+IMPORTANT: Extract a list of key entities (countries, organizations, individuals, locations) involved in the scenario.
+For each numeric claim, include sources array containing retrieval_id and a short passage excerpt. If no retrieval supports claim, set evidence_backed=false and do not assert the number.
+
 Scenario: ${scenario}
 ${retrievalBlock}
 Model parameters: ${JSON.stringify({ seed: Date.now() })}
@@ -303,6 +532,11 @@ Include detailed assumptions, parameter ranges, and reproducible simulation setu
   } else {
     // teacher
     return `You are a Strategic Education Designer. Produce a JSON-only teacher packet.
+
+IMPORTANT: Extract a list of key entities (countries, organizations, individuals, locations) involved in the scenario.
+For each numeric claim, include sources array containing retrieval_id and a short passage excerpt. If no retrieval supports claim, set evidence_backed=false and do not assert the number.
+For each numeric claim, include sources array containing retrieval_id and a short passage excerpt. If no retrieval supports claim, set evidence_backed=false and do not assert the number.
+For each numeric claim, include sources array containing retrieval_id and a short passage excerpt. If no retrieval supports claim, set evidence_backed=false and do not assert the number.
 
 Scenario: ${scenario}
 ${retrievalBlock}
@@ -343,8 +577,36 @@ async function logSchemaFailure(request_id: string | null, rawResponse: string, 
 const ajv = new Ajv({ allErrors: true, removeAdditional: false });
 addFormats(ajv);
 
-// Simplified schemas for audience outputs (based on Ph2.md specs)
+// Global flag to track geopolitical context during validation
+let _currentScenarioText = '';
+let _currentAudienceType = '';
+
+// Add custom keyword for geopolitical domain validation
+ajv.addKeyword({
+  keyword: 'geopolitical-passage-excerpt',
+  validate: function (schema: any, data: any, parentSchema?: any, dataCtx?: any) {
+    if (!data || !Array.isArray(data)) return true; // Not applicable if no sources
+
+    // Check if this is a geopolitical domain response by examining stored context
+    const isGeopolitical = isHighRiskDomain(_currentScenarioText);
+    if (!isGeopolitical) return true; // Skip validation for non-geopolitical scenarios
+
+    // For geopolitical domains, require passage_excerpt for all sources
+    return data.every((source: any) =>
+      source.hasOwnProperty('passage_excerpt') &&
+      typeof source.passage_excerpt === 'string' &&
+      source.passage_excerpt.trim().length > 0
+    );
+  },
+  errors: true,
+  error: {
+    message: 'Geopolitical domains require passage_excerpt for all sources in numeric claims'
+  }
+});
+
+// --- Strict AJV schema with $ref enforcement ---
 const numericObjectSchema = {
+  $id: "https://example.com/schemas/numeric_object.json",
   type: "object",
   required: ["value", "confidence", "sources"],
   properties: {
@@ -355,16 +617,22 @@ const numericObjectSchema = {
       minItems: 1,
       items: {
         type: "object",
-        required: ["id", "score"],
+        required: ["id", "retrieval_id", "url", "passage_excerpt", "anchor_score"],
         properties: {
           id: { type: "string" },
-          score: { type: "number", minimum: 0, maximum: 1 },
-          excerpt: { type: "string" }
+          retrieval_id: { type: "string" },
+          url: { type: "string" },
+          passage_excerpt: { type: "string" },
+          anchor_score: { type: "number", minimum: 0 }
         }
       }
-    }
+    },
+    derived: { type: "boolean" }
   }
 };
+
+// Compile the numeric object schema
+ajv.addSchema(numericObjectSchema);
 
 const audienceSchemas = {
   student: {
@@ -378,10 +646,11 @@ const audienceSchemas = {
         type: "array",
         items: {
           type: "object",
+          required: ["action", "rationale", "expected_outcome"],
           properties: {
             action: { type: "string" },
             rationale: { type: "string" },
-            expected_outcome: numericObjectSchema
+            expected_outcome: { "$ref": "https://example.com/schemas/numeric_object.json#" }
           }
         }
       },
@@ -430,10 +699,11 @@ const audienceSchemas = {
         type: "array",
         items: {
           type: "object",
+          required: ["actor", "action", "payoff_estimate"],
           properties: {
             actor: { type: "string" },
             action: { type: "string" },
-            payoff_estimate: numericObjectSchema,
+            payoff_estimate: { "$ref": "https://example.com/schemas/numeric_object.json#" },
             risk_notes: { type: "string" }
           }
         }
@@ -912,12 +1182,33 @@ Deno.serve(async (req) => {
     })
   }
 
-  // Parse LLM text as JSON-only expected output
-  const parsed = await safeJsonParse(llmText ?? "")
+  // Parse LLM text as JSON-only expected output with enhanced sanitization
+  const parsed = await parseLlmOutput(llmText ?? "", request_id)
   if (!parsed.ok) {
-    // If LLM returned non-JSON, log and optionally try to extract JSON via regex
+    // Enhanced error handling for different failure types
     const errorId = uuid()
-    await logSchemaFailure(request_id, llmText ?? "", [{ message: "llm_output_not_json" }])
+    let errorMessage = "LLM output not parseable as JSON"
+    let userMessage = "Analysis generation failed"
+    let suggestions = []
+
+    if (parsed.error === "defensive_parsing_failed") {
+      errorMessage = "Server-side sanitization failed - malformed LLM output detected"
+      userMessage = "Third-party extension interference detected. Please disable browser extensions or try again."
+      suggestions = ["Disable browser extensions", "Try a different browser", "Contact support if issue persists"]
+    } else if (parsed.error === "json_extraction_failed") {
+      errorMessage = "JSON extraction failed despite multiple parsing strategies"
+      userMessage = "LLM response format error. Server-side sanitization applied but still failed."
+      suggestions = ["Retry the analysis", "Try a simpler scenario", "Contact support if issue persists"]
+    } else {
+      userMessage = "LLM processing failed"
+      suggestions = ["Try again in a few moments", "Contact support if issue persists"]
+    }
+
+    await logRpcError(request_id, errorId, errorMessage, {
+      raw_response: parsed.raw,
+      error_type: parsed.error,
+      sanitization_attempted: true
+    })
 
     // For education_quick we may synthesize a minimal JSON fallback
     if (mode === "education_quick") {
@@ -958,8 +1249,10 @@ Deno.serve(async (req) => {
       return new Response(JSON.stringify({
         ok: false,
         error: "llm_output_not_json",
-        message: "LLM did not return valid JSON",
-        error_id: errorId
+        message: userMessage,
+        suggestions,
+        error_id: errorId,
+        request_id
       }), {
         status: 502,
         headers: { 'Content-Type': 'application/json' }
@@ -1141,6 +1434,17 @@ Deno.serve(async (req) => {
   }
 
   const totalDuration = Date.now() - start
+
+  // Include sanitization information in provenance
+  const sanitizationInfo = parsed.sanitized ? {
+    server_side_sanitization_applied: true,
+    sanitization_patterns: parsed.patterns.join(", "),
+    third_party_interference_likely: parsed.patterns.some(p => p.includes('extension_injection'))
+  } : {
+    server_side_sanitization_applied: false,
+    clean_response: true
+  }
+
   const resp = {
     ok: true,
     analysis_id,
@@ -1149,7 +1453,8 @@ Deno.serve(async (req) => {
       model: modelUsed,
       fallback_used: fallbackUsed,
       llm_duration_ms: llmDurationMs,
-      total_duration_ms: totalDuration
+      total_duration_ms: totalDuration,
+      ...sanitizationInfo
     }
   }
 

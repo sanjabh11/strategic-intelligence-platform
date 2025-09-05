@@ -2,7 +2,7 @@
 // Detailed analysis view with comprehensive summary, assumptions, payoff matrix, and data exports
 
 import React from 'react';
-import { Microscope, FileText, Grid3X3, Download, AlertCircle, ExternalLink, CheckCircle, XCircle } from 'lucide-react';
+import { Microscope, FileText, Grid3X3, Download, AlertCircle, ExternalLink, CheckCircle, XCircle, Notebook, Zap } from 'lucide-react';
 import { AudienceViewProps, ResearcherViewData, SourceCitation } from '../../types/audience-views';
 
 const ResearcherView: React.FC<AudienceViewProps> = ({
@@ -182,6 +182,32 @@ const ResearcherView: React.FC<AudienceViewProps> = ({
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {researcherData.data_exports?.payoff_csv_url && (
+          <button
+            onClick={() => handleDownload(researcherData.data_exports.payoff_csv_url, 'payoff-matrix.csv')}
+            className="p-4 bg-slate-700 hover:bg-slate-600 rounded-lg border border-slate-600 hover:border-green-500 transition-colors text-left"
+          >
+            <div className="flex items-center space-x-3 mb-2">
+              <Grid3X3 className="w-5 h-5 text-green-400" />
+              <span className="font-medium text-slate-200">Payoff Matrix CSV</span>
+            </div>
+            <p className="text-xs text-slate-400">Export payoff matrix as CSV</p>
+          </button>
+        )}
+
+        {researcherData.data_exports?.simulations_json_url && (
+          <button
+            onClick={() => handleDownload(researcherData.data_exports.simulations_json_url, 'simulations.json')}
+            className="p-4 bg-slate-700 hover:bg-slate-600 rounded-lg border border-slate-600 hover:border-green-500 transition-colors text-left"
+          >
+            <div className="flex items-center space-x-3 mb-2">
+              <Download className="w-5 h-5 text-green-400" />
+              <span className="font-medium text-slate-200">Simulations JSON</span>
+            </div>
+            <p className="text-xs text-slate-400">Simulation results data</p>
+          </button>
+        )}
+
         {researcherData.data_exports?.json_url && (
           <button
             onClick={() => handleDownload(researcherData.data_exports.json_url, 'analysis-data.json')}
@@ -189,35 +215,9 @@ const ResearcherView: React.FC<AudienceViewProps> = ({
           >
             <div className="flex items-center space-x-3 mb-2">
               <Download className="w-5 h-5 text-green-400" />
-              <span className="font-medium text-slate-200">JSON Export</span>
+              <span className="font-medium text-slate-200">Complete JSON</span>
             </div>
-            <p className="text-xs text-slate-400">Complete analysis data</p>
-          </button>
-        )}
-
-        {researcherData.data_exports?.csv_url && (
-          <button
-            onClick={() => handleDownload(researcherData.data_exports.csv_url, 'payoff-matrix.csv')}
-            className="p-4 bg-slate-700 hover:bg-slate-600 rounded-lg border border-slate-600 hover:border-green-500 transition-colors text-left"
-          >
-            <div className="flex items-center space-x-3 mb-2">
-              <Download className="w-5 h-5 text-green-400" />
-              <span className="font-medium text-slate-200">CSV Export</span>
-            </div>
-            <p className="text-xs text-slate-400">Payoff matrix data</p>
-          </button>
-        )}
-
-        {researcherData.data_exports?.excel_url && (
-          <button
-            onClick={() => handleDownload(researcherData.data_exports.excel_url, 'analysis-results.xlsx')}
-            className="p-4 bg-slate-700 hover:bg-slate-600 rounded-lg border border-slate-600 hover:border-green-500 transition-colors text-left"
-          >
-            <div className="flex items-center space-x-3 mb-2">
-              <Download className="w-5 h-5 text-green-400" />
-              <span className="font-medium text-slate-200">Excel Export</span>
-            </div>
-            <p className="text-xs text-slate-400">Formatted spreadsheet</p>
+            <p className="text-xs text-slate-400">Full analysis data</p>
           </button>
         )}
 
@@ -232,6 +232,78 @@ const ResearcherView: React.FC<AudienceViewProps> = ({
             </pre>
           </div>
         )}
+      </div>
+    </div>
+  );
+
+  const renderNotebookGenerator = () => {
+    if (!researcherData.notebook_snippet) return null;
+
+    return (
+      <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
+        <div className="flex items-center mb-6">
+          <Notebook className="w-6 h-6 mr-3 text-indigo-400" />
+          <h2 className="text-xl font-semibold text-slate-200">Jupyter Notebook Generator</h2>
+        </div>
+
+        <div className="bg-slate-700 rounded-lg p-4 border border-slate-600">
+          <div className="flex items-center justify-between mb-4">
+            <span className="font-medium text-slate-200">Generated Analysis Notebook</span>
+            <button
+              onClick={() => handleDownload(`data:text/plain,${encodeURIComponent(researcherData.notebook_snippet)}`, 'analysis-notebook.ipynb')}
+              className="px-4 py-2 bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 rounded-lg text-sm font-medium flex items-center"
+            >
+              <Download className="w-4 h-4 mr-2" />
+              Download Notebook
+            </button>
+          </div>
+
+          <pre className="text-xs text-slate-400 bg-slate-800 p-3 rounded overflow-x-auto max-h-64">
+            {researcherData.notebook_snippet}
+          </pre>
+        </div>
+      </div>
+    );
+  };
+
+  const renderSensitivitySuite = () => (
+    <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
+      <div className="flex items-center mb-6">
+        <Zap className="w-6 h-6 mr-3 text-yellow-400" />
+        <h2 className="text-xl font-semibold text-slate-200">Sensitivity Analysis Suite</h2>
+      </div>
+
+      <div className="space-y-4">
+        <div className="bg-slate-700 rounded-lg p-4 border border-slate-600">
+          <h3 className="font-medium text-slate-200 mb-3">Parameter Sensitivity Results</h3>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {researcherData.simulation_results?.sensitivity?.param_samples?.map((sample, index) => (
+              <div key={index} className="bg-slate-600 rounded p-3 border border-slate-500">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-slate-300 font-medium">{sample.param}</span>
+                  <span className="text-yellow-400 text-sm">
+                    Effect: {(sample.effect_on_outcome * 100).toFixed(1)}%
+                  </span>
+                </div>
+
+                <div className="text-xs text-slate-400">
+                  Range: {sample.range[0]} to {sample.range[1]}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Quick sensitivity test button */}
+        <button
+          className="w-full px-4 py-3 bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-300 rounded-lg border border-yellow-500/40 hover:border-yellow-500/60 transition-colors"
+        >
+          <div className="flex items-center justify-center">
+            <Zap className="w-5 h-5 mr-2" />
+            Run New Sensitivity Analysis
+          </div>
+        </button>
       </div>
     </div>
   );
@@ -284,6 +356,8 @@ const ResearcherView: React.FC<AudienceViewProps> = ({
       {renderAssumptions()}
       {renderPayoffMatrix()}
       {renderDataExports()}
+      {renderNotebookGenerator()}
+      {renderSensitivitySuite()}
       {renderSources()}
     </div>
   );

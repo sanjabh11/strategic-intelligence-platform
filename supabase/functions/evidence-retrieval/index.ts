@@ -119,7 +119,9 @@ async function perplexityRetrieval(query: string): Promise<EvidenceSource[]> {
       apa: `${new URL(s.url).hostname}. (${new Date(now).getFullYear()}). ${s.title || 'Web source'}. ${s.url}`,
       mla: `"${s.title || 'Web source'}." ${new URL(s.url).hostname}, ${new Date(now).toISOString().split('T')[0]}, ${s.url}`,
       chicago: `${new URL(s.url).hostname}. "${s.title || 'Web source'}." ${new Date(now).getFullYear()}. ${s.url}`
-    }
+    },
+    retrieval_id: crypto.randomUUID(),
+    passage_excerpt: s.snippet || 'No excerpt available'
   }))
 }
 
@@ -137,6 +139,8 @@ interface EvidenceSource {
     mla: string;
     chicago: string;
   };
+  retrieval_id?: string; // ID from retrievals table for provenance
+  passage_excerpt?: string; // Specific passage used for seeding numeric values
 }
 
 interface EvidenceRetrievalResponse {
@@ -343,7 +347,9 @@ async function firecrawlResearchRetrieval(request: EvidenceRetrievalRequest): Pr
         relevance_score: item.relevance_score,
         credibility_score: item.credibility_score,
         temporal_distance: item.temporal_distance,
-        citation_format: item.citation_format
+        citation_format: item.citation_format,
+        retrieval_id: crypto.randomUUID(),
+        passage_excerpt: item.content || 'No excerpt available'
       }));
     } else {
       console.warn('Invalid Firecrawl response, using fallback');

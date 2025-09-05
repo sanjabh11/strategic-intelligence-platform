@@ -30,6 +30,8 @@ export const ENDPOINTS = {
   COLLECTIVE_STATS: `${API_BASE}/collective-stats`,
   FIRECRAWL_RESEARCH: `${API_BASE}/firecrawl-research`,
   EVIDENCE_RETRIEVAL: `${API_BASE}/evidence-retrieval`,
+  HUMAN_REVIEW_QUEUE: `${API_BASE}/human-review/review_queue`,
+  HUMAN_REVIEW_POST: `${API_BASE}/human-review/analysis`,
 }
 
 // Authentication headers for direct API calls

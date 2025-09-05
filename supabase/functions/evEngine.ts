@@ -10,7 +10,22 @@ export function computeEVs(actions: ActionEntry[], probabilities?: Record<string
     const value = Number(a.payoff_estimate?.value ?? 0);
     const conf = Number(a.payoff_estimate?.confidence ?? 0.5);
     const ev = value * conf;
-    return { actor: a.actor, action: a.action, ev, sources: a.payoff_estimate.sources ?? [], raw: a.payoff_estimate };
+    // Link sources to retrieval_id + score + excerpt for provenance
+    const sources = (a.payoff_estimate.sources ?? []).map(s => ({
+      retrieval_id: s.id,
+      score: s.score,
+      excerpt: s.excerpt
+    }));
+    // Auto-mark derived if sources absent
+    const derived = !sources || sources.length === 0;
+    return {
+      actor: a.actor,
+      action: a.action,
+      ev,
+      sources,
+      derived,
+      raw: { ...a.payoff_estimate, derived }
+    };
   });
   // Rank descending
   evs.sort((x,y) => y.ev - x.ev);

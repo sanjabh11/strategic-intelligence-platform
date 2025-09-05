@@ -92,6 +92,30 @@ const StudentView: React.FC<AudienceViewProps> = ({
     </div>
   );
 
+  const renderEVExample = () => {
+    const topEV = Math.max(...studentData.top_2_actions.map(a => a.expected_outcome.value * a.expected_outcome.confidence));
+
+    return (
+      <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
+        <div className="flex items-center mb-4">
+          <BookOpen className="w-6 h-6 mr-3 text-orange-400" />
+          <h2 className="text-xl font-semibold text-slate-200">Expected Value Example</h2>
+        </div>
+        <div className="bg-slate-700 rounded-lg p-4 border border-slate-600">
+          <p className="text-slate-300 text-sm leading-relaxed mb-3">
+            <strong>EV Formula:</strong> Expected Value (EV) = Estimated Outcome × Confidence
+          </p>
+          <div className="text-slate-300 text-sm space-y-1 mb-3">
+            <div>Example: Best action has EV of {(topEV * 1000000).toFixed(0)} (in millions)</div>
+            <div className="text-slate-500 text-xs">
+              This represents the weighted value considering both the estimated payoff and our confidence in that estimate.
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   const renderKeyTerms = () => (
     <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
       <div className="flex items-center mb-4">
@@ -193,7 +217,7 @@ const StudentView: React.FC<AudienceViewProps> = ({
     <div className="space-y-6">
       {renderSummary()}
       {renderTopActions()}
-      {renderKeyTerms()}
+      {renderEVExample()}
       {renderQuiz()}
       {renderSources()}
     </div>

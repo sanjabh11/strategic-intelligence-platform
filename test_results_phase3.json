@@ -1,0 +1,2906 @@
+{
+  "total": 20,
+  "passed": 20,
+  "failed": 0,
+  "details": [
+    {
+      "scenario": "U.S.-China trade war impacts on semiconductor supply chains",
+      "validation": {
+        "scenario": "U.S.-China trade war impacts on semiconductor supply chains",
+        "passed": true,
+        "failures": [],
+        "metrics": {
+          "evidenceBacked": true
+        }
+      },
+      "result": {
+        "success": true,
+        "response": {
+          "ok": true,
+          "analysis": {
+            "scenario_text": "U.S.-China trade war impacts on semiconductor supply chains",
+            "players": [
+              {
+                "id": "P1",
+                "name": "Alpha",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P2",
+                "name": "Beta",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P3",
+                "name": "Gamma",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              }
+            ],
+            "equilibrium": {
+              "profile": {
+                "P1": {
+                  "Cooperate": 0.504,
+                  "Defect": 0.496
+                },
+                "P2": {
+                  "Cooperate": 0.501,
+                  "Defect": 0.499
+                },
+                "P3": {
+                  "Cooperate": 0.494,
+                  "Defect": 0.506
+                }
+              },
+              "stability": 0.77,
+              "method": "recursive_best_response_mvp",
+              "convergenceIteration": 25,
+              "confidence": {
+                "lower": 0.67,
+                "upper": 0.87
+              }
+            },
+            "quantum": {
+              "collapsed": [
+                {
+                  "action": "Cooperate",
+                  "probability": 0.5
+                },
+                {
+                  "action": "Defect",
+                  "probability": 0.5
+                }
+              ],
+              "influence": [
+                [
+                  0.796,
+                  0.119,
+                  0.122
+                ],
+                [
+                  0.29,
+                  0.839,
+                  0.1
+                ],
+                [
+                  0.28,
+                  0.247,
+                  0.727
+                ]
+              ]
+            },
+            "pattern_matches": [
+              {
+                "id": "coordination_game",
+                "score": 0.764
+              },
+              {
+                "id": "stag_hunt_variant",
+                "score": 0.649
+              }
+            ],
+            "retrievals": [
+              {
+                "id": "https://www.traxtech.com/ai-in-supply-chain/semiconductor-supply-chain-fractures-as-u.s.-china-trade-war-enters-ai-phase",
+                "title": "traxtech.com",
+                "url": "https://www.traxtech.com/ai-in-supply-chain/semiconductor-supply-chain-fractures-as-u.s.-china-trade-war-enters-ai-phase"
+              },
+              {
+                "id": "https://fortune.com/2025/08/16/us-china-chip-deal-nvidia-amd-global-chip-supply-chain/",
+                "title": "fortune.com",
+                "url": "https://fortune.com/2025/08/16/us-china-chip-deal-nvidia-amd-global-chip-supply-chain/"
+              },
+              {
+                "id": "https://www.ainvest.com/news/trump-imminent-semiconductor-tariffs-impact-global-tech-supply-chains-2509/",
+                "title": "ainvest.com",
+                "url": "https://www.ainvest.com/news/trump-imminent-semiconductor-tariffs-impact-global-tech-supply-chains-2509/"
+              },
+              {
+                "id": "https://www.china-briefing.com/news/us-china-relations-in-the-trump-2-0-implications/",
+                "title": "china-briefing.com",
+                "url": "https://www.china-briefing.com/news/us-china-relations-in-the-trump-2-0-implications/"
+              },
+              {
+                "id": "https://www.ainvest.com/news/trump-semiconductor-tariff-strategy-impact-global-tech-supply-chains-2509-41/",
+                "title": "ainvest.com",
+                "url": "https://www.ainvest.com/news/trump-semiconductor-tariff-strategy-impact-global-tech-supply-chains-2509-41/"
+              }
+            ],
+            "retrieval_count": 5,
+            "processing_stats": {
+              "processing_time_ms": 11788,
+              "stability_score": 0.77
+            },
+            "provenance": {
+              "evidence_backed": true,
+              "retrieval_count": 5,
+              "model": "edge-mvp-1.0"
+            }
+          },
+          "mode": "standard"
+        },
+        "requestId": "test-1-1757076002957"
+      }
+    },
+    {
+      "scenario": "Russian military maneuvers near Ukraine borders",
+      "validation": {
+        "scenario": "Russian military maneuvers near Ukraine borders",
+        "passed": true,
+        "failures": [],
+        "metrics": {
+          "evidenceBacked": true
+        }
+      },
+      "result": {
+        "success": true,
+        "response": {
+          "ok": true,
+          "analysis": {
+            "scenario_text": "Russian military maneuvers near Ukraine borders",
+            "players": [
+              {
+                "id": "P1",
+                "name": "Alpha",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P2",
+                "name": "Beta",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P3",
+                "name": "Gamma",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              }
+            ],
+            "equilibrium": {
+              "profile": {
+                "P1": {
+                  "Cooperate": 0.504,
+                  "Defect": 0.496
+                },
+                "P2": {
+                  "Cooperate": 0.501,
+                  "Defect": 0.499
+                },
+                "P3": {
+                  "Cooperate": 0.494,
+                  "Defect": 0.506
+                }
+              },
+              "stability": 0.77,
+              "method": "recursive_best_response_mvp",
+              "convergenceIteration": 25,
+              "confidence": {
+                "lower": 0.67,
+                "upper": 0.87
+              }
+            },
+            "quantum": {
+              "collapsed": [
+                {
+                  "action": "Cooperate",
+                  "probability": 0.5
+                },
+                {
+                  "action": "Defect",
+                  "probability": 0.5
+                }
+              ],
+              "influence": [
+                [
+                  0.796,
+                  0.119,
+                  0.122
+                ],
+                [
+                  0.29,
+                  0.839,
+                  0.1
+                ],
+                [
+                  0.28,
+                  0.247,
+                  0.727
+                ]
+              ]
+            },
+            "pattern_matches": [
+              {
+                "id": "coordination_game",
+                "score": 0.764
+              },
+              {
+                "id": "stag_hunt_variant",
+                "score": 0.649
+              }
+            ],
+            "retrievals": [
+              {
+                "id": "https://kyivindependent.com/poland-launches-largest-military-drills-as-russia-belarus-hold-exercises/",
+                "title": "kyivindependent.com",
+                "url": "https://kyivindependent.com/poland-launches-largest-military-drills-as-russia-belarus-hold-exercises/"
+              },
+              {
+                "id": "https://abcnews.go.com/International/nato-scrambles-jets-russia-launches-500-drones-missiles/story?id=125206573",
+                "title": "abcnews.go.com",
+                "url": "https://abcnews.go.com/International/nato-scrambles-jets-russia-launches-500-drones-missiles/story?id=125206573"
+              },
+              {
+                "id": "https://www.understandingwar.org/backgrounder/russian-offensive-campaign-assessment-september-1-2025",
+                "title": "understandingwar.org",
+                "url": "https://www.understandingwar.org/backgrounder/russian-offensive-campaign-assessment-september-1-2025"
+              },
+              {
+                "id": "https://www.cfr.org/global-conflict-tracker/conflict/conflict-ukraine",
+                "title": "cfr.org",
+                "url": "https://www.cfr.org/global-conflict-tracker/conflict/conflict-ukraine"
+              },
+              {
+                "id": "https://www.criticalthreats.org/analysis/russian-offensive-campaign-assessment-september-2-2025",
+                "title": "criticalthreats.org",
+                "url": "https://www.criticalthreats.org/analysis/russian-offensive-campaign-assessment-september-2-2025"
+              }
+            ],
+            "retrieval_count": 5,
+            "processing_stats": {
+              "processing_time_ms": 14577,
+              "stability_score": 0.77
+            },
+            "provenance": {
+              "evidence_backed": true,
+              "retrieval_count": 5,
+              "model": "edge-mvp-1.0"
+            }
+          },
+          "mode": "standard"
+        },
+        "requestId": "test-2-1757076016999"
+      }
+    },
+    {
+      "scenario": "EU economic sanctions on Russian oligarchs",
+      "validation": {
+        "scenario": "EU economic sanctions on Russian oligarchs",
+        "passed": true,
+        "failures": [],
+        "metrics": {
+          "evidenceBacked": true
+        }
+      },
+      "result": {
+        "success": true,
+        "response": {
+          "ok": true,
+          "analysis": {
+            "scenario_text": "EU economic sanctions on Russian oligarchs",
+            "players": [
+              {
+                "id": "P1",
+                "name": "Alpha",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P2",
+                "name": "Beta",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P3",
+                "name": "Gamma",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              }
+            ],
+            "equilibrium": {
+              "profile": {
+                "P1": {
+                  "Cooperate": 0.504,
+                  "Defect": 0.496
+                },
+                "P2": {
+                  "Cooperate": 0.501,
+                  "Defect": 0.499
+                },
+                "P3": {
+                  "Cooperate": 0.494,
+                  "Defect": 0.506
+                }
+              },
+              "stability": 0.77,
+              "method": "recursive_best_response_mvp",
+              "convergenceIteration": 25,
+              "confidence": {
+                "lower": 0.67,
+                "upper": 0.87
+              }
+            },
+            "quantum": {
+              "collapsed": [
+                {
+                  "action": "Cooperate",
+                  "probability": 0.5
+                },
+                {
+                  "action": "Defect",
+                  "probability": 0.5
+                }
+              ],
+              "influence": [
+                [
+                  0.796,
+                  0.119,
+                  0.122
+                ],
+                [
+                  0.29,
+                  0.839,
+                  0.1
+                ],
+                [
+                  0.28,
+                  0.247,
+                  0.727
+                ]
+              ]
+            },
+            "pattern_matches": [
+              {
+                "id": "coordination_game",
+                "score": 0.764
+              },
+              {
+                "id": "stag_hunt_variant",
+                "score": 0.649
+              }
+            ],
+            "retrievals": [
+              {
+                "id": "https://www.rferl.org/a/eu-russia-sanctions-hungary-slovakia-pressure/33520501.html",
+                "title": "rferl.org",
+                "url": "https://www.rferl.org/a/eu-russia-sanctions-hungary-slovakia-pressure/33520501.html"
+              },
+              {
+                "id": "https://en.wikipedia.org/wiki/Russia%E2%80%93European_Union_relations",
+                "title": "en.wikipedia.org",
+                "url": "https://en.wikipedia.org/wiki/Russia%E2%80%93European_Union_relations"
+              },
+              {
+                "id": "https://newsukraine.rbc.ua/news/hungary-and-slovakia-ask-eu-to-lift-sanctions-1756940547.html",
+                "title": "newsukraine.rbc.ua",
+                "url": "https://newsukraine.rbc.ua/news/hungary-and-slovakia-ask-eu-to-lift-sanctions-1756940547.html"
+              },
+              {
+                "id": "https://www.ashurst.com/en/insights/russia-sanctions-tracker/uk-sanctions/",
+                "title": "ashurst.com",
+                "url": "https://www.ashurst.com/en/insights/russia-sanctions-tracker/uk-sanctions/"
+              },
+              {
+                "id": "https://united24media.com/latest-news/hungary-and-slovakia-push-eu-to-lift-sanctions-on-russian-oligarchs-ahead-of-renewal-deadline-11363",
+                "title": "united24media.com",
+                "url": "https://united24media.com/latest-news/hungary-and-slovakia-push-eu-to-lift-sanctions-on-russian-oligarchs-ahead-of-renewal-deadline-11363"
+              }
+            ],
+            "retrieval_count": 5,
+            "processing_stats": {
+              "processing_time_ms": 6143,
+              "stability_score": 0.77
+            },
+            "provenance": {
+              "evidence_backed": true,
+              "retrieval_count": 5,
+              "model": "edge-mvp-1.0"
+            }
+          },
+          "mode": "standard"
+        },
+        "requestId": "test-3-1757076034015"
+      }
+    },
+    {
+      "scenario": "Iran nuclear program development and international response",
+      "validation": {
+        "scenario": "Iran nuclear program development and international response",
+        "passed": true,
+        "failures": [],
+        "metrics": {
+          "evidenceBacked": true
+        }
+      },
+      "result": {
+        "success": true,
+        "response": {
+          "ok": true,
+          "analysis": {
+            "scenario_text": "Iran nuclear program development and international response",
+            "players": [
+              {
+                "id": "P1",
+                "name": "Alpha",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P2",
+                "name": "Beta",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P3",
+                "name": "Gamma",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              }
+            ],
+            "equilibrium": {
+              "profile": {
+                "P1": {
+                  "Cooperate": 0.504,
+                  "Defect": 0.496
+                },
+                "P2": {
+                  "Cooperate": 0.501,
+                  "Defect": 0.499
+                },
+                "P3": {
+                  "Cooperate": 0.494,
+                  "Defect": 0.506
+                }
+              },
+              "stability": 0.77,
+              "method": "recursive_best_response_mvp",
+              "convergenceIteration": 25,
+              "confidence": {
+                "lower": 0.67,
+                "upper": 0.87
+              }
+            },
+            "quantum": {
+              "collapsed": [
+                {
+                  "action": "Cooperate",
+                  "probability": 0.5
+                },
+                {
+                  "action": "Defect",
+                  "probability": 0.5
+                }
+              ],
+              "influence": [
+                [
+                  0.796,
+                  0.119,
+                  0.122
+                ],
+                [
+                  0.29,
+                  0.839,
+                  0.1
+                ],
+                [
+                  0.28,
+                  0.247,
+                  0.727
+                ]
+              ]
+            },
+            "pattern_matches": [
+              {
+                "id": "coordination_game",
+                "score": 0.764
+              },
+              {
+                "id": "stag_hunt_variant",
+                "score": 0.649
+              }
+            ],
+            "retrievals": [
+              {
+                "id": "https://www.csis.org/analysis/damage-irans-nuclear-program-can-it-rebuild",
+                "title": "csis.org",
+                "url": "https://www.csis.org/analysis/damage-irans-nuclear-program-can-it-rebuild"
+              },
+              {
+                "id": "https://en.wikipedia.org/wiki/United_States_strikes_on_Iranian_nuclear_sites",
+                "title": "en.wikipedia.org",
+                "url": "https://en.wikipedia.org/wiki/United_States_strikes_on_Iranian_nuclear_sites"
+              },
+              {
+                "id": "https://www.energypolicy.columbia.edu/back-to-basics-iran-sanctions-after-the-june-2025-conflict/",
+                "title": "energypolicy.columbia.edu",
+                "url": "https://www.energypolicy.columbia.edu/back-to-basics-iran-sanctions-after-the-june-2025-conflict/"
+              },
+              {
+                "id": "https://www.crisisgroup.org/trigger-list/iran-usisrael-trigger-list/flashpoints/tehran",
+                "title": "crisisgroup.org",
+                "url": "https://www.crisisgroup.org/trigger-list/iran-usisrael-trigger-list/flashpoints/tehran"
+              },
+              {
+                "id": "https://www.iris-france.org/en/iran-nuclear-deal-towards-a-reactivation-of-sanctions-against-tehran/",
+                "title": "iris-france.org",
+                "url": "https://www.iris-france.org/en/iran-nuclear-deal-towards-a-reactivation-of-sanctions-against-tehran/"
+              }
+            ],
+            "retrieval_count": 5,
+            "processing_stats": {
+              "processing_time_ms": 8583,
+              "stability_score": 0.77
+            },
+            "provenance": {
+              "evidence_backed": true,
+              "retrieval_count": 5,
+              "model": "edge-mvp-1.0"
+            }
+          },
+          "mode": "standard"
+        },
+        "requestId": "test-4-1757076042141"
+      }
+    },
+    {
+      "scenario": "North Korea missile testing and regional tensions",
+      "validation": {
+        "scenario": "North Korea missile testing and regional tensions",
+        "passed": true,
+        "failures": [],
+        "metrics": {
+          "evidenceBacked": true
+        }
+      },
+      "result": {
+        "success": true,
+        "response": {
+          "ok": true,
+          "analysis": {
+            "scenario_text": "North Korea missile testing and regional tensions",
+            "players": [
+              {
+                "id": "P1",
+                "name": "Alpha",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P2",
+                "name": "Beta",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P3",
+                "name": "Gamma",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              }
+            ],
+            "equilibrium": {
+              "profile": {
+                "P1": {
+                  "Cooperate": 0.504,
+                  "Defect": 0.496
+                },
+                "P2": {
+                  "Cooperate": 0.501,
+                  "Defect": 0.499
+                },
+                "P3": {
+                  "Cooperate": 0.494,
+                  "Defect": 0.506
+                }
+              },
+              "stability": 0.77,
+              "method": "recursive_best_response_mvp",
+              "convergenceIteration": 25,
+              "confidence": {
+                "lower": 0.67,
+                "upper": 0.87
+              }
+            },
+            "quantum": {
+              "collapsed": [
+                {
+                  "action": "Cooperate",
+                  "probability": 0.5
+                },
+                {
+                  "action": "Defect",
+                  "probability": 0.5
+                }
+              ],
+              "influence": [
+                [
+                  0.796,
+                  0.119,
+                  0.122
+                ],
+                [
+                  0.29,
+                  0.839,
+                  0.1
+                ],
+                [
+                  0.28,
+                  0.247,
+                  0.727
+                ]
+              ]
+            },
+            "pattern_matches": [
+              {
+                "id": "coordination_game",
+                "score": 0.764
+              },
+              {
+                "id": "stag_hunt_variant",
+                "score": 0.649
+              }
+            ],
+            "retrievals": [
+              {
+                "id": "https://abcnews.go.com/International/north-korea-test-fires-2-new-missiles-amid/story?id=124929065",
+                "title": "abcnews.go.com",
+                "url": "https://abcnews.go.com/International/north-korea-test-fires-2-new-missiles-amid/story?id=124929065"
+              },
+              {
+                "id": "https://www.taxtmi.com/news?id=38021",
+                "title": "taxtmi.com",
+                "url": "https://www.taxtmi.com/news?id=38021"
+              },
+              {
+                "id": "https://beyondparallel.csis.org/undeclared-north-korea-sinpung-dong-missile-operating-base/",
+                "title": "beyondparallel.csis.org",
+                "url": "https://beyondparallel.csis.org/undeclared-north-korea-sinpung-dong-missile-operating-base/"
+              },
+              {
+                "id": "https://www.tiktok.com/@dailymail/video/7541100804271263031",
+                "title": "tiktok.com",
+                "url": "https://www.tiktok.com/@dailymail/video/7541100804271263031"
+              },
+              {
+                "id": "https://www.nknews.org/?p=960344",
+                "title": "nknews.org",
+                "url": "https://www.nknews.org/?p=960344"
+              }
+            ],
+            "retrieval_count": 5,
+            "processing_stats": {
+              "processing_time_ms": 11280,
+              "stability_score": 0.77
+            },
+            "provenance": {
+              "evidence_backed": true,
+              "retrieval_count": 5,
+              "model": "edge-mvp-1.0"
+            }
+          },
+          "mode": "standard"
+        },
+        "requestId": "test-5-1757076053066"
+      }
+    },
+    {
+      "scenario": "Taiwan Strait naval incidents and Chinese ADIZ enforcement",
+      "validation": {
+        "scenario": "Taiwan Strait naval incidents and Chinese ADIZ enforcement",
+        "passed": true,
+        "failures": [],
+        "metrics": {
+          "evidenceBacked": false
+        }
+      },
+      "result": {
+        "success": true,
+        "response": {
+          "ok": true,
+          "analysis": {
+            "scenario_text": "Taiwan Strait naval incidents and Chinese ADIZ enforcement",
+            "players": [
+              {
+                "id": "P1",
+                "name": "Alpha",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P2",
+                "name": "Beta",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P3",
+                "name": "Gamma",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              }
+            ],
+            "equilibrium": {
+              "profile": {
+                "P1": {
+                  "Cooperate": 0.504,
+                  "Defect": 0.496
+                },
+                "P2": {
+                  "Cooperate": 0.501,
+                  "Defect": 0.499
+                },
+                "P3": {
+                  "Cooperate": 0.494,
+                  "Defect": 0.506
+                }
+              },
+              "stability": 0.77,
+              "method": "recursive_best_response_mvp",
+              "convergenceIteration": 25,
+              "confidence": {
+                "lower": 0.67,
+                "upper": 0.87
+              }
+            },
+            "quantum": {
+              "collapsed": [
+                {
+                  "action": "Cooperate",
+                  "probability": 0.5
+                },
+                {
+                  "action": "Defect",
+                  "probability": 0.5
+                }
+              ],
+              "influence": [
+                [
+                  0.796,
+                  0.119,
+                  0.122
+                ],
+                [
+                  0.29,
+                  0.839,
+                  0.1
+                ],
+                [
+                  0.28,
+                  0.247,
+                  0.727
+                ]
+              ]
+            },
+            "pattern_matches": [
+              {
+                "id": "coordination_game",
+                "score": 0.764
+              },
+              {
+                "id": "stag_hunt_variant",
+                "score": 0.649
+              }
+            ],
+            "retrievals": [],
+            "retrieval_count": 0,
+            "processing_stats": {
+              "processing_time_ms": 15018,
+              "stability_score": 0.77
+            },
+            "provenance": {
+              "evidence_backed": false,
+              "retrieval_count": 0,
+              "model": "edge-mvp-1.0",
+              "warning": "retrieval timeout"
+            }
+          },
+          "mode": "standard"
+        },
+        "requestId": "test-6-1757076066293"
+      }
+    },
+    {
+      "scenario": "Middle East oil pipeline disruptions from Yemen conflict",
+      "validation": {
+        "scenario": "Middle East oil pipeline disruptions from Yemen conflict",
+        "passed": true,
+        "failures": [],
+        "metrics": {
+          "evidenceBacked": true
+        }
+      },
+      "result": {
+        "success": true,
+        "response": {
+          "ok": true,
+          "analysis": {
+            "scenario_text": "Middle East oil pipeline disruptions from Yemen conflict",
+            "players": [
+              {
+                "id": "P1",
+                "name": "Alpha",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P2",
+                "name": "Beta",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P3",
+                "name": "Gamma",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              }
+            ],
+            "equilibrium": {
+              "profile": {
+                "P1": {
+                  "Cooperate": 0.504,
+                  "Defect": 0.496
+                },
+                "P2": {
+                  "Cooperate": 0.501,
+                  "Defect": 0.499
+                },
+                "P3": {
+                  "Cooperate": 0.494,
+                  "Defect": 0.506
+                }
+              },
+              "stability": 0.77,
+              "method": "recursive_best_response_mvp",
+              "convergenceIteration": 25,
+              "confidence": {
+                "lower": 0.67,
+                "upper": 0.87
+              }
+            },
+            "quantum": {
+              "collapsed": [
+                {
+                  "action": "Cooperate",
+                  "probability": 0.5
+                },
+                {
+                  "action": "Defect",
+                  "probability": 0.5
+                }
+              ],
+              "influence": [
+                [
+                  0.796,
+                  0.119,
+                  0.122
+                ],
+                [
+                  0.29,
+                  0.839,
+                  0.1
+                ],
+                [
+                  0.28,
+                  0.247,
+                  0.727
+                ]
+              ]
+            },
+            "pattern_matches": [
+              {
+                "id": "coordination_game",
+                "score": 0.764
+              },
+              {
+                "id": "stag_hunt_variant",
+                "score": 0.649
+              }
+            ],
+            "retrievals": [
+              {
+                "id": "https://www.aa.com.tr/en/energy/oil/yemen-s-houthi-controlled-areas-facing-oil-crisis/29583",
+                "title": "aa.com.tr",
+                "url": "https://www.aa.com.tr/en/energy/oil/yemen-s-houthi-controlled-areas-facing-oil-crisis/29583"
+              },
+              {
+                "id": "https://www.arabnews.com/node/2577909/middle-east",
+                "title": "arabnews.com",
+                "url": "https://www.arabnews.com/node/2577909/middle-east"
+              },
+              {
+                "id": "https://energynews.pro/en/houthi-missile-damages-oil-tanker-off-yemen/",
+                "title": "energynews.pro",
+                "url": "https://energynews.pro/en/houthi-missile-damages-oil-tanker-off-yemen/"
+              },
+              {
+                "id": "https://www.waterjusticeinpalestine.org/blog/2025/8/27/urgent-health-update-consequences-of-war-on-gaza-west-bankeast-jerusalem",
+                "title": "waterjusticeinpalestine.org",
+                "url": "https://www.waterjusticeinpalestine.org/blog/2025/8/27/urgent-health-update-consequences-of-war-on-gaza-west-bankeast-jerusalem"
+              },
+              {
+                "id": "https://www.arabnews.com/node/2597524/middle-east",
+                "title": "arabnews.com",
+                "url": "https://www.arabnews.com/node/2597524/middle-east"
+              }
+            ],
+            "retrieval_count": 5,
+            "processing_stats": {
+              "processing_time_ms": 13981,
+              "stability_score": 0.77
+            },
+            "provenance": {
+              "evidence_backed": true,
+              "retrieval_count": 5,
+              "model": "edge-mvp-1.0"
+            }
+          },
+          "mode": "standard"
+        },
+        "requestId": "test-7-1757076083267"
+      }
+    },
+    {
+      "scenario": "India-Pakistan border skirmishes in Kashmir",
+      "validation": {
+        "scenario": "India-Pakistan border skirmishes in Kashmir",
+        "passed": true,
+        "failures": [],
+        "metrics": {
+          "evidenceBacked": true
+        }
+      },
+      "result": {
+        "success": true,
+        "response": {
+          "ok": true,
+          "analysis": {
+            "scenario_text": "India-Pakistan border skirmishes in Kashmir",
+            "players": [
+              {
+                "id": "P1",
+                "name": "Alpha",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P2",
+                "name": "Beta",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P3",
+                "name": "Gamma",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              }
+            ],
+            "equilibrium": {
+              "profile": {
+                "P1": {
+                  "Cooperate": 0.504,
+                  "Defect": 0.496
+                },
+                "P2": {
+                  "Cooperate": 0.501,
+                  "Defect": 0.499
+                },
+                "P3": {
+                  "Cooperate": 0.494,
+                  "Defect": 0.506
+                }
+              },
+              "stability": 0.77,
+              "method": "recursive_best_response_mvp",
+              "convergenceIteration": 25,
+              "confidence": {
+                "lower": 0.67,
+                "upper": 0.87
+              }
+            },
+            "quantum": {
+              "collapsed": [
+                {
+                  "action": "Cooperate",
+                  "probability": 0.5
+                },
+                {
+                  "action": "Defect",
+                  "probability": 0.5
+                }
+              ],
+              "influence": [
+                [
+                  0.796,
+                  0.119,
+                  0.122
+                ],
+                [
+                  0.29,
+                  0.839,
+                  0.1
+                ],
+                [
+                  0.28,
+                  0.247,
+                  0.727
+                ]
+              ]
+            },
+            "pattern_matches": [
+              {
+                "id": "coordination_game",
+                "score": 0.764
+              },
+              {
+                "id": "stag_hunt_variant",
+                "score": 0.649
+              }
+            ],
+            "retrievals": [
+              {
+                "id": "https://pppescp.com/2025/08/13/the-difficult-india-pakistan-relationship-a-historical-overview/",
+                "title": "pppescp.com",
+                "url": "https://pppescp.com/2025/08/13/the-difficult-india-pakistan-relationship-a-historical-overview/"
+              },
+              {
+                "id": "https://subscriber.politicopro.com/article/eenews/2025/08/27/floods-leave-34-dead-in-kashmir-over-200-000-in-pakistan-displaced-00528545",
+                "title": "subscriber.politicopro.com",
+                "url": "https://subscriber.politicopro.com/article/eenews/2025/08/27/floods-leave-34-dead-in-kashmir-over-200-000-in-pakistan-displaced-00528545"
+              },
+              {
+                "id": "https://untoldmag.org/kashmir-war-impact/",
+                "title": "untoldmag.org",
+                "url": "https://untoldmag.org/kashmir-war-impact/"
+              },
+              {
+                "id": "https://www.arabnews.com/node/2600241/world",
+                "title": "arabnews.com",
+                "url": "https://www.arabnews.com/node/2600241/world"
+              },
+              {
+                "id": "https://www.gzeromedia.com/news/analysis/three-months-since-the-kashmir-conflict-is-it-pakistans-moment",
+                "title": "gzeromedia.com",
+                "url": "https://www.gzeromedia.com/news/analysis/three-months-since-the-kashmir-conflict-is-it-pakistans-moment"
+              }
+            ],
+            "retrieval_count": 5,
+            "processing_stats": {
+              "processing_time_ms": 7271,
+              "stability_score": 0.77
+            },
+            "provenance": {
+              "evidence_backed": true,
+              "retrieval_count": 5,
+              "model": "edge-mvp-1.0"
+            }
+          },
+          "mode": "standard"
+        },
+        "requestId": "test-8-1757076099146"
+      }
+    },
+    {
+      "scenario": "NATO expansion into Eastern Europe",
+      "validation": {
+        "scenario": "NATO expansion into Eastern Europe",
+        "passed": true,
+        "failures": [],
+        "metrics": {
+          "evidenceBacked": true
+        }
+      },
+      "result": {
+        "success": true,
+        "response": {
+          "ok": true,
+          "analysis": {
+            "scenario_text": "NATO expansion into Eastern Europe",
+            "players": [
+              {
+                "id": "P1",
+                "name": "Alpha",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P2",
+                "name": "Beta",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P3",
+                "name": "Gamma",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              }
+            ],
+            "equilibrium": {
+              "profile": {
+                "P1": {
+                  "Cooperate": 0.504,
+                  "Defect": 0.496
+                },
+                "P2": {
+                  "Cooperate": 0.501,
+                  "Defect": 0.499
+                },
+                "P3": {
+                  "Cooperate": 0.494,
+                  "Defect": 0.506
+                }
+              },
+              "stability": 0.77,
+              "method": "recursive_best_response_mvp",
+              "convergenceIteration": 25,
+              "confidence": {
+                "lower": 0.67,
+                "upper": 0.87
+              }
+            },
+            "quantum": {
+              "collapsed": [
+                {
+                  "action": "Cooperate",
+                  "probability": 0.5
+                },
+                {
+                  "action": "Defect",
+                  "probability": 0.5
+                }
+              ],
+              "influence": [
+                [
+                  0.796,
+                  0.119,
+                  0.122
+                ],
+                [
+                  0.29,
+                  0.839,
+                  0.1
+                ],
+                [
+                  0.28,
+                  0.247,
+                  0.727
+                ]
+              ]
+            },
+            "pattern_matches": [
+              {
+                "id": "coordination_game",
+                "score": 0.764
+              },
+              {
+                "id": "stag_hunt_variant",
+                "score": 0.649
+              }
+            ],
+            "retrievals": [
+              {
+                "id": "https://atlasinstitute.org/the-impact-of-nato-enlargement-to-eastern-europe-on-us-russia-relations/",
+                "title": "atlasinstitute.org",
+                "url": "https://atlasinstitute.org/the-impact-of-nato-enlargement-to-eastern-europe-on-us-russia-relations/"
+              },
+              {
+                "id": "https://en.wikipedia.org/wiki/Russia%E2%80%93NATO_relations",
+                "title": "en.wikipedia.org",
+                "url": "https://en.wikipedia.org/wiki/Russia%E2%80%93NATO_relations"
+              },
+              {
+                "id": "https://www.heritage.org/defense/report/the-2025-nato-summit",
+                "title": "heritage.org",
+                "url": "https://www.heritage.org/defense/report/the-2025-nato-summit"
+              },
+              {
+                "id": "https://journals.sagepub.com/doi/10.1177/14651165251367355",
+                "title": "journals.sagepub.com",
+                "url": "https://journals.sagepub.com/doi/10.1177/14651165251367355"
+              },
+              {
+                "id": "https://www.wsws.org/en/articles/2025/08/29/nato-a29.html",
+                "title": "wsws.org",
+                "url": "https://www.wsws.org/en/articles/2025/08/29/nato-a29.html"
+              }
+            ],
+            "retrieval_count": 5,
+            "processing_stats": {
+              "processing_time_ms": 11210,
+              "stability_score": 0.77
+            },
+            "provenance": {
+              "evidence_backed": true,
+              "retrieval_count": 5,
+              "model": "edge-mvp-1.0"
+            }
+          },
+          "mode": "standard"
+        },
+        "requestId": "test-9-1757076108229"
+      }
+    },
+    {
+      "scenario": "South China Sea territorial disputes involving Philippines",
+      "validation": {
+        "scenario": "South China Sea territorial disputes involving Philippines",
+        "passed": true,
+        "failures": [],
+        "metrics": {
+          "evidenceBacked": true
+        }
+      },
+      "result": {
+        "success": true,
+        "response": {
+          "ok": true,
+          "analysis": {
+            "scenario_text": "South China Sea territorial disputes involving Philippines",
+            "players": [
+              {
+                "id": "P1",
+                "name": "Alpha",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P2",
+                "name": "Beta",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P3",
+                "name": "Gamma",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              }
+            ],
+            "equilibrium": {
+              "profile": {
+                "P1": {
+                  "Cooperate": 0.504,
+                  "Defect": 0.496
+                },
+                "P2": {
+                  "Cooperate": 0.501,
+                  "Defect": 0.499
+                },
+                "P3": {
+                  "Cooperate": 0.494,
+                  "Defect": 0.506
+                }
+              },
+              "stability": 0.77,
+              "method": "recursive_best_response_mvp",
+              "convergenceIteration": 25,
+              "confidence": {
+                "lower": 0.67,
+                "upper": 0.87
+              }
+            },
+            "quantum": {
+              "collapsed": [
+                {
+                  "action": "Cooperate",
+                  "probability": 0.5
+                },
+                {
+                  "action": "Defect",
+                  "probability": 0.5
+                }
+              ],
+              "influence": [
+                [
+                  0.796,
+                  0.119,
+                  0.122
+                ],
+                [
+                  0.29,
+                  0.839,
+                  0.1
+                ],
+                [
+                  0.28,
+                  0.247,
+                  0.727
+                ]
+              ]
+            },
+            "pattern_matches": [
+              {
+                "id": "coordination_game",
+                "score": 0.764
+              },
+              {
+                "id": "stag_hunt_variant",
+                "score": 0.649
+              }
+            ],
+            "retrievals": [
+              {
+                "id": "https://asiatimes.com/2025/09/philippines-flexes-middle-power-clout-in-china-sea-dispute/",
+                "title": "asiatimes.com",
+                "url": "https://asiatimes.com/2025/09/philippines-flexes-middle-power-clout-in-china-sea-dispute/"
+              },
+              {
+                "id": "https://en.wikipedia.org/wiki/Scarborough_Shoal_standoff",
+                "title": "en.wikipedia.org",
+                "url": "https://en.wikipedia.org/wiki/Scarborough_Shoal_standoff"
+              },
+              {
+                "id": "https://www.lowyinstitute.org/the-interpreter/south-china-sea-collision-brings-us-philippines-alliance-fore",
+                "title": "lowyinstitute.org",
+                "url": "https://www.lowyinstitute.org/the-interpreter/south-china-sea-collision-brings-us-philippines-alliance-fore"
+              },
+              {
+                "id": "https://www.military.com/daily-news/2025/08/22/philippines-condemns-chinas-swarm-of-forces-near-disputed-shoal-and-vows-defend-territory.html",
+                "title": "military.com",
+                "url": "https://www.military.com/daily-news/2025/08/22/philippines-condemns-chinas-swarm-of-forces-near-disputed-shoal-and-vows-defend-territory.html"
+              },
+              {
+                "id": "https://en.wikipedia.org/wiki/Territorial_disputes_in_the_South_China_Sea",
+                "title": "en.wikipedia.org",
+                "url": "https://en.wikipedia.org/wiki/Territorial_disputes_in_the_South_China_Sea"
+              }
+            ],
+            "retrieval_count": 5,
+            "processing_stats": {
+              "processing_time_ms": 7168,
+              "stability_score": 0.77
+            },
+            "provenance": {
+              "evidence_backed": true,
+              "retrieval_count": 5,
+              "model": "edge-mvp-1.0"
+            }
+          },
+          "mode": "standard"
+        },
+        "requestId": "test-10-1757076121317"
+      }
+    },
+    {
+      "scenario": "Venezuelan oil crisis and U.S. sanctions implications",
+      "validation": {
+        "scenario": "Venezuelan oil crisis and U.S. sanctions implications",
+        "passed": true,
+        "failures": [],
+        "metrics": {
+          "evidenceBacked": true
+        }
+      },
+      "result": {
+        "success": true,
+        "response": {
+          "ok": true,
+          "analysis": {
+            "scenario_text": "Venezuelan oil crisis and U.S. sanctions implications",
+            "players": [
+              {
+                "id": "P1",
+                "name": "Alpha",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P2",
+                "name": "Beta",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P3",
+                "name": "Gamma",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              }
+            ],
+            "equilibrium": {
+              "profile": {
+                "P1": {
+                  "Cooperate": 0.504,
+                  "Defect": 0.496
+                },
+                "P2": {
+                  "Cooperate": 0.501,
+                  "Defect": 0.499
+                },
+                "P3": {
+                  "Cooperate": 0.494,
+                  "Defect": 0.506
+                }
+              },
+              "stability": 0.77,
+              "method": "recursive_best_response_mvp",
+              "convergenceIteration": 25,
+              "confidence": {
+                "lower": 0.67,
+                "upper": 0.87
+              }
+            },
+            "quantum": {
+              "collapsed": [
+                {
+                  "action": "Cooperate",
+                  "probability": 0.5
+                },
+                {
+                  "action": "Defect",
+                  "probability": 0.5
+                }
+              ],
+              "influence": [
+                [
+                  0.796,
+                  0.119,
+                  0.122
+                ],
+                [
+                  0.29,
+                  0.839,
+                  0.1
+                ],
+                [
+                  0.28,
+                  0.247,
+                  0.727
+                ]
+              ]
+            },
+            "pattern_matches": [
+              {
+                "id": "coordination_game",
+                "score": 0.764
+              },
+              {
+                "id": "stag_hunt_variant",
+                "score": 0.649
+              }
+            ],
+            "retrievals": [
+              {
+                "id": "https://atlasinstitute.org/sanctions-to-warships-american-mobilisation-near-venezuela/",
+                "title": "atlasinstitute.org",
+                "url": "https://atlasinstitute.org/sanctions-to-warships-american-mobilisation-near-venezuela/"
+              },
+              {
+                "id": "https://en.wikipedia.org/wiki/United_States%E2%80%93Venezuela_relations",
+                "title": "en.wikipedia.org",
+                "url": "https://en.wikipedia.org/wiki/United_States%E2%80%93Venezuela_relations"
+              },
+              {
+                "id": "https://discoveryalert.com.au/news/venezuelan-crude-oil-us-market-2025/",
+                "title": "discoveryalert.com.au",
+                "url": "https://discoveryalert.com.au/news/venezuelan-crude-oil-us-market-2025/"
+              },
+              {
+                "id": "https://www.markets.com/news/cryptocurrency-venezuela-economic-lifeline-819-en-EU",
+                "title": "markets.com",
+                "url": "https://www.markets.com/news/cryptocurrency-venezuela-economic-lifeline-819-en-EU"
+              },
+              {
+                "id": "https://www.wsws.org/en/articles/2025/08/31/ibzg-a31.html",
+                "title": "wsws.org",
+                "url": "https://www.wsws.org/en/articles/2025/08/31/ibzg-a31.html"
+              }
+            ],
+            "retrieval_count": 5,
+            "processing_stats": {
+              "processing_time_ms": 8732,
+              "stability_score": 0.77
+            },
+            "provenance": {
+              "evidence_backed": true,
+              "retrieval_count": 5,
+              "model": "edge-mvp-1.0"
+            }
+          },
+          "mode": "standard"
+        },
+        "requestId": "test-11-1757076130172"
+      }
+    },
+    {
+      "scenario": "Israeli-Palestinian Gaza border conflicts",
+      "validation": {
+        "scenario": "Israeli-Palestinian Gaza border conflicts",
+        "passed": true,
+        "failures": [],
+        "metrics": {
+          "evidenceBacked": true
+        }
+      },
+      "result": {
+        "success": true,
+        "response": {
+          "ok": true,
+          "analysis": {
+            "scenario_text": "Israeli-Palestinian Gaza border conflicts",
+            "players": [
+              {
+                "id": "P1",
+                "name": "Alpha",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P2",
+                "name": "Beta",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P3",
+                "name": "Gamma",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              }
+            ],
+            "equilibrium": {
+              "profile": {
+                "P1": {
+                  "Cooperate": 0.504,
+                  "Defect": 0.496
+                },
+                "P2": {
+                  "Cooperate": 0.501,
+                  "Defect": 0.499
+                },
+                "P3": {
+                  "Cooperate": 0.494,
+                  "Defect": 0.506
+                }
+              },
+              "stability": 0.77,
+              "method": "recursive_best_response_mvp",
+              "convergenceIteration": 25,
+              "confidence": {
+                "lower": 0.67,
+                "upper": 0.87
+              }
+            },
+            "quantum": {
+              "collapsed": [
+                {
+                  "action": "Cooperate",
+                  "probability": 0.5
+                },
+                {
+                  "action": "Defect",
+                  "probability": 0.5
+                }
+              ],
+              "influence": [
+                [
+                  0.796,
+                  0.119,
+                  0.122
+                ],
+                [
+                  0.29,
+                  0.839,
+                  0.1
+                ],
+                [
+                  0.28,
+                  0.247,
+                  0.727
+                ]
+              ]
+            },
+            "pattern_matches": [
+              {
+                "id": "coordination_game",
+                "score": 0.764
+              },
+              {
+                "id": "stag_hunt_variant",
+                "score": 0.649
+              }
+            ],
+            "retrievals": [
+              {
+                "id": "https://en.wikipedia.org/wiki/2025_Gaza_war_ceasefire",
+                "title": "en.wikipedia.org",
+                "url": "https://en.wikipedia.org/wiki/2025_Gaza_war_ceasefire"
+              },
+              {
+                "id": "https://en.wikipedia.org/wiki/Gaza%E2%80%93Israel_conflict",
+                "title": "en.wikipedia.org",
+                "url": "https://en.wikipedia.org/wiki/Gaza%E2%80%93Israel_conflict"
+              },
+              {
+                "id": "https://news.un.org/en/story/2025/08/1165619",
+                "title": "news.un.org",
+                "url": "https://news.un.org/en/story/2025/08/1165619"
+              },
+              {
+                "id": "https://www.un.org/unispal/document/ocha-sitrep-gaza-28aug25/",
+                "title": "un.org",
+                "url": "https://www.un.org/unispal/document/ocha-sitrep-gaza-28aug25/"
+              },
+              {
+                "id": "https://www.rescue.org/crisis-in-gaza",
+                "title": "rescue.org",
+                "url": "https://www.rescue.org/crisis-in-gaza"
+              }
+            ],
+            "retrieval_count": 5,
+            "processing_stats": {
+              "processing_time_ms": 6374,
+              "stability_score": 0.77
+            },
+            "provenance": {
+              "evidence_backed": true,
+              "retrieval_count": 5,
+              "model": "edge-mvp-1.0"
+            }
+          },
+          "mode": "standard"
+        },
+        "requestId": "test-12-1757076141077"
+      }
+    },
+    {
+      "scenario": "Afghanistan Taliban government recognition and aid strategies",
+      "validation": {
+        "scenario": "Afghanistan Taliban government recognition and aid strategies",
+        "passed": true,
+        "failures": [],
+        "metrics": {
+          "evidenceBacked": true
+        }
+      },
+      "result": {
+        "success": true,
+        "response": {
+          "ok": true,
+          "analysis": {
+            "scenario_text": "Afghanistan Taliban government recognition and aid strategies",
+            "players": [
+              {
+                "id": "P1",
+                "name": "Alpha",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P2",
+                "name": "Beta",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P3",
+                "name": "Gamma",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              }
+            ],
+            "equilibrium": {
+              "profile": {
+                "P1": {
+                  "Cooperate": 0.504,
+                  "Defect": 0.496
+                },
+                "P2": {
+                  "Cooperate": 0.501,
+                  "Defect": 0.499
+                },
+                "P3": {
+                  "Cooperate": 0.494,
+                  "Defect": 0.506
+                }
+              },
+              "stability": 0.77,
+              "method": "recursive_best_response_mvp",
+              "convergenceIteration": 25,
+              "confidence": {
+                "lower": 0.67,
+                "upper": 0.87
+              }
+            },
+            "quantum": {
+              "collapsed": [
+                {
+                  "action": "Cooperate",
+                  "probability": 0.5
+                },
+                {
+                  "action": "Defect",
+                  "probability": 0.5
+                }
+              ],
+              "influence": [
+                [
+                  0.796,
+                  0.119,
+                  0.122
+                ],
+                [
+                  0.29,
+                  0.839,
+                  0.1
+                ],
+                [
+                  0.28,
+                  0.247,
+                  0.727
+                ]
+              ]
+            },
+            "pattern_matches": [
+              {
+                "id": "coordination_game",
+                "score": 0.764
+              },
+              {
+                "id": "stag_hunt_variant",
+                "score": 0.649
+              }
+            ],
+            "retrievals": [
+              {
+                "id": "https://en.wikipedia.org/wiki/International_relations_with_the_Taliban",
+                "title": "en.wikipedia.org",
+                "url": "https://en.wikipedia.org/wiki/International_relations_with_the_Taliban"
+              },
+              {
+                "id": "https://www.britannica.com/event/Afghanistan-War",
+                "title": "britannica.com",
+                "url": "https://www.britannica.com/event/Afghanistan-War"
+              },
+              {
+                "id": "https://www.lowyinstitute.org/the-interpreter/russia-central-asia-are-quietly-embracing-taliban",
+                "title": "lowyinstitute.org",
+                "url": "https://www.lowyinstitute.org/the-interpreter/russia-central-asia-are-quietly-embracing-taliban"
+              },
+              {
+                "id": "https://law.justia.com/cases/federal/appellate-courts/ca2/23-258/23-258-2025-08-26.html",
+                "title": "law.justia.com",
+                "url": "https://law.justia.com/cases/federal/appellate-courts/ca2/23-258/23-258-2025-08-26.html"
+              },
+              {
+                "id": "https://www.gov.uk/government/publications/afghanistan-country-policy-and-information-notes/country-policy-and-information-note-fear-of-the-taliban-afghanistan-august-2025-accessible",
+                "title": "gov.uk",
+                "url": "https://www.gov.uk/government/publications/afghanistan-country-policy-and-information-notes/country-policy-and-information-note-fear-of-the-taliban-afghanistan-august-2025-accessible"
+              }
+            ],
+            "retrieval_count": 5,
+            "processing_stats": {
+              "processing_time_ms": 8122,
+              "stability_score": 0.77
+            },
+            "provenance": {
+              "evidence_backed": true,
+              "retrieval_count": 5,
+              "model": "edge-mvp-1.0"
+            }
+          },
+          "mode": "standard"
+        },
+        "requestId": "test-13-1757076149094"
+      }
+    },
+    {
+      "scenario": "Syrian civil war humanitarian crisis and refugee flows",
+      "validation": {
+        "scenario": "Syrian civil war humanitarian crisis and refugee flows",
+        "passed": true,
+        "failures": [],
+        "metrics": {
+          "evidenceBacked": false
+        }
+      },
+      "result": {
+        "success": true,
+        "response": {
+          "ok": true,
+          "analysis": {
+            "scenario_text": "Syrian civil war humanitarian crisis and refugee flows",
+            "players": [
+              {
+                "id": "P1",
+                "name": "Alpha",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P2",
+                "name": "Beta",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P3",
+                "name": "Gamma",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              }
+            ],
+            "equilibrium": {
+              "profile": {
+                "P1": {
+                  "Cooperate": 0.504,
+                  "Defect": 0.496
+                },
+                "P2": {
+                  "Cooperate": 0.501,
+                  "Defect": 0.499
+                },
+                "P3": {
+                  "Cooperate": 0.494,
+                  "Defect": 0.506
+                }
+              },
+              "stability": 0.77,
+              "method": "recursive_best_response_mvp",
+              "convergenceIteration": 25,
+              "confidence": {
+                "lower": 0.67,
+                "upper": 0.87
+              }
+            },
+            "quantum": {
+              "collapsed": [
+                {
+                  "action": "Cooperate",
+                  "probability": 0.5
+                },
+                {
+                  "action": "Defect",
+                  "probability": 0.5
+                }
+              ],
+              "influence": [
+                [
+                  0.796,
+                  0.119,
+                  0.122
+                ],
+                [
+                  0.29,
+                  0.839,
+                  0.1
+                ],
+                [
+                  0.28,
+                  0.247,
+                  0.727
+                ]
+              ]
+            },
+            "pattern_matches": [
+              {
+                "id": "coordination_game",
+                "score": 0.764
+              },
+              {
+                "id": "stag_hunt_variant",
+                "score": 0.649
+              }
+            ],
+            "retrievals": [],
+            "retrieval_count": 0,
+            "processing_stats": {
+              "processing_time_ms": 15016,
+              "stability_score": 0.77
+            },
+            "provenance": {
+              "evidence_backed": false,
+              "retrieval_count": 0,
+              "model": "edge-mvp-1.0",
+              "warning": "retrieval timeout"
+            }
+          },
+          "mode": "standard"
+        },
+        "requestId": "test-14-1757076159033"
+      }
+    },
+    {
+      "scenario": "US withdrawal from INF Treaty and Russian response",
+      "validation": {
+        "scenario": "US withdrawal from INF Treaty and Russian response",
+        "passed": true,
+        "failures": [],
+        "metrics": {
+          "evidenceBacked": true
+        }
+      },
+      "result": {
+        "success": true,
+        "response": {
+          "ok": true,
+          "analysis": {
+            "scenario_text": "US withdrawal from INF Treaty and Russian response",
+            "players": [
+              {
+                "id": "P1",
+                "name": "Alpha",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P2",
+                "name": "Beta",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P3",
+                "name": "Gamma",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              }
+            ],
+            "equilibrium": {
+              "profile": {
+                "P1": {
+                  "Cooperate": 0.504,
+                  "Defect": 0.496
+                },
+                "P2": {
+                  "Cooperate": 0.501,
+                  "Defect": 0.499
+                },
+                "P3": {
+                  "Cooperate": 0.494,
+                  "Defect": 0.506
+                }
+              },
+              "stability": 0.77,
+              "method": "recursive_best_response_mvp",
+              "convergenceIteration": 25,
+              "confidence": {
+                "lower": 0.67,
+                "upper": 0.87
+              }
+            },
+            "quantum": {
+              "collapsed": [
+                {
+                  "action": "Cooperate",
+                  "probability": 0.5
+                },
+                {
+                  "action": "Defect",
+                  "probability": 0.5
+                }
+              ],
+              "influence": [
+                [
+                  0.796,
+                  0.119,
+                  0.122
+                ],
+                [
+                  0.29,
+                  0.839,
+                  0.1
+                ],
+                [
+                  0.28,
+                  0.247,
+                  0.727
+                ]
+              ]
+            },
+            "pattern_matches": [
+              {
+                "id": "coordination_game",
+                "score": 0.764
+              },
+              {
+                "id": "stag_hunt_variant",
+                "score": 0.649
+              }
+            ],
+            "retrievals": [
+              {
+                "id": "https://www.csis.org/analysis/what-trumps-submarine-threat-and-russias-inf-exit-really-mean",
+                "title": "csis.org",
+                "url": "https://www.csis.org/analysis/what-trumps-submarine-threat-and-russias-inf-exit-really-mean"
+              },
+              {
+                "id": "https://www.civilsdaily.com/story/russian-invasion-of-ukraine-global-implications/",
+                "title": "civilsdaily.com",
+                "url": "https://www.civilsdaily.com/story/russian-invasion-of-ukraine-global-implications/"
+              },
+              {
+                "id": "https://www.port.ac.uk/news-events-and-blogs/blogs/academic-expertise/russias-decision-to-pull-out-of-nuclear-treaty-makes-the-world-more-dangerous",
+                "title": "port.ac.uk",
+                "url": "https://www.port.ac.uk/news-events-and-blogs/blogs/academic-expertise/russias-decision-to-pull-out-of-nuclear-treaty-makes-the-world-more-dangerous"
+              },
+              {
+                "id": "https://en.wikipedia.org/wiki/Russia%E2%80%93NATO_relations",
+                "title": "en.wikipedia.org",
+                "url": "https://en.wikipedia.org/wiki/Russia%E2%80%93NATO_relations"
+              },
+              {
+                "id": "https://sanonofresyndrome.com/nuclear-news/international-day-against-nuclear-tests",
+                "title": "sanonofresyndrome.com",
+                "url": "https://sanonofresyndrome.com/nuclear-news/international-day-against-nuclear-tests"
+              }
+            ],
+            "retrieval_count": 5,
+            "processing_stats": {
+              "processing_time_ms": 8990,
+              "stability_score": 0.77
+            },
+            "provenance": {
+              "evidence_backed": true,
+              "retrieval_count": 5,
+              "model": "edge-mvp-1.0"
+            }
+          },
+          "mode": "standard"
+        },
+        "requestId": "test-15-1757076176591"
+      }
+    },
+    {
+      "scenario": "Chinese Belt and Road Initiative in Central Asia",
+      "validation": {
+        "scenario": "Chinese Belt and Road Initiative in Central Asia",
+        "passed": true,
+        "failures": [],
+        "metrics": {
+          "evidenceBacked": true
+        }
+      },
+      "result": {
+        "success": true,
+        "response": {
+          "ok": true,
+          "analysis": {
+            "scenario_text": "Chinese Belt and Road Initiative in Central Asia",
+            "players": [
+              {
+                "id": "P1",
+                "name": "Alpha",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P2",
+                "name": "Beta",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P3",
+                "name": "Gamma",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              }
+            ],
+            "equilibrium": {
+              "profile": {
+                "P1": {
+                  "Cooperate": 0.504,
+                  "Defect": 0.496
+                },
+                "P2": {
+                  "Cooperate": 0.501,
+                  "Defect": 0.499
+                },
+                "P3": {
+                  "Cooperate": 0.494,
+                  "Defect": 0.506
+                }
+              },
+              "stability": 0.77,
+              "method": "recursive_best_response_mvp",
+              "convergenceIteration": 25,
+              "confidence": {
+                "lower": 0.67,
+                "upper": 0.87
+              }
+            },
+            "quantum": {
+              "collapsed": [
+                {
+                  "action": "Cooperate",
+                  "probability": 0.5
+                },
+                {
+                  "action": "Defect",
+                  "probability": 0.5
+                }
+              ],
+              "influence": [
+                [
+                  0.796,
+                  0.119,
+                  0.122
+                ],
+                [
+                  0.29,
+                  0.839,
+                  0.1
+                ],
+                [
+                  0.28,
+                  0.247,
+                  0.727
+                ]
+              ]
+            },
+            "pattern_matches": [
+              {
+                "id": "coordination_game",
+                "score": 0.764
+              },
+              {
+                "id": "stag_hunt_variant",
+                "score": 0.649
+              }
+            ],
+            "retrievals": [
+              {
+                "id": "https://openknowledge.worldbank.org/entities/publication/16252360-1cf1-546e-9978-9e57b5f32cec",
+                "title": "openknowledge.worldbank.org",
+                "url": "https://openknowledge.worldbank.org/entities/publication/16252360-1cf1-546e-9978-9e57b5f32cec"
+              },
+              {
+                "id": "https://www.kwm.com/cn/en/insights/topic/law-and-practice-under-the-belt-and-road-initiative.html",
+                "title": "kwm.com",
+                "url": "https://www.kwm.com/cn/en/insights/topic/law-and-practice-under-the-belt-and-road-initiative.html"
+              },
+              {
+                "id": "https://www.stimson.org/2025/iran-seeks-new-trade-routes-with-china/",
+                "title": "stimson.org",
+                "url": "https://www.stimson.org/2025/iran-seeks-new-trade-routes-with-china/"
+              },
+              {
+                "id": "https://www.britannica.com/place/Central-Asia",
+                "title": "britannica.com",
+                "url": "https://www.britannica.com/place/Central-Asia"
+              },
+              {
+                "id": "https://www.atlanticcouncil.org/blogs/new-atlanticist/what-russias-war-on-ukraine-means-for-central-asia/",
+                "title": "atlanticcouncil.org",
+                "url": "https://www.atlanticcouncil.org/blogs/new-atlanticist/what-russias-war-on-ukraine-means-for-central-asia/"
+              }
+            ],
+            "retrieval_count": 5,
+            "processing_stats": {
+              "processing_time_ms": 6798,
+              "stability_score": 0.77
+            },
+            "provenance": {
+              "evidence_backed": true,
+              "retrieval_count": 5,
+              "model": "edge-mvp-1.0"
+            }
+          },
+          "mode": "standard"
+        },
+        "requestId": "test-16-1757076187590"
+      }
+    },
+    {
+      "scenario": "Brazilian rain forest deforestation and international pressure",
+      "validation": {
+        "scenario": "Brazilian rain forest deforestation and international pressure",
+        "passed": true,
+        "failures": [],
+        "metrics": {
+          "evidenceBacked": true
+        }
+      },
+      "result": {
+        "success": true,
+        "response": {
+          "ok": true,
+          "analysis": {
+            "scenario_text": "Brazilian rain forest deforestation and international pressure",
+            "players": [
+              {
+                "id": "P1",
+                "name": "Alpha",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P2",
+                "name": "Beta",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P3",
+                "name": "Gamma",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              }
+            ],
+            "equilibrium": {
+              "profile": {
+                "P1": {
+                  "Cooperate": 0.504,
+                  "Defect": 0.496
+                },
+                "P2": {
+                  "Cooperate": 0.501,
+                  "Defect": 0.499
+                },
+                "P3": {
+                  "Cooperate": 0.494,
+                  "Defect": 0.506
+                }
+              },
+              "stability": 0.77,
+              "method": "recursive_best_response_mvp",
+              "convergenceIteration": 25,
+              "confidence": {
+                "lower": 0.67,
+                "upper": 0.87
+              }
+            },
+            "quantum": {
+              "collapsed": [
+                {
+                  "action": "Cooperate",
+                  "probability": 0.5
+                },
+                {
+                  "action": "Defect",
+                  "probability": 0.5
+                }
+              ],
+              "influence": [
+                [
+                  0.796,
+                  0.119,
+                  0.122
+                ],
+                [
+                  0.29,
+                  0.839,
+                  0.1
+                ],
+                [
+                  0.28,
+                  0.247,
+                  0.727
+                ]
+              ]
+            },
+            "pattern_matches": [
+              {
+                "id": "coordination_game",
+                "score": 0.764
+              },
+              {
+                "id": "stag_hunt_variant",
+                "score": 0.649
+              }
+            ],
+            "retrievals": [
+              {
+                "id": "https://www.gov.br/secom/en/latest-news/2025/08/brazil-records-56-8-drop-in-hotspots-61-decrease-in-burned-areas-in-july",
+                "title": "gov.br",
+                "url": "https://www.gov.br/secom/en/latest-news/2025/08/brazil-records-56-8-drop-in-hotspots-61-decrease-in-burned-areas-in-july"
+              },
+              {
+                "id": "https://www.forest-trends.org/idat_countries/indonesia/",
+                "title": "forest-trends.org",
+                "url": "https://www.forest-trends.org/idat_countries/indonesia/"
+              },
+              {
+                "id": "https://phys.org/news/2025-09-deforestation-rainfall-temperatures-amazon-dry.html",
+                "title": "phys.org",
+                "url": "https://phys.org/news/2025-09-deforestation-rainfall-temperatures-amazon-dry.html"
+              },
+              {
+                "id": "https://en.wikipedia.org/wiki/Deforestation",
+                "title": "en.wikipedia.org",
+                "url": "https://en.wikipedia.org/wiki/Deforestation"
+              },
+              {
+                "id": "https://www.eurekalert.org/news-releases/1096618",
+                "title": "eurekalert.org",
+                "url": "https://www.eurekalert.org/news-releases/1096618"
+              }
+            ],
+            "retrieval_count": 5,
+            "processing_stats": {
+              "processing_time_ms": 10134,
+              "stability_score": 0.77
+            },
+            "provenance": {
+              "evidence_backed": true,
+              "retrieval_count": 5,
+              "model": "edge-mvp-1.0"
+            }
+          },
+          "mode": "standard"
+        },
+        "requestId": "test-17-1757076196136"
+      }
+    },
+    {
+      "scenario": "Turkish military operations in Northern Syria",
+      "validation": {
+        "scenario": "Turkish military operations in Northern Syria",
+        "passed": true,
+        "failures": [],
+        "metrics": {
+          "evidenceBacked": true
+        }
+      },
+      "result": {
+        "success": true,
+        "response": {
+          "ok": true,
+          "analysis": {
+            "scenario_text": "Turkish military operations in Northern Syria",
+            "players": [
+              {
+                "id": "P1",
+                "name": "Alpha",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P2",
+                "name": "Beta",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P3",
+                "name": "Gamma",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              }
+            ],
+            "equilibrium": {
+              "profile": {
+                "P1": {
+                  "Cooperate": 0.504,
+                  "Defect": 0.496
+                },
+                "P2": {
+                  "Cooperate": 0.501,
+                  "Defect": 0.499
+                },
+                "P3": {
+                  "Cooperate": 0.494,
+                  "Defect": 0.506
+                }
+              },
+              "stability": 0.77,
+              "method": "recursive_best_response_mvp",
+              "convergenceIteration": 25,
+              "confidence": {
+                "lower": 0.67,
+                "upper": 0.87
+              }
+            },
+            "quantum": {
+              "collapsed": [
+                {
+                  "action": "Cooperate",
+                  "probability": 0.5
+                },
+                {
+                  "action": "Defect",
+                  "probability": 0.5
+                }
+              ],
+              "influence": [
+                [
+                  0.796,
+                  0.119,
+                  0.122
+                ],
+                [
+                  0.29,
+                  0.839,
+                  0.1
+                ],
+                [
+                  0.28,
+                  0.247,
+                  0.727
+                ]
+              ]
+            },
+            "pattern_matches": [
+              {
+                "id": "coordination_game",
+                "score": 0.764
+              },
+              {
+                "id": "stag_hunt_variant",
+                "score": 0.649
+              }
+            ],
+            "retrievals": [
+              {
+                "id": "https://english.news.cn/europe/20250904/7ba60583304d4599a0267d6798b8e9e6/c.html",
+                "title": "english.news.cn",
+                "url": "https://english.news.cn/europe/20250904/7ba60583304d4599a0267d6798b8e9e6/c.html"
+              },
+              {
+                "id": "https://www.arabnews.com/node/2596343/middle-east",
+                "title": "arabnews.com",
+                "url": "https://www.arabnews.com/node/2596343/middle-east"
+              },
+              {
+                "id": "https://english.enabbaladi.net/archives/2025/08/syria-turkey-military-agreement-a-new-approach-constrained-by-limits/",
+                "title": "english.enabbaladi.net",
+                "url": "https://english.enabbaladi.net/archives/2025/08/syria-turkey-military-agreement-a-new-approach-constrained-by-limits/"
+              },
+              {
+                "id": "https://en.wikipedia.org/wiki/US_intervention_in_the_Syrian_civil_war",
+                "title": "en.wikipedia.org",
+                "url": "https://en.wikipedia.org/wiki/US_intervention_in_the_Syrian_civil_war"
+              },
+              {
+                "id": "https://www.wrmea.org/other/turkiyes-syrian-burden.html",
+                "title": "wrmea.org",
+                "url": "https://www.wrmea.org/other/turkiyes-syrian-burden.html"
+              }
+            ],
+            "retrieval_count": 5,
+            "processing_stats": {
+              "processing_time_ms": 8914,
+              "stability_score": 0.77
+            },
+            "provenance": {
+              "evidence_backed": true,
+              "retrieval_count": 5,
+              "model": "edge-mvp-1.0"
+            }
+          },
+          "mode": "standard"
+        },
+        "requestId": "test-18-1757076207965"
+      }
+    },
+    {
+      "scenario": "Ukrainian energy security and Russian gas pipelines",
+      "validation": {
+        "scenario": "Ukrainian energy security and Russian gas pipelines",
+        "passed": true,
+        "failures": [],
+        "metrics": {
+          "evidenceBacked": true
+        }
+      },
+      "result": {
+        "success": true,
+        "response": {
+          "ok": true,
+          "analysis": {
+            "scenario_text": "Ukrainian energy security and Russian gas pipelines",
+            "players": [
+              {
+                "id": "P1",
+                "name": "Alpha",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P2",
+                "name": "Beta",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P3",
+                "name": "Gamma",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              }
+            ],
+            "equilibrium": {
+              "profile": {
+                "P1": {
+                  "Cooperate": 0.504,
+                  "Defect": 0.496
+                },
+                "P2": {
+                  "Cooperate": 0.501,
+                  "Defect": 0.499
+                },
+                "P3": {
+                  "Cooperate": 0.494,
+                  "Defect": 0.506
+                }
+              },
+              "stability": 0.77,
+              "method": "recursive_best_response_mvp",
+              "convergenceIteration": 25,
+              "confidence": {
+                "lower": 0.67,
+                "upper": 0.87
+              }
+            },
+            "quantum": {
+              "collapsed": [
+                {
+                  "action": "Cooperate",
+                  "probability": 0.5
+                },
+                {
+                  "action": "Defect",
+                  "probability": 0.5
+                }
+              ],
+              "influence": [
+                [
+                  0.796,
+                  0.119,
+                  0.122
+                ],
+                [
+                  0.29,
+                  0.839,
+                  0.1
+                ],
+                [
+                  0.28,
+                  0.247,
+                  0.727
+                ]
+              ]
+            },
+            "pattern_matches": [
+              {
+                "id": "coordination_game",
+                "score": 0.764
+              },
+              {
+                "id": "stag_hunt_variant",
+                "score": 0.649
+              }
+            ],
+            "retrievals": [
+              {
+                "id": "https://www.rferl.org/a/ukraine-us-gas-imports-russia/33510194.html",
+                "title": "rferl.org",
+                "url": "https://www.rferl.org/a/ukraine-us-gas-imports-russia/33510194.html"
+              },
+              {
+                "id": "https://www.euronews.com/2025/08/21/ukrainian-suspected-of-links-to-nord-stream-pipeline-blasts-arrested-in-italy-prosecutors-",
+                "title": "euronews.com",
+                "url": "https://www.euronews.com/2025/08/21/ukrainian-suspected-of-links-to-nord-stream-pipeline-blasts-arrested-in-italy-prosecutors-"
+              },
+              {
+                "id": "https://cepa.org/article/gas-transit-and-the-death-of-russian-made-myths/",
+                "title": "cepa.org",
+                "url": "https://cepa.org/article/gas-transit-and-the-death-of-russian-made-myths/"
+              },
+              {
+                "id": "https://www.cfr.org/global-conflict-tracker/conflict/conflict-ukraine",
+                "title": "cfr.org",
+                "url": "https://www.cfr.org/global-conflict-tracker/conflict/conflict-ukraine"
+              },
+              {
+                "id": "https://www.eia.gov/todayinenergy/detail.php?id=66044",
+                "title": "eia.gov",
+                "url": "https://www.eia.gov/todayinenergy/detail.php?id=66044"
+              }
+            ],
+            "retrieval_count": 5,
+            "processing_stats": {
+              "processing_time_ms": 8475,
+              "stability_score": 0.77
+            },
+            "provenance": {
+              "evidence_backed": true,
+              "retrieval_count": 5,
+              "model": "edge-mvp-1.0"
+            }
+          },
+          "mode": "standard"
+        },
+        "requestId": "test-19-1757076219215"
+      }
+    },
+    {
+      "scenario": "Iranian proxy warfare through Hezbollah in Lebanon",
+      "validation": {
+        "scenario": "Iranian proxy warfare through Hezbollah in Lebanon",
+        "passed": true,
+        "failures": [],
+        "metrics": {
+          "evidenceBacked": true
+        }
+      },
+      "result": {
+        "success": true,
+        "response": {
+          "ok": true,
+          "analysis": {
+            "scenario_text": "Iranian proxy warfare through Hezbollah in Lebanon",
+            "players": [
+              {
+                "id": "P1",
+                "name": "Alpha",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P2",
+                "name": "Beta",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P3",
+                "name": "Gamma",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              }
+            ],
+            "equilibrium": {
+              "profile": {
+                "P1": {
+                  "Cooperate": 0.504,
+                  "Defect": 0.496
+                },
+                "P2": {
+                  "Cooperate": 0.501,
+                  "Defect": 0.499
+                },
+                "P3": {
+                  "Cooperate": 0.494,
+                  "Defect": 0.506
+                }
+              },
+              "stability": 0.77,
+              "method": "recursive_best_response_mvp",
+              "convergenceIteration": 25,
+              "confidence": {
+                "lower": 0.67,
+                "upper": 0.87
+              }
+            },
+            "quantum": {
+              "collapsed": [
+                {
+                  "action": "Cooperate",
+                  "probability": 0.5
+                },
+                {
+                  "action": "Defect",
+                  "probability": 0.5
+                }
+              ],
+              "influence": [
+                [
+                  0.796,
+                  0.119,
+                  0.122
+                ],
+                [
+                  0.29,
+                  0.839,
+                  0.1
+                ],
+                [
+                  0.28,
+                  0.247,
+                  0.727
+                ]
+              ]
+            },
+            "pattern_matches": [
+              {
+                "id": "coordination_game",
+                "score": 0.764
+              },
+              {
+                "id": "stag_hunt_variant",
+                "score": 0.649
+              }
+            ],
+            "retrievals": [
+              {
+                "id": "https://smallwarsjournal.com/2025/08/14/the-collapse-of-irans-proxy-strategy-exposes-the-limits-of-asymmetric-warfare/",
+                "title": "smallwarsjournal.com",
+                "url": "https://smallwarsjournal.com/2025/08/14/the-collapse-of-irans-proxy-strategy-exposes-the-limits-of-asymmetric-warfare/"
+              },
+              {
+                "id": "https://www.arabnews.com/node/2571943/%7B%7B",
+                "title": "arabnews.com",
+                "url": "https://www.arabnews.com/node/2571943/%7B%7B"
+              },
+              {
+                "id": "https://www.nbcrightnow.com/national/lebanon-to-discuss-army-plan-to-disarm-hezbollah/article_9cfb4ab8-d974-54ac-852c-7cb81e85326d.html",
+                "title": "nbcrightnow.com",
+                "url": "https://www.nbcrightnow.com/national/lebanon-to-discuss-army-plan-to-disarm-hezbollah/article_9cfb4ab8-d974-54ac-852c-7cb81e85326d.html"
+              },
+              {
+                "id": "https://www.rferl.org/a/iran-netanyahu-unga-warning-iran-hezbollah/33137794.html",
+                "title": "rferl.org",
+                "url": "https://www.rferl.org/a/iran-netanyahu-unga-warning-iran-hezbollah/33137794.html"
+              },
+              {
+                "id": "https://www.understandingwar.org/backgrounder/iran-update-august-11-2025",
+                "title": "understandingwar.org",
+                "url": "https://www.understandingwar.org/backgrounder/iran-update-august-11-2025"
+              }
+            ],
+            "retrieval_count": 5,
+            "processing_stats": {
+              "processing_time_ms": 9511,
+              "stability_score": 0.77
+            },
+            "provenance": {
+              "evidence_backed": true,
+              "retrieval_count": 5,
+              "model": "edge-mvp-1.0"
+            }
+          },
+          "mode": "standard"
+        },
+        "requestId": "test-20-1757076229519"
+      }
+    }
+  ],
+  "metrics": {
+    "totalExcerpts": 90,
+    "validExcerpts": 0,
+    "schemaFailures": 0,
+    "evidenceBackedCount": 18,
+    "humanReviewTriggered": 10,
+    "decisionTableSynthesized": 20,
+    "nanErrors": 0
+  }
+}

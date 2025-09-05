@@ -187,7 +187,7 @@ export interface Provenance {
 }
 
 // Unified Audience Analysis Type
-export type AudienceType = 'student' | 'learner' | 'researcher' | 'teacher';
+export type AudienceType = 'student' | 'learner' | 'researcher' | 'teacher' | 'reviewer';
 
 export interface AudienceAnalysisData {
   analysis_id: string;
@@ -260,5 +260,12 @@ export const AUDIENCE_CONFIGS: Record<AudienceType, AudienceConfig> = {
     description: 'Educational materials and assessments',
     icon: 'chalkboard-teacher',
     color: 'orange'
+  },
+  reviewer: {
+    key: 'reviewer',
+    label: 'Reviewer',
+    description: 'Human review and approval workflow',
+    icon: 'check-circle',
+    color: 'red'
   }
 };

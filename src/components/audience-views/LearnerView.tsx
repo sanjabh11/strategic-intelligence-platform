@@ -1,9 +1,11 @@
 // Learner View Component
 // Interactive learning view with decision table, rankings, sensitivity analysis, and exercises
 
-import React from 'react';
-import { BookOpen, Table, TrendingUp, AlertTriangle, GraduationCap, AlertCircle, ExternalLink } from 'lucide-react';
+import React, { useState } from 'react';
+import { BookOpen, Table, TrendingUp, AlertTriangle, GraduationCap, AlertCircle, ExternalLink, Settings, BarChart3 } from 'lucide-react';
 import { AudienceViewProps, LearnerViewData, SourceCitation } from '../../types/audience-views';
+import EVWidget from '../EVWidget';
+import SensitivitySlider from '../SensitivitySlider';
 
 const LearnerView: React.FC<AudienceViewProps> = ({
   analysisData,
@@ -45,6 +47,7 @@ const LearnerView: React.FC<AudienceViewProps> = ({
   }
 
   const learnerData = analysisData.data as LearnerViewData;
+  const [_updatedData, setUpdatedData] = useState<LearnerViewData>(learnerData);
 
   const renderDecisionTable = () => (
     <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
@@ -272,6 +275,11 @@ const LearnerView: React.FC<AudienceViewProps> = ({
       {renderSummary()}
       {renderDecisionTable()}
       {renderExpectedValueRanking()}
+
+      {/* Interactive Widgets */}
+      <EVWidget data={learnerData} onUpdateEV={setUpdatedData} />
+      <SensitivitySlider data={learnerData} />
+
       {renderSensitivityAdvice()}
       {renderExercise()}
       {renderSources()}
