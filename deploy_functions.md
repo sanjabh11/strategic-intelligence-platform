@@ -1,0 +1,1 @@
+Add the endpoint for pattern-symmetry-mining to supabase.ts

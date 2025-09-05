@@ -1,0 +1,41 @@
+{
+  "imports": {
+    "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@2",
+    "@std/assert": "https://deno.land/std@0.204.0/assert/mod.ts"
+  },
+  "tasks": {
+    "test": "deno test --allow-all tests/",
+    "test:watch": "deno test --watch --allow-all tests/",
+    "test:coverage": "deno test --allow-all --coverage=coverage tests/ && deno coverage coverage",
+    "benchmark": "deno test --allow-all tests/performance.test.ts",
+    "ci-test": "deno test --allow-all --fail-fast tests/"
+  },
+  "test": {
+    "files": {
+      "include": ["tests/**/*.ts"],
+      "exclude": ["tests/**/*.bench.ts"]
+    }
+  },
+  "fmt": {
+    "files": {
+      "include": ["*.ts", "tests/**/*.ts"],
+      "exclude": ["coverage/"]
+    },
+    "options": {
+      "lineWidth": 100,
+      "useTabs": false,
+      "indentWidth": 2,
+      "semiColons": true,
+      "singleQuote": true,
+      "proseWrap": "preserve"
+    }
+  },
+  "lint": {
+    "files": {
+      "include": ["*.ts", "tests/**/*.ts"]
+    },
+    "rules": {
+      "tags": ["recommended"]
+    }
+  }
+}

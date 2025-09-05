@@ -1,0 +1,209 @@
+// @ts-nocheck
+// Supabase Edge Function: human-review
+// Deno runtime
+// Endpoints:
+// - GET /functions/v1/review_queue - Fetch pending reviews
+// - POST /functions/v1/analysis/{id}/review - Approve/reject analysis
+
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+
+// --- Environment helpers ---
+const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+
+if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+  console.error("Missing Supabase environment variables")
+}
+
+const supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
+
+// --- Utility helpers ---
+function jsonResponse(status: number, body: unknown) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { 'Content-Type': 'application/json' },
+  })
+}
+
+// --- Mock authentication (will be replaced with real auth later) ---
+function getMockReviewerUser(): { id: string; role: string } | null {
+  // Mock reviewer - in production this would come from authenticated user
+  return {
+    id: 'reviewer-001',
+    role: 'reviewer'
+  }
+}
+
+// --- Database operations ---
+async function getPendingReviews() {
+  const { data, error } = await supabaseAdmin
+    .from('analysis_runs')
+    .select(`
+      id,
+      scenario_text,
+      created_at,
+      status,
+      audience,
+      analysis_json
+    `)
+    .eq('status', 'under_review')
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    throw new Error(`Database error: ${error.message}`)
+  }
+
+  return data || []
+}
+
+async function getAnalysisRun(analysisId: string) {
+  const { data, error } = await supabaseAdmin
+    .from('analysis_runs')
+    .select('*')
+    .eq('id', analysisId)
+    .single()
+
+  if (error) {
+    if (error.code === 'PGRST116') {
+      throw new Error('Analysis not found')
+    }
+    throw new Error(`Database error: ${error.message}`)
+  }
+
+  return data
+}
+
+async function updateAnalysisStatus(analysisId: string, status: 'approved' | 'rejected') {
+  const { error } = await supabaseAdmin
+    .from('analysis_runs')
+    .update({ status })
+    .eq('id', analysisId)
+
+  if (error) {
+    throw new Error(`Failed to update analysis status: ${error.message}`)
+  }
+
+  return true
+}
+
+async function createHumanReview(analysisId: string, reviewerId: string, status: 'approved' | 'rejected', notes?: string) {
+  const { data, error } = await supabaseAdmin
+    .from('human_reviews')
+    .insert({
+      analysis_run_id: analysisId,
+      reviewer_id: reviewerId,
+      status,
+      notes: notes || null,
+      reviewed_at: new Date().toISOString()
+    })
+    .select()
+    .single()
+
+  if (error) {
+    throw new Error(`Failed to create review: ${error.message}`)
+  }
+
+  return data
+}
+
+// --- Route handlers ---
+async function handleReviewQueue() {
+  try {
+    const reviews = await getPendingReviews()
+    return jsonResponse(200, {
+      ok: true,
+      reviews: reviews.map(review => ({
+        id: review.id,
+        scenario_text: review.scenario_text?.slice(0, 200) + (review.scenario_text?.length > 200 ? '...' : ''),
+        created_at: review.created_at,
+        audience: review.audience,
+        summary: review.analysis_json?.summary?.text || null
+      }))
+    })
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e)
+    console.error('Review queue error:', msg)
+    return jsonResponse(500, { ok: false, message: msg })
+  }
+}
+
+async function handleReview(analysisId: string, req: Request) {
+  const reviewer = getMockReviewerUser()
+
+  if (!reviewer) {
+    return jsonResponse(401, { ok: false, message: 'Unauthorized - invalid reviewer' })
+  }
+
+  // Check if reviewer has reviewer role
+  if (reviewer.role !== 'reviewer') {
+    return jsonResponse(403, { ok: false, message: 'Forbidden - reviewer role required' })
+  }
+
+  try {
+    // Parse request body
+    const body = await req.json()
+    const { action, notes } = body
+
+    if (!action || !['approve', 'reject'].includes(action)) {
+      return jsonResponse(400, { ok: false, message: 'Invalid action. Must be "approve" or "reject"' })
+    }
+
+    const reviewStatus = action === 'approve' ? 'approved' : 'rejected'
+
+    // Get analysis run
+    const analysis = await getAnalysisRun(analysisId)
+
+    if (analysis.status !== 'under_review') {
+      return jsonResponse(400, { ok: false, message: 'Analysis is not pending review' })
+    }
+
+    // Update analysis status
+    await updateAnalysisStatus(analysisId, reviewStatus)
+
+    // Create review record
+    const review = await createHumanReview(analysisId, reviewer.id, reviewStatus, notes)
+
+    return jsonResponse(200, {
+      ok: true,
+      analysis_id: analysisId,
+      action,
+      review_id: review.id,
+      reviewed_at: review.reviewed_at
+    })
+
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e)
+    console.error('Review error:', msg)
+    return jsonResponse(500, { ok: false, message: msg })
+  }
+}
+
+// --- Main handler ---
+Deno.serve(async (req) => {
+  try {
+    const url = new URL(req.url)
+    const pathParts = url.pathname.split('/').filter(p => p)
+    const method = req.method
+
+    // GET /functions/v1/review_queue
+    if (method === 'GET' && pathParts.length === 3 &&
+        pathParts[1] === 'v1' && pathParts[2] === 'review_queue') {
+      return await handleReviewQueue()
+    }
+
+    // POST /functions/v1/analysis/{id}/review
+    if (method === 'POST' && pathParts.length === 5 &&
+        pathParts[1] === 'v1' && pathParts[2] === 'analysis' &&
+        pathParts[4] === 'review') {
+      const analysisId = pathParts[3]
+      return await handleReview(analysisId, req)
+    }
+
+    return jsonResponse(404, { ok: false, message: 'Endpoint not found' })
+
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e)
+    console.error('Unhandled error:', msg)
+    return jsonResponse(500, { ok: false, message: msg })
+  }
+})

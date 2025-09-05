@@ -78,7 +78,13 @@ const AnalysisResultSchema = z.object({
   processing_stats: ProcessingStatsSchema,
   provenance: ProvenanceSchema,
   forecast: z.array(ForecastPointSchema).optional()
-});
+}).and(z.object({
+  voi: z.object({
+    ev_prior: z.number(),
+    evpi: z.number(),
+    evppi: z.record(z.number())
+  }).optional()
+}))
 
 const AnalyzeResponseSchema = z.object({
   ok: z.boolean(),
@@ -87,7 +93,9 @@ const AnalyzeResponseSchema = z.object({
   analysis: AnalysisResultSchema.optional(),
   mode: z.string().optional(),
   message: z.string().optional(),
-  error: z.string().optional()
+  error: z.string().optional(),
+  reason: z.string().optional(),
+  action: z.string().optional()
 });
 
 const StatusResponseSchema = z.object({
@@ -105,14 +113,15 @@ export interface UseStrategyAnalysisReturn {
   status: AnalysisStatus;
   requestId: string | null;
   analysisRunId: string | null;
-  
+
   // Actions
   runAnalysis: (request: AnalysisRequest) => Promise<void>;
   clearResults: () => void;
-  
+
   // Utilities
   isProcessing: boolean;
   canRunAnalysis: boolean;
+  setAudience: (audience: 'student' | 'learner' | 'researcher' | 'teacher') => void;
 }
 
 export function useStrategyAnalysis(): UseStrategyAnalysisReturn {
@@ -122,7 +131,8 @@ export function useStrategyAnalysis(): UseStrategyAnalysisReturn {
   const [status, setStatus] = useState<AnalysisStatus>('idle');
   const [requestId, setRequestId] = useState<string | null>(null);
   const [analysisRunId, setAnalysisRunId] = useState<string | null>(null);
-  
+  const [audience, setAudience] = useState<'student' | 'learner' | 'researcher' | 'teacher'>('learner');
+
   const [statusCheckInterval, setStatusCheckInterval] = useState<NodeJS.Timeout | null>(null);
   const [pollAttempts, setPollAttempts] = useState(0);
   
@@ -178,7 +188,6 @@ export function useStrategyAnalysis(): UseStrategyAnalysisReturn {
       if (result.status === 'completed' && result.analysis) {
         setAnalysis(result.analysis as AnalysisResult);
         setStatus('completed');
-        setLoading(false);
         return true;
       }
       if (result.status === 'processing') {
@@ -240,27 +249,31 @@ export function useStrategyAnalysis(): UseStrategyAnalysisReturn {
     clearResults();
     setLoading(true);
     setStatus('queued');
-    
+
     try {
       console.log('Submitting analysis request:', request);
-      // Local fallback: education_quick or forced local mode
-      if (isLocalMode || request.mode === 'education_quick') {
-        const local = await analyzeLocally(request);
-        const parsedLocal = AnalysisResultSchema.safeParse(local);
-        if (!parsedLocal.success) {
-          throw new Error(`Invalid local analysis result: ${parsedLocal.error.message}`);
-        }
-        setAnalysis(parsedLocal.data as AnalysisResult);
-        setAnalysisRunId('local');
+
+      // Check if local mode is enabled
+      if (isLocalMode) {
+        console.log('Using local analysis engine');
+        const localResult = await analyzeLocally(request);
+        const enhancedAnalysis = await enhanceAnalysisWithStrategicEngines(
+          crypto.randomUUID(), request.scenario_text, localResult.players
+        );
+        setAnalysis({
+          ...localResult,
+          ...enhancedAnalysis
+        });
         setStatus('completed');
         setLoading(false);
         return;
       }
-      
+
+      // Use API for production flow
       const response = await fetch(ENDPOINTS.ANALYZE, {
         method: 'POST',
         headers: getAuthHeaders(),
-        body: JSON.stringify(request)
+        body: JSON.stringify({ ...request, audience })
       });
       const raw = await response.text();
       const json = (() => {
@@ -281,6 +294,13 @@ export function useStrategyAnalysis(): UseStrategyAnalysisReturn {
       const result = parsed.data;
 
       if (!result.ok) {
+        // Handle RAG failure for high-risk scenarios
+        if (result.reason === 'no_external_sources' || result.reason === 'rag_system_error') {
+          setError(result.message || 'Unable to retrieve external evidence for this scenario. Analysis has been queued for human review.');
+          setStatus('failed');
+          setLoading(false);
+          return;
+        }
         throw new Error(result.message || result.error || 'Analysis submission failed');
       }
 
@@ -289,7 +309,13 @@ export function useStrategyAnalysis(): UseStrategyAnalysisReturn {
 
       if (result.mode === 'fallback') {
         if (result.analysis) {
-          setAnalysis(result.analysis as AnalysisResult);
+          const enhancedAnalysis = await enhanceAnalysisWithStrategicEngines(
+            result.analysis_run_id || result.request_id || '', request.scenario_text, result.analysis.players
+          );
+          setAnalysis({
+            ...(result.analysis as AnalysisResult),
+            ...enhancedAnalysis
+          });
         }
         setStatus('completed');
         setLoading(false);
@@ -298,7 +324,13 @@ export function useStrategyAnalysis(): UseStrategyAnalysisReturn {
         startStatusPolling(result.request_id);
       } else if (result.analysis) {
         // Fallback: if analysis provided but no request id
-        setAnalysis(result.analysis as AnalysisResult);
+        const enhancedAnalysis = await enhanceAnalysisWithStrategicEngines(
+          result.analysis_run_id || crypto.randomUUID(), request.scenario_text, result.analysis.players
+        );
+        setAnalysis({
+          ...(result.analysis as AnalysisResult),
+          ...enhancedAnalysis
+        });
         setStatus('completed');
         setLoading(false);
       } else {
@@ -325,15 +357,130 @@ export function useStrategyAnalysis(): UseStrategyAnalysisReturn {
     status,
     requestId,
     analysisRunId,
-    
+
     // Actions
     runAnalysis,
     clearResults,
-    
+
     // Utilities
     isProcessing,
-    canRunAnalysis
+    canRunAnalysis,
+    setAudience
   };
+}
+
+async function enhanceAnalysisWithStrategicEngines(
+  analysisRunId: string,
+  scenario: string,
+  players: any[] | undefined
+): Promise<any> {
+
+  const enhancements = {
+    recursiveEquilibrium: null,
+    symmetryAnalysis: null,
+    crossDomainInsights: null
+  };
+
+  try {
+    // Call Recursive Equilibrium Engine
+    const recursiveResponse = await fetch(ENDPOINTS.RECURSIVE_EQ, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({
+        runId: analysisRunId,
+        scenario: {
+          players: players?.map(p => ({
+            id: p.id,
+            name: p.name,
+            actions: p.actions
+          })) || []
+        },
+        analysisConfig: {
+          beliefDepth: 3,  // PRD requirement: >2
+          adaptationRate: 0.2,
+          iterations: 500, // PRD requirement: >100, <2000
+          convergenceThreshold: 1e-6,
+          quantumEnabled: true
+        }
+      })
+    });
+
+    if (recursiveResponse.ok) {
+      const recursiveData = await recursiveResponse.json();
+      if (recursiveData.ok && recursiveData.response) {
+        enhancements.recursiveEquilibrium = recursiveData.response;
+      }
+    }
+
+    // Call Symmetry Mining Engine
+    const symmetryResponse = await fetch(ENDPOINTS.SYMMETRY_MINING, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({
+        runId: analysisRunId,
+        currentScenario: {
+          title: "Strategic Analysis Scenario",
+          description: scenario,
+          domain: extractDomainFromScenario(scenario),
+          stakeholders: extractStakeholdersFromScenario(scenario),
+          strategicElements: {
+            players: players?.length || 0,
+            actions: players?.flatMap(p => p.actions) || [],
+            information: 'complete',
+            payoffStructure: 'competitive'
+          }
+        },
+        analysisConfig: {
+          abstractionLevel: 7,  // PRD range 1-10
+          maxAnalogies: 5,
+          similarityThreshold: 0.6,
+          domainsToSearch: ['military', 'business', 'politics', 'evolution', 'sports'],
+          returnStructuredResults: true
+        }
+      })
+    });
+
+    if (symmetryResponse.ok) {
+      const symmetryData = await symmetryResponse.json();
+      if (symmetryData.ok && symmetryData.response) {
+        enhancements.symmetryAnalysis = symmetryData.response;
+        enhancements.crossDomainInsights = symmetryData.response.strategicRecommendations;
+      }
+    }
+
+  } catch (error) {
+    console.warn('Strategic engine enhancements failed:', error);
+    // Continue with original analysis if enhancement services fail
+  }
+
+  return enhancements;
+}
+
+// Extract domain from scenario text
+function extractDomainFromScenario(scenario: string): string {
+  const lowerText = scenario.toLowerCase();
+
+  const domainMappings = {
+    'business': ['company', 'market', 'corporate', 'industry', 'competitor'],
+    'political': ['government', 'policy', 'political', 'diplomatic'],
+    'military': ['military', 'defense', 'strategic power', 'security'],
+    'economics': ['economic', 'trade', 'currency', 'financial'],
+    'technology': ['technology', 'ai', 'innovation', 'digital']
+  };
+
+  for (const [domain, keywords] of Object.entries(domainMappings)) {
+    if (keywords.some(keyword => lowerText.includes(keyword))) {
+      return domain;
+    }
+  }
+
+  return 'universal'; // Default
+}
+
+// Extract stakeholders from scenario
+function extractStakeholdersFromScenario(scenario: string): string[] {
+  // Simple stakeholder extraction - can be enhanced
+  return ['stakeholder_1', 'stakeholder_2'];
 }
 
 // Utility function to create example scenarios

@@ -22,7 +22,14 @@ export const ENDPOINTS = {
   ANALYZE: `${API_BASE}/analyze-engine`,
   STATUS: `${API_BASE}/get-analysis-status`,
   SYSTEM_STATUS: `${API_BASE}/system-status`,
-  HEALTH: `${API_BASE}/health`
+  HEALTH: `${API_BASE}/health`,
+  ANALYZE_STREAM: `${API_BASE}/analyze-stream`,
+  SYMMETRY_MINING: `${API_BASE}/symmetry-mining`,
+  RECURSIVE_EQ: `${API_BASE}/recursive-equilibrium`,
+  SHARE_STRATEGY: `${API_BASE}/share-strategy`,
+  COLLECTIVE_STATS: `${API_BASE}/collective-stats`,
+  FIRECRAWL_RESEARCH: `${API_BASE}/firecrawl-research`,
+  EVIDENCE_RETRIEVAL: `${API_BASE}/evidence-retrieval`,
 }
 
 // Authentication headers for direct API calls

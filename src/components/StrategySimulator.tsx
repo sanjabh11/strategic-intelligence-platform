@@ -2,11 +2,14 @@
 import React, { useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 import { useStrategyAnalysis, getExampleScenarios } from '../hooks/useStrategyAnalysis';
+import { useQueryHistoryCache } from '../hooks/useQueryHistoryCache';
 import type { AnalysisOptions } from '../types/strategic-analysis';
-import { Loader2, AlertCircle, CheckCircle2, Clock, Zap, Brain, Target, TrendingUp } from 'lucide-react';
+import { Loader2, AlertCircle, CheckCircle2, Clock, Zap, Brain, Target, TrendingUp, Globe } from 'lucide-react';
 import PerplexityDashboard from './PerplexityDashboard';
+import FirecrawlDashboard from './FirecrawlDashboard';
 import { ChartHeader, useLearningMode, explanationContent } from './explanations';
 import type { ExplanationSection } from './explanations';
+import { AudienceViewRouter } from './audience-views';
 
 const StrategySimulator: React.FC = () => {
   const {
@@ -18,7 +21,10 @@ const StrategySimulator: React.FC = () => {
     clearResults,
     canRunAnalysis
   } = useStrategyAnalysis();
-  
+
+  // Query history cache hook
+  const { cachedQueries, addQueryToCache, clearCache, getCacheStats } = useQueryHistoryCache();
+
   // Learning mode context
   const { isLearningMode } = useLearningMode();
   
@@ -28,6 +34,7 @@ const StrategySimulator: React.FC = () => {
   );
   const [mode, setMode] = useState<'standard' | 'education_quick'>('standard');
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [showFirecrawlResearch, setShowFirecrawlResearch] = useState(false);
   const [advancedOptions, setAdvancedOptions] = useState<AnalysisOptions>({
     beliefDepth: 2,
     adaptationRate: 0.2,
@@ -38,10 +45,22 @@ const StrategySimulator: React.FC = () => {
   const exampleScenarios = getExampleScenarios();
   
   const handleRunAnalysis = async () => {
+    const startTime = Date.now();
     await runAnalysis({
       scenario_text: scenario,
       mode: mode,
       options: showAdvanced ? advancedOptions : {}
+    });
+
+    // Cache the query (we'll rely on the hook's logic to manage updates)
+    // Note: We cache immediately when the analysis starts, and it will be updated when results come back
+    const externalSourcesCount = 0; // Will be updated when results arrive
+    addQueryToCache({
+      query: scenario,
+      analysisResult: null, // Will be updated when analysis completes
+      mode: mode,
+      processingTimeMs: undefined, // Will be updated when analysis completes
+      externalSourcesCount
     });
   };
 
@@ -421,6 +440,57 @@ const StrategySimulator: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-900 text-white p-6">
       <div className="max-w-7xl mx-auto">
+
+        {/* Audience Views Section */}
+        {analysis && status === 'completed' && (
+          <div className="mb-8">
+            <AudienceViewRouter
+              analysisData={{
+                audience: 'student', // Default to student for demo
+                data: {
+                  // Mock data - in production this would come from analysis_json
+                  one_paragraph_summary: "This strategic scenario involves multiple stakeholders making decisions that affect market positioning, regulatory oversight, and competitive advantage. The analysis shows a Nash equilibrium where companies balance innovation with compliance requirements.",
+                  top_2_actions: [
+                    {
+                      player: "Apple",
+                      action: "Lead with strict standards",
+                      reasoning: "Maintains premium brand positioning and regulatory compliance"
+                    },
+                    {
+                      player: "Google",
+                      action: "Follow industry consensus",
+                      reasoning: "Balances innovation pace with collaborative standards development"
+                    }
+                  ],
+                  key_terms: [
+                    {
+                      term: "Nash Equilibrium",
+                      definition: "A set of strategies where no player can benefit by changing strategy unilaterally",
+                      context: "Applies to competitive strategy scenarios"
+                    }
+                  ],
+                  two_quiz_questions: [
+                    {
+                      question: "What is the primary goal of strategic analysis?",
+                      options: ["Maximize profits", "Identify optimal decision paths", "Reduce competition", "Increase market share"],
+                      correct_answer: 1,
+                      explanation: "Strategic analysis identifies optimal decision paths considering all stakeholders and outcomes"
+                    }
+                  ]
+                },
+                metadata: {
+                  generated_at: new Date().toISOString(),
+                  model_version: "v1.0.0",
+                  analysis_id: "demo-analysis",
+                  processing_time_ms: 1500
+                }
+              }}
+              analysisRunId="demo-run"
+              isLoading={false}
+              error={undefined}
+            />
+          </div>
+        )}
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
@@ -454,7 +524,86 @@ const StrategySimulator: React.FC = () => {
               ))}
             </div>
           </div>
-          
+
+          {/* Query History */}
+          {cachedQueries.length > 0 && (
+            <div className="mb-6">
+              <h3 className="text-lg font-medium mb-3 text-slate-300 flex items-center">
+                <Clock className="w-5 h-5 mr-2 text-blue-400" />
+                Recent Queries ({cachedQueries.length})
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {cachedQueries.map((cachedQuery) => (
+                  <button
+                    key={cachedQuery.id}
+                    onClick={() => {
+                      setScenario(cachedQuery.query);
+                      if (cachedQuery.analysisResult) {
+                        // If we have the result cached, we could potentially load it directly
+                        // For now, we'll just set the scenario text
+                      }
+                    }}
+                    className="text-left p-3 bg-slate-700 hover:bg-slate-600 rounded-lg border border-slate-600 hover:border-blue-500 transition-colors"
+                  >
+                    <div className="text-sm font-medium text-blue-400 mb-1">
+                      {cachedQuery.mode === 'standard' ? 'Standard Analysis' : 'Education Quick'}
+                    </div>
+                    <div className="text-xs text-slate-400 line-clamp-2 mb-2">
+                      {cachedQuery.query.substring(0, 120)}...
+                    </div>
+                    <div className="flex items-center justify-between text-xs text-slate-500">
+                      <span>
+                        {cachedQuery.processingTimeMs
+                          ? `${cachedQuery.processingTimeMs}ms`
+                          : 'Cached'}
+                      </span>
+                      <span>
+                        {cachedQuery.externalSourcesCount > 0
+                          ? `${cachedQuery.externalSourcesCount} sources`
+                          : 'Local'}
+                      </span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+              <div className="mt-3 flex justify-end">
+                <button
+                  onClick={clearCache}
+                  className="text-xs text-slate-400 hover:text-slate-300 px-3 py-1 rounded hover:bg-slate-700 transition-colors"
+                >
+                  Clear History
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Firecrawl Research */}
+          <div className="mb-6">
+            <div className="flex items-center justify-between">
+              <button
+                onClick={() => setShowFirecrawlResearch(!showFirecrawlResearch)}
+                className={`flex items-center px-4 py-2 rounded-lg border transition-colors ${
+                  showFirecrawlResearch
+                    ? 'bg-blue-600 border-blue-500 text-white'
+                    : 'bg-slate-700 border-slate-600 text-slate-300 hover:border-slate-500'
+                }`}
+              >
+                <Globe className="w-5 h-5 mr-2" />
+                {showFirecrawlResearch ? 'Hide Web Research' : 'Show Web Research'}
+              </button>
+              <div className="text-xs text-slate-400">
+                Advanced web scraping & content analysis
+              </div>
+            </div>
+
+            {/* Firecrawl Dashboard */}
+            {showFirecrawlResearch && (
+              <div className="mt-6">
+                <FirecrawlDashboard />
+              </div>
+            )}
+          </div>
+
           {/* Scenario Input */}
           <div className="space-y-4">
             <div>

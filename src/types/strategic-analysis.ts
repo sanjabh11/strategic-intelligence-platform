@@ -26,6 +26,7 @@ export interface AnalysisRequest {
   quantum_states?: Record<string, QuantumStrategyState>;
   options?: AnalysisOptions;
   mode?: 'standard' | 'education_quick';
+  audience?: 'student' | 'learner' | 'researcher' | 'teacher';
 }
 
 export interface Retrieval {
