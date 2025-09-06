@@ -2,8 +2,9 @@
 // Detailed analysis view with comprehensive summary, assumptions, payoff matrix, and data exports
 
 import React from 'react';
-import { Microscope, FileText, Grid3X3, Download, AlertCircle, ExternalLink, CheckCircle, XCircle, Notebook, Zap } from 'lucide-react';
+import { Microscope, FileText, Grid3X3, Download, AlertCircle, ExternalLink, CheckCircle, XCircle, Notebook, Zap, Table, TrendingUp } from 'lucide-react';
 import { AudienceViewProps, ResearcherViewData, SourceCitation } from '../../types/audience-views';
+import EVWidget from '../EVWidget';
 
 const ResearcherView: React.FC<AudienceViewProps> = ({
   analysisData,
@@ -350,11 +351,83 @@ const ResearcherView: React.FC<AudienceViewProps> = ({
     );
   };
 
+  const renderDecisionWidgets = () => {
+    // Check if we have decision table data from the analysis
+    const analysis = analysisData as any; // Type assertion for accessing decision data
+    if (analysis?.decision_table && analysis?.expected_value_ranking) {
+      return (
+        <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
+          <div className="flex items-center mb-6">
+            <Table className="w-6 h-6 mr-3 text-cyan-400" />
+            <h2 className="text-xl font-semibold text-slate-200">Decision Analysis</h2>
+          </div>
+
+          {/* Decision Table */}
+          <div className="mb-6">
+            <h3 className="font-medium text-slate-200 mb-3">Decision Table</h3>
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse">
+                <thead>
+                  <tr className="border-b border-slate-600">
+                    <th className="text-left p-3 text-slate-300 font-medium">Actor</th>
+                    <th className="text-left p-3 text-slate-300 font-medium">Action</th>
+                    <th className="text-center p-3 text-slate-300 font-medium">Payoff</th>
+                    <th className="text-center p-3 text-slate-300 font-medium">Confidence</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {analysis.decision_table.map((row: any, index: number) => (
+                    <tr key={index} className="border-b border-slate-700 hover:bg-slate-700/50">
+                      <td className="p-3 text-slate-300 font-medium">{row.actor}</td>
+                      <td className="p-3 text-slate-300">{row.action}</td>
+                      <td className="p-3 text-center">
+                        <div className="text-sm font-mono text-blue-400">
+                          {Number(row.payoff_estimate?.value ?? 0).toFixed(2)}
+                        </div>
+                      </td>
+                      <td className="p-3 text-center">
+                        <div className="text-sm text-slate-400">
+                          {(Number(row.payoff_estimate?.confidence ?? 0) * 100).toFixed(1)}%
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* EV Ranking */}
+          <div>
+            <h3 className="font-medium text-slate-200 mb-3">Expected Value Ranking</h3>
+            <div className="space-y-3">
+              {analysis.expected_value_ranking.map((item: any, index: number) => (
+                <div key={index} className="bg-slate-700 rounded-lg p-4 border border-slate-600">
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="font-medium text-slate-200">{item.action}</h4>
+                    <span className="text-lg font-mono text-blue-400">
+                      EV: {Number(item.ev).toFixed(2)}
+                    </span>
+                  </div>
+                  <div className="text-xs text-slate-400">
+                    EV Confidence: {(Number(item.ev_confidence ?? 0) * 100).toFixed(1)}%
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <div className="space-y-6">
       {renderSummary()}
       {renderAssumptions()}
       {renderPayoffMatrix()}
+      {renderDecisionWidgets()}
       {renderDataExports()}
       {renderNotebookGenerator()}
       {renderSensitivitySuite()}
