@@ -1,0 +1,1482 @@
+{
+  "total": 10,
+  "passed": 0,
+  "failed": 10,
+  "details": [
+    {
+      "scenario": "Gold price trends and current market analysis",
+      "validation": {
+        "scenario": "Gold price trends and current market analysis",
+        "passed": false,
+        "failures": [
+          "Required checks failed: timestamp, top2_actions, provenance, ui_banner"
+        ],
+        "metrics": {
+          "timestampValid": false,
+          "top2ActionsValid": false,
+          "provenanceValid": false,
+          "sourcesWithPassagesValid": true,
+          "evidenceBackedAppropriate": true,
+          "uiBannerReady": false
+        }
+      },
+      "result": {
+        "success": true,
+        "response": {
+          "ok": true,
+          "analysis": {
+            "scenario_text": "Gold price trends and current market analysis",
+            "players": [
+              {
+                "id": "P1",
+                "name": "Alpha",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P2",
+                "name": "Beta",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P3",
+                "name": "Gamma",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              }
+            ],
+            "equilibrium": {
+              "profile": {
+                "P1": {
+                  "Cooperate": 0.504,
+                  "Defect": 0.496
+                },
+                "P2": {
+                  "Cooperate": 0.501,
+                  "Defect": 0.499
+                },
+                "P3": {
+                  "Cooperate": 0.494,
+                  "Defect": 0.506
+                }
+              },
+              "stability": 0.77,
+              "method": "recursive_best_response_mvp",
+              "convergenceIteration": 25,
+              "confidence": {
+                "lower": 0.67,
+                "upper": 0.87
+              }
+            },
+            "quantum": {
+              "collapsed": [
+                {
+                  "action": "Cooperate",
+                  "probability": 0.5
+                },
+                {
+                  "action": "Defect",
+                  "probability": 0.5
+                }
+              ],
+              "influence": [
+                [
+                  0.796,
+                  0.119,
+                  0.122
+                ],
+                [
+                  0.29,
+                  0.839,
+                  0.1
+                ],
+                [
+                  0.28,
+                  0.247,
+                  0.727
+                ]
+              ]
+            },
+            "pattern_matches": [
+              {
+                "id": "coordination_game",
+                "score": 0.764
+              },
+              {
+                "id": "stag_hunt_variant",
+                "score": 0.649
+              }
+            ],
+            "retrievals": [
+              {
+                "id": "https://economictimes.com/news/international/us/gold-prices-on-the-move-touching-new-record-amid-us-dollar-dip-gold-prediction-3700-knocking/articleshow/123639337.cms",
+                "title": "economictimes.com",
+                "url": "https://economictimes.com/news/international/us/gold-prices-on-the-move-touching-new-record-amid-us-dollar-dip-gold-prediction-3700-knocking/articleshow/123639337.cms"
+              },
+              {
+                "id": "https://www.moneymetals.com/gold-price",
+                "title": "moneymetals.com",
+                "url": "https://www.moneymetals.com/gold-price"
+              },
+              {
+                "id": "https://www.bullionvault.com/gold-news/precious-metal-price-forecasts-2025-gold-silver-platinum-and-palladium",
+                "title": "bullionvault.com",
+                "url": "https://www.bullionvault.com/gold-news/precious-metal-price-forecasts-2025-gold-silver-platinum-and-palladium"
+              },
+              {
+                "id": "https://fortune.com/article/current-price-of-gold-09-04-2025/",
+                "title": "fortune.com",
+                "url": "https://fortune.com/article/current-price-of-gold-09-04-2025/"
+              },
+              {
+                "id": "https://fortune.com/article/current-price-of-gold-09-05-2025/",
+                "title": "fortune.com",
+                "url": "https://fortune.com/article/current-price-of-gold-09-05-2025/"
+              }
+            ],
+            "retrieval_count": 5,
+            "processing_stats": {
+              "processing_time_ms": 8480,
+              "stability_score": 0.77
+            },
+            "provenance": {
+              "evidence_backed": true,
+              "retrieval_count": 5,
+              "model": "edge-mvp-1.0"
+            }
+          },
+          "mode": "standard"
+        },
+        "requestId": "test-1-1757085628368"
+      }
+    },
+    {
+      "scenario": "Oil market outlook and trading opportunities",
+      "validation": {
+        "scenario": "Oil market outlook and trading opportunities",
+        "passed": false,
+        "failures": [
+          "Required checks failed: timestamp, top2_actions, provenance, ui_banner"
+        ],
+        "metrics": {
+          "timestampValid": false,
+          "top2ActionsValid": false,
+          "provenanceValid": false,
+          "sourcesWithPassagesValid": true,
+          "evidenceBackedAppropriate": true,
+          "uiBannerReady": false
+        }
+      },
+      "result": {
+        "success": true,
+        "response": {
+          "ok": true,
+          "analysis": {
+            "scenario_text": "Oil market outlook and trading opportunities",
+            "players": [
+              {
+                "id": "P1",
+                "name": "Alpha",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P2",
+                "name": "Beta",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P3",
+                "name": "Gamma",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              }
+            ],
+            "equilibrium": {
+              "profile": {
+                "P1": {
+                  "Cooperate": 0.504,
+                  "Defect": 0.496
+                },
+                "P2": {
+                  "Cooperate": 0.501,
+                  "Defect": 0.499
+                },
+                "P3": {
+                  "Cooperate": 0.494,
+                  "Defect": 0.506
+                }
+              },
+              "stability": 0.77,
+              "method": "recursive_best_response_mvp",
+              "convergenceIteration": 25,
+              "confidence": {
+                "lower": 0.67,
+                "upper": 0.87
+              }
+            },
+            "quantum": {
+              "collapsed": [
+                {
+                  "action": "Cooperate",
+                  "probability": 0.5
+                },
+                {
+                  "action": "Defect",
+                  "probability": 0.5
+                }
+              ],
+              "influence": [
+                [
+                  0.796,
+                  0.119,
+                  0.122
+                ],
+                [
+                  0.29,
+                  0.839,
+                  0.1
+                ],
+                [
+                  0.28,
+                  0.247,
+                  0.727
+                ]
+              ]
+            },
+            "pattern_matches": [
+              {
+                "id": "coordination_game",
+                "score": 0.764
+              },
+              {
+                "id": "stag_hunt_variant",
+                "score": 0.649
+              }
+            ],
+            "retrievals": [
+              {
+                "id": "https://www.eia.gov/pressroom/releases/press573.php",
+                "title": "eia.gov",
+                "url": "https://www.eia.gov/pressroom/releases/press573.php"
+              },
+              {
+                "id": "https://www.statista.com/statistics/326017/weekly-crude-oil-prices/",
+                "title": "statista.com",
+                "url": "https://www.statista.com/statistics/326017/weekly-crude-oil-prices/"
+              },
+              {
+                "id": "https://www.ief.org/news/comparative-analysis-of-monthly-reports-on-the-oil-market-66",
+                "title": "ief.org",
+                "url": "https://www.ief.org/news/comparative-analysis-of-monthly-reports-on-the-oil-market-66"
+              },
+              {
+                "id": "https://corporate.exxonmobil.com/sustainability-and-reports/global-outlook",
+                "title": "corporate.exxonmobil.com",
+                "url": "https://corporate.exxonmobil.com/sustainability-and-reports/global-outlook"
+              },
+              {
+                "id": "https://www.eia.gov/outlooks/steo/",
+                "title": "eia.gov",
+                "url": "https://www.eia.gov/outlooks/steo/"
+              }
+            ],
+            "retrieval_count": 5,
+            "processing_stats": {
+              "processing_time_ms": 8976,
+              "stability_score": 0.77
+            },
+            "provenance": {
+              "evidence_backed": true,
+              "retrieval_count": 5,
+              "model": "edge-mvp-1.0"
+            }
+          },
+          "mode": "standard"
+        },
+        "requestId": "test-2-1757085639344"
+      }
+    },
+    {
+      "scenario": "Bitcoin cryptocurrency investment analysis",
+      "validation": {
+        "scenario": "Bitcoin cryptocurrency investment analysis",
+        "passed": false,
+        "failures": [
+          "Required checks failed: timestamp, top2_actions, provenance, evidence_backed, ui_banner"
+        ],
+        "metrics": {
+          "timestampValid": false,
+          "top2ActionsValid": false,
+          "provenanceValid": false,
+          "sourcesWithPassagesValid": true,
+          "evidenceBackedAppropriate": false,
+          "uiBannerReady": false
+        }
+      },
+      "result": {
+        "success": true,
+        "response": {
+          "ok": true,
+          "analysis": {
+            "scenario_text": "Bitcoin cryptocurrency investment analysis",
+            "players": [
+              {
+                "id": "P1",
+                "name": "Alpha",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P2",
+                "name": "Beta",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P3",
+                "name": "Gamma",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              }
+            ],
+            "equilibrium": {
+              "profile": {
+                "P1": {
+                  "Cooperate": 0.504,
+                  "Defect": 0.496
+                },
+                "P2": {
+                  "Cooperate": 0.501,
+                  "Defect": 0.499
+                },
+                "P3": {
+                  "Cooperate": 0.494,
+                  "Defect": 0.506
+                }
+              },
+              "stability": 0.77,
+              "method": "recursive_best_response_mvp",
+              "convergenceIteration": 25,
+              "confidence": {
+                "lower": 0.67,
+                "upper": 0.87
+              }
+            },
+            "quantum": {
+              "collapsed": [
+                {
+                  "action": "Cooperate",
+                  "probability": 0.5
+                },
+                {
+                  "action": "Defect",
+                  "probability": 0.5
+                }
+              ],
+              "influence": [
+                [
+                  0.796,
+                  0.119,
+                  0.122
+                ],
+                [
+                  0.29,
+                  0.839,
+                  0.1
+                ],
+                [
+                  0.28,
+                  0.247,
+                  0.727
+                ]
+              ]
+            },
+            "pattern_matches": [
+              {
+                "id": "coordination_game",
+                "score": 0.764
+              },
+              {
+                "id": "stag_hunt_variant",
+                "score": 0.649
+              }
+            ],
+            "retrievals": [],
+            "retrieval_count": 0,
+            "processing_stats": {
+              "processing_time_ms": 15014,
+              "stability_score": 0.77
+            },
+            "provenance": {
+              "evidence_backed": false,
+              "retrieval_count": 0,
+              "model": "edge-mvp-1.0",
+              "warning": "retrieval timeout"
+            }
+          },
+          "mode": "standard"
+        },
+        "requestId": "test-3-1757085650341"
+      }
+    },
+    {
+      "scenario": "EURUSD forex trading scenario",
+      "validation": {
+        "scenario": "EURUSD forex trading scenario",
+        "passed": false,
+        "failures": [
+          "Required checks failed: timestamp, top2_actions, provenance, ui_banner"
+        ],
+        "metrics": {
+          "timestampValid": false,
+          "top2ActionsValid": false,
+          "provenanceValid": false,
+          "sourcesWithPassagesValid": true,
+          "evidenceBackedAppropriate": true,
+          "uiBannerReady": false
+        }
+      },
+      "result": {
+        "success": true,
+        "response": {
+          "ok": true,
+          "analysis": {
+            "scenario_text": "EURUSD forex trading scenario",
+            "players": [
+              {
+                "id": "P1",
+                "name": "Alpha",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P2",
+                "name": "Beta",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P3",
+                "name": "Gamma",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              }
+            ],
+            "equilibrium": {
+              "profile": {
+                "P1": {
+                  "Cooperate": 0.504,
+                  "Defect": 0.496
+                },
+                "P2": {
+                  "Cooperate": 0.501,
+                  "Defect": 0.499
+                },
+                "P3": {
+                  "Cooperate": 0.494,
+                  "Defect": 0.506
+                }
+              },
+              "stability": 0.77,
+              "method": "recursive_best_response_mvp",
+              "convergenceIteration": 25,
+              "confidence": {
+                "lower": 0.67,
+                "upper": 0.87
+              }
+            },
+            "quantum": {
+              "collapsed": [
+                {
+                  "action": "Cooperate",
+                  "probability": 0.5
+                },
+                {
+                  "action": "Defect",
+                  "probability": 0.5
+                }
+              ],
+              "influence": [
+                [
+                  0.796,
+                  0.119,
+                  0.122
+                ],
+                [
+                  0.29,
+                  0.839,
+                  0.1
+                ],
+                [
+                  0.28,
+                  0.247,
+                  0.727
+                ]
+              ]
+            },
+            "pattern_matches": [
+              {
+                "id": "coordination_game",
+                "score": 0.764
+              },
+              {
+                "id": "stag_hunt_variant",
+                "score": 0.649
+              }
+            ],
+            "retrievals": [
+              {
+                "id": "https://roboforex.com/beginners/analytics/forex-forecast/currencies/eur-usd-forecast-2025-09-05/",
+                "title": "roboforex.com",
+                "url": "https://roboforex.com/beginners/analytics/forex-forecast/currencies/eur-usd-forecast-2025-09-05/"
+              },
+              {
+                "id": "https://roboforex.com/beginners/analytics/forex-forecast/currencies/eurusd-forecast-and-prediction/",
+                "title": "roboforex.com",
+                "url": "https://roboforex.com/beginners/analytics/forex-forecast/currencies/eurusd-forecast-and-prediction/"
+              },
+              {
+                "id": "https://www.youtube.com/watch?v=voEN9gszL9o",
+                "title": "youtube.com",
+                "url": "https://www.youtube.com/watch?v=voEN9gszL9o"
+              },
+              {
+                "id": "https://www.mitrade.com/insights/news/live-news/article-1-1094742-20250904",
+                "title": "mitrade.com",
+                "url": "https://www.mitrade.com/insights/news/live-news/article-1-1094742-20250904"
+              },
+              {
+                "id": "https://www.orbex.com/blog/en/2025/09/eur-usd-05-09-2025",
+                "title": "orbex.com",
+                "url": "https://www.orbex.com/blog/en/2025/09/eur-usd-05-09-2025"
+              }
+            ],
+            "retrieval_count": 5,
+            "processing_stats": {
+              "processing_time_ms": 8601,
+              "stability_score": 0.77
+            },
+            "provenance": {
+              "evidence_backed": true,
+              "retrieval_count": 5,
+              "model": "edge-mvp-1.0"
+            }
+          },
+          "mode": "standard"
+        },
+        "requestId": "test-4-1757085667252"
+      }
+    },
+    {
+      "scenario": "SPY ETF market performance review",
+      "validation": {
+        "scenario": "SPY ETF market performance review",
+        "passed": false,
+        "failures": [
+          "Required checks failed: timestamp, top2_actions, provenance, ui_banner"
+        ],
+        "metrics": {
+          "timestampValid": false,
+          "top2ActionsValid": false,
+          "provenanceValid": false,
+          "sourcesWithPassagesValid": true,
+          "evidenceBackedAppropriate": true,
+          "uiBannerReady": false
+        }
+      },
+      "result": {
+        "success": true,
+        "response": {
+          "ok": true,
+          "analysis": {
+            "scenario_text": "SPY ETF market performance review",
+            "players": [
+              {
+                "id": "P1",
+                "name": "Alpha",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P2",
+                "name": "Beta",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P3",
+                "name": "Gamma",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              }
+            ],
+            "equilibrium": {
+              "profile": {
+                "P1": {
+                  "Cooperate": 0.504,
+                  "Defect": 0.496
+                },
+                "P2": {
+                  "Cooperate": 0.501,
+                  "Defect": 0.499
+                },
+                "P3": {
+                  "Cooperate": 0.494,
+                  "Defect": 0.506
+                }
+              },
+              "stability": 0.77,
+              "method": "recursive_best_response_mvp",
+              "convergenceIteration": 25,
+              "confidence": {
+                "lower": 0.67,
+                "upper": 0.87
+              }
+            },
+            "quantum": {
+              "collapsed": [
+                {
+                  "action": "Cooperate",
+                  "probability": 0.5
+                },
+                {
+                  "action": "Defect",
+                  "probability": 0.5
+                }
+              ],
+              "influence": [
+                [
+                  0.796,
+                  0.119,
+                  0.122
+                ],
+                [
+                  0.29,
+                  0.839,
+                  0.1
+                ],
+                [
+                  0.28,
+                  0.247,
+                  0.727
+                ]
+              ]
+            },
+            "pattern_matches": [
+              {
+                "id": "coordination_game",
+                "score": 0.764
+              },
+              {
+                "id": "stag_hunt_variant",
+                "score": 0.649
+              }
+            ],
+            "retrievals": [
+              {
+                "id": "https://tickeron.com/blogs/spy-august-2025-outlook-in-depth-financial-market-analysis-11429/",
+                "title": "tickeron.com",
+                "url": "https://tickeron.com/blogs/spy-august-2025-outlook-in-depth-financial-market-analysis-11429/"
+              },
+              {
+                "id": "https://www.tipranks.com/news/stock-market-news-review-spy-qqq-tumble-on-alarming-ai-report-as-momentum-fades",
+                "title": "tipranks.com",
+                "url": "https://www.tipranks.com/news/stock-market-news-review-spy-qqq-tumble-on-alarming-ai-report-as-momentum-fades"
+              },
+              {
+                "id": "https://stockanalysis.com/etf/spy/",
+                "title": "stockanalysis.com",
+                "url": "https://stockanalysis.com/etf/spy/"
+              },
+              {
+                "id": "https://www.nasdaq.com/market-activity/etf/spy/news-headlines",
+                "title": "nasdaq.com",
+                "url": "https://www.nasdaq.com/market-activity/etf/spy/news-headlines"
+              },
+              {
+                "id": "https://www.tipranks.com/news/spy-etf-news-9-4-2025",
+                "title": "tipranks.com",
+                "url": "https://www.tipranks.com/news/spy-etf-news-9-4-2025"
+              }
+            ],
+            "retrieval_count": 5,
+            "processing_stats": {
+              "processing_time_ms": 7271,
+              "stability_score": 0.77
+            },
+            "provenance": {
+              "evidence_backed": true,
+              "retrieval_count": 5,
+              "model": "edge-mvp-1.0"
+            }
+          },
+          "mode": "standard"
+        },
+        "requestId": "test-5-1757085678057"
+      }
+    },
+    {
+      "scenario": "Crude oil futures market analysis",
+      "validation": {
+        "scenario": "Crude oil futures market analysis",
+        "passed": false,
+        "failures": [
+          "Required checks failed: timestamp, top2_actions, provenance, evidence_backed, ui_banner"
+        ],
+        "metrics": {
+          "timestampValid": false,
+          "top2ActionsValid": false,
+          "provenanceValid": false,
+          "sourcesWithPassagesValid": true,
+          "evidenceBackedAppropriate": false,
+          "uiBannerReady": false
+        }
+      },
+      "result": {
+        "success": true,
+        "response": {
+          "ok": true,
+          "analysis": {
+            "scenario_text": "Crude oil futures market analysis",
+            "players": [
+              {
+                "id": "P1",
+                "name": "Alpha",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P2",
+                "name": "Beta",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P3",
+                "name": "Gamma",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              }
+            ],
+            "equilibrium": {
+              "profile": {
+                "P1": {
+                  "Cooperate": 0.504,
+                  "Defect": 0.496
+                },
+                "P2": {
+                  "Cooperate": 0.501,
+                  "Defect": 0.499
+                },
+                "P3": {
+                  "Cooperate": 0.494,
+                  "Defect": 0.506
+                }
+              },
+              "stability": 0.77,
+              "method": "recursive_best_response_mvp",
+              "convergenceIteration": 25,
+              "confidence": {
+                "lower": 0.67,
+                "upper": 0.87
+              }
+            },
+            "quantum": {
+              "collapsed": [
+                {
+                  "action": "Cooperate",
+                  "probability": 0.5
+                },
+                {
+                  "action": "Defect",
+                  "probability": 0.5
+                }
+              ],
+              "influence": [
+                [
+                  0.796,
+                  0.119,
+                  0.122
+                ],
+                [
+                  0.29,
+                  0.839,
+                  0.1
+                ],
+                [
+                  0.28,
+                  0.247,
+                  0.727
+                ]
+              ]
+            },
+            "pattern_matches": [
+              {
+                "id": "coordination_game",
+                "score": 0.764
+              },
+              {
+                "id": "stag_hunt_variant",
+                "score": 0.649
+              }
+            ],
+            "retrievals": [],
+            "retrieval_count": 0,
+            "processing_stats": {
+              "processing_time_ms": 15014,
+              "stability_score": 0.77
+            },
+            "provenance": {
+              "evidence_backed": false,
+              "retrieval_count": 0,
+              "model": "edge-mvp-1.0",
+              "warning": "retrieval timeout"
+            }
+          },
+          "mode": "standard"
+        },
+        "requestId": "test-6-1757085687502"
+      }
+    },
+    {
+      "scenario": "Bitcoin vs Ethereum crypto market comparison",
+      "validation": {
+        "scenario": "Bitcoin vs Ethereum crypto market comparison",
+        "passed": false,
+        "failures": [
+          "Required checks failed: timestamp, top2_actions, provenance, evidence_backed, ui_banner"
+        ],
+        "metrics": {
+          "timestampValid": false,
+          "top2ActionsValid": false,
+          "provenanceValid": false,
+          "sourcesWithPassagesValid": true,
+          "evidenceBackedAppropriate": false,
+          "uiBannerReady": false
+        }
+      },
+      "result": {
+        "success": true,
+        "response": {
+          "ok": true,
+          "analysis": {
+            "scenario_text": "Bitcoin vs Ethereum crypto market comparison",
+            "players": [
+              {
+                "id": "P1",
+                "name": "Alpha",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P2",
+                "name": "Beta",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P3",
+                "name": "Gamma",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              }
+            ],
+            "equilibrium": {
+              "profile": {
+                "P1": {
+                  "Cooperate": 0.504,
+                  "Defect": 0.496
+                },
+                "P2": {
+                  "Cooperate": 0.501,
+                  "Defect": 0.499
+                },
+                "P3": {
+                  "Cooperate": 0.494,
+                  "Defect": 0.506
+                }
+              },
+              "stability": 0.77,
+              "method": "recursive_best_response_mvp",
+              "convergenceIteration": 25,
+              "confidence": {
+                "lower": 0.67,
+                "upper": 0.87
+              }
+            },
+            "quantum": {
+              "collapsed": [
+                {
+                  "action": "Cooperate",
+                  "probability": 0.5
+                },
+                {
+                  "action": "Defect",
+                  "probability": 0.5
+                }
+              ],
+              "influence": [
+                [
+                  0.796,
+                  0.119,
+                  0.122
+                ],
+                [
+                  0.29,
+                  0.839,
+                  0.1
+                ],
+                [
+                  0.28,
+                  0.247,
+                  0.727
+                ]
+              ]
+            },
+            "pattern_matches": [
+              {
+                "id": "coordination_game",
+                "score": 0.764
+              },
+              {
+                "id": "stag_hunt_variant",
+                "score": 0.649
+              }
+            ],
+            "retrievals": [],
+            "retrieval_count": 0,
+            "processing_stats": {
+              "processing_time_ms": 15006,
+              "stability_score": 0.77
+            },
+            "provenance": {
+              "evidence_backed": false,
+              "retrieval_count": 0,
+              "model": "edge-mvp-1.0",
+              "warning": "retrieval timeout"
+            }
+          },
+          "mode": "standard"
+        },
+        "requestId": "test-7-1757085704159"
+      }
+    },
+    {
+      "scenario": "GBPUSD currency pair trading opportunity",
+      "validation": {
+        "scenario": "GBPUSD currency pair trading opportunity",
+        "passed": false,
+        "failures": [
+          "Required checks failed: timestamp, top2_actions, provenance, ui_banner"
+        ],
+        "metrics": {
+          "timestampValid": false,
+          "top2ActionsValid": false,
+          "provenanceValid": false,
+          "sourcesWithPassagesValid": true,
+          "evidenceBackedAppropriate": true,
+          "uiBannerReady": false
+        }
+      },
+      "result": {
+        "success": true,
+        "response": {
+          "ok": true,
+          "analysis": {
+            "scenario_text": "GBPUSD currency pair trading opportunity",
+            "players": [
+              {
+                "id": "P1",
+                "name": "Alpha",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P2",
+                "name": "Beta",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P3",
+                "name": "Gamma",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              }
+            ],
+            "equilibrium": {
+              "profile": {
+                "P1": {
+                  "Cooperate": 0.504,
+                  "Defect": 0.496
+                },
+                "P2": {
+                  "Cooperate": 0.501,
+                  "Defect": 0.499
+                },
+                "P3": {
+                  "Cooperate": 0.494,
+                  "Defect": 0.506
+                }
+              },
+              "stability": 0.77,
+              "method": "recursive_best_response_mvp",
+              "convergenceIteration": 25,
+              "confidence": {
+                "lower": 0.67,
+                "upper": 0.87
+              }
+            },
+            "quantum": {
+              "collapsed": [
+                {
+                  "action": "Cooperate",
+                  "probability": 0.5
+                },
+                {
+                  "action": "Defect",
+                  "probability": 0.5
+                }
+              ],
+              "influence": [
+                [
+                  0.796,
+                  0.119,
+                  0.122
+                ],
+                [
+                  0.29,
+                  0.839,
+                  0.1
+                ],
+                [
+                  0.28,
+                  0.247,
+                  0.727
+                ]
+              ]
+            },
+            "pattern_matches": [
+              {
+                "id": "coordination_game",
+                "score": 0.764
+              },
+              {
+                "id": "stag_hunt_variant",
+                "score": 0.649
+              }
+            ],
+            "retrievals": [
+              {
+                "id": "https://forex24.pro/gbpusd-forecast/gbp-usd-forecast-and-analysis-for-september-5-2025/",
+                "title": "forex24.pro",
+                "url": "https://forex24.pro/gbpusd-forecast/gbp-usd-forecast-and-analysis-for-september-5-2025/"
+              },
+              {
+                "id": "https://goodmoneyguide.com/trading/gbpusd/",
+                "title": "goodmoneyguide.com",
+                "url": "https://goodmoneyguide.com/trading/gbpusd/"
+              },
+              {
+                "id": "https://roboforex.com/beginners/analytics/forex-forecast/trade-ideas/top-trade-ideas-2025-09-05/",
+                "title": "roboforex.com",
+                "url": "https://roboforex.com/beginners/analytics/forex-forecast/trade-ideas/top-trade-ideas-2025-09-05/"
+              },
+              {
+                "id": "https://www.mitrade.com/au/insights/news/live-news/article-1-1092886-20250903",
+                "title": "mitrade.com",
+                "url": "https://www.mitrade.com/au/insights/news/live-news/article-1-1092886-20250903"
+              },
+              {
+                "id": "https://www.marketpulse.com/markets/gbpusd-technical-corrective-decline-ended-potential-bullish-reversal-in-progress-for-sterling-as-nfp-looms/",
+                "title": "marketpulse.com",
+                "url": "https://www.marketpulse.com/markets/gbpusd-technical-corrective-decline-ended-potential-bullish-reversal-in-progress-for-sterling-as-nfp-looms/"
+              }
+            ],
+            "retrieval_count": 5,
+            "processing_stats": {
+              "processing_time_ms": 11466,
+              "stability_score": 0.77
+            },
+            "provenance": {
+              "evidence_backed": true,
+              "retrieval_count": 5,
+              "model": "edge-mvp-1.0"
+            }
+          },
+          "mode": "standard"
+        },
+        "requestId": "test-8-1757085721144"
+      }
+    },
+    {
+      "scenario": "Silver commodity market outlook",
+      "validation": {
+        "scenario": "Silver commodity market outlook",
+        "passed": false,
+        "failures": [
+          "Required checks failed: timestamp, top2_actions, provenance, ui_banner"
+        ],
+        "metrics": {
+          "timestampValid": false,
+          "top2ActionsValid": false,
+          "provenanceValid": false,
+          "sourcesWithPassagesValid": true,
+          "evidenceBackedAppropriate": true,
+          "uiBannerReady": false
+        }
+      },
+      "result": {
+        "success": true,
+        "response": {
+          "ok": true,
+          "analysis": {
+            "scenario_text": "Silver commodity market outlook",
+            "players": [
+              {
+                "id": "P1",
+                "name": "Alpha",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P2",
+                "name": "Beta",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P3",
+                "name": "Gamma",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              }
+            ],
+            "equilibrium": {
+              "profile": {
+                "P1": {
+                  "Cooperate": 0.504,
+                  "Defect": 0.496
+                },
+                "P2": {
+                  "Cooperate": 0.501,
+                  "Defect": 0.499
+                },
+                "P3": {
+                  "Cooperate": 0.494,
+                  "Defect": 0.506
+                }
+              },
+              "stability": 0.77,
+              "method": "recursive_best_response_mvp",
+              "convergenceIteration": 25,
+              "confidence": {
+                "lower": 0.67,
+                "upper": 0.87
+              }
+            },
+            "quantum": {
+              "collapsed": [
+                {
+                  "action": "Cooperate",
+                  "probability": 0.5
+                },
+                {
+                  "action": "Defect",
+                  "probability": 0.5
+                }
+              ],
+              "influence": [
+                [
+                  0.796,
+                  0.119,
+                  0.122
+                ],
+                [
+                  0.29,
+                  0.839,
+                  0.1
+                ],
+                [
+                  0.28,
+                  0.247,
+                  0.727
+                ]
+              ]
+            },
+            "pattern_matches": [
+              {
+                "id": "coordination_game",
+                "score": 0.764
+              },
+              {
+                "id": "stag_hunt_variant",
+                "score": 0.649
+              }
+            ],
+            "retrievals": [
+              {
+                "id": "https://www.sbcgold.com/silver-price-forecasts/silver-price-forecast-2025/",
+                "title": "sbcgold.com",
+                "url": "https://www.sbcgold.com/silver-price-forecasts/silver-price-forecast-2025/"
+              },
+              {
+                "id": "https://sprott.com/precious-metals-watch/",
+                "title": "sprott.com",
+                "url": "https://sprott.com/precious-metals-watch/"
+              },
+              {
+                "id": "https://farmonaut.com/mining/silver-mining-stocks-2025-key-trends-outlook",
+                "title": "farmonaut.com",
+                "url": "https://farmonaut.com/mining/silver-mining-stocks-2025-key-trends-outlook"
+              },
+              {
+                "id": "https://www.mitrade.com/insights/news/live-news/article-5-1025684-20250809",
+                "title": "mitrade.com",
+                "url": "https://www.mitrade.com/insights/news/live-news/article-5-1025684-20250809"
+              },
+              {
+                "id": "https://www.ainvest.com/news/2025-precious-metals-breakout-gold-silver-miners-early-stages-decade-long-bull-market-2509/",
+                "title": "ainvest.com",
+                "url": "https://www.ainvest.com/news/2025-precious-metals-breakout-gold-silver-miners-early-stages-decade-long-bull-market-2509/"
+              }
+            ],
+            "retrieval_count": 5,
+            "processing_stats": {
+              "processing_time_ms": 11290,
+              "stability_score": 0.77
+            },
+            "provenance": {
+              "evidence_backed": true,
+              "retrieval_count": 5,
+              "model": "edge-mvp-1.0"
+            }
+          },
+          "mode": "standard"
+        },
+        "requestId": "test-9-1757085734563"
+      }
+    },
+    {
+      "scenario": "USDJPY forex pair technical analysis",
+      "validation": {
+        "scenario": "USDJPY forex pair technical analysis",
+        "passed": false,
+        "failures": [
+          "Required checks failed: timestamp, top2_actions, provenance, ui_banner"
+        ],
+        "metrics": {
+          "timestampValid": false,
+          "top2ActionsValid": false,
+          "provenanceValid": false,
+          "sourcesWithPassagesValid": true,
+          "evidenceBackedAppropriate": true,
+          "uiBannerReady": false
+        }
+      },
+      "result": {
+        "success": true,
+        "response": {
+          "ok": true,
+          "analysis": {
+            "scenario_text": "USDJPY forex pair technical analysis",
+            "players": [
+              {
+                "id": "P1",
+                "name": "Alpha",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P2",
+                "name": "Beta",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              },
+              {
+                "id": "P3",
+                "name": "Gamma",
+                "actions": [
+                  "Cooperate",
+                  "Defect"
+                ]
+              }
+            ],
+            "equilibrium": {
+              "profile": {
+                "P1": {
+                  "Cooperate": 0.504,
+                  "Defect": 0.496
+                },
+                "P2": {
+                  "Cooperate": 0.501,
+                  "Defect": 0.499
+                },
+                "P3": {
+                  "Cooperate": 0.494,
+                  "Defect": 0.506
+                }
+              },
+              "stability": 0.77,
+              "method": "recursive_best_response_mvp",
+              "convergenceIteration": 25,
+              "confidence": {
+                "lower": 0.67,
+                "upper": 0.87
+              }
+            },
+            "quantum": {
+              "collapsed": [
+                {
+                  "action": "Cooperate",
+                  "probability": 0.5
+                },
+                {
+                  "action": "Defect",
+                  "probability": 0.5
+                }
+              ],
+              "influence": [
+                [
+                  0.796,
+                  0.119,
+                  0.122
+                ],
+                [
+                  0.29,
+                  0.839,
+                  0.1
+                ],
+                [
+                  0.28,
+                  0.247,
+                  0.727
+                ]
+              ]
+            },
+            "pattern_matches": [
+              {
+                "id": "coordination_game",
+                "score": 0.764
+              },
+              {
+                "id": "stag_hunt_variant",
+                "score": 0.649
+              }
+            ],
+            "retrievals": [
+              {
+                "id": "https://www.orbex.com/blog/en/2025/09/usd-jpy-05-09-2025",
+                "title": "orbex.com",
+                "url": "https://www.orbex.com/blog/en/2025/09/usd-jpy-05-09-2025"
+              },
+              {
+                "id": "https://www.mitrade.com/insights/news/live-news/article-1-1095606-20250904",
+                "title": "mitrade.com",
+                "url": "https://www.mitrade.com/insights/news/live-news/article-1-1095606-20250904"
+              },
+              {
+                "id": "https://roboforex.com/beginners/analytics/forex-forecast/currencies/usd-jpy-forecast-2025-09-05/",
+                "title": "roboforex.com",
+                "url": "https://roboforex.com/beginners/analytics/forex-forecast/currencies/usd-jpy-forecast-2025-09-05/"
+              },
+              {
+                "id": "https://www.mitrade.com/insights/news/live-news/article-1-1096782-20250905",
+                "title": "mitrade.com",
+                "url": "https://www.mitrade.com/insights/news/live-news/article-1-1096782-20250905"
+              },
+              {
+                "id": "https://www.youtube.com/watch?v=OOWHVZwciSg",
+                "title": "youtube.com",
+                "url": "https://www.youtube.com/watch?v=OOWHVZwciSg"
+              }
+            ],
+            "retrieval_count": 5,
+            "processing_stats": {
+              "processing_time_ms": 13189,
+              "stability_score": 0.77
+            },
+            "provenance": {
+              "evidence_backed": true,
+              "retrieval_count": 5,
+              "model": "edge-mvp-1.0"
+            }
+          },
+          "mode": "standard"
+        },
+        "requestId": "test-10-1757085747527"
+      }
+    }
+  ],
+  "metrics": {
+    "totalTimestampChecks": 0,
+    "validTimestamps": 0,
+    "top2ActionsPresent": 0,
+    "provenancePresent": 0,
+    "sourcesWithPassages": 10,
+    "evidenceBackedAppropriate": 7,
+    "uiBannerReady": 0,
+    "schemaFailures": 0
+  }
+}

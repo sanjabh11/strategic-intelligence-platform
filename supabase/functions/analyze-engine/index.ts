@@ -41,6 +41,15 @@ function uuid() {
   return crypto.randomUUID?.() ?? `${Date.now()}-${Math.floor(Math.random()*1e6)}`
 }
 
+function simpleHash(str: string) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = ((hash << 5) - hash) + str.charCodeAt(i);
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return hash.toString(36);
+}
+
 async function safeJsonParse(text: string) {
   try {
     return { ok: true, json: JSON.parse(text) }
@@ -544,6 +553,121 @@ Produce teacher JSON with lesson_outline, simulation_setup, grading_rubric, stud
 Include practical classroom activities and assessment methods.`
   }
 }
+// --- Numeric Passage Enforcement ---
+async function enforceNumericPassages(llmJson: any, retrievals: any[]): Promise<void> {
+  console.log('🔍 Starting numeric passage enforcement scan');
+
+  let attachedPassages = 0;
+  let unverifiedClaims = 0;
+
+  // Helper function to find matching snippet in retrievals
+  const findMatchingSnippet = (numericValue: string, retrievals: any[]): any => {
+    const pattern = new RegExp(`\\b${escapeRegExp(numericValue)}\\b`, 'i');
+    for (const retrieval of retrievals) {
+      if (!retrieval.snippet) continue;
+      if (pattern.test(retrieval.snippet)) {
+        return {
+          id: retrieval.id || `retrieval-${uuid()}`,
+          url: retrieval.url || '',
+          passage_excerpt: retrieval.snippet
+        };
+      }
+    }
+    return null;
+  };
+
+  const escapeRegExp = (string: string): string => {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  };
+
+  // Scan indicators object for finance queries
+  if (llmJson.indicators) {
+    console.log('📊 Scanning indicators object');
+    ['spot_price', 'pct_change', 'usdx', 'y10_real'].forEach(field => {
+      if (llmJson.indicators[field] != null) {
+        const value = llmJson.indicators[field];
+        const numericValue = value.toString();
+
+        if (!llmJson.indicators[field].sources ||
+            !Array.isArray(llmJson.indicators[field].sources) ||
+            llmJson.indicators[field].sources.length === 0) {
+
+          const matchingSnippet = findMatchingSnippet(numericValue, retrievals);
+          if (matchingSnippet) {
+            llmJson.indicators[field].sources = [matchingSnippet];
+            attachedPassages++;
+            console.log(`✅ Attached passage for indicators.${field}: ${numericValue}`);
+          } else {
+            llmJson.indicators[field].verification = 'UNVERIFIED';
+            unverifiedClaims++;
+            console.log(`❌ No matching passage for indicators.${field}: ${numericValue}`);
+          }
+        } else {
+          console.log(`ℹ️  Sources already exist for indicators.${field}`);
+        }
+      }
+    });
+  }
+
+  // Scan top_2_actions for numeric values
+  if (llmJson.top_2_actions && Array.isArray(llmJson.top_2_actions)) {
+    console.log('🎯 Scanning top_2_actions');
+    llmJson.top_2_actions.forEach((action: any, idx: number) => {
+      // Check rationale
+      if (action.rationale) {
+        const numericMatches = action.rationale.match(/\b\d+\.?\d*\b/g);
+        if (numericMatches) {
+          numericMatches.forEach((numericValue: string) => {
+            if (!action.sources ||
+                !Array.isArray(action.sources) ||
+                action.sources.length === 0 ||
+                !action.sources.some((s: any) => s.passage_excerpt?.includes(numericValue))) {
+
+              const matchingSnippet = findMatchingSnippet(numericValue, retrievals);
+              if (matchingSnippet) {
+                if (!action.sources) action.sources = [];
+                action.sources.push(matchingSnippet);
+                attachedPassages++;
+              } else {
+                unverifiedClaims++;
+              }
+            }
+          });
+        }
+      }
+
+      // Check entry_price_range
+      if (action.entry_price_range && typeof action.entry_price_range === 'string') {
+        const numericMatches = action.entry_price_range.match(/\b\d+\.?\d*\b/g);
+        if (numericMatches) {
+          numericMatches.forEach((numericValue: string) => {
+            if (!action.sources ||
+                !Array.isArray(action.sources) ||
+                action.sources.length === 0 ||
+                !action.sources.some((s: any) => s.passage_excerpt?.includes(numericValue))) {
+
+              const matchingSnippet = findMatchingSnippet(numericValue, retrievals);
+              if (matchingSnippet) {
+                if (!action.sources) action.sources = [];
+                action.sources.push(matchingSnippet);
+                attachedPassages++;
+              } else {
+                unverifiedClaims++;
+              }
+            }
+          });
+        }
+      }
+    });
+  }
+
+  // Update provenance.evidence_backed
+  if (llmJson.provenance) {
+    llmJson.provenance.evidence_backed = attachedPassages > 0;
+  }
+
+  console.log(`🔍 Completed: ${attachedPassages} passages attached, ${unverifiedClaims} unverified claims`);
+}
 
 // --- Error logging helpers ---
 async function logRpcError(request_id: string | null, errorId: string, errMsg: string, payload: any = null) {
@@ -1025,6 +1149,32 @@ Deno.serve(async (req) => {
   // Stage: RAG retrievals (unless education_quick)
   let retrievals: any[] = []
   let evidence_backed = false
+
+  // Try to load from cache first
+  if (mode !== "education_quick") {
+    try {
+      const topic_domain = scenario_text.toLowerCase().includes('finance') || scenario_text.toLowerCase().includes('oil') || scenario_text.toLowerCase().includes('gold') || scenario_text.toLowerCase().includes('bitcoin') ? 'finance' : 'geopolitics';
+      const user_profile = requestBody.user_profile || { risk_tolerance: 0.5 };
+      const user_profile_hash = simpleHash(JSON.stringify(user_profile));
+      const cache_key = `${scenario_text}::${topic_domain}::${user_profile_hash}`;
+
+      const { data: cachedResult, error } = await supabaseAdmin
+        .from('retrieval_cache')
+        .select('hits, url_list')
+        .eq('query', cache_key)
+        .single();
+
+      if (cachedResult && !error) {
+        retrievals = cachedResult.hits || [];
+        evidence_backed = Array.isArray(retrievals) && retrievals.length > 0;
+        console.log(`[${request_id}] stage=cache_hit, hits=${retrievals.length}, cache_key=${cache_key}`);
+      } else {
+        console.log(`[${request_id}] stage=cache_miss, will fetch from perplexity, cache_key=${cache_key}`);
+      }
+    } catch (e) {
+      console.log(`[${request_id}] stage=cache_miss, will fetch from perplexity (error: ${e})`);
+    }
+  }
   if (mode === "standard") {
     console.log(`[${request_id}] stage=rag_start, high_risk=${highRisk}`)
     const perp = await perplexitySearch(scenario_text, 5, 3)
@@ -1035,8 +1185,16 @@ Deno.serve(async (req) => {
 
       // Cache retrievals
       try {
+        // Enhanced cache key with topic_domain and user_profile_hash
+        const topic_domain = scenario_text.toLowerCase().includes('finance') || scenario_text.toLowerCase().includes('oil') || scenario_text.toLowerCase().includes('gold') || scenario_text.toLowerCase().includes('bitcoin') ? 'finance' : 'geopolitics';
+        const user_profile = requestBody.user_profile || { risk_tolerance: 0.5 };
+        const user_profile_hash = simpleHash(JSON.stringify(user_profile));
+        const cache_key = `${scenario_text}::${topic_domain}::${user_profile_hash}`;
+
+        console.log(`[CACHE] Cache key composition: scenario_text("${scenario_text.slice(0,50)}...") + topic_domain("${topic_domain}") + user_profile_hash("${user_profile_hash}")`);
+
         await supabaseAdmin.from("retrieval_cache").upsert({
-          query: scenario_text,
+          query: cache_key,
           hits: retrievals,
           url_list: retrievals.map((r:any) => r.url).filter(Boolean)
         }, { onConflict: ["query"] })
