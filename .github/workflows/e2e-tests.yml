@@ -1,0 +1,55 @@
+name: E2E Analyze-Engine Tests
+
+on:
+  push:
+    branches: [ main, master ]
+    paths:
+      - 'supabase/functions/analyze-engine/**'
+      - 'tests/**'
+      - '.github/workflows/e2e-tests.yml'
+  pull_request:
+    branches: [ main, master ]
+    paths:
+      - 'supabase/functions/analyze-engine/**'
+      - 'tests/**'
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run E2E tests
+        env:
+          ENDPOINT: ${{ secrets.E2E_ANALYZE_ENDPOINT }}
+          SERVICE_KEY: ${{ secrets.E2E_SERVICE_KEY }}
+        run: npm run test:e2e
+
+      - name: Notify on test failure
+        if: failure()
+        run: |
+          echo "❌ E2E tests failed!"
+          echo "🔧 Check the test output above for specific failures"
+          echo "📋 Common issues:"
+          echo "   - Function not deployed with latest code"
+          echo "   - Environment variables not configured"
+          echo "   - Database migration not applied"
+          echo "   - Schema validation errors"
+          exit 1
+
+      - name: Notify on test success
+        if: success()
+        run: |
+          echo "✅ All E2E tests passed!"
+          echo "🎉 System is ready for production"

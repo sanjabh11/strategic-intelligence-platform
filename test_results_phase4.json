@@ -116,9 +116,9 @@
             ],
             "retrievals": [
               {
-                "id": "https://economictimes.com/news/international/us/gold-prices-on-the-move-touching-new-record-amid-us-dollar-dip-gold-prediction-3700-knocking/articleshow/123639337.cms",
-                "title": "economictimes.com",
-                "url": "https://economictimes.com/news/international/us/gold-prices-on-the-move-touching-new-record-amid-us-dollar-dip-gold-prediction-3700-knocking/articleshow/123639337.cms"
+                "id": "https://tradingeconomics.com/commodity/gold",
+                "title": "tradingeconomics.com",
+                "url": "https://tradingeconomics.com/commodity/gold"
               },
               {
                 "id": "https://www.moneymetals.com/gold-price",
@@ -126,24 +126,24 @@
                 "url": "https://www.moneymetals.com/gold-price"
               },
               {
-                "id": "https://www.bullionvault.com/gold-news/precious-metal-price-forecasts-2025-gold-silver-platinum-and-palladium",
-                "title": "bullionvault.com",
-                "url": "https://www.bullionvault.com/gold-news/precious-metal-price-forecasts-2025-gold-silver-platinum-and-palladium"
+                "id": "https://goldprice.org/gold-price-today/2025-09-03",
+                "title": "goldprice.org",
+                "url": "https://goldprice.org/gold-price-today/2025-09-03"
               },
               {
-                "id": "https://fortune.com/article/current-price-of-gold-09-04-2025/",
-                "title": "fortune.com",
-                "url": "https://fortune.com/article/current-price-of-gold-09-04-2025/"
+                "id": "https://www.royalmint.com/gold-price/",
+                "title": "royalmint.com",
+                "url": "https://www.royalmint.com/gold-price/"
               },
               {
-                "id": "https://fortune.com/article/current-price-of-gold-09-05-2025/",
-                "title": "fortune.com",
-                "url": "https://fortune.com/article/current-price-of-gold-09-05-2025/"
+                "id": "https://www.cbsnews.com/news/will-gold-prices-fall-september-2025/",
+                "title": "cbsnews.com",
+                "url": "https://www.cbsnews.com/news/will-gold-prices-fall-september-2025/"
               }
             ],
             "retrieval_count": 5,
             "processing_stats": {
-              "processing_time_ms": 8480,
+              "processing_time_ms": 7240,
               "stability_score": 0.77
             },
             "provenance": {
@@ -154,7 +154,7 @@
           },
           "mode": "standard"
         },
-        "requestId": "test-1-1757085628368"
+        "requestId": "test-1-1757156904048"
       }
     },
     {
@@ -270,34 +270,34 @@
             ],
             "retrievals": [
               {
-                "id": "https://www.eia.gov/pressroom/releases/press573.php",
-                "title": "eia.gov",
-                "url": "https://www.eia.gov/pressroom/releases/press573.php"
-              },
-              {
-                "id": "https://www.statista.com/statistics/326017/weekly-crude-oil-prices/",
-                "title": "statista.com",
-                "url": "https://www.statista.com/statistics/326017/weekly-crude-oil-prices/"
-              },
-              {
                 "id": "https://www.ief.org/news/comparative-analysis-of-monthly-reports-on-the-oil-market-66",
                 "title": "ief.org",
                 "url": "https://www.ief.org/news/comparative-analysis-of-monthly-reports-on-the-oil-market-66"
               },
               {
-                "id": "https://corporate.exxonmobil.com/sustainability-and-reports/global-outlook",
-                "title": "corporate.exxonmobil.com",
-                "url": "https://corporate.exxonmobil.com/sustainability-and-reports/global-outlook"
+                "id": "https://www.spglobal.com/commodity-insights/en/news-research/latest-news/crude-oil/080725-oil-markets-brace-for-impact-as-trumps-tariffs-take-effect",
+                "title": "spglobal.com",
+                "url": "https://www.spglobal.com/commodity-insights/en/news-research/latest-news/crude-oil/080725-oil-markets-brace-for-impact-as-trumps-tariffs-take-effect"
               },
               {
-                "id": "https://www.eia.gov/outlooks/steo/",
-                "title": "eia.gov",
-                "url": "https://www.eia.gov/outlooks/steo/"
+                "id": "https://www.energyconnects.com/opinion/thought-leadership/2025/august/opec-iea-demand-divide-deepens-leaving-oil-market-guessing/",
+                "title": "energyconnects.com",
+                "url": "https://www.energyconnects.com/opinion/thought-leadership/2025/august/opec-iea-demand-divide-deepens-leaving-oil-market-guessing/"
+              },
+              {
+                "id": "https://www.farmprogress.com/commodities/crude-oil",
+                "title": "farmprogress.com",
+                "url": "https://www.farmprogress.com/commodities/crude-oil"
+              },
+              {
+                "id": "https://www.ebc.com/forex/267486.html",
+                "title": "ebc.com",
+                "url": "https://www.ebc.com/forex/267486.html"
               }
             ],
             "retrieval_count": 5,
             "processing_stats": {
-              "processing_time_ms": 8976,
+              "processing_time_ms": 12118,
               "stability_score": 0.77
             },
             "provenance": {
@@ -308,7 +308,7 @@
           },
           "mode": "standard"
         },
-        "requestId": "test-2-1757085639344"
+        "requestId": "test-2-1757156913659"
       }
     },
     {
@@ -317,14 +317,14 @@
         "scenario": "Bitcoin cryptocurrency investment analysis",
         "passed": false,
         "failures": [
-          "Required checks failed: timestamp, top2_actions, provenance, evidence_backed, ui_banner"
+          "Required checks failed: timestamp, top2_actions, provenance, ui_banner"
         ],
         "metrics": {
           "timestampValid": false,
           "top2ActionsValid": false,
           "provenanceValid": false,
           "sourcesWithPassagesValid": true,
-          "evidenceBackedAppropriate": false,
+          "evidenceBackedAppropriate": true,
           "uiBannerReady": false
         }
       },
@@ -422,22 +422,47 @@
                 "score": 0.649
               }
             ],
-            "retrievals": [],
-            "retrieval_count": 0,
+            "retrievals": [
+              {
+                "id": "https://coinbureau.com/analysis/is-crypto-a-good-investment/",
+                "title": "coinbureau.com",
+                "url": "https://coinbureau.com/analysis/is-crypto-a-good-investment/"
+              },
+              {
+                "id": "https://capital.com/en-int/analysis/bitcoin-price-prediction-2030-2050",
+                "title": "capital.com",
+                "url": "https://capital.com/en-int/analysis/bitcoin-price-prediction-2030-2050"
+              },
+              {
+                "id": "https://liquidity-provider.com/articles/best-crypto-to-buy-now-investors-guide-2025/",
+                "title": "liquidity-provider.com",
+                "url": "https://liquidity-provider.com/articles/best-crypto-to-buy-now-investors-guide-2025/"
+              },
+              {
+                "id": "https://investinglive.com/Cryptocurrency",
+                "title": "investinglive.com",
+                "url": "https://investinglive.com/Cryptocurrency"
+              },
+              {
+                "id": "https://bitwiseinvestments.com/crypto-market-insights/bitcoin-long-term-capital-market-assumptions-2025",
+                "title": "bitwiseinvestments.com",
+                "url": "https://bitwiseinvestments.com/crypto-market-insights/bitcoin-long-term-capital-market-assumptions-2025"
+              }
+            ],
+            "retrieval_count": 5,
             "processing_stats": {
-              "processing_time_ms": 15014,
+              "processing_time_ms": 8019,
               "stability_score": 0.77
             },
             "provenance": {
-              "evidence_backed": false,
-              "retrieval_count": 0,
-              "model": "edge-mvp-1.0",
-              "warning": "retrieval timeout"
+              "evidence_backed": true,
+              "retrieval_count": 5,
+              "model": "edge-mvp-1.0"
             }
           },
           "mode": "standard"
         },
-        "requestId": "test-3-1757085650341"
+        "requestId": "test-3-1757156928716"
       }
     },
     {
@@ -553,14 +578,14 @@
             ],
             "retrievals": [
               {
-                "id": "https://roboforex.com/beginners/analytics/forex-forecast/currencies/eur-usd-forecast-2025-09-05/",
-                "title": "roboforex.com",
-                "url": "https://roboforex.com/beginners/analytics/forex-forecast/currencies/eur-usd-forecast-2025-09-05/"
+                "id": "https://forex24.pro/eurusd-forecast/eur-usd-forecast-euro-dollar-for-september-5-2025/",
+                "title": "forex24.pro",
+                "url": "https://forex24.pro/eurusd-forecast/eur-usd-forecast-euro-dollar-for-september-5-2025/"
               },
               {
-                "id": "https://roboforex.com/beginners/analytics/forex-forecast/currencies/eurusd-forecast-and-prediction/",
-                "title": "roboforex.com",
-                "url": "https://roboforex.com/beginners/analytics/forex-forecast/currencies/eurusd-forecast-and-prediction/"
+                "id": "https://www.tradingview.com",
+                "title": "tradingview.com",
+                "url": "https://www.tradingview.com"
               },
               {
                 "id": "https://www.youtube.com/watch?v=voEN9gszL9o",
@@ -568,9 +593,9 @@
                 "url": "https://www.youtube.com/watch?v=voEN9gszL9o"
               },
               {
-                "id": "https://www.mitrade.com/insights/news/live-news/article-1-1094742-20250904",
-                "title": "mitrade.com",
-                "url": "https://www.mitrade.com/insights/news/live-news/article-1-1094742-20250904"
+                "id": "https://in.tradingview.com/symbols/EURUSD/",
+                "title": "in.tradingview.com",
+                "url": "https://in.tradingview.com/symbols/EURUSD/"
               },
               {
                 "id": "https://www.orbex.com/blog/en/2025/09/eur-usd-05-09-2025",
@@ -580,7 +605,7 @@
             ],
             "retrieval_count": 5,
             "processing_stats": {
-              "processing_time_ms": 8601,
+              "processing_time_ms": 7665,
               "stability_score": 0.77
             },
             "provenance": {
@@ -591,7 +616,7 @@
           },
           "mode": "standard"
         },
-        "requestId": "test-4-1757085667252"
+        "requestId": "test-4-1757156938616"
       }
     },
     {
@@ -712,9 +737,9 @@
                 "url": "https://tickeron.com/blogs/spy-august-2025-outlook-in-depth-financial-market-analysis-11429/"
               },
               {
-                "id": "https://www.tipranks.com/news/stock-market-news-review-spy-qqq-tumble-on-alarming-ai-report-as-momentum-fades",
-                "title": "tipranks.com",
-                "url": "https://www.tipranks.com/news/stock-market-news-review-spy-qqq-tumble-on-alarming-ai-report-as-momentum-fades"
+                "id": "https://money.tmx.com/en/quote/SPY:US",
+                "title": "money.tmx.com",
+                "url": "https://money.tmx.com/en/quote/SPY:US"
               },
               {
                 "id": "https://stockanalysis.com/etf/spy/",
@@ -722,9 +747,9 @@
                 "url": "https://stockanalysis.com/etf/spy/"
               },
               {
-                "id": "https://www.nasdaq.com/market-activity/etf/spy/news-headlines",
-                "title": "nasdaq.com",
-                "url": "https://www.nasdaq.com/market-activity/etf/spy/news-headlines"
+                "id": "https://www.schwab.com/research/markets/ideas-strategies/etfs",
+                "title": "schwab.com",
+                "url": "https://www.schwab.com/research/markets/ideas-strategies/etfs"
               },
               {
                 "id": "https://www.tipranks.com/news/spy-etf-news-9-4-2025",
@@ -734,7 +759,7 @@
             ],
             "retrieval_count": 5,
             "processing_stats": {
-              "processing_time_ms": 7271,
+              "processing_time_ms": 6511,
               "stability_score": 0.77
             },
             "provenance": {
@@ -745,7 +770,7 @@
           },
           "mode": "standard"
         },
-        "requestId": "test-5-1757085678057"
+        "requestId": "test-5-1757156947997"
       }
     },
     {
@@ -754,14 +779,14 @@
         "scenario": "Crude oil futures market analysis",
         "passed": false,
         "failures": [
-          "Required checks failed: timestamp, top2_actions, provenance, evidence_backed, ui_banner"
+          "Required checks failed: timestamp, top2_actions, provenance, ui_banner"
         ],
         "metrics": {
           "timestampValid": false,
           "top2ActionsValid": false,
           "provenanceValid": false,
           "sourcesWithPassagesValid": true,
-          "evidenceBackedAppropriate": false,
+          "evidenceBackedAppropriate": true,
           "uiBannerReady": false
         }
       },
@@ -859,22 +884,47 @@
                 "score": 0.649
               }
             ],
-            "retrievals": [],
-            "retrieval_count": 0,
+            "retrievals": [
+              {
+                "id": "https://www.ainvest.com/news/crude-oil-market-volatility-term-bearish-signals-navigating-declining-futures-environment-2509/",
+                "title": "ainvest.com",
+                "url": "https://www.ainvest.com/news/crude-oil-market-volatility-term-bearish-signals-navigating-declining-futures-environment-2509/"
+              },
+              {
+                "id": "https://www.barchart.com/futures/quotes/CBX25",
+                "title": "barchart.com",
+                "url": "https://www.barchart.com/futures/quotes/CBX25"
+              },
+              {
+                "id": "https://tradingeconomics.com/commodity/crude-oil",
+                "title": "tradingeconomics.com",
+                "url": "https://tradingeconomics.com/commodity/crude-oil"
+              },
+              {
+                "id": "https://www.barchart.com/futures/quotes/CLK1",
+                "title": "barchart.com",
+                "url": "https://www.barchart.com/futures/quotes/CLK1"
+              },
+              {
+                "id": "https://noortrends.ae/en/oil-breaks-through-key-resistance-3-09-2025/09/03/tech-analysis/",
+                "title": "noortrends.ae",
+                "url": "https://noortrends.ae/en/oil-breaks-through-key-resistance-3-09-2025/09/03/tech-analysis/"
+              }
+            ],
+            "retrieval_count": 5,
             "processing_stats": {
-              "processing_time_ms": 15014,
+              "processing_time_ms": 11214,
               "stability_score": 0.77
             },
             "provenance": {
-              "evidence_backed": false,
-              "retrieval_count": 0,
-              "model": "edge-mvp-1.0",
-              "warning": "retrieval timeout"
+              "evidence_backed": true,
+              "retrieval_count": 5,
+              "model": "edge-mvp-1.0"
             }
           },
           "mode": "standard"
         },
-        "requestId": "test-6-1757085687502"
+        "requestId": "test-6-1757156956614"
       }
     },
     {
@@ -883,14 +933,14 @@
         "scenario": "Bitcoin vs Ethereum crypto market comparison",
         "passed": false,
         "failures": [
-          "Required checks failed: timestamp, top2_actions, provenance, evidence_backed, ui_banner"
+          "Required checks failed: timestamp, top2_actions, provenance, ui_banner"
         ],
         "metrics": {
           "timestampValid": false,
           "top2ActionsValid": false,
           "provenanceValid": false,
           "sourcesWithPassagesValid": true,
-          "evidenceBackedAppropriate": false,
+          "evidenceBackedAppropriate": true,
           "uiBannerReady": false
         }
       },
@@ -988,22 +1038,47 @@
                 "score": 0.649
               }
             ],
-            "retrievals": [],
-            "retrieval_count": 0,
+            "retrievals": [
+              {
+                "id": "https://www.ainvest.com/news/cryptocurrencies-bitcoin-ethereum-rallying-2025-2509/",
+                "title": "ainvest.com",
+                "url": "https://www.ainvest.com/news/cryptocurrencies-bitcoin-ethereum-rallying-2025-2509/"
+              },
+              {
+                "id": "https://www.mitrade.com/au/insights/news/live-news/article-3-1073746-20250828",
+                "title": "mitrade.com",
+                "url": "https://www.mitrade.com/au/insights/news/live-news/article-3-1073746-20250828"
+              },
+              {
+                "id": "https://news.futunn.com/en/post/61526404/september-2-2025-analysis-of-bitcoin-and-ethereum-market-trends",
+                "title": "news.futunn.com",
+                "url": "https://news.futunn.com/en/post/61526404/september-2-2025-analysis-of-bitcoin-and-ethereum-market-trends"
+              },
+              {
+                "id": "https://www.ig.com/ae/news-and-trade-ideas/ether-sprints-ahead-of-bitcoin-as-institutional-money-rotates-in-250813",
+                "title": "ig.com",
+                "url": "https://www.ig.com/ae/news-and-trade-ideas/ether-sprints-ahead-of-bitcoin-as-institutional-money-rotates-in-250813"
+              },
+              {
+                "id": "https://www.bankrate.com/investing/top-performing-crypto/",
+                "title": "bankrate.com",
+                "url": "https://www.bankrate.com/investing/top-performing-crypto/"
+              }
+            ],
+            "retrieval_count": 5,
             "processing_stats": {
-              "processing_time_ms": 15006,
+              "processing_time_ms": 10872,
               "stability_score": 0.77
             },
             "provenance": {
-              "evidence_backed": false,
-              "retrieval_count": 0,
-              "model": "edge-mvp-1.0",
-              "warning": "retrieval timeout"
+              "evidence_backed": true,
+              "retrieval_count": 5,
+              "model": "edge-mvp-1.0"
             }
           },
           "mode": "standard"
         },
-        "requestId": "test-7-1757085704159"
+        "requestId": "test-7-1757156972508"
       }
     },
     {
@@ -1134,19 +1209,19 @@
                 "url": "https://roboforex.com/beginners/analytics/forex-forecast/trade-ideas/top-trade-ideas-2025-09-05/"
               },
               {
-                "id": "https://www.mitrade.com/au/insights/news/live-news/article-1-1092886-20250903",
+                "id": "https://www.mitrade.com/insights/news/live-news/article-1-1086554-20250902",
                 "title": "mitrade.com",
-                "url": "https://www.mitrade.com/au/insights/news/live-news/article-1-1092886-20250903"
+                "url": "https://www.mitrade.com/insights/news/live-news/article-1-1086554-20250902"
               },
               {
-                "id": "https://www.marketpulse.com/markets/gbpusd-technical-corrective-decline-ended-potential-bullish-reversal-in-progress-for-sterling-as-nfp-looms/",
-                "title": "marketpulse.com",
-                "url": "https://www.marketpulse.com/markets/gbpusd-technical-corrective-decline-ended-potential-bullish-reversal-in-progress-for-sterling-as-nfp-looms/"
+                "id": "https://freshforex.com/analitics/fresh-forecast/fa/issue_337203.html",
+                "title": "freshforex.com",
+                "url": "https://freshforex.com/analitics/fresh-forecast/fa/issue_337203.html"
               }
             ],
             "retrieval_count": 5,
             "processing_stats": {
-              "processing_time_ms": 11466,
+              "processing_time_ms": 7965,
               "stability_score": 0.77
             },
             "provenance": {
@@ -1157,7 +1232,7 @@
           },
           "mode": "standard"
         },
-        "requestId": "test-8-1757085721144"
+        "requestId": "test-8-1757156986718"
       }
     },
     {
@@ -1278,29 +1353,29 @@
                 "url": "https://www.sbcgold.com/silver-price-forecasts/silver-price-forecast-2025/"
               },
               {
-                "id": "https://sprott.com/precious-metals-watch/",
-                "title": "sprott.com",
-                "url": "https://sprott.com/precious-metals-watch/"
+                "id": "https://www.bullionvault.com/silver-price-chart.do",
+                "title": "bullionvault.com",
+                "url": "https://www.bullionvault.com/silver-price-chart.do"
               },
               {
-                "id": "https://farmonaut.com/mining/silver-mining-stocks-2025-key-trends-outlook",
-                "title": "farmonaut.com",
-                "url": "https://farmonaut.com/mining/silver-mining-stocks-2025-key-trends-outlook"
+                "id": "https://deriv.com/blog/posts/silver-40-dollars-price-forecast-2025-commodity-rally",
+                "title": "deriv.com",
+                "url": "https://deriv.com/blog/posts/silver-40-dollars-price-forecast-2025-commodity-rally"
               },
               {
-                "id": "https://www.mitrade.com/insights/news/live-news/article-5-1025684-20250809",
-                "title": "mitrade.com",
-                "url": "https://www.mitrade.com/insights/news/live-news/article-5-1025684-20250809"
+                "id": "https://www.barchart.com/futures/quotes/SIN25",
+                "title": "barchart.com",
+                "url": "https://www.barchart.com/futures/quotes/SIN25"
               },
               {
-                "id": "https://www.ainvest.com/news/2025-precious-metals-breakout-gold-silver-miners-early-stages-decade-long-bull-market-2509/",
-                "title": "ainvest.com",
-                "url": "https://www.ainvest.com/news/2025-precious-metals-breakout-gold-silver-miners-early-stages-decade-long-bull-market-2509/"
+                "id": "https://www.bullionvault.com/gold-news/precious-metal-price-forecasts-2025-gold-silver-platinum-and-palladium",
+                "title": "bullionvault.com",
+                "url": "https://www.bullionvault.com/gold-news/precious-metal-price-forecasts-2025-gold-silver-platinum-and-palladium"
               }
             ],
             "retrieval_count": 5,
             "processing_stats": {
-              "processing_time_ms": 11290,
+              "processing_time_ms": 7181,
               "stability_score": 0.77
             },
             "provenance": {
@@ -1311,7 +1386,7 @@
           },
           "mode": "standard"
         },
-        "requestId": "test-9-1757085734563"
+        "requestId": "test-9-1757156996709"
       }
     },
     {
@@ -1427,9 +1502,9 @@
             ],
             "retrievals": [
               {
-                "id": "https://www.orbex.com/blog/en/2025/09/usd-jpy-05-09-2025",
-                "title": "orbex.com",
-                "url": "https://www.orbex.com/blog/en/2025/09/usd-jpy-05-09-2025"
+                "id": "https://roboforex.com/beginners/analytics/forex-forecast/forex-technical-analysis/technical-forecast-monthly-september-2025/",
+                "title": "roboforex.com",
+                "url": "https://roboforex.com/beginners/analytics/forex-forecast/forex-technical-analysis/technical-forecast-monthly-september-2025/"
               },
               {
                 "id": "https://www.mitrade.com/insights/news/live-news/article-1-1095606-20250904",
@@ -1437,24 +1512,24 @@
                 "url": "https://www.mitrade.com/insights/news/live-news/article-1-1095606-20250904"
               },
               {
+                "id": "https://www.orbex.com/blog/en/2025/09/usd-jpy-05-09-2025",
+                "title": "orbex.com",
+                "url": "https://www.orbex.com/blog/en/2025/09/usd-jpy-05-09-2025"
+              },
+              {
+                "id": "https://tradersunion.com/currencies/forecast/usd-jpy/",
+                "title": "tradersunion.com",
+                "url": "https://tradersunion.com/currencies/forecast/usd-jpy/"
+              },
+              {
                 "id": "https://roboforex.com/beginners/analytics/forex-forecast/currencies/usd-jpy-forecast-2025-09-05/",
                 "title": "roboforex.com",
                 "url": "https://roboforex.com/beginners/analytics/forex-forecast/currencies/usd-jpy-forecast-2025-09-05/"
-              },
-              {
-                "id": "https://www.mitrade.com/insights/news/live-news/article-1-1096782-20250905",
-                "title": "mitrade.com",
-                "url": "https://www.mitrade.com/insights/news/live-news/article-1-1096782-20250905"
-              },
-              {
-                "id": "https://www.youtube.com/watch?v=OOWHVZwciSg",
-                "title": "youtube.com",
-                "url": "https://www.youtube.com/watch?v=OOWHVZwciSg"
               }
             ],
             "retrieval_count": 5,
             "processing_stats": {
-              "processing_time_ms": 13189,
+              "processing_time_ms": 10135,
               "stability_score": 0.77
             },
             "provenance": {
@@ -1465,7 +1540,7 @@
           },
           "mode": "standard"
         },
-        "requestId": "test-10-1757085747527"
+        "requestId": "test-10-1757157005595"
       }
     }
   ],
@@ -1475,7 +1550,7 @@
     "top2ActionsPresent": 0,
     "provenancePresent": 0,
     "sourcesWithPassages": 10,
-    "evidenceBackedAppropriate": 7,
+    "evidenceBackedAppropriate": 10,
     "uiBannerReady": 0,
     "schemaFailures": 0
   }

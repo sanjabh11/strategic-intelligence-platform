@@ -81,8 +81,14 @@ const StudentView: React.FC<AudienceViewProps> = ({
                   {action.rationale}
                 </p>
                 <div className="text-xs text-slate-500">
-                  Expected Outcome: {action.expected_outcome.value.toFixed(2)}
-                  (Confidence: {(action.expected_outcome.confidence * 100).toFixed(1)}%)
+                  Expected Outcome: {(() => {
+                    const value = action.expected_outcome?.value;
+                    return isNaN(value) ? 'N/A' : value.toFixed(2);
+                  })()}
+                  (Confidence: {(() => {
+                    const confidence = action.expected_outcome?.confidence;
+                    return isNaN(confidence) ? 'N/A' : (confidence * 100).toFixed(1) + '%';
+                  })()})
                 </div>
               </div>
             </div>
@@ -93,7 +99,15 @@ const StudentView: React.FC<AudienceViewProps> = ({
   );
 
   const renderEVExample = () => {
-    const topEV = Math.max(...studentData.top_2_actions.map(a => a.expected_outcome.value * a.expected_outcome.confidence));
+    const validEVs = studentData.top_2_actions
+      .map(a => {
+        const value = a.expected_outcome?.value;
+        const confidence = a.expected_outcome?.confidence;
+        return (isNaN(value) || isNaN(confidence)) ? 0 : value * confidence;
+      })
+      .filter(ev => ev !== 0);
+
+    const topEV = validEVs.length > 0 ? Math.max(...validEVs) : 0;
 
     return (
       <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
@@ -106,7 +120,7 @@ const StudentView: React.FC<AudienceViewProps> = ({
             <strong>EV Formula:</strong> Expected Value (EV) = Estimated Outcome × Confidence
           </p>
           <div className="text-slate-300 text-sm space-y-1 mb-3">
-            <div>Example: Best action has EV of {(topEV * 1000000).toFixed(0)} (in millions)</div>
+            <div>Example: Best action has EV of {isNaN(topEV) ? 'N/A' : (topEV * 1000000).toFixed(0)} (in millions)</div>
             <div className="text-slate-500 text-xs">
               This represents the weighted value considering both the estimated payoff and our confidence in that estimate.
             </div>
@@ -203,7 +217,12 @@ const StudentView: React.FC<AudienceViewProps> = ({
                 <div className="flex-1 min-w-0">
                   <h3 className="font-medium text-cyan-300">Source {source.id}</h3>
                   <p className="text-slate-400 text-sm line-clamp-2 mt-1">{source.excerpt}</p>
-                  <p className="text-slate-500 text-xs mt-1">Relevance: {(source.score * 100).toFixed(1)}%</p>
+                  <p className="text-slate-500 text-xs mt-1">
+                    Relevance: {(() => {
+                      const score = source.score;
+                      return isNaN(score) ? 'N/A' : (score * 100).toFixed(1) + '%';
+                    })()}
+                  </p>
                 </div>
               </div>
             </button>

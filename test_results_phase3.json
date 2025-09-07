@@ -129,14 +129,14 @@
                 "url": "https://www.china-briefing.com/news/us-china-relations-in-the-trump-2-0-implications/"
               },
               {
-                "id": "https://www.ainvest.com/news/trump-semiconductor-tariff-strategy-impact-global-tech-supply-chains-2509-41/",
-                "title": "ainvest.com",
-                "url": "https://www.ainvest.com/news/trump-semiconductor-tariff-strategy-impact-global-tech-supply-chains-2509-41/"
+                "id": "https://www.timetrex.com/blog/semiconductor-tariffs",
+                "title": "timetrex.com",
+                "url": "https://www.timetrex.com/blog/semiconductor-tariffs"
               }
             ],
             "retrieval_count": 5,
             "processing_stats": {
-              "processing_time_ms": 10028,
+              "processing_time_ms": 10690,
               "stability_score": 0.77
             },
             "provenance": {
@@ -147,7 +147,7 @@
           },
           "mode": "standard"
         },
-        "requestId": "test-1-1757085881514"
+        "requestId": "test-1-1757157058859"
       }
     },
     {
@@ -256,19 +256,9 @@
             ],
             "retrievals": [
               {
-                "id": "https://www.understandingwar.org/backgrounder/russian-offensive-campaign-assessment-september-1-2025",
-                "title": "understandingwar.org",
-                "url": "https://www.understandingwar.org/backgrounder/russian-offensive-campaign-assessment-september-1-2025"
-              },
-              {
-                "id": "https://abcnews.go.com/International/nato-scrambles-jets-russia-launches-500-drones-missiles/story?id=125206573",
-                "title": "abcnews.go.com",
-                "url": "https://abcnews.go.com/International/nato-scrambles-jets-russia-launches-500-drones-missiles/story?id=125206573"
-              },
-              {
-                "id": "https://www.criticalthreats.org/analysis/russian-offensive-campaign-assessment-september-2-2025",
-                "title": "criticalthreats.org",
-                "url": "https://www.criticalthreats.org/analysis/russian-offensive-campaign-assessment-september-2-2025"
+                "id": "https://www.defensenews.com/global/europe/2025/09/02/russias-zapad-drill-has-europe-on-edge-about-low-key-attacks/",
+                "title": "defensenews.com",
+                "url": "https://www.defensenews.com/global/europe/2025/09/02/russias-zapad-drill-has-europe-on-edge-about-low-key-attacks/"
               },
               {
                 "id": "https://www.cfr.org/global-conflict-tracker/conflict/conflict-ukraine",
@@ -276,14 +266,24 @@
                 "url": "https://www.cfr.org/global-conflict-tracker/conflict/conflict-ukraine"
               },
               {
-                "id": "https://tvpworld.com/88731806/nato-drills-baltic-defense-plan-ahead-of-big-russian-exercises",
-                "title": "tvpworld.com",
-                "url": "https://tvpworld.com/88731806/nato-drills-baltic-defense-plan-ahead-of-big-russian-exercises"
+                "id": "https://www.criticalthreats.org/analysis/russian-offensive-campaign-assessment-september-2-2025",
+                "title": "criticalthreats.org",
+                "url": "https://www.criticalthreats.org/analysis/russian-offensive-campaign-assessment-september-2-2025"
+              },
+              {
+                "id": "https://en.wikipedia.org/wiki/Kursk_campaign",
+                "title": "en.wikipedia.org",
+                "url": "https://en.wikipedia.org/wiki/Kursk_campaign"
+              },
+              {
+                "id": "https://dsm.forecastinternational.com/2025/09/05/this-week-in-the-russia-ukraine-war-september-5/",
+                "title": "dsm.forecastinternational.com",
+                "url": "https://dsm.forecastinternational.com/2025/09/05/this-week-in-the-russia-ukraine-war-september-5/"
               }
             ],
             "retrieval_count": 5,
             "processing_stats": {
-              "processing_time_ms": 10264,
+              "processing_time_ms": 11289,
               "stability_score": 0.77
             },
             "provenance": {
@@ -294,7 +294,7 @@
           },
           "mode": "standard"
         },
-        "requestId": "test-2-1757085894149"
+        "requestId": "test-2-1757157072916"
       }
     },
     {
@@ -403,9 +403,9 @@
             ],
             "retrievals": [
               {
-                "id": "https://www.rferl.org/a/eu-russia-sanctions-hungary-slovakia-pressure/33520501.html",
-                "title": "rferl.org",
-                "url": "https://www.rferl.org/a/eu-russia-sanctions-hungary-slovakia-pressure/33520501.html"
+                "id": "https://newsukraine.rbc.ua/news/hungary-and-slovakia-ask-eu-to-lift-sanctions-1756940547.html",
+                "title": "newsukraine.rbc.ua",
+                "url": "https://newsukraine.rbc.ua/news/hungary-and-slovakia-ask-eu-to-lift-sanctions-1756940547.html"
               },
               {
                 "id": "https://en.wikipedia.org/wiki/Russia%E2%80%93European_Union_relations",
@@ -413,24 +413,24 @@
                 "url": "https://en.wikipedia.org/wiki/Russia%E2%80%93European_Union_relations"
               },
               {
-                "id": "https://newsukraine.rbc.ua/news/hungary-and-slovakia-ask-eu-to-lift-sanctions-1756940547.html",
-                "title": "newsukraine.rbc.ua",
-                "url": "https://newsukraine.rbc.ua/news/hungary-and-slovakia-ask-eu-to-lift-sanctions-1756940547.html"
-              },
-              {
-                "id": "https://www.ashurst.com/en/insights/russia-sanctions-tracker/uk-sanctions/",
-                "title": "ashurst.com",
-                "url": "https://www.ashurst.com/en/insights/russia-sanctions-tracker/uk-sanctions/"
-              },
-              {
                 "id": "https://united24media.com/latest-news/hungary-and-slovakia-push-eu-to-lift-sanctions-on-russian-oligarchs-ahead-of-renewal-deadline-11363",
                 "title": "united24media.com",
                 "url": "https://united24media.com/latest-news/hungary-and-slovakia-push-eu-to-lift-sanctions-on-russian-oligarchs-ahead-of-renewal-deadline-11363"
+              },
+              {
+                "id": "https://www.euronews.com/my-europe/2025/08/27/exclusive-eu-council-faces-landmark-defamation-claim-in-germany-over-sanctions-reasons",
+                "title": "euronews.com",
+                "url": "https://www.euronews.com/my-europe/2025/08/27/exclusive-eu-council-faces-landmark-defamation-claim-in-germany-over-sanctions-reasons"
+              },
+              {
+                "id": "https://www.hoganlovells.com/en/publications/eus-18th-sanctions-package-takes-aim-at-investorstate-dispute-settlement-another-layer-to-the-eus",
+                "title": "hoganlovells.com",
+                "url": "https://www.hoganlovells.com/en/publications/eus-18th-sanctions-package-takes-aim-at-investorstate-dispute-settlement-another-layer-to-the-eus"
               }
             ],
             "retrieval_count": 5,
             "processing_stats": {
-              "processing_time_ms": 7807,
+              "processing_time_ms": 5681,
               "stability_score": 0.77
             },
             "provenance": {
@@ -441,7 +441,7 @@
           },
           "mode": "standard"
         },
-        "requestId": "test-3-1757085906324"
+        "requestId": "test-3-1757157087375"
       }
     },
     {
@@ -451,7 +451,7 @@
         "passed": true,
         "failures": [],
         "metrics": {
-          "evidenceBacked": false
+          "evidenceBacked": true
         }
       },
       "result": {
@@ -548,22 +548,47 @@
                 "score": 0.649
               }
             ],
-            "retrievals": [],
-            "retrieval_count": 0,
+            "retrievals": [
+              {
+                "id": "https://www.washingtoninstitute.org/policy-analysis/irans-nuclear-reconstitution-options",
+                "title": "washingtoninstitute.org",
+                "url": "https://www.washingtoninstitute.org/policy-analysis/irans-nuclear-reconstitution-options"
+              },
+              {
+                "id": "https://en.wikipedia.org/wiki/United_States_strikes_on_Iranian_nuclear_sites",
+                "title": "en.wikipedia.org",
+                "url": "https://en.wikipedia.org/wiki/United_States_strikes_on_Iranian_nuclear_sites"
+              },
+              {
+                "id": "https://www.energypolicy.columbia.edu/back-to-basics-iran-sanctions-after-the-june-2025-conflict/",
+                "title": "energypolicy.columbia.edu",
+                "url": "https://www.energypolicy.columbia.edu/back-to-basics-iran-sanctions-after-the-june-2025-conflict/"
+              },
+              {
+                "id": "https://en.wikipedia.org/wiki/Iran%E2%80%93Israel_war",
+                "title": "en.wikipedia.org",
+                "url": "https://en.wikipedia.org/wiki/Iran%E2%80%93Israel_war"
+              },
+              {
+                "id": "https://www.iris-france.org/en/iran-nuclear-deal-towards-a-reactivation-of-sanctions-against-tehran/",
+                "title": "iris-france.org",
+                "url": "https://www.iris-france.org/en/iran-nuclear-deal-towards-a-reactivation-of-sanctions-against-tehran/"
+              }
+            ],
+            "retrieval_count": 5,
             "processing_stats": {
-              "processing_time_ms": 15014,
+              "processing_time_ms": 8400,
               "stability_score": 0.77
             },
             "provenance": {
-              "evidence_backed": false,
-              "retrieval_count": 0,
-              "model": "edge-mvp-1.0",
-              "warning": "retrieval timeout"
+              "evidence_backed": true,
+              "retrieval_count": 5,
+              "model": "edge-mvp-1.0"
             }
           },
           "mode": "standard"
         },
-        "requestId": "test-4-1757085916103"
+        "requestId": "test-4-1757157095180"
       }
     },
     {
@@ -677,9 +702,9 @@
                 "url": "https://abcnews.go.com/International/north-korea-test-fires-2-new-missiles-amid/story?id=124929065"
               },
               {
-                "id": "https://www.congress.gov/crs-product/R45811",
-                "title": "congress.gov",
-                "url": "https://www.congress.gov/crs-product/R45811"
+                "id": "https://www.intellinews.com/north-korea-test-fires-two-new-air-defence-missiles-397623/",
+                "title": "intellinews.com",
+                "url": "https://www.intellinews.com/north-korea-test-fires-two-new-air-defence-missiles-397623/"
               },
               {
                 "id": "https://beyondparallel.csis.org/undeclared-north-korea-sinpung-dong-missile-operating-base/",
@@ -687,19 +712,19 @@
                 "url": "https://beyondparallel.csis.org/undeclared-north-korea-sinpung-dong-missile-operating-base/"
               },
               {
-                "id": "https://www.nknews.org/?p=960344",
-                "title": "nknews.org",
-                "url": "https://www.nknews.org/?p=960344"
+                "id": "https://www.taxtmi.com/news?id=38021",
+                "title": "taxtmi.com",
+                "url": "https://www.taxtmi.com/news?id=38021"
               },
               {
-                "id": "https://www.lemonde.fr/en/international/article/2025/08/19/kim-jong-un-urges-expansion-of-north-korea-nuclear-capability_6744500_4.html",
-                "title": "lemonde.fr",
-                "url": "https://www.lemonde.fr/en/international/article/2025/08/19/kim-jong-un-urges-expansion-of-north-korea-nuclear-capability_6744500_4.html"
+                "id": "https://www.cbsnews.com/news/north-korea-test-fires-2-new-antiair-missiles-kim-jong-un/",
+                "title": "cbsnews.com",
+                "url": "https://www.cbsnews.com/news/north-korea-test-fires-2-new-antiair-missiles-kim-jong-un/"
               }
             ],
             "retrieval_count": 5,
             "processing_stats": {
-              "processing_time_ms": 7690,
+              "processing_time_ms": 6726,
               "stability_score": 0.77
             },
             "provenance": {
@@ -710,7 +735,7 @@
           },
           "mode": "standard"
         },
-        "requestId": "test-5-1757085932791"
+        "requestId": "test-5-1757157105259"
       }
     },
     {
@@ -720,7 +745,7 @@
         "passed": true,
         "failures": [],
         "metrics": {
-          "evidenceBacked": false
+          "evidenceBacked": true
         }
       },
       "result": {
@@ -817,22 +842,47 @@
                 "score": 0.649
               }
             ],
-            "retrievals": [],
-            "retrieval_count": 0,
+            "retrievals": [
+              {
+                "id": "https://en.wikipedia.org/wiki/2025_Chinese_naval_exercises_in_the_Tasman_Sea",
+                "title": "en.wikipedia.org",
+                "url": "https://en.wikipedia.org/wiki/2025_Chinese_naval_exercises_in_the_Tasman_Sea"
+              },
+              {
+                "id": "https://www.globaltimes.cn/author/Reporter-Liu-Xuanzun.html",
+                "title": "globaltimes.cn",
+                "url": "https://www.globaltimes.cn/author/Reporter-Liu-Xuanzun.html"
+              },
+              {
+                "id": "https://www.understandingwar.org/backgrounder/china-taiwan-weekly-update-august-18-2025",
+                "title": "understandingwar.org",
+                "url": "https://www.understandingwar.org/backgrounder/china-taiwan-weekly-update-august-18-2025"
+              },
+              {
+                "id": "https://www.andrewerickson.com/2025/09/cmsi-note-16-confirmed-adm-yuan-huazhi-removed-as-the-plans-political-commissar/",
+                "title": "andrewerickson.com",
+                "url": "https://www.andrewerickson.com/2025/09/cmsi-note-16-confirmed-adm-yuan-huazhi-removed-as-the-plans-political-commissar/"
+              },
+              {
+                "id": "https://www.aol.com/canadian-australian-warships-transit-taiwan-055252878.html",
+                "title": "aol.com",
+                "url": "https://www.aol.com/canadian-australian-warships-transit-taiwan-055252878.html"
+              }
+            ],
+            "retrieval_count": 5,
             "processing_stats": {
-              "processing_time_ms": 15016,
+              "processing_time_ms": 10334,
               "stability_score": 0.77
             },
             "provenance": {
-              "evidence_backed": false,
-              "retrieval_count": 0,
-              "model": "edge-mvp-1.0",
-              "warning": "retrieval timeout"
+              "evidence_backed": true,
+              "retrieval_count": 5,
+              "model": "edge-mvp-1.0"
             }
           },
           "mode": "standard"
         },
-        "requestId": "test-6-1757085942266"
+        "requestId": "test-6-1757157113609"
       }
     },
     {
@@ -946,14 +996,14 @@
                 "url": "https://www.aa.com.tr/en/energy/oil/yemen-s-houthi-controlled-areas-facing-oil-crisis/29583"
               },
               {
-                "id": "https://www.arabnews.com/node/2577909/middle-east",
-                "title": "arabnews.com",
-                "url": "https://www.arabnews.com/node/2577909/middle-east"
+                "id": "https://richardfalk.org",
+                "title": "richardfalk.org",
+                "url": "https://richardfalk.org"
               },
               {
-                "id": "https://energynews.pro/en/houthi-missile-damages-oil-tanker-off-yemen/",
-                "title": "energynews.pro",
-                "url": "https://energynews.pro/en/houthi-missile-damages-oil-tanker-off-yemen/"
+                "id": "https://discoveryalert.com.au/news/kurdistan-oil-export-dispute-analysis-2025/",
+                "title": "discoveryalert.com.au",
+                "url": "https://discoveryalert.com.au/news/kurdistan-oil-export-dispute-analysis-2025/"
               },
               {
                 "id": "https://www.waterjusticeinpalestine.org/blog/2025/8/27/urgent-health-update-consequences-of-war-on-gaza-west-bankeast-jerusalem",
@@ -961,14 +1011,14 @@
                 "url": "https://www.waterjusticeinpalestine.org/blog/2025/8/27/urgent-health-update-consequences-of-war-on-gaza-west-bankeast-jerusalem"
               },
               {
-                "id": "https://discoveryalert.com.au/news/kurdistan-oil-export-dispute-analysis-2025/",
-                "title": "discoveryalert.com.au",
-                "url": "https://discoveryalert.com.au/news/kurdistan-oil-export-dispute-analysis-2025/"
+                "id": "https://www.arabnews.com/node/2597524/middle-east",
+                "title": "arabnews.com",
+                "url": "https://www.arabnews.com/node/2597524/middle-east"
               }
             ],
             "retrieval_count": 5,
             "processing_stats": {
-              "processing_time_ms": 10953,
+              "processing_time_ms": 11366,
               "stability_score": 0.77
             },
             "provenance": {
@@ -979,7 +1029,7 @@
           },
           "mode": "standard"
         },
-        "requestId": "test-7-1757085958925"
+        "requestId": "test-7-1757157125823"
       }
     },
     {
@@ -1093,29 +1143,29 @@
                 "url": "https://pppescp.com/2025/08/13/the-difficult-india-pakistan-relationship-a-historical-overview/"
               },
               {
-                "id": "https://subscriber.politicopro.com/article/eenews/2025/08/27/floods-leave-34-dead-in-kashmir-over-200-000-in-pakistan-displaced-00528545",
-                "title": "subscriber.politicopro.com",
-                "url": "https://subscriber.politicopro.com/article/eenews/2025/08/27/floods-leave-34-dead-in-kashmir-over-200-000-in-pakistan-displaced-00528545"
-              },
-              {
-                "id": "https://www.gzeromedia.com/news/analysis/three-months-since-the-kashmir-conflict-is-it-pakistans-moment",
-                "title": "gzeromedia.com",
-                "url": "https://www.gzeromedia.com/news/analysis/three-months-since-the-kashmir-conflict-is-it-pakistans-moment"
-              },
-              {
                 "id": "https://www.arabnews.com/node/2600241/world",
                 "title": "arabnews.com",
                 "url": "https://www.arabnews.com/node/2600241/world"
               },
               {
-                "id": "https://www.scmp.com/week-asia/politics/article/3322212/india-pakistan-enter-new-missile-race-after-deadly-border-clash",
-                "title": "scmp.com",
-                "url": "https://www.scmp.com/week-asia/politics/article/3322212/india-pakistan-enter-new-missile-race-after-deadly-border-clash"
+                "id": "https://untoldmag.org/kashmir-war-impact/",
+                "title": "untoldmag.org",
+                "url": "https://untoldmag.org/kashmir-war-impact/"
+              },
+              {
+                "id": "https://www.boloji.com/articles/54955/bharat-pahalgam-massacre--iii-the-aftermath",
+                "title": "boloji.com",
+                "url": "https://www.boloji.com/articles/54955/bharat-pahalgam-massacre--iii-the-aftermath"
+              },
+              {
+                "id": "https://timesofindia.indiatimes.com/india/like-a-rhythmic-wave-army-chief-says-india-pak-conflict-didnt-finish-on-may-10-claims-operation-sindoor-continued-for-long-time/articleshow/123728727.cms",
+                "title": "timesofindia.indiatimes.com",
+                "url": "https://timesofindia.indiatimes.com/india/like-a-rhythmic-wave-army-chief-says-india-pak-conflict-didnt-finish-on-may-10-claims-operation-sindoor-continued-for-long-time/articleshow/123728727.cms"
               }
             ],
             "retrieval_count": 5,
             "processing_stats": {
-              "processing_time_ms": 9582,
+              "processing_time_ms": 6923,
               "stability_score": 0.77
             },
             "provenance": {
@@ -1126,7 +1176,7 @@
           },
           "mode": "standard"
         },
-        "requestId": "test-8-1757085971566"
+        "requestId": "test-8-1757157139291"
       }
     },
     {
@@ -1255,14 +1305,14 @@
                 "url": "https://journals.sagepub.com/doi/10.1177/14651165251367355"
               },
               {
-                "id": "https://www.wsws.org/en/articles/2025/08/29/nato-a29.html",
-                "title": "wsws.org",
-                "url": "https://www.wsws.org/en/articles/2025/08/29/nato-a29.html"
+                "id": "https://www.cfr.org/report/russia-its-neighbors-and-enlarging-nato",
+                "title": "cfr.org",
+                "url": "https://www.cfr.org/report/russia-its-neighbors-and-enlarging-nato"
               }
             ],
             "retrieval_count": 5,
             "processing_stats": {
-              "processing_time_ms": 9883,
+              "processing_time_ms": 5663,
               "stability_score": 0.77
             },
             "provenance": {
@@ -1273,7 +1323,7 @@
           },
           "mode": "standard"
         },
-        "requestId": "test-9-1757085982718"
+        "requestId": "test-9-1757157147814"
       }
     },
     {
@@ -1392,24 +1442,24 @@
                 "url": "https://en.wikipedia.org/wiki/Scarborough_Shoal_standoff"
               },
               {
-                "id": "https://www.military.com/daily-news/2025/08/22/philippines-condemns-chinas-swarm-of-forces-near-disputed-shoal-and-vows-defend-territory.html",
-                "title": "military.com",
-                "url": "https://www.military.com/daily-news/2025/08/22/philippines-condemns-chinas-swarm-of-forces-near-disputed-shoal-and-vows-defend-territory.html"
-              },
-              {
-                "id": "https://www.scmp.com/topics/south-china-sea",
-                "title": "scmp.com",
-                "url": "https://www.scmp.com/topics/south-china-sea"
-              },
-              {
                 "id": "https://www.lowyinstitute.org/the-interpreter/south-china-sea-collision-brings-us-philippines-alliance-fore",
                 "title": "lowyinstitute.org",
                 "url": "https://www.lowyinstitute.org/the-interpreter/south-china-sea-collision-brings-us-philippines-alliance-fore"
+              },
+              {
+                "id": "https://www.euronews.com/2025/08/12/philippine-military-blames-china-for-ships-collision-in-disputed-south-china-sea",
+                "title": "euronews.com",
+                "url": "https://www.euronews.com/2025/08/12/philippine-military-blames-china-for-ships-collision-in-disputed-south-china-sea"
+              },
+              {
+                "id": "https://en.wikipedia.org/wiki/Territorial_disputes_in_the_South_China_Sea",
+                "title": "en.wikipedia.org",
+                "url": "https://en.wikipedia.org/wiki/Territorial_disputes_in_the_South_China_Sea"
               }
             ],
             "retrieval_count": 5,
             "processing_stats": {
-              "processing_time_ms": 6474,
+              "processing_time_ms": 12757,
               "stability_score": 0.77
             },
             "provenance": {
@@ -1420,7 +1470,7 @@
           },
           "mode": "standard"
         },
-        "requestId": "test-10-1757085994635"
+        "requestId": "test-10-1757157155514"
       }
     },
     {
@@ -1539,24 +1589,24 @@
                 "url": "https://en.wikipedia.org/wiki/United_States%E2%80%93Venezuela_relations"
               },
               {
-                "id": "https://discoveryalert.com.au/news/venezuelan-crude-oil-us-market-2025/",
+                "id": "https://discoveryalert.com.au/news/venezuelan-crude-oil-us-markets-2025-impact-implications/",
                 "title": "discoveryalert.com.au",
-                "url": "https://discoveryalert.com.au/news/venezuelan-crude-oil-us-market-2025/"
+                "url": "https://discoveryalert.com.au/news/venezuelan-crude-oil-us-markets-2025-impact-implications/"
               },
               {
-                "id": "https://www.markets.com/news/cryptocurrency-venezuela-economic-lifeline-819-en-EU",
-                "title": "markets.com",
-                "url": "https://www.markets.com/news/cryptocurrency-venezuela-economic-lifeline-819-en-EU"
+                "id": "https://www.britannica.com/topic/history-of-Venezuela",
+                "title": "britannica.com",
+                "url": "https://www.britannica.com/topic/history-of-Venezuela"
               },
               {
-                "id": "https://www.wsws.org/en/articles/2025/08/31/ibzg-a31.html",
-                "title": "wsws.org",
-                "url": "https://www.wsws.org/en/articles/2025/08/31/ibzg-a31.html"
+                "id": "https://english.elpais.com/international/2025-09-04/united-states-and-venezuela-six-years-of-maximum-tension.html",
+                "title": "english.elpais.com",
+                "url": "https://english.elpais.com/international/2025-09-04/united-states-and-venezuela-six-years-of-maximum-tension.html"
               }
             ],
             "retrieval_count": 5,
             "processing_stats": {
-              "processing_time_ms": 7647,
+              "processing_time_ms": 7161,
               "stability_score": 0.77
             },
             "provenance": {
@@ -1567,7 +1617,7 @@
           },
           "mode": "standard"
         },
-        "requestId": "test-11-1757086003252"
+        "requestId": "test-11-1757157170155"
       }
     },
     {
@@ -1577,7 +1627,7 @@
         "passed": true,
         "failures": [],
         "metrics": {
-          "evidenceBacked": false
+          "evidenceBacked": true
         }
       },
       "result": {
@@ -1674,22 +1724,47 @@
                 "score": 0.649
               }
             ],
-            "retrievals": [],
-            "retrieval_count": 0,
+            "retrievals": [
+              {
+                "id": "https://en.wikipedia.org/wiki/Gaza_war",
+                "title": "en.wikipedia.org",
+                "url": "https://en.wikipedia.org/wiki/Gaza_war"
+              },
+              {
+                "id": "https://en.wikipedia.org/wiki/Gaza%E2%80%93Israel_conflict",
+                "title": "en.wikipedia.org",
+                "url": "https://en.wikipedia.org/wiki/Gaza%E2%80%93Israel_conflict"
+              },
+              {
+                "id": "https://www.un.org/unispal/document/security-council-press-release-10aug25/",
+                "title": "un.org",
+                "url": "https://www.un.org/unispal/document/security-council-press-release-10aug25/"
+              },
+              {
+                "id": "https://www.un.org/unispal/document/ocha-sitrep-gaza-28aug25/",
+                "title": "un.org",
+                "url": "https://www.un.org/unispal/document/ocha-sitrep-gaza-28aug25/"
+              },
+              {
+                "id": "https://www.rescue.org/crisis-in-gaza",
+                "title": "rescue.org",
+                "url": "https://www.rescue.org/crisis-in-gaza"
+              }
+            ],
+            "retrieval_count": 5,
             "processing_stats": {
-              "processing_time_ms": 15005,
+              "processing_time_ms": 7632,
               "stability_score": 0.77
             },
             "provenance": {
-              "evidence_backed": false,
-              "retrieval_count": 0,
-              "model": "edge-mvp-1.0",
-              "warning": "retrieval timeout"
+              "evidence_backed": true,
+              "retrieval_count": 5,
+              "model": "edge-mvp-1.0"
             }
           },
           "mode": "standard"
         },
-        "requestId": "test-12-1757086012603"
+        "requestId": "test-12-1757157179184"
       }
     },
     {
@@ -1813,9 +1888,9 @@
                 "url": "https://en.wikipedia.org/wiki/International_relations_with_the_Taliban"
               },
               {
-                "id": "https://law.justia.com/cases/federal/appellate-courts/ca2/23-258/23-258-2025-08-26.html",
-                "title": "law.justia.com",
-                "url": "https://law.justia.com/cases/federal/appellate-courts/ca2/23-258/23-258-2025-08-26.html"
+                "id": "https://en.wikipedia.org/wiki/Inter-Services_Intelligence",
+                "title": "en.wikipedia.org",
+                "url": "https://en.wikipedia.org/wiki/Inter-Services_Intelligence"
               },
               {
                 "id": "https://www.lowyinstitute.org/the-interpreter/russia-central-asia-are-quietly-embracing-taliban",
@@ -1825,7 +1900,7 @@
             ],
             "retrieval_count": 5,
             "processing_stats": {
-              "processing_time_ms": 9294,
+              "processing_time_ms": 8821,
               "stability_score": 0.77
             },
             "provenance": {
@@ -1836,7 +1911,7 @@
           },
           "mode": "standard"
         },
-        "requestId": "test-13-1757086029319"
+        "requestId": "test-13-1757157188372"
       }
     },
     {
@@ -1945,9 +2020,9 @@
             ],
             "retrievals": [
               {
-                "id": "https://www.who.int/publications/m/item/public-health-situation-analysis---syrian-arab-republic",
-                "title": "who.int",
-                "url": "https://www.who.int/publications/m/item/public-health-situation-analysis---syrian-arab-republic"
+                "id": "https://www.concern.net/news/worlds-worst-humanitarian-crises",
+                "title": "concern.net",
+                "url": "https://www.concern.net/news/worlds-worst-humanitarian-crises"
               },
               {
                 "id": "https://www.arabnews.pk/node/2613777/middle-east",
@@ -1955,9 +2030,9 @@
                 "url": "https://www.arabnews.pk/node/2613777/middle-east"
               },
               {
-                "id": "https://www.nrc.no/perspectives/2025/5-things-you-need-to-know-about-syrias-transition",
-                "title": "nrc.no",
-                "url": "https://www.nrc.no/perspectives/2025/5-things-you-need-to-know-about-syrias-transition"
+                "id": "https://www.who.int/publications/m/item/public-health-situation-analysis---syrian-arab-republic",
+                "title": "who.int",
+                "url": "https://www.who.int/publications/m/item/public-health-situation-analysis---syrian-arab-republic"
               },
               {
                 "id": "https://www.concern.net/news/global-refugee-crisis-explained",
@@ -1965,14 +2040,14 @@
                 "url": "https://www.concern.net/news/global-refugee-crisis-explained"
               },
               {
-                "id": "https://sfuturem.org/en/2025/09/analysis-of-the-humanitarian-funding-crisis-in-syria/",
-                "title": "sfuturem.org",
-                "url": "https://sfuturem.org/en/2025/09/analysis-of-the-humanitarian-funding-crisis-in-syria/"
+                "id": "https://www.nrc.no/perspectives/2025/5-things-you-need-to-know-about-syrias-transition",
+                "title": "nrc.no",
+                "url": "https://www.nrc.no/perspectives/2025/5-things-you-need-to-know-about-syrias-transition"
               }
             ],
             "retrieval_count": 5,
             "processing_stats": {
-              "processing_time_ms": 8763,
+              "processing_time_ms": 10133,
               "stability_score": 0.77
             },
             "provenance": {
@@ -1983,7 +2058,7 @@
           },
           "mode": "standard"
         },
-        "requestId": "test-14-1757086040129"
+        "requestId": "test-14-1757157199158"
       }
     },
     {
@@ -1993,7 +2068,7 @@
         "passed": true,
         "failures": [],
         "metrics": {
-          "evidenceBacked": false
+          "evidenceBacked": true
         }
       },
       "result": {
@@ -2090,22 +2165,47 @@
                 "score": 0.649
               }
             ],
-            "retrievals": [],
-            "retrieval_count": 0,
+            "retrievals": [
+              {
+                "id": "https://asiatimes.com/2025/08/global-risk-rises-as-russia-walks-away-from-nuclear-pact/",
+                "title": "asiatimes.com",
+                "url": "https://asiatimes.com/2025/08/global-risk-rises-as-russia-walks-away-from-nuclear-pact/"
+              },
+              {
+                "id": "https://www.civilsdaily.com/story/russian-invasion-of-ukraine-global-implications/",
+                "title": "civilsdaily.com",
+                "url": "https://www.civilsdaily.com/story/russian-invasion-of-ukraine-global-implications/"
+              },
+              {
+                "id": "https://www.port.ac.uk/news-events-and-blogs/blogs/academic-expertise/russias-decision-to-pull-out-of-nuclear-treaty-makes-the-world-more-dangerous",
+                "title": "port.ac.uk",
+                "url": "https://www.port.ac.uk/news-events-and-blogs/blogs/academic-expertise/russias-decision-to-pull-out-of-nuclear-treaty-makes-the-world-more-dangerous"
+              },
+              {
+                "id": "https://en.wikipedia.org/wiki/Russia%E2%80%93NATO_relations",
+                "title": "en.wikipedia.org",
+                "url": "https://en.wikipedia.org/wiki/Russia%E2%80%93NATO_relations"
+              },
+              {
+                "id": "https://www.thenation.com/article/world/trump-putin-ukraine-russia-war-diplomacy/",
+                "title": "thenation.com",
+                "url": "https://www.thenation.com/article/world/trump-putin-ukraine-russia-war-diplomacy/"
+              }
+            ],
+            "retrieval_count": 5,
             "processing_stats": {
-              "processing_time_ms": 15017,
+              "processing_time_ms": 6837,
               "stability_score": 0.77
             },
             "provenance": {
-              "evidence_backed": false,
-              "retrieval_count": 0,
-              "model": "edge-mvp-1.0",
-              "warning": "retrieval timeout"
+              "evidence_backed": true,
+              "retrieval_count": 5,
+              "model": "edge-mvp-1.0"
             }
           },
           "mode": "standard"
         },
-        "requestId": "test-15-1757086050894"
+        "requestId": "test-15-1757157211240"
       }
     },
     {
@@ -2224,9 +2324,9 @@
                 "url": "https://www.kwm.com/cn/en/insights/topic/law-and-practice-under-the-belt-and-road-initiative.html"
               },
               {
-                "id": "https://openknowledge.worldbank.org/entities/publication/16252360-1cf1-546e-9978-9e57b5f32cec",
-                "title": "openknowledge.worldbank.org",
-                "url": "https://openknowledge.worldbank.org/entities/publication/16252360-1cf1-546e-9978-9e57b5f32cec"
+                "id": "https://www.caspianpolicy.com/research/middle-corridor/foreign-investments-and-the-middle-corridor-assessing-the-caspian-regions-landscape",
+                "title": "caspianpolicy.com",
+                "url": "https://www.caspianpolicy.com/research/middle-corridor/foreign-investments-and-the-middle-corridor-assessing-the-caspian-regions-landscape"
               },
               {
                 "id": "https://www.britannica.com/place/Central-Asia",
@@ -2234,14 +2334,14 @@
                 "url": "https://www.britannica.com/place/Central-Asia"
               },
               {
-                "id": "https://www.stimson.org/2025/iran-seeks-new-trade-routes-with-china/",
-                "title": "stimson.org",
-                "url": "https://www.stimson.org/2025/iran-seeks-new-trade-routes-with-china/"
+                "id": "https://openknowledge.worldbank.org/entities/publication/16252360-1cf1-546e-9978-9e57b5f32cec",
+                "title": "openknowledge.worldbank.org",
+                "url": "https://openknowledge.worldbank.org/entities/publication/16252360-1cf1-546e-9978-9e57b5f32cec"
               }
             ],
             "retrieval_count": 5,
             "processing_stats": {
-              "processing_time_ms": 13518,
+              "processing_time_ms": 9373,
               "stability_score": 0.77
             },
             "provenance": {
@@ -2252,7 +2352,7 @@
           },
           "mode": "standard"
         },
-        "requestId": "test-16-1757086067733"
+        "requestId": "test-16-1757157223481"
       }
     },
     {
@@ -2262,7 +2362,7 @@
         "passed": true,
         "failures": [],
         "metrics": {
-          "evidenceBacked": false
+          "evidenceBacked": true
         }
       },
       "result": {
@@ -2359,22 +2459,47 @@
                 "score": 0.649
               }
             ],
-            "retrievals": [],
-            "retrieval_count": 0,
+            "retrievals": [
+              {
+                "id": "https://www.earth.com/news/deforestation-is-drying-the-amazon-more-than-climate-change/",
+                "title": "earth.com",
+                "url": "https://www.earth.com/news/deforestation-is-drying-the-amazon-more-than-climate-change/"
+              },
+              {
+                "id": "https://www.britannica.com/place/Brazil/Climate",
+                "title": "britannica.com",
+                "url": "https://www.britannica.com/place/Brazil/Climate"
+              },
+              {
+                "id": "https://news.mongabay.com/2025/09/why-is-rainfall-declining-in-the-amazon-new-research-says-deforestation-is-the-leading-driver/",
+                "title": "news.mongabay.com",
+                "url": "https://news.mongabay.com/2025/09/why-is-rainfall-declining-in-the-amazon-new-research-says-deforestation-is-the-leading-driver/"
+              },
+              {
+                "id": "https://en.wikipedia.org/wiki/Deforestation",
+                "title": "en.wikipedia.org",
+                "url": "https://en.wikipedia.org/wiki/Deforestation"
+              },
+              {
+                "id": "https://www.gov.br/secom/en/latest-news/2025/08/brazil-records-56-8-drop-in-hotspots-61-decrease-in-burned-areas-in-july",
+                "title": "gov.br",
+                "url": "https://www.gov.br/secom/en/latest-news/2025/08/brazil-records-56-8-drop-in-hotspots-61-decrease-in-burned-areas-in-july"
+              }
+            ],
+            "retrieval_count": 5,
             "processing_stats": {
-              "processing_time_ms": 15006,
+              "processing_time_ms": 5592,
               "stability_score": 0.77
             },
             "provenance": {
-              "evidence_backed": false,
-              "retrieval_count": 0,
-              "model": "edge-mvp-1.0",
-              "warning": "retrieval timeout"
+              "evidence_backed": true,
+              "retrieval_count": 5,
+              "model": "edge-mvp-1.0"
             }
           },
           "mode": "standard"
         },
-        "requestId": "test-17-1757086083003"
+        "requestId": "test-17-1757157235174"
       }
     },
     {
@@ -2483,19 +2608,9 @@
             ],
             "retrievals": [
               {
-                "id": "https://shafaq.com/en/Middle-East/Turkiye-warns-SDF-Resistance-risks-new-instability-in-Syria",
-                "title": "shafaq.com",
-                "url": "https://shafaq.com/en/Middle-East/Turkiye-warns-SDF-Resistance-risks-new-instability-in-Syria"
-              },
-              {
-                "id": "https://www.arabnews.com/node/2596343/middle-east",
-                "title": "arabnews.com",
-                "url": "https://www.arabnews.com/node/2596343/middle-east"
-              },
-              {
-                "id": "https://english.news.cn/europe/20250904/7ba60583304d4599a0267d6798b8e9e6/c.html",
-                "title": "english.news.cn",
-                "url": "https://english.news.cn/europe/20250904/7ba60583304d4599a0267d6798b8e9e6/c.html"
+                "id": "https://www.dailysabah.com/opinion/op-ed/ankaras-new-chapter-in-syria-stabilization-security-and-strategic-cooperation",
+                "title": "dailysabah.com",
+                "url": "https://www.dailysabah.com/opinion/op-ed/ankaras-new-chapter-in-syria-stabilization-security-and-strategic-cooperation"
               },
               {
                 "id": "https://en.wikipedia.org/wiki/US_intervention_in_the_Syrian_civil_war",
@@ -2503,14 +2618,24 @@
                 "url": "https://en.wikipedia.org/wiki/US_intervention_in_the_Syrian_civil_war"
               },
               {
-                "id": "https://english.enabbaladi.net/archives/2025/08/syria-turkey-military-agreement-a-new-approach-constrained-by-limits/",
+                "id": "https://www.wrmea.org/other/turkiyes-syrian-burden.html",
+                "title": "wrmea.org",
+                "url": "https://www.wrmea.org/other/turkiyes-syrian-burden.html"
+              },
+              {
+                "id": "https://www.euronews.com/2025/08/14/turkey-to-provide-weapons-and-support-to-syria-under-new-defence-pact-officials-say",
+                "title": "euronews.com",
+                "url": "https://www.euronews.com/2025/08/14/turkey-to-provide-weapons-and-support-to-syria-under-new-defence-pact-officials-say"
+              },
+              {
+                "id": "https://english.enabbaladi.net/archives/2025/08/syria-and-turkey-sign-military-training-and-advisory-agreement/",
                 "title": "english.enabbaladi.net",
-                "url": "https://english.enabbaladi.net/archives/2025/08/syria-turkey-military-agreement-a-new-approach-constrained-by-limits/"
+                "url": "https://english.enabbaladi.net/archives/2025/08/syria-and-turkey-sign-military-training-and-advisory-agreement/"
               }
             ],
             "retrieval_count": 5,
             "processing_stats": {
-              "processing_time_ms": 8896,
+              "processing_time_ms": 10740,
               "stability_score": 0.77
             },
             "provenance": {
@@ -2521,7 +2646,7 @@
           },
           "mode": "standard"
         },
-        "requestId": "test-18-1757086099564"
+        "requestId": "test-18-1757157242449"
       }
     },
     {
@@ -2630,9 +2755,9 @@
             ],
             "retrievals": [
               {
-                "id": "https://www.rferl.org/a/ukraine-us-gas-imports-russia/33510194.html",
-                "title": "rferl.org",
-                "url": "https://www.rferl.org/a/ukraine-us-gas-imports-russia/33510194.html"
+                "id": "https://kyivindependent.com/putin-admits-russia-faces-gas-shortage-amid-ukraines-strikes-on-energy-infrastructure/",
+                "title": "kyivindependent.com",
+                "url": "https://kyivindependent.com/putin-admits-russia-faces-gas-shortage-amid-ukraines-strikes-on-energy-infrastructure/"
               },
               {
                 "id": "https://www.euronews.com/my-europe/2025/08/19/hungary-threatens-kyiv-with-electricity-cut-after-ukrainian-attacks-shut-down-russia-oil-i",
@@ -2640,9 +2765,9 @@
                 "url": "https://www.euronews.com/my-europe/2025/08/19/hungary-threatens-kyiv-with-electricity-cut-after-ukrainian-attacks-shut-down-russia-oil-i"
               },
               {
-                "id": "https://cepa.org/article/gas-transit-and-the-death-of-russian-made-myths/",
-                "title": "cepa.org",
-                "url": "https://cepa.org/article/gas-transit-and-the-death-of-russian-made-myths/"
+                "id": "https://www.atlanticcouncil.org/blogs/energysource/the-china-russia-natural-gas-deal-is-a-distraction-from-lng-sanctions-evasion/",
+                "title": "atlanticcouncil.org",
+                "url": "https://www.atlanticcouncil.org/blogs/energysource/the-china-russia-natural-gas-deal-is-a-distraction-from-lng-sanctions-evasion/"
               },
               {
                 "id": "https://www.euronews.com/2025/08/21/ukrainian-suspected-of-links-to-nord-stream-pipeline-blasts-arrested-in-italy-prosecutors-",
@@ -2650,14 +2775,14 @@
                 "url": "https://www.euronews.com/2025/08/21/ukrainian-suspected-of-links-to-nord-stream-pipeline-blasts-arrested-in-italy-prosecutors-"
               },
               {
-                "id": "https://www.atlanticcouncil.org/blogs/energysource/the-china-russia-natural-gas-deal-is-a-distraction-from-lng-sanctions-evasion/",
+                "id": "https://www.atlanticcouncil.org/blogs/ukrainealert/hungary-has-alternative-energy-options-but-chooses-to-rely-on-russia/",
                 "title": "atlanticcouncil.org",
-                "url": "https://www.atlanticcouncil.org/blogs/energysource/the-china-russia-natural-gas-deal-is-a-distraction-from-lng-sanctions-evasion/"
+                "url": "https://www.atlanticcouncil.org/blogs/ukrainealert/hungary-has-alternative-energy-options-but-chooses-to-rely-on-russia/"
               }
             ],
             "retrieval_count": 5,
             "processing_stats": {
-              "processing_time_ms": 7395,
+              "processing_time_ms": 5674,
               "stability_score": 0.77
             },
             "provenance": {
@@ -2668,7 +2793,7 @@
           },
           "mode": "standard"
         },
-        "requestId": "test-19-1757086110330"
+        "requestId": "test-19-1757157254697"
       }
     },
     {
@@ -2787,24 +2912,24 @@
                 "url": "https://www.arabnews.com/node/2571943/%7B%7B"
               },
               {
-                "id": "https://www.understandingwar.org/backgrounder/iran-update-august-11-2025",
-                "title": "understandingwar.org",
-                "url": "https://www.understandingwar.org/backgrounder/iran-update-august-11-2025"
-              },
-              {
-                "id": "https://www.rferl.org/a/iran-netanyahu-unga-warning-iran-hezbollah/33137794.html",
-                "title": "rferl.org",
-                "url": "https://www.rferl.org/a/iran-netanyahu-unga-warning-iran-hezbollah/33137794.html"
-              },
-              {
-                "id": "https://www.nbcrightnow.com/national/lebanon-discusses-army-plan-to-disarm-hezbollah/article_9cfb4ab8-d974-54ac-852c-7cb81e85326d.html",
+                "id": "https://www.nbcrightnow.com/national/lebanon-says-army-will-begin-implementing-hezbollah-disarmament-plan/article_9cfb4ab8-d974-54ac-852c-7cb81e85326d.html",
                 "title": "nbcrightnow.com",
-                "url": "https://www.nbcrightnow.com/national/lebanon-discusses-army-plan-to-disarm-hezbollah/article_9cfb4ab8-d974-54ac-852c-7cb81e85326d.html"
+                "url": "https://www.nbcrightnow.com/national/lebanon-says-army-will-begin-implementing-hezbollah-disarmament-plan/article_9cfb4ab8-d974-54ac-852c-7cb81e85326d.html"
+              },
+              {
+                "id": "https://en.wikipedia.org/wiki/Hezbollah",
+                "title": "en.wikipedia.org",
+                "url": "https://en.wikipedia.org/wiki/Hezbollah"
+              },
+              {
+                "id": "https://www.wsws.org/en/articles/2025/08/10/qhys-a10.html",
+                "title": "wsws.org",
+                "url": "https://www.wsws.org/en/articles/2025/08/10/qhys-a10.html"
               }
             ],
             "retrieval_count": 5,
             "processing_stats": {
-              "processing_time_ms": 8398,
+              "processing_time_ms": 7799,
               "stability_score": 0.77
             },
             "provenance": {
@@ -2815,15 +2940,15 @@
           },
           "mode": "standard"
         },
-        "requestId": "test-20-1757086119374"
+        "requestId": "test-20-1757157263390"
       }
     }
   ],
   "metrics": {
-    "totalExcerpts": 75,
+    "totalExcerpts": 100,
     "validExcerpts": 0,
     "schemaFailures": 0,
-    "evidenceBackedCount": 15,
+    "evidenceBackedCount": 20,
     "humanReviewTriggered": 10,
     "decisionTableSynthesized": 20,
     "nanErrors": 0

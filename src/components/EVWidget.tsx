@@ -70,28 +70,45 @@ const EVWidget: React.FC<EVWidgetProps> = ({ data, onUpdateEV }) => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-        {data.decision_table.map((row, index) => (
-          <div key={index} className="bg-slate-700 rounded-lg p-4 border border-slate-600">
-            <h4 className="font-medium text-slate-200 mb-3">{row.action}</h4>
+        {data.decision_table.map((row, index) => {
+          // NaN protection for payoff values
+          const payoffValue = row.payoff_estimate?.value;
+          const confidenceValue = row.payoff_estimate?.confidence;
 
-            <div className="space-y-2">
-              <label className="block text-xs text-slate-400">
-                Override Payoff Estimate
-              </label>
-              <input
-                type="number"
-                step="0.01"
-                value={overrides[row.action] ?? row.payoff_estimate.value}
-                onChange={(e) => handlePayoffChange(index, parseFloat(e.target.value))}
-                className="w-full px-3 py-2 bg-slate-600 border border-slate-500 rounded text-slate-200 text-sm"
-              />
-              <div className="text-xs text-slate-500">
-                Original: {row.payoff_estimate.value.toFixed(2)} |
-                Confidence: {(row.payoff_estimate.confidence * 100).toFixed(1)}%
+          if (isNaN(payoffValue) || isNaN(confidenceValue)) {
+            return (
+              <div key={index} className="bg-red-900/20 rounded-lg p-4 border border-red-700">
+                <h4 className="font-medium text-red-200 mb-3">{row.action}</h4>
+                <div className="text-xs text-red-400">
+                  Insufficient numeric data - cannot display payoff estimate
+                </div>
+              </div>
+            );
+          }
+
+          return (
+            <div key={index} className="bg-slate-700 rounded-lg p-4 border border-slate-600">
+              <h4 className="font-medium text-slate-200 mb-3">{row.action}</h4>
+
+              <div className="space-y-2">
+                <label className="block text-xs text-slate-400">
+                  Override Payoff Estimate
+                </label>
+                <input
+                  type="number"
+                  step="0.01"
+                  value={overrides[row.action] ?? payoffValue}
+                  onChange={(e) => handlePayoffChange(index, parseFloat(e.target.value))}
+                  className="w-full px-3 py-2 bg-slate-600 border border-slate-500 rounded text-slate-200 text-sm"
+                />
+                <div className="text-xs text-slate-500">
+                  Original: {payoffValue.toFixed(2)} |
+                  Confidence: {(confidenceValue * 100).toFixed(1)}%
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Updated EV Rankings */}

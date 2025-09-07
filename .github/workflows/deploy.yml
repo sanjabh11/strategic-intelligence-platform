@@ -1,0 +1,48 @@
+name: Deploy Analyze Engine
+
+on:
+  push:
+    branches: [ main, master ]
+    paths:
+      - 'supabase/functions/analyze-engine/**'
+      - 'supabase/migrations/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Deploy Edge Function
+        uses: supabase/cli-action@v1
+        with:
+          args: functions deploy analyze-engine --project-ref ${{ secrets.SUPABASE_PROJECT_REF }}
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+      - name: Run Post-Deployment Tests
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          node test_postdeploy.js
+
+      - name: Notify on Failure
+        if: failure()
+        run: |
+          echo "Deployment failed! Check the function logs in Supabase Dashboard."
+          echo "Common issues:"
+          echo "- Environment variables not set"
+          echo "- Database migration not applied"
+          echo "- Function build errors"

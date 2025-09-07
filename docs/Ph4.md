@@ -1,5 +1,5 @@
 
-1) Goals (what we must achieve)
+1) Goals  
 
 Real-time, evidence-backed analyses (no regurgitated mock content).
 

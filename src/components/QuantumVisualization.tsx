@@ -26,6 +26,9 @@ const QuantumVisualization: React.FC<QuantumVisualizationProps> = ({
 }) => {
   const [selectedView, setSelectedView] = useState<'superposition' | 'temporal'>('superposition');
 
+  // Safe number validation function
+  const safeNumber = (v: any): number | null => (typeof v === 'number' && isFinite(v) ? v : null);
+
   if (quantumStates.length === 0) {
     return (
       <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
@@ -40,14 +43,36 @@ const QuantumVisualization: React.FC<QuantumVisualizationProps> = ({
   // Quantum Superposition Chart
   const SuperpositionChart = () => {
     const superpositionData = quantumStates.flatMap(state =>
-      state.coherentStrategies.map(strategy => ({
-        name: `${state.playerId}:${strategy.action}`,
-        amplitude: Math.abs(strategy.amplitude),
-        probability: strategy.probability * 100,
-        player: state.playerId,
-        strategy: strategy.action
-      }))
+      state.coherentStrategies.map(strategy => {
+        // Safe number validation
+        const amplitude = safeNumber(strategy.amplitude);
+        const probability = safeNumber(strategy.probability);
+
+        if (amplitude === null || probability === null) {
+          return null; // Filter out invalid entries
+        }
+
+        return {
+          name: `${state.playerId}:${strategy.action}`,
+          amplitude: Math.abs(amplitude),
+          probability: (probability as number) * 100,
+          player: state.playerId,
+          strategy: strategy.action
+        };
+      }).filter(Boolean) // Remove null entries
     );
+
+    // Check if we have valid data
+    if (superpositionData.length === 0) {
+      return (
+        <div className="bg-red-900/20 rounded-lg p-4 border border-red-700">
+          <h4 className="font-medium text-red-200 mb-3">Quantum Superposition States</h4>
+          <div className="text-xs text-red-400">
+            Insufficient numeric data - cannot display quantum visualization
+          </div>
+        </div>
+      );
+    }
 
     return (
       <div className="bg-slate-800 rounded-xl p-6 border border-purple-500/30">
@@ -120,13 +145,19 @@ const QuantumVisualization: React.FC<QuantumVisualizationProps> = ({
           </div>
           <div className="bg-slate-700 p-4 rounded-lg text-center">
             <div className="text-blue-400 text-xl font-mono">
-              {(superpositionData.reduce((sum, item) => sum + item.probability, 0) / superpositionData.length).toFixed(1)}%
+              {superpositionData.length > 0 ?
+                ((superpositionData.reduce((sum, item) => sum + item.probability, 0) / superpositionData.length).toFixed(1)) :
+                'N/A'
+              }%
             </div>
             <div className="text-sm text-slate-400">Avg Probability</div>
           </div>
           <div className="bg-slate-700 p-4 rounded-lg text-center">
             <div className="text-emerald-400 text-xl font-mono">
-              {Math.max(...superpositionData.map(d => d.amplitude)).toFixed(2)}
+              {superpositionData.length > 0 ?
+                Math.max(...superpositionData.map(d => d.amplitude)).toFixed(2) :
+                'N/A'
+              }
             </div>
             <div className="text-sm text-slate-400">Max Amplitude</div>
           </div>

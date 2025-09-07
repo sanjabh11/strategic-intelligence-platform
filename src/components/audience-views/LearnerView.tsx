@@ -73,10 +73,16 @@ const LearnerView: React.FC<AudienceViewProps> = ({
                 <td className="p-3 text-slate-300">{row.action}</td>
                 <td className="p-3 text-center">
                   <div className="text-sm font-mono text-blue-400">
-                    {row.payoff_estimate.value.toFixed(2)}
+                    {(() => {
+                      const value = row.payoff_estimate?.value;
+                      return isNaN(value) ? 'N/A' : value.toFixed(2);
+                    })()}
                   </div>
                   <div className="text-xs text-slate-400">
-                    Confidence: {(row.payoff_estimate.confidence * 100).toFixed(1)}%
+                    Confidence: {(() => {
+                      const confidence = row.payoff_estimate?.confidence;
+                      return isNaN(confidence) ? 'N/A' : (confidence * 100).toFixed(1) + '%';
+                    })()}
                   </div>
                 </td>
                 <td className="p-3 text-slate-300 text-sm">{row.risk_notes}</td>
@@ -102,7 +108,10 @@ const LearnerView: React.FC<AudienceViewProps> = ({
               <h3 className="font-medium text-slate-200">{item.action}</h3>
               <div className="flex items-center space-x-2">
                 <span className="text-lg font-mono text-blue-400">
-                  EV: {item.ev.toFixed(2)}
+                  EV: {(() => {
+                    const ev = item.ev;
+                    return isNaN(ev) ? 'N/A' : ev.toFixed(2);
+                  })()}
                 </span>
               </div>
             </div>
@@ -110,11 +119,17 @@ const LearnerView: React.FC<AudienceViewProps> = ({
             <div className="w-full bg-slate-600 rounded-full h-2 mb-2">
               <div
                 className="bg-blue-500 h-2 rounded-full transition-all duration-300"
-                style={{ width: `${Math.min(100, (item.ev_confidence * 100))}%` }}
+                style={{ width: `${Math.min(100, (() => {
+                  const confidence = item.ev_confidence;
+                  return isNaN(confidence) ? 0 : confidence * 100;
+                })())}%` }}
               ></div>
             </div>
             <div className="text-xs text-slate-400">
-              EV Confidence: {(item.ev_confidence * 100).toFixed(1)}%
+              EV Confidence: {(() => {
+                const confidence = item.ev_confidence;
+                return isNaN(confidence) ? 'N/A' : (confidence * 100).toFixed(1) + '%';
+              })()}
             </div>
           </div>
         ))}
@@ -139,11 +154,18 @@ const LearnerView: React.FC<AudienceViewProps> = ({
                 <div className="flex justify-between items-center mb-2">
                   <span className="font-medium text-slate-200">{param.param}</span>
                   <span className={`px-2 py-1 rounded text-xs ${
-                    param.impact_score > 0.7 ? 'bg-red-500/20 text-red-300' :
-                    param.impact_score > 0.4 ? 'bg-yellow-500/20 text-yellow-300' :
-                    'bg-green-500/20 text-green-300'
+                    (() => {
+                      const score = param.impact_score;
+                      return isNaN(score) ? 'bg-gray-500/20 text-gray-300' :
+                        score > 0.7 ? 'bg-red-500/20 text-red-300' :
+                        score > 0.4 ? 'bg-yellow-500/20 text-yellow-300' :
+                        'bg-green-500/20 text-green-300';
+                    })()
                   }`}>
-                    Impact: {(param.impact_score * 100).toFixed(1)}%
+                    Impact: {(() => {
+                      const score = param.impact_score;
+                      return isNaN(score) ? 'N/A' : (score * 100).toFixed(1) + '%';
+                    })()}
                   </span>
                 </div>
                 <div className="w-full bg-slate-600 rounded-full h-2 mt-2">
@@ -246,7 +268,12 @@ const LearnerView: React.FC<AudienceViewProps> = ({
                 <div className="flex-1 min-w-0">
                   <h3 className="font-medium text-emerald-300">Source {source.id}</h3>
                   <p className="text-slate-400 text-sm line-clamp-2 mt-1">{source.excerpt}</p>
-                  <p className="text-slate-500 text-xs mt-1">Relevance: {(source.score * 100).toFixed(1)}%</p>
+                  <p className="text-slate-500 text-xs mt-1">
+                    Relevance: {(() => {
+                      const score = source.score;
+                      return isNaN(score) ? 'N/A' : (score * 100).toFixed(1) + '%';
+                    })()}
+                  </p>
                 </div>
               </div>
             </button>

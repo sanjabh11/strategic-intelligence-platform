@@ -27,7 +27,10 @@ const StrategySimulator: React.FC = () => {
 
   // Learning mode context
   const { isLearningMode } = useLearningMode();
-  
+
+  // Safe number validation function
+  const safeNumber = (v: any): number | null => (typeof v === 'number' && isFinite(v) ? v : null);
+
   // Form state
   const [scenario, setScenario] = useState<string>(
     "Three major technology companies (Apple, Google, Microsoft) must decide on AI safety standards. Each can choose to 'lead with strict standards', 'follow industry consensus', or 'maintain competitive advantage'. Their decisions affect regulatory oversight, public trust, innovation pace, and market positioning."
@@ -103,7 +106,7 @@ const StrategySimulator: React.FC = () => {
   // Forecast visualization (optional)
   const ForecastChart = () => {
     if (!analysis?.forecast || analysis.forecast.length === 0) return null;
-    const data = analysis.forecast.map(d => ({ t: d.t, probability: d.probability }));
+    const data = analysis.forecast.map(d => ({ t: safeNumber(d.t) || 0, probability: safeNumber(d.probability) || 0 }));
     return (
       <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
         <ChartHeader
@@ -232,12 +235,15 @@ const StrategySimulator: React.FC = () => {
   // Quantum visualization
   const QuantumChart = () => {
     if (!analysis?.quantum?.collapsed) return null;
-    
-    const data = analysis.quantum.collapsed.map(item => ({
-      action: item.action,
-      probability: item.probability,
-      percentage: item.probability * 100
-    }));
+
+    const data = analysis.quantum.collapsed.map(item => {
+      const safeProb = safeNumber(item.probability) || 0;
+      return {
+        action: item.action,
+        probability: safeProb,
+        percentage: safeProb * 100
+      };
+    });
     
     const colors = ['#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
     const influence = analysis.quantum?.influence;

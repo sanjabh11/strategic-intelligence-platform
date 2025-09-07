@@ -4,7 +4,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import {
   Dna, Brain, Target, TrendingUp, AlertTriangle, Shield, Users, Zap,
-  Eye, Lightbulb, CheckCircle, XCircle, BarChart3, RadarChart, Award
+  Eye, Lightbulb, CheckCircle, XCircle, BarChart3, Award
 } from 'lucide-react';
 import {
   PieChart, Pie, Cell, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
@@ -258,10 +258,13 @@ const StrategicDNA: React.FC<StrategicDNAProps> = ({
 
   const [activeView, setActiveView] = useState<'overview' | 'personality' | 'biases' | 'recommendations'>('overview');
 
+  // Safe number validation function
+  const safeNumber = (v: any): number | null => (typeof v === 'number' && isFinite(v) ? v : null);
+
   // Radar chart data for personality profile
   const radarData = personalityProfile.map(personality => ({
     dimension: personality.dimension,
-    score: personality.score,
+    score: safeNumber(personality.score) || 0,
     fullMark: 100
   }));
 
@@ -437,12 +440,12 @@ const StrategicDNA: React.FC<StrategicDNAProps> = ({
                 <div className="mb-3">
                   <div className="flex justify-between text-sm mb-1">
                     <span className="text-slate-400">Score</span>
-                    <span className="font-mono text-purple-400">{personality.score}/100</span>
+                    <span className="font-mono text-purple-400">{(safeNumber(personality.score) || 0).toString()}/100</span>
                   </div>
                   <div className="w-full bg-slate-600 rounded-full h-2">
                     <div
                       className="bg-purple-500 h-2 rounded-full transition-all duration-300"
-                      style={{width: `${personality.score}%`}}
+                      style={{width: `${safeNumber(personality.score) || 0}%`}}
                     ></div>
                   </div>
                 </div>

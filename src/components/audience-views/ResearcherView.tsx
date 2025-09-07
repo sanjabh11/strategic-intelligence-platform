@@ -156,13 +156,19 @@ const ResearcherView: React.FC<AudienceViewProps> = ({
                     <div className="text-center">
                       <div className="text-xs text-slate-500 mb-1">Player 1 Payoff</div>
                       <div className="text-lg font-mono text-cyan-400 bg-slate-600 px-3 py-1 rounded">
-                        {row.payoffs[0]}
+                        {(() => {
+                          const value = Number(row.payoffs[0]);
+                          return isNaN(value) ? 'N/A' : value.toFixed(2);
+                        })()}
                       </div>
                     </div>
                     <div className="text-center">
                       <div className="text-xs text-slate-500 mb-1">Player 2 Payoff</div>
                       <div className="text-lg font-mono text-emerald-400 bg-slate-600 px-3 py-1 rounded">
-                        {row.payoffs[1]}
+                        {(() => {
+                          const value = Number(row.payoffs[1]);
+                          return isNaN(value) ? 'N/A' : value.toFixed(2);
+                        })()}
                       </div>
                     </div>
                   </div>
@@ -382,12 +388,18 @@ const ResearcherView: React.FC<AudienceViewProps> = ({
                       <td className="p-3 text-slate-300">{row.action}</td>
                       <td className="p-3 text-center">
                         <div className="text-sm font-mono text-blue-400">
-                          {Number(row.payoff_estimate?.value ?? 0).toFixed(2)}
+                          {(() => {
+                            const value = Number(row.payoff_estimate?.value ?? 0);
+                            return isNaN(value) ? 'N/A' : value.toFixed(2);
+                          })()}
                         </div>
                       </td>
                       <td className="p-3 text-center">
                         <div className="text-sm text-slate-400">
-                          {(Number(row.payoff_estimate?.confidence ?? 0) * 100).toFixed(1)}%
+                          {(() => {
+                            const confidence = Number(row.payoff_estimate?.confidence ?? 0);
+                            return isNaN(confidence) ? 'N/A' : (confidence * 100).toFixed(1) + '%';
+                          })()}
                         </div>
                       </td>
                     </tr>
@@ -406,11 +418,17 @@ const ResearcherView: React.FC<AudienceViewProps> = ({
                   <div className="flex items-center justify-between mb-2">
                     <h4 className="font-medium text-slate-200">{item.action}</h4>
                     <span className="text-lg font-mono text-blue-400">
-                      EV: {Number(item.ev).toFixed(2)}
+                      EV: {(() => {
+                        const ev = Number(item.ev);
+                        return isNaN(ev) ? 'N/A' : ev.toFixed(2);
+                      })()}
                     </span>
                   </div>
                   <div className="text-xs text-slate-400">
-                    EV Confidence: {(Number(item.ev_confidence ?? 0) * 100).toFixed(1)}%
+                    EV Confidence: {(() => {
+                      const confidence = Number(item.ev_confidence ?? 0);
+                      return isNaN(confidence) ? 'N/A' : (confidence * 100).toFixed(1) + '%';
+                    })()}
                   </div>
                 </div>
               ))}

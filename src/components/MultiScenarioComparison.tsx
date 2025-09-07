@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import {
-  Compare, BarChart3, TrendingUp, Award, AlertTriangle,
+  GitCompare, BarChart3, TrendingUp, Award, AlertTriangle,
   Target, Clock, CheckCircle, Users, Star, Plus, Minus
 } from 'lucide-react';
 import {
@@ -61,6 +61,9 @@ const MultiScenarioComparison: React.FC<MultiScenarioComparisonProps> = ({
   const [selectedScenarios, setSelectedScenarios] = useState<ScenarioResult[]>([]);
   const [comparisonView, setComparisonView] = useState<'overview' | 'detailed' | 'trends'>('overview');
   const [sortBy, setSortBy] = useState<'score' | 'stability' | 'processing_time' | 'diversity'>('score');
+
+  // Safe number validation function
+  const safeNumber = (v: any): number | null => (typeof v === 'number' && isFinite(v) ? v : null);
 
   // Mock scenarios data for demonstration (in production this would come from API)
   const mockScenarios: ScenarioResult[] = useMemo(() => [
@@ -147,7 +150,7 @@ const MultiScenarioComparison: React.FC<MultiScenarioComparisonProps> = ({
     });
   }, [displayScenarios, sortBy]);
 
-  // Calculate comparison metrics
+  // Calculate comparison metrics with NaN protection
   const calculatedMetrics = useMemo((): ComparisonMetrics => {
     if (displayScenarios.length === 0) return {
       winning_solutions: 0,
@@ -157,16 +160,31 @@ const MultiScenarioComparison: React.FC<MultiScenarioComparisonProps> = ({
       risk_distribution: 0
     };
 
-    const avgStability = displayScenarios.reduce((sum, s) => sum + (s.equilibrium?.stability || 0), 0) / displayScenarios.length;
-    const avgProcessingTime = displayScenarios.reduce((sum, s) => sum + (s.processing_stats?.processing_time_ms || 0), 0) / displayScenarios.length;
-    const riskVariance = displayScenarios.reduce((acc, s) => acc + Math.pow((s.equilibrium?.stability || 0) - avgStability, 2), 0) / displayScenarios.length;
+    // Filter out scenarios with invalid data
+    const validScenarios = displayScenarios.filter(s => {
+      const stability = safeNumber(s.equilibrium?.stability);
+      const score = safeNumber(s.strategic_score);
+      return stability !== null && score !== null && (stability as number) >= 0 && (stability as number) <= 1 && (score as number) >= 0 && (score as number) <= 100;
+    });
+
+    if (validScenarios.length === 0) return {
+      winning_solutions: 0,
+      average_stability: 0,
+      processing_efficiency: 0,
+      strategic_diversity: 0,
+      risk_distribution: 0
+    };
+
+    const avgStability = validScenarios.reduce((sum, s) => sum + (safeNumber(s.equilibrium?.stability) || 0), 0) / validScenarios.length;
+    const avgProcessingTime = validScenarios.reduce((sum, s) => sum + (safeNumber(s.processing_stats?.processing_time_ms) || 0), 0) / validScenarios.length;
+    const riskVariance = validScenarios.reduce((acc, s) => acc + Math.pow((safeNumber(s.equilibrium?.stability) || 0) - avgStability, 2), 0) / validScenarios.length;
 
     return {
-      winning_solutions: displayScenarios.filter(s => s.strategic_score > 80).length,
-      average_stability: avgStability,
-      processing_efficiency: 100000 / avgProcessingTime, // Higher is more efficient
-      strategic_diversity: 1 - (riskVariance / (avgStability * (1 - avgStability))),
-      risk_distribution: Math.sqrt(riskVariance)
+      winning_solutions: validScenarios.filter(s => s.strategic_score > 80).length,
+      average_stability: isNaN(avgStability) ? 0 : avgStability,
+      processing_efficiency: isNaN(avgProcessingTime) || avgProcessingTime === 0 ? 0 : 100000 / avgProcessingTime,
+      strategic_diversity: isNaN(riskVariance) || isNaN(avgStability) ? 0 : 1 - (riskVariance / (avgStability * (1 - avgStability))),
+      risk_distribution: isNaN(riskVariance) ? 0 : Math.sqrt(riskVariance)
     };
   }, [displayScenarios]);
 
@@ -176,7 +194,7 @@ const MultiScenarioComparison: React.FC<MultiScenarioComparisonProps> = ({
       <div className="bg-gradient-to-r from-cyan-600 to-green-600 p-6 rounded-xl text-white">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Compare className="w-8 h-8" />
+            <GitCompare className="w-8 h-8" />
             <div>
               <h2 className="text-2xl font-bold">Multi-Scenario Comparison</h2>
               <p className="text-cyan-100">Compare strategic scenarios across game-theoretic models</p>
@@ -235,7 +253,12 @@ const MultiScenarioComparison: React.FC<MultiScenarioComparisonProps> = ({
 
           <div className="h-96 mb-6">
             <ResponsiveContainer width="100%" height="100%">
-              <ComposedChart data={sortedScenarios}>
+              <ComposedChart data={sortedScenarios.filter(s => {
+                // Safe number validation
+                const score = safeNumber(s.strategic_score);
+                const stability = safeNumber(s.equilibrium?.stability);
+                return score !== null && stability !== null && (score as number) >= 0 && (score as number) <= 100 && (stability as number) >= 0 && (stability as number) <= 1;
+              })}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                 <XAxis
                   dataKey="name"
@@ -360,7 +383,7 @@ const MultiScenarioComparison: React.FC<MultiScenarioComparisonProps> = ({
                         Object.entries(actions)
                           .sort((a, b) => b[1] - a[1])
                           .slice(0, 1)[0]?.[0] || 'mixed'
-                      } ({(Object.entries(actions).sort((a, b) => b[1] - a[1])[0]?.[1] || 0) * 100).toFixed(0)}%)
+                      } ({((Object.entries(actions).sort((a, b) => b[1] - a[1])[0]?.[1] || 0) * 100).toFixed(0)}%)
                     </div>
                   ))}
                 </div>
@@ -400,9 +423,9 @@ const MultiScenarioComparison: React.FC<MultiScenarioComparisonProps> = ({
                 <AreaChart
                   data={sortedScenarios.map((s, idx) => ({
                     scenario: s.name.split(' ')[0] + '...' + s.name.split(' ')[1]?s.name.split(' ')[1].charAt(0):'',
-                    score: s.strategic_score,
-                    stability: s.equilibrium.stability,
-                    processing: s.processing_stats?.processing_time_ms || 0,
+                    score: safeNumber(s.strategic_score) || 0,
+                    stability: safeNumber(s.equilibrium?.stability) || 0,
+                    processing: safeNumber(s.processing_stats?.processing_time_ms) || 0,
                     order: sortedScenarios.length - idx
                   }))}
                 >
@@ -439,10 +462,10 @@ const MultiScenarioComparison: React.FC<MultiScenarioComparisonProps> = ({
               <ResponsiveContainer width="100%" height="100%">
                 <ScatterChart
                   data={sortedScenarios.map(s => ({
-                    reward: s.strategic_score,
-                    risk: (1 - s.equilibrium.stability) * 100,
+                    reward: safeNumber(s.strategic_score) || 0,
+                    risk: (1 - (safeNumber(s.equilibrium?.stability) || 0)) * 100,
                     name: s.name.split(' ')[0],
-                    confidence: s.provenance?.confidence || 0
+                    confidence: safeNumber(s.provenance?.confidence) || 0
                   }))}
                 >
                   <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
