@@ -689,22 +689,41 @@ Deno.serve(async (req) => {
       const supabase = createClient(supabaseUrl, writeKey);
 
       try {
-        // Store pattern analysis results
-        await supabase
-          .from('strategic_patterns')
-          .insert(
-            response.patternDiscovery.analogies.map(analogy => ({
-              signature_hash: crypto.randomUUID(),
-              abstraction_level: request.analysisConfig.abstractionLevel,
-              confidence_score: analogy.structuralSimilarity,
-              structural_invariants: {
-                source_domain: analogy.sourceDomain,
-                target_domain: analogy.targetDomain,
-                success_probability: analogy.successProbability
-              },
-              adaptation_vector: new Array(128).fill(Math.random()) // Placeholder vector
-            }))
-          );
+        // Attempt to fetch a real feature vector from analysis_features for this run
+        let featureVector: number[] | null = null
+        try {
+          const { data: feat } = await supabase
+            .from('analysis_features')
+            .select('feature_vector')
+            .eq('run_id', request.runId)
+            .maybeSingle()
+          if (feat && Array.isArray(feat.feature_vector)) {
+            featureVector = feat.feature_vector as number[]
+          }
+        } catch (_) {
+          // If unavailable, proceed without adaptation_vector (no placeholder)
+          featureVector = null
+        }
+
+        // Store pattern analysis results without placeholders
+        const rows = response.patternDiscovery.analogies.map(analogy => {
+          const base: any = {
+            signature_hash: crypto.randomUUID(),
+            abstraction_level: request.analysisConfig.abstractionLevel,
+            confidence_score: analogy.structuralSimilarity,
+            structural_invariants: {
+              source_domain: analogy.sourceDomain,
+              target_domain: analogy.targetDomain,
+              success_probability: analogy.successProbability
+            }
+          }
+          if (featureVector && featureVector.length > 0) {
+            base.adaptation_vector = featureVector
+          }
+          return base
+        })
+
+        await supabase.from('strategic_patterns').insert(rows)
       } catch (persistError) {
         console.error('Pattern persistence failed:', persistError);
       }

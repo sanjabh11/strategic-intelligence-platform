@@ -14,11 +14,35 @@ function simpleHash(str: string) {
   return hash.toString(36);
 }
 
+// Google Programmable Search (CSE)
+export async function fetchGoogleCSE(query: string): Promise<any[]> {
+  if (!GOOGLE_API_KEY || !GOOGLE_CSE_ID) return []
+
+  return await retry(async () => {
+    const url = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(query)}&key=${GOOGLE_API_KEY}&cx=${GOOGLE_CSE_ID}`
+    const res = await fetch(url, { signal: AbortSignal.timeout(4000) })
+    if (!res.ok) throw new Error(`Google CSE HTTP ${res.status}`)
+    const data = await res.json()
+    const items = Array.isArray(data?.items) ? data.items.slice(0, 5) : []
+    return items.map((it: any) => ({
+      source: 'google_cse',
+      url: it.link,
+      snippet: it.snippet || it.title || '',
+      score: 0.65,
+      retrieved_at: new Date().toISOString()
+    }))
+  }, 'google_cse') || []
+}
+
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
 
-const PERPLEXITY_KEY = Deno.env.get('PERPLEXITY_KEY') ?? ""
+// Accept both PERPLEXITY_API_KEY (preferred) and PERPLEXITY_KEY for backward compatibility
+const PERPLEXITY_KEY = Deno.env.get('PERPLEXITY_API_KEY') ?? Deno.env.get('PERPLEXITY_KEY') ?? ""
+const GEMINI_KEY = Deno.env.get('GEMINI_API_KEY') ?? ""
+const GOOGLE_API_KEY = Deno.env.get('GOOGLE_API_KEY') ?? Deno.env.get('GOOGLE_SEARCH_API_KEY') ?? ""
+const GOOGLE_CSE_ID = Deno.env.get('GOOGLE_CSE_ID') ?? Deno.env.get('GOOGLE_CX') ?? ""
 const UNCOMTRADE_BASE = Deno.env.get('UNCOMTRADE_BASE') || "https://comtrade.un.org/api/get"
 const WORLD_BANK_BASE = Deno.env.get('WORLD_BANK_BASE') || "https://api.worldbank.org/v2"
 const GDELT_BASE = Deno.env.get('GDELT_BASE') || "https://api.gdeltproject.org/api/v2/doc/doc"
@@ -290,6 +314,57 @@ export async function fetchPerplexity(query: string): Promise<any[]> {
   }, 'perplexity') || []
 }
 
+// Gemini sources (prompted citations)
+export async function fetchGeminiSources(query: string): Promise<any[]> {
+  if (!GEMINI_KEY) return []
+
+  try {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [
+          {
+            role: 'user',
+            parts: [
+              {
+                text: `Task: Find 5 authoritative, recent web sources related to the query. Return ONLY a JSON array named sources with objects: {url:string, snippet:string}.
+
+Query: ${query}`
+              }
+            ]
+          }
+        ],
+        generationConfig: { temperature: 0.2, maxOutputTokens: 512 }
+      }),
+      signal: AbortSignal.timeout(4000)
+    })
+
+    if (!resp.ok) throw new Error(`Gemini HTTP ${resp.status}`)
+    const data = await resp.json()
+
+    // Best-effort parsing of JSON array from text
+    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || ''
+    let sources: any[] = []
+    try {
+      const match = text.match(/\[.*\]/s)
+      if (match) sources = JSON.parse(match[0])
+    } catch (_) {}
+
+    return (sources || []).slice(0, 5).map((s: any) => ({
+      source: 'gemini',
+      url: s.url,
+      snippet: s.snippet || '',
+      score: 0.6,
+      retrieved_at: new Date().toISOString()
+    }))
+  } catch (e) {
+    console.warn('Gemini sources failed:', e?.message ?? e)
+    return []
+  }
+}
+
 // Main orchestrator function
 export async function fetchAllRetrievals(opts: {
   query: string,
@@ -336,6 +411,12 @@ export async function fetchAllRetrievals(opts: {
 
   // Always include Perplexity
   tasks.push(fetchPerplexity(query))
+
+  // Include Gemini prompted sources
+  tasks.push(fetchGeminiSources(query))
+
+  // Include Google CSE when configured (secondary web search)
+  tasks.push(fetchGoogleCSE(query))
 
   // UN Comtrade for bilateral trade
   if (countryCodes.length >= 2) {

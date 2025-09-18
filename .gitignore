@@ -29,7 +29,7 @@ build/
 *.tsbuildinfo
 
 # ---- Environment files (keep examples) ----
-.env
+#.env
 #.env.*
 !.env.example
 
@@ -67,6 +67,6 @@ junit.xml
 # ---- Misc ----
 Thumbs.db
 Desktop.ini
-.env
+#.env
 
 

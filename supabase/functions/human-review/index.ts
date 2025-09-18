@@ -10,12 +10,23 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 // --- Environment helpers ---
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+const SUPABASE_ANON_KEY = Deno.env.get('SUPABASE_ANON_KEY') || ''
 
 if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
   console.error("Missing Supabase environment variables")
 }
 
 const supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
+
+// Build a request-scoped auth client from the incoming Authorization header
+function buildAuthClient(req: Request) {
+  const authHeader = req.headers.get('authorization') || req.headers.get('Authorization') || ''
+  const token = authHeader.replace(/^Bearer\s+/i, '')
+  const client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    global: { headers: { Authorization: `Bearer ${token}` } }
+  })
+  return { client, token }
+}
 
 // --- Utility helpers ---
 function jsonResponse(status: number, body: unknown) {
@@ -25,12 +36,27 @@ function jsonResponse(status: number, body: unknown) {
   })
 }
 
-// --- Mock authentication (will be replaced with real auth later) ---
-function getMockReviewerUser(): { id: string; role: string } | null {
-  // Mock reviewer - in production this would come from authenticated user
-  return {
-    id: 'reviewer-001',
-    role: 'reviewer'
+// --- Authentication ---
+async function getReviewerUser(req: Request): Promise<{ id: string; role: string } | null> {
+  try {
+    const { client, token } = buildAuthClient(req)
+    if (!token) return null
+
+    const { data: userRes, error: userErr } = await client.auth.getUser()
+    if (userErr || !userRes?.user) return null
+
+    const authId = userRes.user.id
+    // Lookup role in users table (created by migration 20250904_0010...)
+    const { data: userRow } = await supabaseAdmin
+      .from('users')
+      .select('id, role, auth_id')
+      .eq('auth_id', authId)
+      .maybeSingle()
+
+    const role = (userRow?.role || 'user') as string
+    return { id: authId, role }
+  } catch {
+    return null
   }
 }
 
@@ -199,10 +225,10 @@ High-stakes analyses will be clearly marked with 🚨
 }
 
 async function handleReview(analysisId: string, req: Request) {
-  const reviewer = getMockReviewerUser()
+  const reviewer = await getReviewerUser(req)
 
   if (!reviewer) {
-    return jsonResponse(401, { ok: false, message: 'Unauthorized - invalid reviewer' })
+    return jsonResponse(401, { ok: false, message: 'Unauthorized' })
   }
 
   // Check if reviewer has reviewer role

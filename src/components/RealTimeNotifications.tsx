@@ -2,6 +2,7 @@
 // Provides real-time updates for collaborative insights, Bayesian belief updates, and strategy analysis
 
 import React, { useState, useEffect, useRef } from 'react';
+import { supabase } from '../lib/supabase';
 import {
   Bell, BellRing, X, Check, Zap, Brain, ArrowUpDown,
   MessageCircle, TrendingUp, AlertTriangle, Info
@@ -41,93 +42,107 @@ const RealTimeNotifications: React.FC<RealTimeNotificationsProps> = ({
   const intervalRef = useRef<NodeJS.Timeout>();
   const dismissTimeouts = useRef<Map<string, NodeJS.Timeout>>(new Map());
 
-  // Mock notification generator for development
+  // Supabase Realtime subscriptions
   useEffect(() => {
-    // Simulate real-time notifications
-    const generateNotification = () => {
-      const notificationTypes = [
-        {
-          type: 'insight' as const,
-          title: 'New Insight Shared',
-          message: 'Colleague suggested an alternative approach to risk mitigation.',
-          priority: 'medium' as const,
-          category: 'collaborative' as const,
-          autoDismiss: true,
-          dismissDelay: 10000
-        },
-        {
-          type: 'belief_update' as const,
-          title: 'Belief Network Updated',
-          message: 'New evidence strengthened your cooperation hypothesis.',
-          priority: 'high' as const,
-          category: 'bayesian' as const,
-          autoDismiss: false
-        },
-        {
-          type: 'analysis_complete' as const,
-          title: 'Analysis Complete',
-          message: 'Quantum strategy analysis finished with new strategic insights.',
-          priority: 'medium' as const,
-          category: 'analysis' as const,
-          autoDismiss: true,
-          dismissDelay: 15000
-        },
-        {
-          type: 'evidence_ready' as const,
-          title: 'Evidence Retrieved',
-          message: '3 new academic sources found supporting your strategic theory.',
-          priority: 'medium' as const,
-          category: 'evidence' as const,
-          autoDismiss: true,
-          dismissDelay: 20000
-        },
-        {
-          type: 'session_update' as const,
-          title: 'Session Update',
-          message: 'Consensus reached on strategic recommendation.',
-          priority: 'high' as const,
-          category: 'collaborative' as const,
-          autoDismiss: false
-        }
-      ];
+    const channels: any[] = []
 
-      // Randomly generate notifications (reduced frequency for demo)
-      if (Math.random() < 0.15) { // 15% chance every 5 seconds
-        const template = notificationTypes[Math.floor(Math.random() * notificationTypes.length)];
-        const newNotification: NotificationItem = {
-          id: `notif_${Date.now()}_${Math.random()}`,
-          ...template,
-          details: template.type === 'insight' ? `New insight in session ${sessionId}` :
-                   template.type === 'belief_update' ? 'Belief strength increased by 25%' :
-                   template.type === 'evidence_ready' ? 'From academic sources published 2023-2024' :
-                   'Click to view full details',
-          timestamp: new Date(),
-          read: false
-        };
-
-        setNotifications(prev => [newNotification, ...prev].slice(0, 10)); // Keep max 10 notifications
-
-        // Handle auto-dismiss
-        if (newNotification.autoDismiss && newNotification.dismissDelay) {
-          const timeout = setTimeout(() => {
-            dismissNotification(newNotification.id);
-          }, newNotification.dismissDelay);
-          dismissTimeouts.current.set(newNotification.id, timeout);
-        }
+    function pushNotification(n: Omit<NotificationItem, 'id' | 'timestamp' | 'read'>) {
+      const item: NotificationItem = {
+        id: `notif_${Date.now()}_${Math.random().toString(36).slice(2)}`,
+        timestamp: new Date(),
+        read: false,
+        ...n
       }
-    };
+      setNotifications(prev => [item, ...prev].slice(0, 50))
+      if (item.autoDismiss && item.dismissDelay) {
+        const timeout = setTimeout(() => dismissNotification(item.id), item.dismissDelay)
+        dismissTimeouts.current.set(item.id, timeout)
+      }
+    }
 
-    // Check for notifications every 5 seconds
-    intervalRef.current = setInterval(generateNotification, 5000);
+    if (supabase) {
+      // Collaborative insights: new insight added
+      const ch1 = supabase
+        .channel('rt-collective-insights')
+        .on('postgres_changes', {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'collective_insights',
+          ...(sessionId ? { filter: `session_id=eq.${sessionId}` } : {})
+        }, (payload) => {
+          const row: any = payload.new
+          pushNotification({
+            type: 'insight',
+            title: 'New Collaborative Insight',
+            message: row?.content?.slice(0, 120) || 'New insight posted',
+            details: row?.author_id ? `by ${row.author_id}` : undefined,
+            priority: 'medium',
+            category: 'collaborative',
+            actionPayload: { insight_id: row?.id },
+            autoDismiss: true,
+            dismissDelay: 15000
+          })
+        })
+        .subscribe()
+      channels.push(ch1)
 
-    // Cleanup
+      // Insight reactions (votes/comments)
+      const ch2 = supabase
+        .channel('rt-insight-reactions')
+        .on('postgres_changes', {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'insight_reactions',
+          ...(sessionId ? { filter: `session_id=eq.${sessionId}` } : {})
+        }, (payload) => {
+          const row: any = payload.new
+          pushNotification({
+            type: 'session_update',
+            title: 'Insight Reaction',
+            message: `Reaction: ${row?.type || 'vote'}`,
+            details: row?.insight_id ? `on insight ${row.insight_id}` : undefined,
+            priority: 'low',
+            category: 'collaborative',
+            actionPayload: { reaction_id: row?.id },
+            autoDismiss: true,
+            dismissDelay: 10000
+          })
+        })
+        .subscribe()
+      channels.push(ch2)
+
+      // Bayesian belief evolution log
+      const ch3 = supabase
+        .channel('rt-belief-evolution')
+        .on('postgres_changes', {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'belief_evolution_log',
+        }, (payload) => {
+          const row: any = payload.new
+          pushNotification({
+            type: 'belief_update',
+            title: 'Belief Network Updated',
+            message: row?.change_summary?.slice(0, 140) || 'Belief update recorded',
+            details: row?.analysis_run_id ? `run ${row.analysis_run_id}` : undefined,
+            priority: 'high',
+            category: 'bayesian',
+            actionPayload: { belief_log_id: row?.id },
+            autoDismiss: false
+          })
+        })
+        .subscribe()
+      channels.push(ch3)
+    }
+
     return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-      dismissTimeouts.current.forEach(timeout => clearTimeout(timeout));
-    };
-  }, [sessionId]);
+      channels.forEach((ch) => {
+        try { supabase.removeChannel(ch) } catch { /* ignore */ }
+      })
+      if (intervalRef.current) clearInterval(intervalRef.current)
+      dismissTimeouts.current.forEach(timeout => clearTimeout(timeout))
+    }
+  }, [sessionId])
 
   // Update unread count
   useEffect(() => {

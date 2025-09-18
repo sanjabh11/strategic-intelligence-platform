@@ -1,5 +1,37 @@
 # Strategic Intelligence Platform (React + TypeScript + Vite)
 
+## Top 10 Functionalities
+
+### 1. **Quantum Game Theory Analysis Engine**
+Advanced strategic analysis using quantum-inspired algorithms and recursive Nash equilibria computation. Supports complex multi-player scenarios with real-time equilibrium calculation and confidence intervals.
+
+### 2. **Multi-Agent Recursive Prediction System**
+Models scenarios where multiple intelligent agents adapt to each other's strategies over time, computing meta-equilibria that account for players knowing others are computing equilibria.
+
+### 3. **Strategic DNA Analysis & Cognitive Profiling**
+Personalized strategic personality assessment including cognitive bias analysis, decision pattern recognition, and strategic recommendation engine based on individual decision history.
+
+### 4. **Cross-Domain Pattern Mining & Symmetry Discovery**
+AI-powered discovery of strategic parallels across seemingly unrelated domains, identifying successful strategies from analogous situations and recommending hybrid approaches.
+
+### 5. **Real-Time Evidence Retrieval & Validation**
+Integrated evidence system using Perplexity AI and Firecrawl for real-time information gathering, with sophisticated validation requiring multiple sources and quality scoring.
+
+### 6. **Audience-Specific Analysis Views**
+Tailored analysis outputs for different user types (students, learners, researchers, teachers) with appropriate complexity levels and educational explanations.
+
+### 7. **Multi-Scenario Comparison & Sensitivity Analysis**
+Advanced comparison tools for analyzing multiple strategic scenarios simultaneously, with sensitivity analysis to understand how changes in parameters affect outcomes.
+
+### 8. **Collective Intelligence & Collaborative Sessions**
+Multi-user strategic simulations and collaborative decision-making sessions with real-time participant coordination and collective intelligence aggregation.
+
+### 9. **Bayesian Belief Updating System**
+Dynamic belief network updates based on new evidence, with strategic implications analysis and belief stability calculations for decision confidence.
+
+### 10. **Comprehensive Monitoring & Analytics Dashboard**
+Real-time system monitoring, performance metrics, quota tracking, and strategic analysis history with advanced caching and optimization features.
+
 ## Quick Start
 
 1) Copy environment file and set Supabase credentials

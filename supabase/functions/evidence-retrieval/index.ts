@@ -18,6 +18,36 @@ function jsonResponse(status: number, body: any) {
   })
 }
 
+// Google Programmable Search (CSE) secondary retrieval
+async function googleCseRetrieval(query: string): Promise<EvidenceSource[]> {
+  const apiKey = Deno.env.get('GOOGLE_API_KEY') || Deno.env.get('GOOGLE_SEARCH_API_KEY')
+  const cx = Deno.env.get('GOOGLE_CSE_ID') || Deno.env.get('GOOGLE_CX')
+  if (!apiKey || !cx) throw new Error('Google CSE not configured')
+
+  const url = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(query)}&key=${apiKey}&cx=${cx}`
+  const res = await fetchWithTimeoutRetry(url, { method: 'GET' }, 8000, 2, 500)
+  const data = await res.json()
+  const items = Array.isArray(data?.items) ? data.items.slice(0, 5) : []
+  const now = Date.now()
+  return items.map((it: any, i: number) => ({
+    id: `google-${crypto.randomUUID().substring(0,8)}-${i}`,
+    title: it.title || 'Web Result',
+    content: (it.snippet || it.title || '').toString().substring(0, 500),
+    url: it.link,
+    source_type: 'web',
+    relevance_score: 0.65,
+    credibility_score: 0.6,
+    temporal_distance: 30, // unknown; treat as recent-ish
+    citation_format: {
+      apa: `${new URL(it.link || 'https://web').hostname}. (${new Date(now).getFullYear()}). ${it.title || 'Web result'}. ${it.link || ''}`,
+      mla: `"${it.title || 'Web result'}" ${new URL(it.link || 'https://web').hostname}, ${new Date(now).toISOString().split('T')[0]}, ${it.link || ''}`,
+      chicago: `${new URL(it.link || 'https://web').hostname}. "${it.title || 'Web result'}" ${new Date(now).getFullYear()}. ${it.link || ''}`
+    },
+    retrieval_id: crypto.randomUUID(),
+    passage_excerpt: (it.snippet || '').toString().substring(0, 300)
+  }))
+}
+
 interface EvidenceRetrievalRequest {
   runId: string;
   query: string;
@@ -68,7 +98,8 @@ async function fetchWithTimeoutRetry(url: string, init: RequestInit, timeoutMs =
 
 // Perplexity primary retrieval
 async function perplexityRetrieval(query: string): Promise<EvidenceSource[]> {
-  const apiKey = Deno.env.get('PERPLEXITY_API_KEY')
+  // Accept both PERPLEXITY_API_KEY (preferred) and PERPLEXITY_KEY
+  const apiKey = Deno.env.get('PERPLEXITY_API_KEY') || Deno.env.get('PERPLEXITY_KEY')
   if (!apiKey) throw new Error('PERPLEXITY_API_KEY missing')
 
   const system = 'You are a research assistant. Return ONLY JSON with an array of sources. Each source must have: title, url, snippet (<=500 chars).'
@@ -191,23 +222,30 @@ async function retrieveEvidence(
       evidenceSet.push(...perplexityEvidence);
     } catch (err) {
       console.warn('Perplexity primary failed:', err?.message || err)
-      // Secondary key: Firecrawl fallback when enabled
-      if (request.sourceConfig.include_firecrawl) {
-        const firecrawlEvidence = await firecrawlResearchRetrieval(request);
-        evidenceSet.push(...firecrawlEvidence);
+      // Secondary: Google CSE if configured
+      try {
+        const googleEvidence = await googleCseRetrieval(request.query)
+        evidenceSet.push(...googleEvidence)
+      } catch (ge) {
+        console.warn('Google CSE fallback failed:', ge)
+        // Tertiary: Firecrawl fallback when enabled
+        if (request.sourceConfig.include_firecrawl) {
+          const firecrawlEvidence = await firecrawlResearchRetrieval(request);
+          evidenceSet.push(...firecrawlEvidence);
+        }
       }
     }
   }
 
-  // Academic source integration (would use Google Scholar, JSTOR, etc.)
+  // Academic source integration (Crossref)
   if (request.sourceConfig.include_academic) {
-    const academicEvidence = await mockAcademicRetrieval(request.query, request.contextualFactors.domain);
+    const academicEvidence = await academicRetrieval(request.query, request.contextualFactors.domain);
     evidenceSet.push(...academicEvidence);
   }
 
-  // News and current events (would use NewsAPI, RSS feeds, etc.)
+  // News and current events (GDELT)
   if (request.sourceConfig.include_news) {
-    const newsEvidence = await mockNewsRetrieval(request.query, request.contextualFactors.temporalScope);
+    const newsEvidence = await newsRetrieval(request.query, request.contextualFactors.temporalScope);
     evidenceSet.push(...newsEvidence);
   }
 
@@ -256,22 +294,73 @@ async function retrieveEvidence(
   };
 }
 
-// Perplexity retrieval (removed mock - integrate real API)
-async function mockPerplexityRetrieval(query: string): Promise<EvidenceSource[]> {
-  console.warn('Perplexity retrieval not yet implemented - returning empty results');
+// Perplexity fallback (returns empty results, no fabrication)
+async function fallbackPerplexityRetrieval(query: string): Promise<EvidenceSource[]> {
+  console.warn('Perplexity fallback invoked - returning empty results');
   return [];
 }
 
-// Academic retrieval (removed mock - integrate real API)
-async function mockAcademicRetrieval(query: string, domain: string): Promise<EvidenceSource[]> {
-  console.warn('Academic retrieval not yet implemented - returning empty results');
-  return [];
+// Academic retrieval via Crossref (no API key required)
+async function academicRetrieval(query: string, domain: string): Promise<EvidenceSource[]> {
+  try {
+    const url = `https://api.crossref.org/works?query=${encodeURIComponent(query)}&rows=5`;
+    const res = await fetchWithTimeoutRetry(url, { method: 'GET' }, 8000, 2, 500);
+    const data = await res.json();
+    const items = (data?.message?.items || []).slice(0, 5);
+    const now = Date.now();
+    return items.map((it: any, i: number) => ({
+      id: `crossref-${crypto.randomUUID().substring(0,8)}-${i}`,
+      title: it.title?.[0] || it['container-title']?.[0] || 'Academic Source',
+      content: (it.abstract || it.title?.[0] || '').toString().substring(0, 500),
+      url: (it.URL || (Array.isArray(it.link) && it.link[0]?.URL) || ''),
+      source_type: 'academic',
+      relevance_score: 0.8,
+      credibility_score: 0.85,
+      temporal_distance: 365, // unknown; could parse issued.date-parts
+      citation_format: {
+        apa: `${(it['container-title']?.[0] || 'Journal')}. (${new Date(now).getFullYear()}). ${(it.title?.[0] || 'Article')}. ${it.URL || ''}`,
+        mla: `"${(it.title?.[0] || 'Article')}" ${(it['container-title']?.[0] || 'Journal')}, ${it.URL || ''}`,
+        chicago: `${(it['container-title']?.[0] || 'Journal')}. "${(it.title?.[0] || 'Article')}" ${it.URL || ''}`
+      },
+      retrieval_id: crypto.randomUUID(),
+      passage_excerpt: (it.abstract || it.title?.[0] || '').toString().substring(0, 300)
+    }));
+  } catch (e) {
+    console.warn('Academic retrieval (Crossref) failed:', e);
+    return [];
+  }
 }
 
-// News retrieval (removed mock - integrate real API)
-async function mockNewsRetrieval(query: string, temporalScope: { start: string; end: string }): Promise<EvidenceSource[]> {
-  console.warn('News retrieval not yet implemented - returning empty results');
-  return [];
+// News retrieval via GDELT doc API (no key required)
+async function newsRetrieval(query: string, temporalScope: { start: string; end: string }): Promise<EvidenceSource[]> {
+  try {
+    const q = encodeURIComponent(query);
+    const url = `https://api.gdeltproject.org/api/v2/doc/doc?query=${q}&mode=artlist&format=json`;
+    const res = await fetchWithTimeoutRetry(url, { method: 'GET' }, 8000, 2, 500);
+    const data = await res.json();
+    const articles = (data.articles || []).slice(0, 5);
+    const now = Date.now();
+    return articles.map((a: any, i: number) => ({
+      id: `gdelt-${crypto.randomUUID().substring(0,8)}-${i}`,
+      title: a.title || 'News Source',
+      content: (a.summary || a.segments || '').toString().substring(0, 500),
+      url: a.url || a.document_url,
+      source_type: 'news',
+      relevance_score: 0.7,
+      credibility_score: 0.6,
+      temporal_distance: 7, // heuristic recent
+      citation_format: {
+        apa: `${new URL(a.url || 'https://news').hostname}. (${new Date(now).getFullYear()}). ${a.title || 'News'}. ${a.url || ''}`,
+        mla: `"${a.title || 'News'}" ${new URL(a.url || 'https://news').hostname}, ${new Date(now).toISOString().split('T')[0]}, ${a.url || ''}`,
+        chicago: `${new URL(a.url || 'https://news').hostname}. "${a.title || 'News'}" ${new Date(now).getFullYear()}. ${a.url || ''}`
+      },
+      retrieval_id: crypto.randomUUID(),
+      passage_excerpt: (a.summary || a.segments || '').toString().substring(0, 300)
+    }));
+  } catch (e) {
+    console.warn('News retrieval (GDELT) failed:', e);
+    return [];
+  }
 }
 
 // Firecrawl web research retrieval
@@ -353,18 +442,18 @@ async function firecrawlResearchRetrieval(request: EvidenceRetrievalRequest): Pr
       }));
     } else {
       console.warn('Invalid Firecrawl response, using fallback');
-      return await mockFirecrawlRetrieval(request);
+      return await fallbackFirecrawlRetrieval(request);
     }
 
   } catch (error) {
     console.error('Firecrawl retrieval error:', error);
-    return await mockFirecrawlRetrieval(request);
+    return await fallbackFirecrawlRetrieval(request);
   }
 }
 
-// Firecrawl retrieval (removed mock - integrate real API)
-async function mockFirecrawlRetrieval(request: EvidenceRetrievalRequest): Promise<EvidenceSource[]> {
-  console.warn('Firecrawl retrieval not yet implemented - returning empty results');
+// Firecrawl fallback (returns empty results, no fabrication)
+async function fallbackFirecrawlRetrieval(request: EvidenceRetrievalRequest): Promise<EvidenceSource[]> {
+  console.warn('Firecrawl fallback invoked - returning empty results');
   return [];
 }
 

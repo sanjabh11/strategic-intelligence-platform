@@ -59,146 +59,20 @@ const StrategicDNA: React.FC<StrategicDNAProps> = ({
   onRecommendationClick
 }) => {
 
-  // Generate mock personality profile (in production, this would come from ML/BI analysis)
-  const personalityProfile = useMemo<StrategicPersonality[]>(() => [
-    {
-      dimension: 'Strategic Patience',
-      score: 78,
-      interpretation: 'High tolerance for delayed outcomes',
-      strengths: ['Long-term planning excellence', 'Opportunity recognition'],
-      weaknesses: ['Sometimes misses quick gains'],
-      traits: [
-        { name: 'Patience', level: 'high', description: 'Excellent at waiting for ideal conditions' },
-        { name: 'Opportunity Sensing', level: 'high', description: 'Good at identifying emerging opportunities' },
-        { name: 'Risk Assessment', level: 'moderate', description: 'Balanced risk evaluation' }
-      ]
-    },
-    {
-      dimension: 'Collaboration Quotient',
-      score: 65,
-      interpretation: 'Moderate preference for partnerships',
-      strengths: ['Networking abilities', 'Win-win solutions'],
-      weaknesses: ['Sometimes compromises too much'],
-      traits: [
-        { name: 'Team Play', level: 'high', description: 'Comfortable in collaborative environments' },
-        { name: 'Negotiation', level: 'moderate', description: 'Good at finding middle grounds' }
-      ]
-    },
-    {
-      dimension: 'Uncertainty Tolerance',
-      score: 44,
-      interpretation: 'Moderate discomfort with uncertainty',
-      strengths: ['Detailed planning', 'Risk mitigation'],
-      weaknesses: ['Over-planning can delay action'],
-      traits: [
-        { name: 'Planning Comfort', level: 'moderate', description: 'Prefers structured decision frameworks' },
-        { name: 'Adaptability', level: 'low', description: 'Can be uncomfortable with rapid changes' }
-      ]
-    },
-    {
-      dimension: 'Innovation Drive',
-      score: 82,
-      interpretation: 'Strong preference for novel approaches',
-      strengths: ['Creative problem-solving', 'Breakthrough solutions'],
-      weaknesses: ['May overlook proven methods'],
-      traits: [
-        { name: 'Creativity', level: 'high', description: 'Excellent at finding novel solutions' },
-        { name: 'Analytical Rigor', level: 'moderate', description: 'Balances innovation with analysis' }
-      ]
-    },
-    {
-      dimension: 'Power Sensitivity',
-      score: 38,
-      interpretation: 'Low focus on power dynamics',
-      strengths: ['Focus on outcomes over politics', 'Stakeholder harmony'],
-      weaknesses: ['May underestimate competitive threats'],
-      traits: [
-        { name: 'Power Awareness', level: 'low', description: 'Less focused on authority dynamics' },
-        { name: 'Relationship Building', level: 'high', description: 'Strong interpersonal skills' }
-      ]
-    }
-  ], []);
+  // No mock personality profile. Await real data; render empty state when none is available.
+  const personalityProfile = useMemo<StrategicPersonality[]>(() => [], []);
 
-  // Cognitive bias analysis
-  const cognitiveBiases = useMemo<CognitiveBias[]>(() => [
-    {
-      bias: 'Confirmation Bias',
-      severity: 'medium',
-      description: 'Tendency to search for information that supports existing beliefs',
-      impact: 'May lead to missed contradictory evidence, impacting decision quality',
-      mitigation: [
-        'Actively seek contrary viewpoints',
-        'Use structured information gathering',
-        'Implement "devil\'s advocate" analysis'
-      ],
-      examples: [
-        'Favoring evidence that supports your initial strategy',
-        'Dismissal of data contradicting your assumptions'
-      ],
-      detected: true,
-      confidence: 78
-    },
-    {
-      bias: 'Overconfidence Bias',
-      severity: 'high',
-      description: 'Excessive confidence in strategic predictions and capabilities',
-      impact: 'Can lead to underestimation of risks and overcommitment to poor strategies',
-      mitigation: [
-        'Use probabilistic thinking tools',
-        'Create formal risk assessments',
-        'Implement reality-check protocols'
-      ],
-      examples: [
-        'Assuming higher success rates than statistically likely',
-        'Underestimating competitor responses'
-      ],
-      detected: true,
-      confidence: 85
-    },
-    {
-      bias: 'Sunk Cost Fallacy',
-      severity: 'low',
-      description: 'Tendency to continue failing strategies due to invested resources',
-      impact: 'Leads to continuation of suboptimal strategies',
-      mitigation: [
-        'Separate sunk costs from future decisions',
-        'Use clean-slate analysis techniques',
-        'Implement strategic audits'
-      ],
-      examples: [
-        'Continuing poor joint ventures due to past investments',
-        'Persistent use of outdated strategies'
-      ],
-      detected: false,
-      confidence: 42
-    },
-    {
-      bias: 'Status Quo Bias',
-      severity: 'low',
-      description: 'Preference for existing strategies over potentially better alternatives',
-      impact: 'Misses opportunities for strategic improvements',
-      mitigation: [
-        'Conduct regular strategy reviews',
-        'Maintain innovation forums',
-        'Use scenario planning techniques'
-      ],
-      examples: [
-        'Sticking with familiar approaches despite market changes',
-        'Resistance to organizational restructuring'
-      ],
-      detected: false,
-      confidence: 38
-    }
-  ], [decisionHistory]);
+  // No mock cognitive bias analysis. Await real data; render empty state when none is available.
+  const cognitiveBiases = useMemo<CognitiveBias[]>(() => [], [decisionHistory]);
 
   // Strategic biography
   const strategicBiography = useMemo<StrategicBiography>(() => ({
-    decisionsMade: 347,
-    successRate: 68.5,
+    decisionsMade: 0,
+    successRate: 0,
     preferredStyle: 'innovative',
-    riskTolerance: 62,
-    timeHorizon: 78, // 78% long-term focus
-    collaborationIndex: 65
+    riskTolerance: 0,
+    timeHorizon: 0,
+    collaborationIndex: 0
   }), []);
 
   // Generate personalized recommendations

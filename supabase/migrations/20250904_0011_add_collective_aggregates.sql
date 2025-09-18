@@ -17,4 +17,4 @@ CREATE INDEX IF NOT EXISTS idx_collective_aggregates_bucket ON public.collective
 
 -- RLS
 ALTER TABLE public.collective_aggregates ENABLE ROW LEVEL SECURITY;
-CREATE POLICY IF NOT EXISTS read_anon_aggregates ON public.collective_aggregates FOR SELECT USING (true);
+CREATE POLICY read_anon_aggregates ON public.collective_aggregates FOR SELECT USING (true);

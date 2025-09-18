@@ -37,9 +37,10 @@ export interface Retrieval {
 }
 
 export interface AnalysisResult {
-  scenario_text: string;
-  players: Player[];
-  equilibrium: {
+  // Optional to match runtime schema; some flows synthesize minimal base
+  scenario_text?: string;
+  players?: Player[];
+  equilibrium?: {
     profile: Record<string, Record<string, {
       value: number;
       confidence: number;
@@ -75,6 +76,23 @@ export interface AnalysisResult {
   };
   // Optional temporal forecast of outcome probability (0..1) over time t
   forecast?: Array<{ t: number | string; probability: number }>;
+
+  // Enhancement fields appended client-side after base analysis completes
+  // These are intentionally broad to support evolving engine outputs.
+  recursiveEquilibrium?: any;
+  symmetryAnalysis?: any;
+  crossDomainInsights?: any;
+  informationValue?: any;
+  temporalOptimization?: any;
+  outcomeForecasting?: any;
+  strategySuccess?: any;
+
+  // Value of Information (VOI) summary
+  voi?: {
+    ev_prior: number;
+    evpi: number;
+    evppi: Record<string, number>;
+  };
 }
 
 export type AnalysisStatus = 'idle' | 'queued' | 'processing' | 'completed' | 'failed';

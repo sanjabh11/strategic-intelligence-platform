@@ -1,5 +1,5 @@
 // Strategic Intelligence Simulator - Main Component
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 import { useStrategyAnalysis, getExampleScenarios } from '../hooks/useStrategyAnalysis';
 import { useQueryHistoryCache } from '../hooks/useQueryHistoryCache';
@@ -10,6 +10,8 @@ import FirecrawlDashboard from './FirecrawlDashboard';
 import { ChartHeader, useLearningMode, explanationContent } from './explanations';
 import type { ExplanationSection } from './explanations';
 import { AudienceViewRouter } from './audience-views';
+import { supabase } from '../lib/supabase';
+import type { AudienceAnalysisData } from '../types/audience-views';
 
 const StrategySimulator: React.FC = () => {
   const {
@@ -17,6 +19,7 @@ const StrategySimulator: React.FC = () => {
     loading,
     error,
     status,
+    analysisRunId,
     runAnalysis,
     clearResults,
     canRunAnalysis
@@ -28,10 +31,53 @@ const StrategySimulator: React.FC = () => {
   // Learning mode context
   const { isLearningMode } = useLearningMode();
 
+  // Audience analysis_json loader (real data)
+  const [audienceData, setAudienceData] = useState<AudienceAnalysisData | null>(null);
+  const [audienceError, setAudienceError] = useState<string | null>(null);
+  const [audienceLoading, setAudienceLoading] = useState(false);
+
+  useEffect(() => {
+    async function loadAudience() {
+      try {
+        setAudienceError(null);
+        setAudienceLoading(true);
+        setAudienceData(null);
+        if (!supabase) {
+          setAudienceError('Supabase client not configured.');
+          return;
+        }
+        // analysisRunId is managed by the hook
+        // We only fetch after completion when id is present
+        if (status === 'completed' && analysis && analysisRunId) {
+          const { data, error: qErr } = await supabase
+            .from('analysis_runs')
+            .select('analysis_json')
+            .eq('id', analysisRunId)
+            .maybeSingle();
+          if (qErr) {
+            setAudienceError(qErr.message);
+            return;
+          }
+          const aj = (data as any)?.analysis_json;
+          if (aj && typeof aj === 'object') {
+            setAudienceData(aj as AudienceAnalysisData);
+          } else {
+            setAudienceError('No audience analysis available for this run.');
+          }
+        }
+      } catch (e: any) {
+        setAudienceError(e?.message || String(e));
+      } finally {
+        setAudienceLoading(false);
+      }
+    }
+    loadAudience();
+  }, [status, analysis, analysisRunId]);
+
   // Safe number validation function
   const safeNumber = (v: any): number | null => (typeof v === 'number' && isFinite(v) ? v : null);
 
-  // Form state
+  // All useState hooks must be called unconditionally at the top
   const [scenario, setScenario] = useState<string>(
     "Three major technology companies (Apple, Google, Microsoft) must decide on AI safety standards. Each can choose to 'lead with strict standards', 'follow industry consensus', or 'maintain competitive advantage'. Their decisions affect regulatory oversight, public trust, innovation pace, and market positioning."
   );
@@ -159,21 +205,25 @@ const StrategySimulator: React.FC = () => {
     );
   };
   
-  // Equilibrium visualization
+  // Equilibrium visualization (robust to number or object values)
   const EquilibriumChart = () => {
     if (!analysis?.equilibrium?.profile) return null;
     
     const playerNameMap = new Map((analysis.players || []).map(p => [p.id, p.name || p.id]));
-    const data = Object.entries(analysis.equilibrium.profile).map(([playerId, strategies]) => ({
-      player: playerNameMap.get(playerId) || playerId,
-      ...strategies
-    }));
-    const actionKeys = Array.from(
-      new Set(
-        data.flatMap(d => Object.keys(d).filter(k => k !== 'player'))
-      )
-    );
-    
+    const profileEntries = Object.entries(analysis.equilibrium.profile);
+    const allActions = Array.from(new Set(profileEntries.flatMap(([_, strategies]) => Object.keys(strategies as Record<string, any>))));
+
+    const data = profileEntries.map(([playerId, strategies]) => {
+      const row: Record<string, any> = { player: playerNameMap.get(playerId) || playerId };
+      for (const action of allActions) {
+        const v: any = (strategies as any)[action];
+        const num = typeof v === 'number' ? v : (v && typeof v === 'object' && typeof v.value === 'number') ? v.value : 0;
+        row[action] = num;
+      }
+      return row;
+    });
+
+    const actionKeys = allActions;
     const colors = ['#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
     
     return (
@@ -447,53 +497,19 @@ const StrategySimulator: React.FC = () => {
     <div className="min-h-screen bg-slate-900 text-white p-6">
       <div className="max-w-7xl mx-auto">
 
-        {/* Audience Views Section */}
-        {analysis && status === 'completed' && (
+        {/* Audience Views Section: real analysis_json rendering */}
+        {audienceLoading && (
+          <div className="mb-6 p-4 bg-slate-800 border border-slate-700 rounded-lg text-slate-300 text-sm">Loading audience view...</div>
+        )}
+        {audienceError && (
+          <div className="mb-6 p-4 bg-red-900/20 border border-red-600/30 rounded-lg text-red-300 text-sm">{audienceError}</div>
+        )}
+        {status === 'completed' && audienceData && (
           <div className="mb-8">
             <AudienceViewRouter
-              analysisData={{
-                audience: 'student', // Default to student for demo
-                data: {
-                  // Mock data - in production this would come from analysis_json
-                  one_paragraph_summary: "This strategic scenario involves multiple stakeholders making decisions that affect market positioning, regulatory oversight, and competitive advantage. The analysis shows a Nash equilibrium where companies balance innovation with compliance requirements.",
-                  top_2_actions: [
-                    {
-                      player: "Apple",
-                      action: "Lead with strict standards",
-                      reasoning: "Maintains premium brand positioning and regulatory compliance"
-                    },
-                    {
-                      player: "Google",
-                      action: "Follow industry consensus",
-                      reasoning: "Balances innovation pace with collaborative standards development"
-                    }
-                  ],
-                  key_terms: [
-                    {
-                      term: "Nash Equilibrium",
-                      definition: "A set of strategies where no player can benefit by changing strategy unilaterally",
-                      context: "Applies to competitive strategy scenarios"
-                    }
-                  ],
-                  two_quiz_questions: [
-                    {
-                      question: "What is the primary goal of strategic analysis?",
-                      options: ["Maximize profits", "Identify optimal decision paths", "Reduce competition", "Increase market share"],
-                      correct_answer: 1,
-                      explanation: "Strategic analysis identifies optimal decision paths considering all stakeholders and outcomes"
-                    }
-                  ]
-                },
-                metadata: {
-                  generated_at: new Date().toISOString(),
-                  model_version: "v1.0.0",
-                  analysis_id: "demo-analysis",
-                  processing_time_ms: 1500
-                }
-              }}
-              analysisRunId="demo-run"
+              analysisData={audienceData}
+              analysisRunId={analysisRunId || undefined}
               isLoading={false}
-              error={undefined}
             />
           </div>
         )}
@@ -766,6 +782,68 @@ const StrategySimulator: React.FC = () => {
             <QuantumChart />
             <PatternMatches />
             <AnalysisMetadata />
+            {/* Advanced Insights from strategic engines (optional chaining to avoid type constraints) */}
+            <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
+              <ChartHeader
+                title="Advanced Strategic Insights"
+                icon={<Brain className="w-5 h-5 mr-2 text-emerald-400" />}
+                helpContent={{
+                  title: 'Advanced Insights',
+                  quickTip: 'Results from enhanced engines: symmetry mining, information value, outcome forecasting.',
+                  detailed: 'These insights come from specialized engines that augment the base equilibrium: cross-domain recommendations, EVPI analysis, and temporal forecasts.'
+                } as any}
+                isLearningMode={isLearningMode}
+              />
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* Cross-Domain Recommendations */}
+                <div className="bg-slate-700 p-4 rounded-lg border border-slate-600">
+                  <div className="font-medium text-slate-200 mb-2">Cross-Domain Recommendations</div>
+                  <div className="space-y-2 text-sm text-slate-300">
+                    {((analysis as any)?.crossDomainInsights || (analysis as any)?.symmetryAnalysis?.strategicRecommendations || []).slice(0,3).map((rec: any, idx: number) => (
+                      <div key={idx} className="bg-slate-600/60 p-2 rounded">
+                        <div className="text-emerald-300">{rec?.strategy || rec?.title || `Recommendation ${idx+1}`}</div>
+                        <div className="text-slate-400 text-xs">{rec?.reasoning || rec?.rationale || rec?.description || 'Analogical reasoning supports transfer.'}</div>
+                      </div>
+                    ))}
+                    {(((analysis as any)?.crossDomainInsights || (analysis as any)?.symmetryAnalysis?.strategicRecommendations || []).length === 0) && (
+                      <div className="text-slate-400 text-sm">No recommendations available.</div>
+                    )}
+                  </div>
+                </div>
+                {/* Information Value Highlights */}
+                <div className="bg-slate-700 p-4 rounded-lg border border-slate-600">
+                  <div className="font-medium text-slate-200 mb-2">Information Value (EVPI)</div>
+                  <div className="space-y-2 text-sm text-slate-300">
+                    {(((analysis as any)?.informationValue?.topSignals) || ((analysis as any)?.informationValue?.recommendations) || []).slice(0,3).map((sig: any, idx: number) => (
+                      <div key={idx} className="flex justify-between bg-slate-600/60 p-2 rounded">
+                        <span>{sig?.name || sig?.id || `Signal ${idx+1}`}</span>
+                        {sig?.evpi !== undefined && <span className="font-mono text-cyan-300">EVPI {(sig.evpi*100).toFixed(1)}%</span>}
+                      </div>
+                    ))}
+                    {(!((analysis as any)?.informationValue)) && (
+                      <div className="text-slate-400 text-sm">No EVPI highlights available.</div>
+                    )}
+                  </div>
+                </div>
+                {/* Outcome Forecast Snapshot */}
+                <div className="bg-slate-700 p-4 rounded-lg border border-slate-600">
+                  <div className="font-medium text-slate-200 mb-2">Outcome Forecast Snapshot</div>
+                  <div className="space-y-2 text-sm text-slate-300">
+                    {(((analysis as any)?.outcomeForecasting?.summary) ? [
+                      (analysis as any).outcomeForecasting.summary
+                    ] : []).map((s: any, idx: number) => (
+                      <div key={idx} className="bg-slate-600/60 p-2 rounded">
+                        <div>Best Case: <span className="text-emerald-300">{s?.bestCase || 'N/A'}</span></div>
+                        <div>Worst Case: <span className="text-red-300">{s?.worstCase || 'N/A'}</span></div>
+                      </div>
+                    ))}
+                    {(!((analysis as any)?.outcomeForecasting)) && (
+                      <div className="text-slate-400 text-sm">No forecast summary available.</div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </div>

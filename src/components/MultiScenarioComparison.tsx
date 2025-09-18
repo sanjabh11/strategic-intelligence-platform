@@ -65,77 +65,8 @@ const MultiScenarioComparison: React.FC<MultiScenarioComparisonProps> = ({
   // Safe number validation function
   const safeNumber = (v: any): number | null => (typeof v === 'number' && isFinite(v) ? v : null);
 
-  // Mock scenarios data for demonstration (in production this would come from API)
-  const mockScenarios: ScenarioResult[] = useMemo(() => [
-    {
-      id: '1',
-      name: 'Cooperative Strategy A',
-      description: 'Focus on mutual cooperation and long-term partnerships',
-      equilibrium: {
-        profile: {
-          player1: { cooperate: 0.8, compete: 0.2 },
-          player2: { cooperate: 0.9, compete: 0.1 }
-        },
-        stability: 0.85,
-        method: 'Nash Equilibrium'
-      },
-      strategic_score: 85,
-      processing_stats: {
-        processing_time_ms: 1200,
-        stability_score: 0.85
-      },
-      provenance: {
-        model: 'quantum-game-theory',
-        confidence: 0.92
-      }
-    },
-    {
-      id: '2',
-      name: 'Competitive Strategy B',
-      description: 'Aggressive market capture with short-term focus',
-      equilibrium: {
-        profile: {
-          player1: { cooperate: 0.2, compete: 0.8 },
-          player2: { cooperate: 0.3, compete: 0.7 }
-        },
-        stability: 0.65,
-        method: 'Mixed Strategy Nash'
-      },
-      strategic_score: 72,
-      processing_stats: {
-        processing_time_ms: 950,
-        stability_score: 0.65
-      },
-      provenance: {
-        model: 'game-theory-classical',
-        confidence: 0.78
-      }
-    },
-    {
-      id: '3',
-      name: 'Balanced Strategy C',
-      description: 'Moderate approach balancing short and long-term goals',
-      equilibrium: {
-        profile: {
-          player1: { cooperate: 0.5, compete: 0.5 },
-          player2: { cooperate: 0.6, compete: 0.4 }
-        },
-        stability: 0.78,
-        method: 'Bayesian Nash'
-      },
-      strategic_score: 81,
-      processing_stats: {
-        processing_time_ms: 1450,
-        stability_score: 0.78
-      },
-      provenance: {
-        model: 'bayesian-equilibrium',
-        confidence: 0.89
-      }
-    }
-  ], []);
-
-  const displayScenarios = scenarios; // Mock data removed as per requirement
+  // No mock scenarios. The component renders only what is provided via props.
+  const displayScenarios = scenarios;
 
   // Sort scenarios based on selected criteria
   const sortedScenarios = useMemo(() => {

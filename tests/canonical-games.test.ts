@@ -6,8 +6,12 @@ import { expect, describe, it, beforeAll, afterAll } from 'vitest';
 import { createClient } from '@supabase/supabase-js';
 
 // Assume Supabase client for testing
-const supabaseUrl = process.env.VITE_SUPABASE_URL || 'https://jxdihzqoaxtydolmltdr.supabase.co';
-const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4ZGloenFvYXh0eWRvbG1sdGRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU5MjQ2MDUsImV4cCI6MjA3MTUwMDYwNX0.RS92p3Y7qJ-38PLFR1L4Y9Rl9R4dmFYYCVxhBcJBW8Q';
+const supabaseUrl = process.env.VITE_SUPABASE_URL || '';
+const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY || '';
+
+if (!supabaseUrl || !supabaseKey) {
+  throw new Error('Missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY in environment for tests.');
+}
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 describe('Canonical Games Test Suite', () => {

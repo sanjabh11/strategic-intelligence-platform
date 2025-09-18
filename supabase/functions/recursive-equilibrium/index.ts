@@ -18,6 +18,30 @@ function jsonResponse(status: number, body: any) {
   });
 }
 
+// Seeded RNG (mulberry32)
+function mulberry32(seed: number) {
+  let t = seed >>> 0;
+  return function() {
+    t += 0x6D2B79F5;
+    let r = Math.imul(t ^ (t >>> 15), 1 | t);
+    r ^= r + Math.imul(r ^ (r >>> 7), 61 | r);
+    return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+// Stable hash-based payoff in [0,1]
+function hashFloat(s: string): number {
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h += (h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24);
+  }
+  // Convert to positive 32-bit and normalize
+  const x = (h >>> 0) / 0xFFFFFFFF;
+  return Math.max(0, Math.min(1, x));
+}
+
+
 // Union types for quantum results
 interface StrategicState {
   playerId: string;
@@ -107,6 +131,7 @@ class RecursiveNashEngine {
   private maxIterations: number;
   private convergenceThreshold: number;
   private randomSeed?: number;
+  private rng: () => number;
 
   constructor(
     beliefDepth: number = 2,
@@ -120,6 +145,7 @@ class RecursiveNashEngine {
     this.maxIterations = Math.min(maxIterations, 5000); // PRD maximum iterations
     this.convergenceThreshold = convergenceThreshold;
     this.randomSeed = randomSeed;
+    this.rng = mulberry32(typeof randomSeed === 'number' ? randomSeed : 1337);
   }
 
   // Main recursive equilibrium computation
@@ -260,7 +286,7 @@ class RecursiveNashEngine {
   private addBeliefNoise(beliefs: Record<string, number>, noiseLevel: number): Record<string, number> {
     const noisyBeliefs: Record<string, number> = {};
     const keys = Object.keys(beliefs);
-    const noise = keys.map(() => (Math.random() - 0.5) * noiseLevel * 2);
+    const noise = keys.map(() => (this.rng() - 0.5) * noiseLevel * 2);
 
     // Normalize noise to preserve total probability mass
     const totalNoise = noise.reduce((sum, n) => sum + n, 0);
@@ -307,8 +333,8 @@ class RecursiveNashEngine {
         if (scenario.payoffMatrix) {
           expectedPayoffs[action] = this.computeExpectedPayoff(playerId, action, scenario.payoffMatrix, opponentsBeliefs, player.actions.indexOf(action));
         } else {
-          // Fallback to simple analysis if no payoff matrix provided
-          expectedPayoffs[action] = Math.random(); // Simulate strategic payoff
+          // Deterministic fallback if no payoff matrix provided
+          expectedPayoffs[action] = this.deterministicPayoff(playerId, action);
         }
       }
 
@@ -361,7 +387,7 @@ class RecursiveNashEngine {
   ): number {
 
     if (!payoffMatrix || payoffMatrix.length === 0) {
-      return Math.random(); // Fallback
+      return this.deterministicPayoff(playerId, action); // Deterministic fallback
     }
 
     let expectedPayoff = 0;
@@ -418,7 +444,10 @@ class RecursiveNashEngine {
     const payoffs: Record<string, number> = {};
 
     for (const player of scenario.players) {
-      payoffs[player.id] = Math.random() * 100; // Simplified payoff calculation
+      // Deterministic aggregate payoff based on current mixed strategy weights
+      const strat = strategies[player.id] || {};
+      const base = Object.entries(strat).reduce((sum, [act, p]) => sum + p * this.deterministicPayoff(player.id, act) * 100, 0);
+      payoffs[player.id] = Number(base.toFixed(6));
     }
 
     return payoffs;
@@ -453,10 +482,31 @@ class RecursiveNashEngine {
     scenario: RecursiveEquilibriumRequest['scenario'],
     beliefs: Record<string, Record<string, Record<string, number>>>
   ): boolean {
+    // Compute best responses given current beliefs
+    const { strategy: bestResponses } = this.computeBestResponses(
+      scenario,
+      beliefs,
+      0
+    );
 
-    // Simplified check - in full implementation would compute best responses
-    // and see if current strategies are best responses to beliefs
-    return true; // Placeholder
+    // If any player has an action where best response probability
+    // exceeds current by more than epsilon, there is an incentive to deviate
+    const EPS = 1e-3;
+    for (const player of scenario.players) {
+      const pid = player.id;
+      const current = strategies[pid] || {};
+      const best = bestResponses[pid] || {};
+
+      for (const action of player.actions) {
+        const cp = current[action] ?? 0;
+        const bp = best[action] ?? 0;
+        if (bp - cp > EPS) {
+          return false; // unilateral deviation beneficial
+        }
+      }
+    }
+
+    return true; // no profitable unilateral deviation detected
   }
 
   // Extract final Nash equilibrium from strategy profile
@@ -580,6 +630,12 @@ class RecursiveNashEngine {
     const stabilityValues = trajectory.map(t => t.stability);
     const mean = stabilityValues.reduce((sum, s) => sum + s, 0) / stabilityValues.length;
     return stabilityValues.reduce((sum, s) => sum + Math.pow(s - mean, 2), 0) / stabilityValues.length;
+  }
+
+  // Deterministic payoff function used when payoff matrix is absent
+  private deterministicPayoff(playerId: string, action: string): number {
+    const seedPart = typeof this.randomSeed === 'number' ? this.randomSeed.toString(36) : 'seed';
+    return hashFloat(`${seedPart}:${playerId}:${action}`);
   }
 }
 
