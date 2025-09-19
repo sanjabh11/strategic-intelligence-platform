@@ -279,3 +279,89 @@ export default tseslint.config({
 - Operational docs for local Docker bring-up and function deployment validation.
 - Ongoing monitoring for any residual Hook Order warnings in nested components (none observed in current audit).
 
+---
+
+## Operational Verification (local)
+
+Use these steps to bring up Supabase locally, deploy functions, and verify the stack.
+
+1) Start Supabase (Docker)
+
+```bash
+supabase start
+```
+
+2) Set server-side secrets (only needed if you use external retrievals or service-role access)
+
+```bash
+# Replace values appropriately; these are stored server-side, not in .env
+supabase secrets set \
+  EDGE_ENABLE_RETRIEVALS=false \
+  EDGE_RETRIEVAL_TIMEOUT_MS=8000 \
+  EDGE_PERPLEXITY_API_KEY=pk-REDACTED \
+  EDGE_SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.REDACTED
+```
+
+3) Deploy core functions
+
+```bash
+supabase functions deploy analyze-engine
+supabase functions deploy get-analysis-status
+supabase functions deploy system-status
+supabase functions deploy symmetry-mining
+
+# Optional advanced services (enable as needed)
+supabase functions deploy information-value-assessment
+supabase functions deploy outcome-forecasting
+supabase functions deploy temporal-strategy-optimization
+supabase functions deploy strategy-success-analysis
+supabase functions deploy cross-domain-transfer
+supabase functions deploy dynamic-recalibration
+supabase functions deploy scale-invariant-templates
+```
+
+4) Verify health/status
+
+```bash
+curl -s \
+  -H "Authorization: Bearer $VITE_SUPABASE_ANON_KEY" \
+  -H "apikey: $VITE_SUPABASE_ANON_KEY" \
+  "$VITE_SUPABASE_URL/functions/v1/system-status" | jq .status
+```
+
+5) Smoke test analyze-engine
+
+```bash
+curl -s -X POST \
+  -H "Authorization: Bearer $VITE_SUPABASE_ANON_KEY" \
+  -H "apikey: $VITE_SUPABASE_ANON_KEY" \
+  -H "Content-Type: application/json" \
+  "$VITE_SUPABASE_URL/functions/v1/analyze-engine" \
+  -d '{
+    "scenario_text": "Simple test",
+    "players_def": [
+      {"id": "P1", "actions": ["A", "B"]},
+      {"id": "P2", "actions": ["A", "B"]}
+    ],
+    "options": { "deterministicSeed": 1 }
+  }' | jq '.status, .analysis.equilibrium.method, .analysis.provenance'
+```
+
+6) Verify symmetry-mining
+
+```bash
+curl -s -X POST \
+  -H "Authorization: Bearer $VITE_SUPABASE_ANON_KEY" \
+  -H "apikey: $VITE_SUPABASE_ANON_KEY" \
+  -H "Content-Type: application/json" \
+  "$VITE_SUPABASE_URL/functions/v1/symmetry-mining" \
+  -d '{
+    "structure": {"playerCount": 2, "gameType": "normal_form", "actionSpace": ["A","B"]},
+    "config": {"similarityThreshold": 0.6, "domainsToSearch": ["economics","security"], "maxAnalogies": 5}
+  }' | jq '.ok, .response.matches[0]'
+```
+
+Notes
+- Keep real keys out of `.env` in git. Use `.env.example` as reference. Real values live locally in `.env` or `.env.local` (both are gitignored) and server-side with `supabase secrets`.
+- If Docker resources are constrained, start core functions only (`analyze-engine`, `get-analysis-status`, `system-status`).
+
