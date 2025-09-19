@@ -38,8 +38,11 @@ const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
 
-// Accept both PERPLEXITY_API_KEY (preferred) and PERPLEXITY_KEY for backward compatibility
-const PERPLEXITY_KEY = Deno.env.get('PERPLEXITY_API_KEY') ?? Deno.env.get('PERPLEXITY_KEY') ?? ""
+// Accept PERPLEXITY_API_KEY (preferred), EDGE_PERPLEXITY_API_KEY (supported), and PERPLEXITY_KEY (legacy)
+const PERPLEXITY_KEY = Deno.env.get('PERPLEXITY_API_KEY')
+  ?? Deno.env.get('EDGE_PERPLEXITY_API_KEY')
+  ?? Deno.env.get('PERPLEXITY_KEY')
+  ?? ""
 const GEMINI_KEY = Deno.env.get('GEMINI_API_KEY') ?? ""
 const GOOGLE_API_KEY = Deno.env.get('GOOGLE_API_KEY') ?? Deno.env.get('GOOGLE_SEARCH_API_KEY') ?? ""
 const GOOGLE_CSE_ID = Deno.env.get('GOOGLE_CSE_ID') ?? Deno.env.get('GOOGLE_CX') ?? ""

@@ -98,8 +98,8 @@ async function fetchWithTimeoutRetry(url: string, init: RequestInit, timeoutMs =
 
 // Perplexity primary retrieval
 async function perplexityRetrieval(query: string): Promise<EvidenceSource[]> {
-  // Accept both PERPLEXITY_API_KEY (preferred) and PERPLEXITY_KEY
-  const apiKey = Deno.env.get('PERPLEXITY_API_KEY') || Deno.env.get('PERPLEXITY_KEY')
+  // Accept PERPLEXITY_API_KEY (preferred), EDGE_PERPLEXITY_API_KEY (supported), and PERPLEXITY_KEY (legacy)
+  const apiKey = Deno.env.get('PERPLEXITY_API_KEY') || Deno.env.get('EDGE_PERPLEXITY_API_KEY') || Deno.env.get('PERPLEXITY_KEY')
   if (!apiKey) throw new Error('PERPLEXITY_API_KEY missing')
 
   const system = 'You are a research assistant. Return ONLY JSON with an array of sources. Each source must have: title, url, snippet (<=500 chars).'

@@ -28,8 +28,11 @@ const getEnv = (k: string) => Deno.env.get(k) || undefined
 const SUPABASE_PROJECT_REF = getEnv('SUPABASE_PROJECT_REF')
 const SUPABASE_URL = getEnv('SUPABASE_URL') || (SUPABASE_PROJECT_REF ? `https://${SUPABASE_PROJECT_REF}.supabase.co` : undefined)!
 const SUPABASE_SERVICE_ROLE_KEY = getEnv('SUPABASE_SERVICE_ROLE_KEY') || getEnv('EDGE_SUPABASE_SERVICE_ROLE_KEY')!
-// Accept both PERPLEXITY_API_KEY (preferred) and PERPLEXITY_KEY for backward compatibility
-const PERPLEXITY_KEY = getEnv('PERPLEXITY_API_KEY') ?? getEnv('PERPLEXITY_KEY') ?? ""
+// Accept PERPLEXITY_API_KEY (preferred), EDGE_PERPLEXITY_API_KEY (supported), and PERPLEXITY_KEY (legacy)
+const PERPLEXITY_KEY = getEnv('PERPLEXITY_API_KEY')
+  ?? getEnv('EDGE_PERPLEXITY_API_KEY')
+  ?? getEnv('PERPLEXITY_KEY')
+  ?? ""
 const GEMINI_KEY = getEnv('GEMINI_API_KEY') ?? ""
 const OPENAI_KEY = getEnv('OPENAI_KEY') ?? ""
 const WORKER_URL = getEnv('WORKER_URL') ?? ""

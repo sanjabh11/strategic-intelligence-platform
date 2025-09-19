@@ -279,20 +279,21 @@ async function handleReview(analysisId: string, req: Request) {
 Deno.serve(async (req) => {
   try {
     const url = new URL(req.url)
-    const pathParts = url.pathname.split('/').filter(p => p)
+    const pathname = url.pathname
     const method = req.method
 
-    // GET /functions/v1/review_queue
-    if (method === 'GET' && pathParts.length === 3 &&
-        pathParts[1] === 'v1' && pathParts[2] === 'review_queue') {
+    // Normalize checks to support function mounted at /functions/v1/human-review
+    const isReviewQueue = pathname.endsWith('/review_queue') || pathname.endsWith('/human-review/review_queue')
+    const analysisReviewMatch = pathname.match(/\/functions\/v1\/(?:human-review\/)?analysis\/([^/]+)\/review$/)
+
+    // GET .../review_queue
+    if (method === 'GET' && isReviewQueue) {
       return await handleReviewQueue()
     }
 
-    // POST /functions/v1/analysis/{id}/review
-    if (method === 'POST' && pathParts.length === 5 &&
-        pathParts[1] === 'v1' && pathParts[2] === 'analysis' &&
-        pathParts[4] === 'review') {
-      const analysisId = pathParts[3]
+    // POST .../analysis/{id}/review
+    if (method === 'POST' && analysisReviewMatch) {
+      const analysisId = analysisReviewMatch[1]
       return await handleReview(analysisId, req)
     }
 

@@ -529,7 +529,9 @@ async function enhanceAnalysisWithStrategicEngines(
     informationValue: null,
     temporalOptimization: null,
     outcomeForecasting: null,
-    strategySuccess: null
+    strategySuccess: null,
+    scaleInvariant: null,
+    dynamicRecalibration: null
   };
 
   try {
@@ -596,6 +598,16 @@ async function enhanceAnalysisWithStrategicEngines(
       if (symmetryData.ok && symmetryData.response) {
         enhancements.symmetryAnalysis = symmetryData.response;
         enhancements.crossDomainInsights = symmetryData.response.strategicRecommendations;
+
+        // Map to analysis.pattern_matches expected by UI
+        try {
+          const analogies = symmetryData.response.strategicAnalogies || [];
+          const patternMatches = analogies.slice(0, 5).map((a: any, idx: number) => ({
+            id: String(a.sourceScenario || `pattern_${idx + 1}`),
+            score: Number(a.structuralSimilarity ?? a.successProbability ?? 0)
+          }));
+          (enhancements as any).pattern_matches = patternMatches;
+        } catch {}
       }
     }
 
@@ -626,6 +638,24 @@ async function enhanceAnalysisWithStrategicEngines(
       const quantumData = await quantumResponse.json();
       if (quantumData.ok && quantumData.response) {
         enhancements.quantumAnalysis = quantumData.response;
+        // Map to analysis.quantum expected by UI (collapsed + influence)
+        try {
+          const q = quantumData.response;
+          const states: any[] = q.quantumStates || [];
+          const actionProb: Record<string, number> = {};
+          let count = 0;
+          for (const st of states) {
+            for (const s of st.coherentStrategies || []) {
+              actionProb[s.action] = (actionProb[s.action] || 0) + (typeof s.probability === 'number' ? s.probability : 0);
+            }
+            count++;
+          }
+          const collapsed = Object.entries(actionProb).map(([action, p]) => ({ action, probability: count ? (p as number) / count : 0 }));
+          const influence = (q.entanglementMatrix?.correlationMatrix && Array.isArray(q.entanglementMatrix.correlationMatrix))
+            ? q.entanglementMatrix.correlationMatrix
+            : undefined;
+          (enhancements as any).quantum = { collapsed, influence };
+        } catch {}
       }
     }
 
@@ -694,8 +724,83 @@ async function enhanceAnalysisWithStrategicEngines(
       const forecastData = await forecastResponse.json();
       if (forecastData.ok && forecastData.response) {
         enhancements.outcomeForecasting = forecastData.response;
+        // Map to analysis.forecast expected by UI (pick primary outcome if present)
+        try {
+          const f = forecastData.response;
+          const forecasts = f.forecasts || {};
+          const outcomeKeys = Object.keys(forecasts);
+          const primaryKey = outcomeKeys.find(k => k.includes('success')) || outcomeKeys[0];
+          const points = Array.isArray(forecasts[primaryKey]) ? forecasts[primaryKey] : [];
+          const forecastArr = points.map((p: any) => ({ t: Number(p.t ?? 0), probability: Number(p.probability ?? 0) }));
+          (enhancements as any).forecast = forecastArr;
+        } catch {}
       }
     }
+
+    // Additional engines to close PRD gaps
+    try {
+      // Strategy Success Analysis (historical effectiveness)
+      const topPattern = (enhancements.symmetryAnalysis?.strategicAnalogies?.[0]?.sourceScenario) || 'Flanking Maneuver';
+      const successRes = await fetch(ENDPOINTS.STRATEGY_SUCCESS, {
+        method: 'POST', headers: getAuthHeaders(),
+        body: JSON.stringify({ runId: analysisRunId, strategyPattern: topPattern, contextFilters: { minSampleSize: 10 }, analysisType: 'comprehensive' })
+      });
+      if (successRes.ok) {
+        const sjson = await successRes.json();
+        if (sjson.ok && sjson.response) enhancements.strategySuccess = sjson.response;
+      }
+    } catch {}
+
+    try {
+      // Scale-Invariant Templates (cross-scale adaptation)
+      const scaleRes = await fetch(ENDPOINTS.SCALE_INVARIANT, {
+        method: 'POST', headers: getAuthHeaders(),
+        body: JSON.stringify({
+          runId: analysisRunId,
+          sourceTemplate: 'coordination_equilibrium',
+          sourceScale: 5,
+          targetScale: 3,
+          sourceDomain: extractDomainFromScenario(scenario),
+          targetDomain: extractDomainFromScenario(scenario),
+          scenarioContext: { description: scenario, stakeholders: extractStakeholdersFromScenario(scenario), timeframe: 'medium', resources: [] }
+        })
+      });
+      if (scaleRes.ok) {
+        const scjson = await scaleRes.json();
+        if (scjson.ok && scjson.response) enhancements.scaleInvariant = scjson.response;
+      }
+    } catch {}
+
+    try {
+      // Dynamic Strategy Recalibration (continuous optimization)
+      const recalcRes = await fetch(ENDPOINTS.DYNAMIC_RECALIBRATION, {
+        method: 'POST', headers: getAuthHeaders(),
+        body: JSON.stringify({
+          runId: analysisRunId,
+          currentStrategy: {
+            actions: (players || []).flatMap((p: any) => (p.actions || []).map((a: string, i: number) => ({ id: `${p.id}_${a}`, name: a, currentPriority: 0.5, performance: 1.0 }))),
+            beliefs: [
+              { parameter: 'market_conditions', priorDistribution: { mean: 0.5, variance: 0.2, confidence: 0.6 }, posteriorDistribution: { mean: 0.5, variance: 0.2, confidence: 0.6 }, updateHistory: [] }
+            ],
+            lastUpdate: Date.now() - 3600_000
+          },
+          newInformation: [],
+          recalibrationConfig: {
+            triggers: [
+              { type: 'time_decay', threshold: 0.5, sensitivity: 0.5, cooldownPeriod: 3600_000 }
+            ],
+            adaptationRate: 0.2,
+            conservatismBias: 0.2,
+            lookAheadHorizon: 24
+          },
+          constraints: { maxStrategyChanges: 3, minConfidenceThreshold: 0.3, resourceLimitations: {} }
+        })
+      });
+      if (recalcRes.ok) {
+        const rjson = await recalcRes.json();
+        if (rjson.ok && rjson.response) enhancements.dynamicRecalibration = rjson.response;
+      }
+    } catch {}
 
   } catch (error) {
     console.warn('Strategic engine enhancements failed:', error);

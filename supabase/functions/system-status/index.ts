@@ -105,8 +105,8 @@ Deno.serve(async (req) => {
         status: 'unknown',
         services: {
           perplexity: {
-            configured: Boolean(Deno.env.get('PERPLEXITY_API_KEY')),
-            missing_env: !Deno.env.get('PERPLEXITY_API_KEY') ? ['PERPLEXITY_API_KEY'] : [],
+            configured: Boolean(Deno.env.get('PERPLEXITY_API_KEY') || Deno.env.get('EDGE_PERPLEXITY_API_KEY')),
+            missing_env: (!Deno.env.get('PERPLEXITY_API_KEY') && !Deno.env.get('EDGE_PERPLEXITY_API_KEY')) ? ['PERPLEXITY_API_KEY','EDGE_PERPLEXITY_API_KEY'] : [],
           },
           firecrawl: {
             configured: Boolean(Deno.env.get('FIRECRAWL_API_KEY')),
