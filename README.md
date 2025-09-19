@@ -251,3 +251,31 @@ export default tseslint.config({
   },
 })
 ```
+
+---
+
+## Implementation Status
+
+### Implementation Done
+
+- Frontend stability and validation
+  - Hardened API parsing with Zod schemas in `src/hooks/useStrategyAnalysis.ts` for analyze and status responses.
+  - Added normalization to accept both string and object players; upgraded numeric equilibrium values to rich objects.
+  - Improved error handling and clear network-down messaging with automatic local fallback.
+
+- Analysis flow and UX
+  - Status polling now triggers strategic engine enhancements on completion (symmetry mining, quantum strategy, information value, outcome forecasting) and stops loading spinner.
+  - Equilibrium chart made robust to number/object profile values in `src/components/StrategySimulator.tsx`.
+  - Added an "Advanced Strategic Insights" panel surfacing cross-domain recommendations, EVPI highlights, and forecast snapshots.
+
+- Strategic engines and backend
+  - Symmetry Mining (`supabase/functions/symmetry-mining/index.ts`) refined with composite scoring and expanded similarity factors (info structure, payoff symmetry).
+  - Types aligned with runtime: `AnalysisResult` updated to include optional fields and enhancement outputs in `src/types/strategic-analysis.ts`.
+
+### Implementation Pending
+
+- End-to-end verification against Supabase edge functions for all enhancement services in production mode (local fallback already works).
+- Additional UI polish for advanced insights once full server outputs are available.
+- Operational docs for local Docker bring-up and function deployment validation.
+- Ongoing monitoring for any residual Hook Order warnings in nested components (none observed in current audit).
+
