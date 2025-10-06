@@ -48,6 +48,7 @@ const GOOGLE_API_KEY = Deno.env.get('GOOGLE_API_KEY') ?? Deno.env.get('GOOGLE_SE
 const GOOGLE_CSE_ID = Deno.env.get('GOOGLE_CSE_ID') ?? Deno.env.get('GOOGLE_CX') ?? ""
 const UNCOMTRADE_BASE = Deno.env.get('UNCOMTRADE_BASE') || "https://comtrade.un.org/api/get"
 const WORLD_BANK_BASE = Deno.env.get('WORLD_BANK_BASE') || "https://api.worldbank.org/v2"
+const GDELT_BASE = Deno.env.get('GDELT_BASE') || "https://api.gdeltproject.org/api/v2/doc/doc"
 // Circuit breaker state management
 async function getCircuitBreakerState(serviceName: string) {
   const { data } = await supabase
@@ -442,10 +443,15 @@ export async function fetchAllRetrievals(opts: {
   )
 
   try {
-    const results = await Promise.race([
-      Promise.all(tasks),
+    const settled = await Promise.race([
+      Promise.allSettled(tasks),
       timeoutPromise
     ])
+
+    // Extract successful results from Promise.allSettled
+    const results = settled
+      .filter((s: any) => s.status === 'fulfilled')
+      .map((s: any) => s.value)
 
     const flattened = results.flat().filter(Boolean)
 
