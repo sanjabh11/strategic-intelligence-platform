@@ -1977,6 +1977,16 @@ Return a single JSON object with these top-level keys:
     if (typeof llmJson.audience !== 'string') {
       llmJson.audience = audience
     }
+    
+    // Ensure required fields for schema validation
+    if (!llmJson.analysis_id) {
+      llmJson.analysis_id = uuid()
+    }
+    if (!llmJson.summary || typeof llmJson.summary !== 'object') {
+      llmJson.summary = {
+        text: llmJson.summary?.text || scenario_text || "Strategic analysis completed"
+      }
+    }
   } catch (normErr) {
     console.warn(`[${request_id}] normalization_warning:`, (normErr as any)?.message ?? normErr)
   }
