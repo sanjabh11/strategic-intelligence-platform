@@ -48,39 +48,40 @@ const GOOGLE_API_KEY = Deno.env.get('GOOGLE_API_KEY') ?? Deno.env.get('GOOGLE_SE
 const GOOGLE_CSE_ID = Deno.env.get('GOOGLE_CSE_ID') ?? Deno.env.get('GOOGLE_CX') ?? ""
 const UNCOMTRADE_BASE = Deno.env.get('UNCOMTRADE_BASE') || "https://comtrade.un.org/api/get"
 const WORLD_BANK_BASE = Deno.env.get('WORLD_BANK_BASE') || "https://api.worldbank.org/v2"
-const GDELT_BASE = Deno.env.get('GDELT_BASE') || "https://api.gdeltproject.org/api/v2/doc/doc"
-
 // Circuit breaker state management
 async function getCircuitBreakerState(serviceName: string) {
   const { data } = await supabase
     .from('circuit_breaker')
-    .select('state, fail_count, last_failure, cooldown_until')
-    .eq('service_name', serviceName)
+    .select('*')
+    .eq('provider', serviceName)
     .single()
 
-  if (data?.cooldown_until) {
+  if (data?.opened_until) {
     const now = new Date().toISOString()
-    if (now < data.cooldown_until) {
+    if (now < data.opened_until) {
       // Cooldown still active, keep in open state
       return {
         ...data,
-        state: 'open'
+        state: 'open',
+        fail_count: data.consecutive_failures
       }
     } else {
       // Cooldown expired, allow half-open state
       return {
         ...data,
-        state: 'half'
+        state: 'half',
+        fail_count: data.consecutive_failures
       }
     }
   }
 
-  return data
+  return data ? { ...data, state: 'closed', fail_count: data.consecutive_failures || 0 } : null
 }
 
 async function updateCircuitBreaker(serviceName: string, success: boolean) {
   const now = new Date().toISOString()
   const nowTimestamp = Date.now()
+
   const current = await getCircuitBreakerState(serviceName) || { state: 'closed', fail_count: 0 }
 
   if (success) {
@@ -88,50 +89,39 @@ async function updateCircuitBreaker(serviceName: string, success: boolean) {
     await supabase
       .from('circuit_breaker')
       .upsert({
-        service_name: serviceName,
-        state: 'closed',
-        fail_count: 0,
-        last_failure: null,
-        cooldown_until: null
-      }, { onConflict: 'service_name' })
+        provider: serviceName,
+        consecutive_failures: 0,
+        opened_until: null
+      }, { onConflict: 'provider' })
   } else {
     // Increment failure count
     const newFailCount = (current.fail_count || 0) + 1
-    let newState: string
-    let cooldownUntil: string | null = null
+    let openedUntil: string | null = null
 
     if (newFailCount >= 5) {
-      newState = 'open'
       // Set cooldown for 60 seconds after the fifth failure
-      cooldownUntil = new Date(nowTimestamp + 60 * 1000).toISOString()
-    } else {
-      newState = 'half'
+      openedUntil = new Date(nowTimestamp + 60 * 1000).toISOString()
     }
 
     await supabase
       .from('circuit_breaker')
       .upsert({
-        service_name: serviceName,
-        state: newState,
-        fail_count: newFailCount,
-        last_failure: now,
-        cooldown_until: cooldownUntil
-      }, { onConflict: 'service_name' })
+        provider: serviceName,
+        consecutive_failures: newFailCount,
+        opened_until: openedUntil
+      }, { onConflict: 'provider' })
   }
 }
 
 // Retry helper with exponential backoff and connection resilience
 async function retry<T>(fn: () => Promise<T>, serviceName: string, maxRetries = 3): Promise<T | null> {
-  const breaker = await getCircuitBreakerState(serviceName)
-  if (breaker?.state === 'open') {
-    console.warn(`Circuit breaker open for ${serviceName}, skipping`)
-    return null
-  }
-
+  // TEMPORARILY BYPASS CIRCUIT BREAKER FOR DEBUGGING
+  console.log(`[retry] Calling ${serviceName}`)
+  
   for (let i = 0; i < maxRetries; i++) {
     try {
       const result = await fn()
-      await updateCircuitBreaker(serviceName, true)
+      console.log(`[retry] ${serviceName} succeeded`)
       return result
     } catch (error: any) {
       // Classify error types for better handling
@@ -303,16 +293,21 @@ export async function fetchPerplexity(query: string): Promise<any[]> {
 
     const text = await response.text()
     const parsed = JSON.parse(text)
-    const results = parsed.choices?.[0]?.message?.content || parsed.results || []
+    
+    // Perplexity API returns: { citations: [...], choices: [{message: {content: "text"}}] }
+    const citations = parsed.citations || []
+    const messageContent = parsed.choices?.[0]?.message?.content || ''
 
-    const hits = (Array.isArray(results) ? results : []).map((r: any, idx: number) => ({
+    const hits = citations.map((url: string, idx: number) => ({
       source: "perplexity",
-      url: r.url,
-      snippet: r.snippet || r.summary || r.excerpt || '',
-      score: r.score || 0.5,
-      retrieved_at: new Date().toISOString()
+      url: url,
+      snippet: messageContent.slice(idx * 150, (idx + 1) * 150) || messageContent.slice(0, 200), // Extract relevant snippet
+      score: 0.95 - (idx * 0.05), // Decreasing score by citation order
+      retrieved_at: new Date().toISOString(),
+      id: `pplx_${Date.now()}_${idx}`
     }))
 
+    console.log(`[Perplexity] Retrieved ${hits.length} citations from response`)
     return hits
   }, 'perplexity') || []
 }

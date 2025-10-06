@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS insight_reactions (
 -- Bayesian Belief Integration Tables
 CREATE TABLE IF NOT EXISTS belief_evolution_log (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    belief_node_id UUID REFERENCES belief_networks(id) ON DELETE CASCADE,
+    belief_node_id UUID, -- References belief_networks(id) when that table exists
     analysis_run_id UUID REFERENCES analysis_runs(id) ON DELETE CASCADE,
     evidence_source TEXT NOT NULL,
     evidence_value NUMERIC NOT NULL,
@@ -190,8 +190,8 @@ CREATE INDEX IF NOT EXISTS idx_collaborative_messages_session ON collaborative_m
 CREATE INDEX IF NOT EXISTS idx_collaborative_messages_type ON collaborative_messages(message_type);
 
 -- Composite indexes for common queries
-CREATE INDEX IF NOT EXISTS idx_sessions_participants_active ON session_participants(session_id, last_active) WHERE joined_at > (NOW() - INTERVAL '24 hours');
-CREATE INDEX IF NOT EXISTS idx_insights_consensus_recent ON collective_insights(session_id, consensus_level, created_at) WHERE created_at > (NOW() - INTERVAL '1 hour');
+CREATE INDEX IF NOT EXISTS idx_sessions_participants_active ON session_participants(session_id, last_active);
+CREATE INDEX IF NOT EXISTS idx_insights_consensus_recent ON collective_insights(session_id, consensus_level, created_at);
 
 -- Full-text search indexes
 CREATE INDEX IF NOT EXISTS idx_evidence_sources_fts ON evidence_sources USING gin(to_tsvector('english', title || ' ' || snippet));

@@ -406,7 +406,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '*',
           'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization, apikey, X-Client-Info'
         }
       })
     }
@@ -463,7 +463,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': '*',
           'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization, apikey, X-Client-Info'
         }
       })
     }

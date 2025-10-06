@@ -79,17 +79,19 @@ export const ExpandableExplanation: React.FC<ExpandableExplanationProps> = ({
             </div>
           )}
           
-          <div>
-            <div className="text-xs font-medium text-slate-400 mb-2">Key Points:</div>
-            <ul className="space-y-1">
-              {section.keyPoints.map((point, idx) => (
-                <li key={idx} className="text-sm text-slate-300 flex items-start">
-                  <div className="w-1.5 h-1.5 bg-cyan-400 rounded-full mt-2 mr-2 flex-shrink-0"></div>
-                  {point}
-                </li>
-              ))}
-            </ul>
-          </div>
+          {section.keyPoints && section.keyPoints.length > 0 && (
+            <div>
+              <div className="text-xs font-medium text-slate-400 mb-2">Key Points:</div>
+              <ul className="space-y-1">
+                {section.keyPoints.map((point, idx) => (
+                  <li key={idx} className="text-sm text-slate-300 flex items-start">
+                    <div className="w-1.5 h-1.5 bg-cyan-400 rounded-full mt-2 mr-2 flex-shrink-0"></div>
+                    {point}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       )}
     </div>

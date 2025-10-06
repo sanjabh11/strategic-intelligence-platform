@@ -2,10 +2,12 @@
 import React, { useState } from 'react';
 import StrategySimulator from './components/StrategySimulator';
 import SystemStatus from './components/SystemStatus';
-import { Brain, BarChart3, Settings, Info } from 'lucide-react';
+import { PersonalLifeCoach } from './components/PersonalLifeCoach';
+import { AIMediator } from './components/AIMediator';
+import { Brain, BarChart3, Settings, Info, Lightbulb, Scale } from 'lucide-react';
 import { LearningModeProvider, WelcomeMessage, LearningModeBadge, useLearningMode } from './components/explanations';
 
-type TabType = 'simulator' | 'status' | 'about';
+type TabType = 'simulator' | 'status' | 'about' | 'lifecoach' | 'mediator';
 
 // Navigation component that uses learning mode context
 const AppContent: React.FC = () => {
@@ -148,6 +150,8 @@ const AppContent: React.FC = () => {
             
             <div className="flex space-x-2">
               <TabButton tab="simulator" icon={BarChart3} label="Analysis" />
+              <TabButton tab="lifecoach" icon={Lightbulb} label="Life Coach" />
+              <TabButton tab="mediator" icon={Scale} label="Mediator" />
               <TabButton tab="status" icon={Settings} label="System" />
               <TabButton tab="about" icon={Info} label="About" />
             </div>
@@ -158,6 +162,8 @@ const AppContent: React.FC = () => {
       {/* Main Content */}
       <main>
         {activeTab === 'simulator' && <StrategySimulator />}
+        {activeTab === 'lifecoach' && <PersonalLifeCoach />}
+        {activeTab === 'mediator' && <AIMediator />}
         {activeTab === 'status' && (
           <div className="min-h-screen bg-slate-900 p-6">
             <div className="max-w-4xl mx-auto">

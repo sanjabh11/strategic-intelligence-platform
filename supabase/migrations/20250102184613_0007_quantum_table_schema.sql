@@ -87,14 +87,36 @@ BEGIN
   END IF;
 END $$;
 
--- Indexes for performance
-CREATE INDEX IF NOT EXISTS idx_quantum_states_run_id ON quantum_strategic_states(run_id);
-CREATE INDEX IF NOT EXISTS idx_quantum_states_player ON quantum_strategic_states(player_id);
-CREATE INDEX IF NOT EXISTS idx_strategic_patterns_signature ON strategic_patterns(signature_hash);
-CREATE INDEX IF NOT EXISTS idx_strategic_patterns_abstraction ON strategic_patterns(abstraction_level);
-CREATE INDEX IF NOT EXISTS idx_strategic_patterns_success_rate ON strategic_patterns(success_rate);
-CREATE INDEX IF NOT EXISTS idx_belief_networks_run_id ON belief_networks(run_id);
-CREATE INDEX IF NOT EXISTS idx_belief_networks_depth ON belief_networks(max_belief_depth);
+-- Indexes for performance (only create if columns exist)
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='quantum_strategic_states' AND column_name='run_id') THEN
+    CREATE INDEX IF NOT EXISTS idx_quantum_states_run_id ON quantum_strategic_states(run_id);
+  END IF;
+  IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='quantum_strategic_states' AND column_name='player_id') THEN
+    CREATE INDEX IF NOT EXISTS idx_quantum_states_player ON quantum_strategic_states(player_id);
+  END IF;
+  IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='strategic_patterns' AND column_name='signature_hash') THEN
+    CREATE INDEX IF NOT EXISTS idx_strategic_patterns_signature ON strategic_patterns(signature_hash);
+  END IF;
+  IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='strategic_patterns' AND column_name='abstraction_level') THEN
+    CREATE INDEX IF NOT EXISTS idx_strategic_patterns_abstraction ON strategic_patterns(abstraction_level);
+  END IF;
+  IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='strategic_patterns' AND column_name='success_rate') THEN
+    CREATE INDEX IF NOT EXISTS idx_strategic_patterns_success_rate ON strategic_patterns(success_rate);
+  END IF;
+  IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='belief_networks' AND column_name='run_id') THEN
+    CREATE INDEX IF NOT EXISTS idx_belief_networks_run_id ON belief_networks(run_id);
+  END IF;
+  IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='belief_networks' AND column_name='max_belief_depth') THEN
+    CREATE INDEX IF NOT EXISTS idx_belief_networks_depth ON belief_networks(max_belief_depth);
+  END IF;
+END $$;
 
--- Enhance vector search for strategic patterns
-CREATE INDEX IF NOT EXISTS idx_strategic_patterns_vector ON strategic_patterns USING ivfflat (adaptation_vector vector_l2_ops) WITH (lists = 100);
+-- Enhance vector search for strategic patterns (only if column exists)
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='strategic_patterns' AND column_name='adaptation_vector') THEN
+    CREATE INDEX IF NOT EXISTS idx_strategic_patterns_vector ON strategic_patterns USING ivfflat (adaptation_vector vector_l2_ops) WITH (lists = 100);
+  END IF;
+END $$;
