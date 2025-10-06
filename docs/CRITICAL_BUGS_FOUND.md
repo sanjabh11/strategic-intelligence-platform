@@ -135,7 +135,7 @@ User sees incomplete analysis
 ### Perplexity API Test (WORKING):
 ```bash
 curl "https://api.perplexity.ai/chat/completions" \
-  -H "Authorization: Bearer pplx-..." \
+  -H "Authorization: Bearer ${PERPLEXITY_API_KEY}" \
   -d '{"model":"sonar-pro","messages":[{"role":"user","content":"gold price"}]}'
 
 Response:

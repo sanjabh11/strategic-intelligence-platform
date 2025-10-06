@@ -1353,13 +1353,13 @@ Deno.serve(async (req) => {
     // Check for high-quality retrievals (score > 0.8)
     const highQualityCount = retrievals.filter(r => (r.score || 0) > 0.8).length
     
-    // Rule: Perplexity has at least 1 retrieval AND
-    // (at least 2 other dataset hits OR one high-quality retrieval with score>0.8)
+    // Relaxed Rule: At least 1 Perplexity retrieval (or 3+ total sources)
+    // This ensures we get external sources even if other APIs timeout
     const hasPerplexity = perplexityCount >= 1
-    const hasSufficientOtherSources = otherSourcesCount >= 2
+    const hasSufficientTotal = retrievals.length >= 3
     const hasHighQualityRetrieval = highQualityCount >= 1
     
-    const isEvidenceBacked = hasPerplexity && (hasSufficientOtherSources || hasHighQualityRetrieval)
+    const isEvidenceBacked = hasPerplexity || (hasSufficientTotal && hasHighQualityRetrieval)
   
     const _rid = rid ?? 'n/a'
     console.log(`[${_rid}] Evidence check: perplexity=${perplexityCount}, other=${otherSourcesCount}, high_quality=${highQualityCount}, result=${isEvidenceBacked}`)
@@ -1400,8 +1400,8 @@ Deno.serve(async (req) => {
     const rag = await fetchAllRetrievals({
       query: scenario_text,
       entities,
-      timeoutMs: 7000,
-      requiredSources: ["perplexity", "uncomtrade", "worldbank", "gdelt"],
+      timeoutMs: 15000,
+      requiredSources: [],
       audience: audience
     })
 
@@ -2374,7 +2374,10 @@ Return a single JSON object with these top-level keys:
     const resp = {
     ok: true,
     analysis_id,
-    analysis: llmJson,
+    analysis: {
+      ...llmJson,
+      retrievals: retrievals || []
+    },
     provenance: {
       model: modelUsed,
       fallback_used: fallbackUsed,
