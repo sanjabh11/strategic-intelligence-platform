@@ -14,6 +14,14 @@ function simpleHash(str: string) {
   return hash.toString(36);
 }
 
+// Simple UUID generator
+function uuid() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
 // Google Programmable Search (CSE)
 export async function fetchGoogleCSE(query: string): Promise<any[]> {
   if (!GOOGLE_API_KEY || !GOOGLE_CSE_ID) return []
@@ -25,6 +33,7 @@ export async function fetchGoogleCSE(query: string): Promise<any[]> {
     const data = await res.json()
     const items = Array.isArray(data?.items) ? data.items.slice(0, 5) : []
     return items.map((it: any) => ({
+      id: uuid(),
       source: 'google_cse',
       url: it.link,
       snippet: it.snippet || it.title || '',
@@ -180,6 +189,7 @@ export async function fetchUNComtrade(country1ISO: string, country2ISO: string, 
     const total = (data.dataset || []).reduce((acc: number, row: any) => acc + (row.TradeValue || 0), 0)
 
     return [{
+      id: uuid(),
       source: "uncomtrade",
       url,
       snippet: `Bilateral trade (last 5 years): $${total.toLocaleString()} total value`,
@@ -206,6 +216,7 @@ export async function fetchWorldBankIndicator(indicator: string, countryCode: st
       `${indicator} data for ${countryCode}`
 
     return [{
+      id: uuid(),
       source: "worldbank",
       url,
       snippet,
@@ -232,6 +243,7 @@ export async function fetchIMFData(countryCode: string, query: string): Promise<
       `IMF economic data for ${countryCode}`
 
     return [{
+      id: uuid(),
       source: "imf",
       url,
       snippet,
@@ -252,6 +264,7 @@ export async function fetchGDELT(query: string): Promise<any[]> {
 
     const data = await response.json()
     const articles = (data.articles || []).slice(0, 3).map((a: any) => ({
+      id: uuid(),
       source: "gdelt",
       url: a.url || a.document_url,
       snippet: (a.summary || a.segments || "").slice(0, 300),
@@ -300,12 +313,12 @@ export async function fetchPerplexity(query: string): Promise<any[]> {
     const messageContent = parsed.choices?.[0]?.message?.content || ''
 
     const hits = citations.map((url: string, idx: number) => ({
+      id: `pplx_${Date.now()}_${idx}`,
       source: "perplexity",
       url: url,
       snippet: messageContent.slice(idx * 150, (idx + 1) * 150) || messageContent.slice(0, 200), // Extract relevant snippet
       score: 0.95 - (idx * 0.05), // Decreasing score by citation order
-      retrieved_at: new Date().toISOString(),
-      id: `pplx_${Date.now()}_${idx}`
+      retrieved_at: new Date().toISOString()
     }))
 
     console.log(`[Perplexity] Retrieved ${hits.length} citations from response`)
@@ -352,6 +365,7 @@ Query: ${query}`
     } catch (_) {}
 
     return (sources || []).slice(0, 5).map((s: any) => ({
+      id: uuid(),
       source: 'gemini',
       url: s.url,
       snippet: s.snippet || '',
