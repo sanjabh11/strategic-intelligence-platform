@@ -4,10 +4,13 @@ import StrategySimulator from './components/StrategySimulator';
 import SystemStatus from './components/SystemStatus';
 import { PersonalLifeCoach } from './components/PersonalLifeCoach';
 import { AIMediator } from './components/AIMediator';
-import { Brain, BarChart3, Settings, Info, Lightbulb, Scale } from 'lucide-react';
+import { GeopoliticalDashboard } from './components/GeopoliticalDashboard';
+import { BiasSimulator } from './components/BiasSimulator';
+import { MultiplayerLobby } from './components/MultiplayerLobby';
+import { Brain, BarChart3, Settings, Info, Lightbulb, Scale, Globe, Target, Users } from 'lucide-react';
 import { LearningModeProvider, WelcomeMessage, LearningModeBadge, useLearningMode } from './components/explanations';
 
-type TabType = 'simulator' | 'status' | 'about' | 'lifecoach' | 'mediator';
+type TabType = 'simulator' | 'status' | 'about' | 'lifecoach' | 'mediator' | 'geopolitical' | 'bias' | 'multiplayer';
 
 // Navigation component that uses learning mode context
 const AppContent: React.FC = () => {
@@ -150,6 +153,9 @@ const AppContent: React.FC = () => {
             
             <div className="flex space-x-2">
               <TabButton tab="simulator" icon={BarChart3} label="Analysis" />
+              <TabButton tab="geopolitical" icon={Globe} label="Live Intel" />
+              <TabButton tab="multiplayer" icon={Users} label="Multiplayer" />
+              <TabButton tab="bias" icon={Target} label="Bias Training" />
               <TabButton tab="lifecoach" icon={Lightbulb} label="Life Coach" />
               <TabButton tab="mediator" icon={Scale} label="Mediator" />
               <TabButton tab="status" icon={Settings} label="System" />
@@ -162,6 +168,9 @@ const AppContent: React.FC = () => {
       {/* Main Content */}
       <main>
         {activeTab === 'simulator' && <StrategySimulator />}
+        {activeTab === 'geopolitical' && <GeopoliticalDashboard />}
+        {activeTab === 'multiplayer' && <MultiplayerLobby />}
+        {activeTab === 'bias' && <BiasSimulator />}
         {activeTab === 'lifecoach' && <PersonalLifeCoach />}
         {activeTab === 'mediator' && <AIMediator />}
         {activeTab === 'status' && (

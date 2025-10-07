@@ -178,10 +178,20 @@ async function calculateHealthMetrics(hours: number = 24, includeHealthProbes: b
   return result
 }
 
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+}
+
 /**
  * Health check endpoint
  */
 Deno.serve(async (req: Request) => {
+  // Handle CORS preflight
+  if (req.method === 'OPTIONS') {
+    return new Response(null, { status: 200, headers: corsHeaders })
+  }
+
   try {
     const url = new URL(req.url)
     const hours = parseInt(url.searchParams.get('hours') || '24')
@@ -192,7 +202,7 @@ Deno.serve(async (req: Request) => {
         error: "Invalid hours parameter. Must be between 1 and 168."
       }), {
         status: 400,
-        headers: { 'Content-Type': 'application/json' }
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       })
     }
 
@@ -204,6 +214,7 @@ Deno.serve(async (req: Request) => {
     }), {
       status: 200,
       headers: {
+        ...corsHeaders,
         'Content-Type': 'application/json',
         'Cache-Control': 'no-cache'
       }
@@ -218,7 +229,7 @@ Deno.serve(async (req: Request) => {
       timestamp: new Date().toISOString()
     }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     })
   }
 })

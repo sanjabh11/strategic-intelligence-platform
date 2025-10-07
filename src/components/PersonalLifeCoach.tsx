@@ -4,6 +4,7 @@ import { Textarea } from './ui/textarea'
 import { Input } from './ui/input'
 import { Card } from './ui/card'
 import { AlertCircle, Brain, TrendingUp, Shield } from 'lucide-react'
+import { supabase, API_BASE, getAuthHeaders } from '../lib/supabase'
 
 export function PersonalLifeCoach() {
   const [title, setTitle] = useState('')
@@ -15,15 +16,21 @@ export function PersonalLifeCoach() {
   const analyzeDecision = async () => {
     setLoading(true)
     try {
-      const response = await fetch('/functions/v1/personal-life-coach', {
+      const response = await fetch(`${API_BASE}/personal-life-coach`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAuthHeaders(),
         body: JSON.stringify({ title, description, category })
       })
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      
       const data = await response.json()
       setResult(data)
     } catch (error) {
       console.error('Analysis failed:', error)
+      setResult({ error: 'Failed to analyze decision. Please try again.' })
     } finally {
       setLoading(false)
     }

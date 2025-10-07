@@ -347,7 +347,7 @@ export function useStrategyAnalysis(): UseStrategyAnalysisReturn {
     setStatus('queued');
 
     try {
-      console.log('Submitting analysis request:', request);
+      // Analysis request submitted;
 
       // Check if local mode is enabled; block in production builds
       if (isLocalMode) {

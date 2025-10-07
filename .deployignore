@@ -1,0 +1,16 @@
+# Files to exclude from deployment
+node_modules/
+.git/
+.vscode/
+*.log
+.env
+.env.local
+tests/
+docs/delivery/PBI-01/
+docs/delivery/PBI-02/
+docs/delivery/PBI-05/
+docs/delivery/PBI-06/
+*.test.ts
+*.test.js
+coverage/
+.DS_Store

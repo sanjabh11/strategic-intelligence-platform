@@ -810,36 +810,71 @@ const StrategySimulator: React.FC = () => {
                     )}
                   </div>
                 </div>
-                {/* Information Value Highlights */}
+                {/* Information Value Highlights (Gap Fix #7 - Updated to use evpi_analysis) */}
                 <div className="bg-slate-700 p-4 rounded-lg border border-slate-600">
                   <div className="font-medium text-slate-200 mb-2">Information Value (EVPI)</div>
                   <div className="space-y-2 text-sm text-slate-300">
-                    {(((analysis as any)?.informationValue?.topSignals) || ((analysis as any)?.informationValue?.recommendations) || []).slice(0,3).map((sig: any, idx: number) => (
-                      <div key={idx} className="flex justify-between bg-slate-600/60 p-2 rounded">
-                        <span>{sig?.name || sig?.id || `Signal ${idx+1}`}</span>
-                        {sig?.evpi !== undefined && <span className="font-mono text-cyan-300">EVPI {(sig.evpi*100).toFixed(1)}%</span>}
-                      </div>
-                    ))}
-                    {(!((analysis as any)?.informationValue)) && (
-                      <div className="text-slate-400 text-sm">No EVPI highlights available.</div>
-                    )}
+                    {(() => {
+                      const evpiData = (analysis as any)?.evpi_analysis
+                      if (evpiData) {
+                        const ranking = evpiData.sensitivityAnalysis?.informationValueRanking || []
+                        return (
+                          <>
+                            <div className="bg-slate-600/60 p-2 rounded mb-2">
+                              <div className="text-xs text-slate-400 mb-1">Expected Value of Perfect Information</div>
+                              <div className="font-mono text-emerald-300 text-lg">
+                                ${(evpiData.expectedValueOfPerfectInformation || 0).toFixed(2)}
+                              </div>
+                            </div>
+                            <div className="text-xs text-slate-400 mb-1">Most Valuable Information:</div>
+                            {ranking.slice(0, 3).map((item: any, idx: number) => (
+                              <div key={idx} className="flex justify-between bg-slate-600/60 p-2 rounded">
+                                <span className="capitalize">{item.nodeId?.replace(/_/g, ' ') || `Info ${idx + 1}`}</span>
+                                <span className="font-mono text-cyan-300">${(item.marginalValue || 0).toFixed(2)}</span>
+                              </div>
+                            ))}
+                          </>
+                        )
+                      }
+                      return <div className="text-slate-400 text-sm">EVPI analysis will appear here after computation.</div>
+                    })()}
                   </div>
                 </div>
-                {/* Outcome Forecast Snapshot */}
+                {/* Outcome Forecast Snapshot (Gap Fix #7 - Updated to use outcome_forecasts) */}
                 <div className="bg-slate-700 p-4 rounded-lg border border-slate-600">
                   <div className="font-medium text-slate-200 mb-2">Outcome Forecast Snapshot</div>
                   <div className="space-y-2 text-sm text-slate-300">
-                    {(((analysis as any)?.outcomeForecasting?.summary) ? [
-                      (analysis as any).outcomeForecasting.summary
-                    ] : []).map((s: any, idx: number) => (
-                      <div key={idx} className="bg-slate-600/60 p-2 rounded">
-                        <div>Best Case: <span className="text-emerald-300">{s?.bestCase || 'N/A'}</span></div>
-                        <div>Worst Case: <span className="text-red-300">{s?.worstCase || 'N/A'}</span></div>
-                      </div>
-                    ))}
-                    {(!((analysis as any)?.outcomeForecasting)) && (
-                      <div className="text-slate-400 text-sm">No forecast summary available.</div>
-                    )}
+                    {(() => {
+                      const forecastData = (analysis as any)?.outcome_forecasts
+                      if (forecastData?.forecasts) {
+                        const firstOutcome = Object.keys(forecastData.forecasts)[0]
+                        const forecast = forecastData.forecasts[firstOutcome] || []
+                        const firstPoint = forecast[0]
+                        const lastPoint = forecast[forecast.length - 1]
+                        
+                        return (
+                          <>
+                            <div className="bg-slate-600/60 p-2 rounded">
+                              <div className="text-xs text-slate-400 mb-1">Time Horizon: {forecastData.scenario?.timeHorizon || 168} hours</div>
+                              <div className="flex justify-between">
+                                <div>
+                                  <div className="text-xs text-slate-400">Initial</div>
+                                  <span className="text-emerald-300">{((firstPoint?.probability || 0) * 100).toFixed(1)}%</span>
+                                </div>
+                                <div className="text-right">
+                                  <div className="text-xs text-slate-400">Final</div>
+                                  <span className="text-amber-300">{((lastPoint?.probability || 0) * 100).toFixed(1)}%</span>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="text-xs text-slate-400 mt-2">
+                              {forecast.length} forecast points computed over {Math.round((forecastData.scenario?.timeHorizon || 168) / 24)} days
+                            </div>
+                          </>
+                        )
+                      }
+                      return <div className="text-slate-400 text-sm">Outcome forecast will appear here after computation.</div>
+                    })()}
                   </div>
                 </div>
               </div>

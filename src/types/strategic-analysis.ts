@@ -34,6 +34,8 @@ export interface Retrieval {
   title: string;
   url: string;
   snippet: string;
+  source?: string;
+  score?: number;
 }
 
 export interface AnalysisResult {
@@ -41,7 +43,7 @@ export interface AnalysisResult {
   scenario_text?: string;
   players?: Player[];
   equilibrium?: {
-    profile: Record<string, Record<string, {
+    profile: Record<string, Record<string, number>> | Record<string, Record<string, {
       value: number;
       confidence: number;
       sources: Array<{
@@ -71,6 +73,7 @@ export interface AnalysisResult {
   provenance?: {
     evidence_backed: boolean;
     retrieval_count: number;
+    retrieval_ids?: string[];
     model: string;
     warning?: string;
   };
@@ -86,6 +89,9 @@ export interface AnalysisResult {
   temporalOptimization?: any;
   outcomeForecasting?: any;
   strategySuccess?: any;
+  evpi_analysis?: any;
+  outcome_forecasts?: any;
+  sources?: any[];
 
   // Value of Information (VOI) summary
   voi?: {

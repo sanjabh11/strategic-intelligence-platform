@@ -37,6 +37,7 @@ export interface StudentViewData {
     answer: string;
     difficulty: "easy" | "medium";
   }>;
+  sources?: SourceCitation[];
   provenance: {
     retrieval_count: number;
     retrieval_ids: string[];
@@ -82,6 +83,7 @@ export interface LearnerViewData {
     task: string;
     hints: string[];
   };
+  sources?: SourceCitation[];
   provenance: {
     retrieval_count: number;
     retrieval_ids: string[];
@@ -93,17 +95,16 @@ export interface LearnerViewData {
 export interface ResearcherViewData {
   long_summary: {
     text: string;
-  };
+  } | any;
   assumptions: Array<{
     name: string;
+    assumption?: string;
     value: number;
     justification: string;
+    evidence_strength?: number | string;
+    source_ids?: string[];
   }>;
-  payoff_matrix: {
-    players: string[];
-    actions_by_player: string[][];
-    matrix_values: number[][][];
-  };
+  payoff_matrix: any;
   solver_config: {
     seed: number;
     method: "recursive_nash" | "replicator" | "best_response";
@@ -129,9 +130,12 @@ export interface ResearcherViewData {
   };
   notebook_snippet: string;
   data_exports: {
-    payoff_csv_url: string;
-    simulations_json_url: string;
+    payoff_csv_url?: string;
+    simulations_json_url?: string;
+    json_url?: string;
+    raw_data?: any;
   };
+  sources?: SourceCitation[];
   provenance: {
     retrieval_count: number;
     retrieval_ids: string[];
@@ -141,11 +145,7 @@ export interface ResearcherViewData {
 
 // Teacher View Types (Aligned with Ph2.md schema)
 export interface TeacherViewData {
-  lesson_outline: {
-    duration_minutes: number;
-    learning_objectives: string[];
-    summary: string;
-  };
+  lesson_outline: any;
   simulation_setup: {
     roles: Array<{
       role: string;
@@ -159,9 +159,14 @@ export interface TeacherViewData {
     criteria: string;
     max_points: number;
     description: string;
+    excellent?: string;
+    good?: string;
+    needs_improvement?: string;
+    points?: number;
   }>;
-  student_handouts: string[];
+  student_handouts: any[];
   sample_solutions: string[];
+  sources?: SourceCitation[];
   provenance: {
     retrieval_count: number;
     retrieval_ids: string[];

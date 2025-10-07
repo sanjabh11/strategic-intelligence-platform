@@ -3,6 +3,7 @@ import { Button } from './ui/button'
 import { Textarea } from './ui/textarea'
 import { Card } from './ui/card'
 import { Scale, Users, DollarSign, CheckCircle } from 'lucide-react'
+import { supabase, API_BASE, getAuthHeaders } from '../lib/supabase'
 
 export function AIMediator() {
   const [category, setCategory] = useState('other')
@@ -15,9 +16,9 @@ export function AIMediator() {
   const mediate = async () => {
     setLoading(true)
     try {
-      const response = await fetch('/functions/v1/ai-mediator', {
+      const response = await fetch(`${API_BASE}/ai-mediator`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAuthHeaders(),
         body: JSON.stringify({
           category,
           description_a: descriptionA,
@@ -25,10 +26,16 @@ export function AIMediator() {
           monetary_value: monetaryValue ? parseFloat(monetaryValue) : undefined
         })
       })
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      
       const data = await response.json()
       setResult(data)
     } catch (error) {
       console.error('Mediation failed:', error)
+      setResult({ error: 'Failed to mediate dispute. Please try again.' })
     } finally {
       setLoading(false)
     }
