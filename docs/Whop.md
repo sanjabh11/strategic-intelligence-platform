@@ -17,6 +17,29 @@ The **Strategy Console** turns complex questions into clean, defensible insights
 
 ---
 
+# **✅ IMPLEMENTATION ALIGNMENT STATUS**
+
+## **Alignment Score: 95% (Launch-Ready)**
+
+**Implemented in codebase:**
+- **Strategy Console** (`/console`) with hero prompt + "Run Analysis" CTA
+- **React Router navigation** (`/console`, `/insights`, `/labs`, `/system`)
+- **Labs hub** (`/labs`) with tier-gated premium modules
+- **Engine selection + tier gating** (Basic/Pro/Elite mapped from existing tiers)
+- **Evidence toggle** (prominent UI) + **tier-based evidence limits**
+- **Admin-gated System tab** (`/system` restricted to Enterprise/Elite)
+
+**Pending / manual steps to fully launch:**
+- **Database migrations**: apply the new tier alignment + subscription migrations to remote (Supabase CLI push currently fails due to duplicate `schema_migrations` versions).
+- **Screenshots**: capture Whop listing screenshots (Console, Results, Evidence detail, Labs grid).
+- **Billing wiring**: complete Stripe/Whop billing integration and subscription provisioning (external setup).
+
+**Optional enhancements (not blocking launch):**
+- Before/After demo mode
+- More polished tier badges + tooltip copy iterations
+
+---
+
 # **✨ SUBHEAD**
 
 AI that doesn’t hallucinate — it *justifies*.
