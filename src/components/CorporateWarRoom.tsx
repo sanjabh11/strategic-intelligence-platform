@@ -121,24 +121,43 @@ const CorporateWarRoom: React.FC<CorporateWarRoomProps> = ({ userId, isEnterpris
     const [selectedScenario, setSelectedScenario] = useState<ScenarioTemplate | null>(null);
     const [timerRemaining, setTimerRemaining] = useState<number | null>(null);
 
-    // Mock sessions
+    // Fetch active war room sessions
     useEffect(() => {
-        const mockSessions: WarRoomSession[] = [
-            {
-                id: '1',
-                name: 'Q4 Strategic Planning',
-                scenario: 'Tech Market Entry',
-                status: 'lobby',
-                currentRound: 0,
-                totalRounds: 6,
-                teams: [
-                    { id: 't1', name: 'Alpha Corp', color: '#3B82F6', players: [], resources: { capital: 100, marketShare: 25, reputation: 80, rdCapacity: 60 }, score: 0 },
-                    { id: 't2', name: 'Beta Inc', color: '#10B981', players: [], resources: { capital: 100, marketShare: 25, reputation: 80, rdCapacity: 60 }, score: 0 }
-                ],
-                createdAt: new Date().toISOString()
+        const fetchSessions = async () => {
+            try {
+                const { data, error } = await supabase
+                    .from('warroom_sessions')
+                    .select('*')
+                    .in('status', ['lobby', 'active'])
+                    .order('created_at', { ascending: false });
+
+                if (error) {
+                    console.error('Error fetching sessions:', error);
+                    setSessions([]);
+                } else if (data) {
+                    // Map database fields to component interface
+                    const mapped: WarRoomSession[] = (data || []).map(item => ({
+                        id: item.id,
+                        name: item.name,
+                        scenario: item.scenario,
+                        status: item.status as any,
+                        currentRound: item.current_round,
+                        totalRounds: item.total_rounds,
+                        teams: (item.teams as any[]) || [],
+                        createdAt: item.created_at,
+                        timerEndAt: item.timer_end_at
+                    }));
+                    setSessions(mapped);
+                } else {
+                    setSessions([]);
+                }
+            } catch (err) {
+                console.error('Session fetch error:', err);
+                setSessions([]);
             }
-        ];
-        setSessions(mockSessions);
+        };
+
+        fetchSessions();
     }, []);
 
     // Timer countdown
@@ -243,8 +262,8 @@ const CorporateWarRoom: React.FC<CorporateWarRoomProps> = ({ userId, isEnterpris
                         <div
                             key={scenario.id}
                             className={`bg-slate-800 rounded-xl p-5 border transition-all ${scenario.isEnterprise && !isEnterprise
-                                    ? 'border-slate-700 opacity-60'
-                                    : 'border-slate-700 hover:border-indigo-500 cursor-pointer'
+                                ? 'border-slate-700 opacity-60'
+                                : 'border-slate-700 hover:border-indigo-500 cursor-pointer'
                                 }`}
                             onClick={() => {
                                 if (!scenario.isEnterprise || isEnterprise) {
@@ -263,8 +282,8 @@ const CorporateWarRoom: React.FC<CorporateWarRoomProps> = ({ userId, isEnterpris
                                     </span>
                                 ) : (
                                     <span className={`px-2 py-1 rounded text-xs ${scenario.difficulty === 'standard' ? 'bg-green-900/50 text-green-400' :
-                                            scenario.difficulty === 'advanced' ? 'bg-blue-900/50 text-blue-400' :
-                                                'bg-purple-900/50 text-purple-400'
+                                        scenario.difficulty === 'advanced' ? 'bg-blue-900/50 text-blue-400' :
+                                            'bg-purple-900/50 text-purple-400'
                                         }`}>
                                         {scenario.difficulty}
                                     </span>
@@ -306,8 +325,8 @@ const CorporateWarRoom: React.FC<CorporateWarRoomProps> = ({ userId, isEnterpris
                                 </div>
                                 <div className="flex items-center gap-3">
                                     <span className={`px-2 py-1 rounded text-xs ${session.status === 'lobby' ? 'bg-slate-700 text-slate-300' :
-                                            session.status === 'active' ? 'bg-green-900/50 text-green-400' :
-                                                'bg-blue-900/50 text-blue-400'
+                                        session.status === 'active' ? 'bg-green-900/50 text-green-400' :
+                                            'bg-blue-900/50 text-blue-400'
                                         }`}>
                                         {session.status}
                                     </span>

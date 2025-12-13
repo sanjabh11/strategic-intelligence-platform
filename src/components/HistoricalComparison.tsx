@@ -21,7 +21,7 @@ export const HistoricalComparison: React.FC<HistoricalComparisonProps> = ({ even
     const fetchHistoricalData = async () => {
       try {
         setLoading(true)
-        
+
         // Fetch similar scenarios from strategy_outcomes table
         const { data, error } = await supabase
           .from('strategy_outcomes')
@@ -32,17 +32,13 @@ export const HistoricalComparison: React.FC<HistoricalComparisonProps> = ({ even
 
         if (error) {
           console.error('Error fetching historical data:', error)
-          // Use mock data for demonstration
-          setHistoricalScenarios(getMockHistoricalData(event.pattern))
-        } else if (data && data.length > 0) {
-          setHistoricalScenarios(data)
+          setHistoricalScenarios([]) // Show empty state instead of mock
         } else {
-          // No data found, use mock
-          setHistoricalScenarios(getMockHistoricalData(event.pattern))
+          setHistoricalScenarios(data || [])
         }
       } catch (err) {
         console.error('Historical data fetch error:', err)
-        setHistoricalScenarios(getMockHistoricalData(event.pattern))
+        setHistoricalScenarios([]) // Show empty state instead of mock
       } finally {
         setLoading(false)
       }
@@ -52,10 +48,10 @@ export const HistoricalComparison: React.FC<HistoricalComparisonProps> = ({ even
   }, [event.pattern])
 
   const avgSuccessRate = historicalScenarios.length > 0
-    ? historicalScenarios.reduce((sum, s) => sum + s.success_rate, 0) / historicalScenarios.length
+    ? historicalScenarios.reduce((sum, s) => sum + (s.success_rate || 0), 0) / historicalScenarios.length
     : 0
 
-  const totalSamples = historicalScenarios.reduce((sum, s) => sum + s.sample_size, 0)
+  const totalSamples = historicalScenarios.reduce((sum, s) => sum + (s.total_iterations || 0), 0)
 
   if (loading) {
     return (
@@ -117,20 +113,20 @@ export const HistoricalComparison: React.FC<HistoricalComparisonProps> = ({ even
           </h4>
           <ResponsiveContainer width="100%" height={200}>
             <BarChart data={historicalScenarios}>
-              <XAxis 
-                dataKey="time_period_start" 
+              <XAxis
+                dataKey="time_period_start"
                 stroke="#94a3b8"
                 style={{ fontSize: '11px' }}
                 tickFormatter={(value) => value ? value.substring(0, 4) : 'N/A'}
               />
-              <YAxis 
+              <YAxis
                 stroke="#94a3b8"
                 style={{ fontSize: '11px' }}
                 tickFormatter={(value) => `${(value * 100).toFixed(0)}%`}
               />
-              <Tooltip 
-                contentStyle={{ 
-                  backgroundColor: '#1e293b', 
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: '#1e293b',
                   border: '1px solid #475569',
                   borderRadius: '8px'
                 }}
@@ -152,17 +148,16 @@ export const HistoricalComparison: React.FC<HistoricalComparisonProps> = ({ even
           </div>
         ) : (
           historicalScenarios.map((scenario, index) => (
-            <div 
+            <div
               key={scenario.id}
               className="bg-slate-700 rounded-lg p-4 hover:bg-slate-600 transition-colors"
             >
               <div className="flex items-start justify-between mb-2">
                 <div className="flex items-center gap-2">
-                  <div className={`w-8 h-8 rounded flex items-center justify-center text-sm font-bold ${
-                    scenario.success_rate > 0.7 ? 'bg-emerald-600' :
+                  <div className={`w-8 h-8 rounded flex items-center justify-center text-sm font-bold ${scenario.success_rate > 0.7 ? 'bg-emerald-600' :
                     scenario.success_rate > 0.4 ? 'bg-amber-600' :
-                    'bg-red-600'
-                  } text-white`}>
+                      'bg-red-600'
+                    } text-white`}>
                     #{index + 1}
                   </div>
                   <div>
@@ -185,18 +180,18 @@ export const HistoricalComparison: React.FC<HistoricalComparisonProps> = ({ even
               <div className="grid grid-cols-3 gap-3 mt-3 text-xs">
                 <div>
                   <span className="text-slate-400">Sample Size:</span>
-                  <div className="text-white font-medium">{scenario.sample_size.toLocaleString()}</div>
+                  <div className="text-white font-medium">{scenario.total_iterations?.toLocaleString() || 'N/A'}</div>
                 </div>
                 <div>
                   <span className="text-slate-400">Confidence:</span>
                   <div className="text-white font-medium">
-                    {(scenario.confidence_level * 100).toFixed(0)}%
+                    {scenario.confidence_level ? (scenario.confidence_level * 100).toFixed(0) + '%' : 'N/A'}
                   </div>
                 </div>
                 <div>
                   <span className="text-slate-400">Source:</span>
                   <div className="text-white font-medium capitalize">
-                    {scenario.data_source.replace(/_/g, ' ')}
+                    {scenario.data_source ? scenario.data_source.replace(/_/g, ' ') : scenario.domain || 'Historical'}
                   </div>
                 </div>
               </div>
@@ -217,7 +212,7 @@ export const HistoricalComparison: React.FC<HistoricalComparisonProps> = ({ even
       <div className="mt-6 bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
         <h4 className="text-sm font-semibold text-blue-300 mb-2">World Bank Context</h4>
         <p className="text-sm text-slate-300 mb-3">
-          Historical analysis based on 50+ years of economic indicators including GDP growth, 
+          Historical analysis based on 50+ years of economic indicators including GDP growth,
           trade volumes, governance metrics, and conflict resolution outcomes.
         </p>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
@@ -250,7 +245,7 @@ export const HistoricalComparison: React.FC<HistoricalComparisonProps> = ({ even
 
       {/* Learn More Link */}
       <div className="mt-4 text-center">
-        <a 
+        <a
           href="https://data.worldbank.org/"
           target="_blank"
           rel="noopener noreferrer"
@@ -264,48 +259,5 @@ export const HistoricalComparison: React.FC<HistoricalComparisonProps> = ({ even
   )
 }
 
-// Mock historical data for demonstration
-function getMockHistoricalData(pattern: string): HistoricalScenario[] {
-  const baseData = [
-    {
-      id: `hist-${pattern}-1`,
-      pattern_name: pattern,
-      indicator_code: 'NY.GDP.MKTP.KD.ZG',
-      success_rate: 0.72,
-      sample_size: 145,
-      confidence_level: 0.85,
-      data_source: 'world_bank_empirical',
-      time_period_start: '2010-01-01',
-      time_period_end: '2015-12-31',
-      raw_data: { gdp_growth: 3.2, trade_volume: 245000000 }
-    },
-    {
-      id: `hist-${pattern}-2`,
-      pattern_name: pattern,
-      indicator_code: 'BX.KLT.DINV.WD.GD.ZS',
-      success_rate: 0.68,
-      sample_size: 203,
-      confidence_level: 0.82,
-      data_source: 'world_bank_empirical',
-      time_period_start: '2005-01-01',
-      time_period_end: '2010-12-31',
-      raw_data: { foreign_investment: 2.8, governance_index: 6.5 }
-    },
-    {
-      id: `hist-${pattern}-3`,
-      pattern_name: pattern,
-      indicator_code: 'SI.POV.GINI',
-      success_rate: 0.81,
-      sample_size: 187,
-      confidence_level: 0.88,
-      data_source: 'world_bank_empirical',
-      time_period_start: '2015-01-01',
-      time_period_end: '2020-12-31',
-      raw_data: { inequality_index: 38.2, cooperation_score: 7.1 }
-    }
-  ]
-
-  return baseData
-}
-
 export default HistoricalComparison
+

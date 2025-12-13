@@ -76,91 +76,39 @@ const ScenarioMarketplace: React.FC<ScenarioMarketplaceProps> = ({ userId }) => 
     const fetchScenarios = useCallback(async () => {
         setLoading(true);
         try {
-            // Mock data for now - would fetch from Supabase
-            const mockScenarios: MarketplaceScenario[] = [
-                {
-                    id: '1',
-                    title: 'Silicon Valley Startup Pitch',
-                    description: 'Navigate the high-stakes world of VC funding. Pitch your startup to investors while competitors vie for the same capital.',
-                    category: 'Business Strategy',
-                    price: 9.99,
-                    creatorId: 'creator1',
-                    creatorName: 'StrategyMaster',
-                    rating: 4.8,
-                    ratingCount: 124,
-                    downloadCount: 892,
-                    tags: ['startups', 'funding', 'competition'],
-                    createdAt: new Date().toISOString(),
-                    players: 4,
-                    complexity: 'advanced'
-                },
-                {
-                    id: '2',
-                    title: 'Trade War Simulation',
-                    description: 'Model tariff negotiations between major economies. Explore the prisoner\'s dilemma of international trade.',
-                    category: 'Geopolitics',
-                    price: 14.99,
-                    creatorId: 'creator2',
-                    creatorName: 'GlobalStrategist',
-                    rating: 4.9,
-                    ratingCount: 89,
-                    downloadCount: 567,
-                    tags: ['trade', 'international', 'tariffs'],
-                    createdAt: new Date().toISOString(),
-                    players: 3,
-                    complexity: 'expert'
-                },
-                {
-                    id: '3',
-                    title: 'Salary Negotiation Training',
-                    description: 'Practice job offer negotiations with realistic AI opponents. Perfect for interview prep.',
-                    category: 'Negotiations',
-                    price: 4.99,
-                    creatorId: 'creator3',
-                    creatorName: 'CareerCoach',
-                    rating: 4.6,
-                    ratingCount: 256,
-                    downloadCount: 2340,
-                    tags: ['career', 'salary', 'interviews'],
-                    createdAt: new Date().toISOString(),
-                    players: 2,
-                    complexity: 'beginner'
-                },
-                {
-                    id: '4',
-                    title: 'Real Estate Auction',
-                    description: 'Competitive bidding simulation for property acquisition. Learn optimal auction strategies.',
-                    category: 'Personal Finance',
-                    price: 7.99,
-                    creatorId: 'creator4',
-                    creatorName: 'RealEstateGuru',
-                    rating: 4.5,
-                    ratingCount: 78,
-                    downloadCount: 445,
-                    tags: ['real estate', 'auctions', 'bidding'],
-                    createdAt: new Date().toISOString(),
-                    players: 5,
-                    complexity: 'intermediate'
-                },
-                {
-                    id: '5',
-                    title: 'Classic Prisoner\'s Dilemma',
-                    description: 'The foundational game theory scenario. Perfect for learning Nash Equilibrium concepts.',
-                    category: 'Game Theory',
-                    price: 0,
-                    creatorId: 'creator5',
-                    creatorName: 'ProfGameTheory',
-                    rating: 4.7,
-                    ratingCount: 512,
-                    downloadCount: 8901,
-                    tags: ['classic', 'free', 'educational'],
-                    createdAt: new Date().toISOString(),
-                    players: 2,
-                    complexity: 'beginner'
-                }
-            ];
+            // Fetch from marketplace_scenarios table
+            const { data, error } = await supabase
+                .from('marketplace_scenarios')
+                .select('*')
+                .order('featured', { ascending: false })
+                .order('downloads', { ascending: false });
 
-            setScenarios(mockScenarios);
+            if (error) {
+                console.error('Error fetching scenarios:', error);
+                setScenarios([]);
+            } else {
+                // Map database fields to component interface
+                const mapped: MarketplaceScenario[] = (data || []).map(item => ({
+                    id: item.id,
+                    title: item.title,
+                    description: item.description,
+                    category: item.category,
+                    price: item.price_cents / 100, // Convert cents to dollars
+                    creatorId: item.creator_id || 'unknown',
+                    creatorName: item.creator_name || 'Anonymous',
+                    rating: item.rating || 0,
+                    ratingCount: item.review_count || 0,
+                    downloadCount: item.downloads || 0,
+                    tags: item.tags || [],
+                    createdAt: item.created_at,
+                    players: item.player_count || 2,
+                    complexity: item.difficulty || 'intermediate'
+                }));
+                setScenarios(mapped);
+            }
+        } catch (err) {
+            console.error('Scenario fetch error:', err);
+            setScenarios([]);
         } finally {
             setLoading(false);
         }
@@ -259,8 +207,8 @@ const ScenarioMarketplace: React.FC<ScenarioMarketplaceProps> = ({ userId }) => 
                     <button
                         onClick={() => handlePurchase(scenario.id)}
                         className={`px-3 py-1 rounded text-sm font-medium ${scenario.price === 0
-                                ? 'bg-green-600 hover:bg-green-700 text-white'
-                                : 'bg-teal-500 hover:bg-teal-600 text-white'
+                            ? 'bg-green-600 hover:bg-green-700 text-white'
+                            : 'bg-teal-500 hover:bg-teal-600 text-white'
                             }`}
                     >
                         {scenario.price === 0 ? 'Download' : 'Purchase'}

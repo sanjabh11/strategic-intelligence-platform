@@ -126,30 +126,43 @@ const BiasProfileDashboard: React.FC<BiasProfileDashboardProps> = ({ userId }) =
     const [activeTab, setActiveTab] = useState<'profile' | 'training' | 'history'>('profile');
     const [expandedBias, setExpandedBias] = useState<string | null>(null);
 
-    // Initialize profile from storage or create new
+    // Fetch or create bias profile
     useEffect(() => {
         const initProfile = async () => {
             setLoading(true);
 
-            // Would fetch from Supabase in production
-            const mockProfile: BiasProfile = {
-                userId: userId || 'guest',
-                overallScore: 72,
-                assessmentCount: 15,
-                lastAssessedAt: new Date().toISOString(),
-                biases: COMMON_BIASES.map((b, i) => ({
-                    ...b,
-                    frequency: 20 + Math.random() * 60,
-                    severity: Math.random() > 0.7 ? 'high' : Math.random() > 0.4 ? 'medium' : 'low',
-                    trend: Math.random() > 0.6 ? 'improving' : Math.random() > 0.3 ? 'stable' : 'worsening',
-                    lastDetected: i < 5 ? new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString() : undefined
-                })) as BiasEntry[],
-                strengths: ['Critical thinking', 'Data-driven decisions', 'Long-term planning'],
-                growthAreas: ['Managing emotional reactions', 'Considering alternative viewpoints']
-            };
+            try {
+                const { data, error } = await supabase
+                    .from('user_bias_profiles')
+                    .select('*')
+                    .eq('user_id', userId || 'guest')
+                    .single();
 
-            setProfile(mockProfile);
-            setLoading(false);
+                if (error && error.code !== 'PGRST116') { // PGRST116 = no rows
+                    console.error('Error fetching bias profile:', error);
+                }
+
+                if (data) {
+                    // Map database fields to component interface
+                    setProfile({
+                        userId: data.user_id,
+                        overallScore: Math.round(data.overall_score * 100),
+                        assessmentCount: data.assessment_count || 0,
+                        lastAssessedAt: data.last_assessed_at || new Date().toISOString(),
+                        biases: (data.biases as any[]) || [],
+                        strengths: data.strengths || [],
+                        growthAreas: data.growth_areas || []
+                    });
+                } else {
+                    // No profile found - show empty state
+                    setProfile(null);
+                }
+            } catch (err) {
+                console.error('Profile fetch error:', err);
+                setProfile(null);
+            } finally {
+                setLoading(false);
+            }
         };
 
         initProfile();
@@ -237,13 +250,13 @@ const BiasProfileDashboard: React.FC<BiasProfileDashboardProps> = ({ userId }) =
                             >
                                 <div className="flex items-center gap-3">
                                     <div className={`w-3 h-3 rounded-full ${bias.severity === 'high' ? 'bg-red-500' :
-                                            bias.severity === 'medium' ? 'bg-amber-500' :
-                                                'bg-green-500'
+                                        bias.severity === 'medium' ? 'bg-amber-500' :
+                                            'bg-green-500'
                                         }`} />
                                     <span className="text-white">{bias.name}</span>
                                     <span className={`text-xs px-2 py-0.5 rounded ${bias.trend === 'improving' ? 'bg-green-900/50 text-green-400' :
-                                            bias.trend === 'worsening' ? 'bg-red-900/50 text-red-400' :
-                                                'bg-slate-600 text-slate-300'
+                                        bias.trend === 'worsening' ? 'bg-red-900/50 text-red-400' :
+                                            'bg-slate-600 text-slate-300'
                                         }`}>
                                         {bias.trend}
                                     </span>
@@ -319,10 +332,10 @@ const BiasProfileDashboard: React.FC<BiasProfileDashboardProps> = ({ userId }) =
                 <div
                     key={module.id}
                     className={`bg-slate-800 rounded-xl p-5 border transition-all ${module.completed
-                            ? 'border-green-500/30'
-                            : idx === 0
-                                ? 'border-violet-500 ring-1 ring-violet-500/30'
-                                : 'border-slate-700'
+                        ? 'border-green-500/30'
+                        : idx === 0
+                            ? 'border-violet-500 ring-1 ring-violet-500/30'
+                            : 'border-slate-700'
                         }`}
                 >
                     <div className="flex items-start justify-between">
@@ -344,8 +357,8 @@ const BiasProfileDashboard: React.FC<BiasProfileDashboardProps> = ({ userId }) =
 
                         <div className="text-right">
                             <span className={`px-2 py-1 rounded text-xs ${module.difficulty === 'beginner' ? 'bg-green-900/50 text-green-400' :
-                                    module.difficulty === 'intermediate' ? 'bg-blue-900/50 text-blue-400' :
-                                        'bg-purple-900/50 text-purple-400'
+                                module.difficulty === 'intermediate' ? 'bg-blue-900/50 text-blue-400' :
+                                    'bg-purple-900/50 text-purple-400'
                                 }`}>
                                 {module.difficulty}
                             </span>
@@ -412,8 +425,8 @@ const BiasProfileDashboard: React.FC<BiasProfileDashboardProps> = ({ userId }) =
                         key={tab}
                         onClick={() => setActiveTab(tab)}
                         className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === tab
-                                ? 'bg-violet-500 text-white'
-                                : 'text-slate-400 hover:text-white'
+                            ? 'bg-violet-500 text-white'
+                            : 'text-slate-400 hover:text-white'
                             }`}
                     >
                         {tab.charAt(0).toUpperCase() + tab.slice(1)}

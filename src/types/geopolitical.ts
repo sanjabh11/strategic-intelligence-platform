@@ -22,14 +22,23 @@ export interface GDELTEvent {
 export interface HistoricalScenario {
   id: string
   pattern_name: string
-  indicator_code: string
+  scenario_title: string
   success_rate: number
-  sample_size: number
-  confidence_level: number
-  data_source: string
-  time_period_start: string
-  time_period_end: string
-  raw_data: any
+  total_iterations: number // Renamed from sample_size
+  description?: string
+  year?: number
+  domain?: string
+  stakeholder_count?: number
+  payoff_data?: any
+  citations?: string[]
+  indicator_code?: string // Optional for backward compatibility
+  confidence_level?: number // Optional for backward compatibility
+  data_source?: string
+  time_period_start?: string
+  time_period_end?: string
+  raw_data?: any
+  created_at?: string
+  updated_at?: string
 }
 
 export interface SimulationParams {
