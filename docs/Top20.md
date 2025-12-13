@@ -119,6 +119,27 @@ This is a **Vite + React 18 + TypeScript** single-page app (SPA) with **Tailwind
 - **Some features are “production-structured but stubbed”**: e.g., `gdelt-stream` currently returns simulated events; `personal-life-coach` contains TODO/placeholder LLM extraction logic. Architecturally solid, but worth validating for “real data” readiness.
 - **Secrets & config hygiene**: [.gitignore](cci:7://file:///Users/sanjayb/minimax/strategic-intelligence-platform/.gitignore:0:0-0:0) correctly ignores `.env`, and there are scripts to set Supabase secrets; however [.env.example](cci:7://file:///Users/sanjayb/minimax/strategic-intelligence-platform/.env.example:0:0-0:0) contains a suspicious placeholder value for `SUPABASE_SERVICE_ROLE_KEY` that ideally should be blank.
 
+# 🆕 Monetization Features (Dec 2024)
+
+21. **Monte Carlo Simulator for ABM** (`supabase/functions/monte-carlo-simulator`): 1000-10000 iteration agent-based market simulation with Central Bank, Miner, Retail, and Institutional agents. Returns price distributions, outcome probabilities, and stability scores.
+
+22. **Game-Theoretic Trading Signals** (`supabase/functions/trading-signals`): Detects market patterns (Crowded Trades, Liquidity Traps, Squeeze Setups) and frames them as game theory scenarios (Prisoner's Dilemma, Chicken, Coordination Games). Generates BUY/SELL/HOLD signals with confidence levels.
+
+23. **Brier-Weighted Consensus Oracle** (`supabase/functions/brier-weighted-consensus`): Aggregates forecasts using Brier score weighting to surface "Superforecaster" consensus. Identifies top 10% predictors and calculates reliability metrics.
+
+24. **Game Tree Builder UI** (`src/components/GameTreeBuilder.tsx`): Visual drag-and-drop extensive form game designer with backward induction solver for Subgame Perfect Equilibrium. Supports n-player games and JSON export.
+
+25. **Negotiation Dojo** (`src/components/NegotiationDojo.tsx`): Practice negotiation against Nash Bargaining AI opponents. 4 scenarios (salary, B2B, rental, freelance) with ZOPA analysis and post-game feedback.
+
+26. **Corporate War Room** (`src/components/CorporateWarRoom.tsx`): Enterprise team-based wargaming with round timers, resource tracking, and multi-player coordination. 4 scenario templates (market entry, M&A, disruption, pricing).
+
+27. **Scenario Marketplace** (`src/components/ScenarioMarketplace.tsx`): Creator economy for game theory scenarios with 70/30 revenue share. Browse, search, filter, and publish scenarios.
+
+28. **Bias Profile Dashboard** (`src/components/BiasProfileDashboard.tsx`): Tracks 10 cognitive biases across 4 categories with personalized debiasing recommendations and training modules.
+
+29. **Whop Integration Utilities** (`src/lib/whop.ts`): Tier-based feature gating, license key generation/validation, ready for @whop/sdk integration.
+
 # Status
 - **Completed**: Repo-wide architecture scan + backend/DB/CI review.
 - **Delivered**: A step-by-step operational mental model and the **top 20 highlights** grounded in specific modules and files.
+- **NEW (Dec 2024)**: 9 monetization features implemented across HIGH and MEDIUM priority tiers.

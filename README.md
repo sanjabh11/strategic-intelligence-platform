@@ -755,4 +755,33 @@ Built on Nobel Prize-winning research:
 
 ---
 
+## 💰 Monetization Features (December 2024)
+
+### HIGH Priority - Implemented ✅
+| Feature | Component | Description |
+|---------|-----------|-------------|
+| F1: Monte Carlo Simulator | `supabase/functions/monte-carlo-simulator` | 1000-10000 iteration ABM for gold/asset modeling |
+| F2: Consensus Oracle | `supabase/functions/brier-weighted-consensus` | Brier-score weighted Superforecaster feeds |
+| F4: Game Tree Builder | `src/components/GameTreeBuilder.tsx` | Visual extensive form game designer with SPE solver |
+| F6: Whop Integration | `src/lib/whop.ts` | Tier gating, license keys, feature access |
+| F9: Trading Signals | `supabase/functions/trading-signals` | Game-theoretic pattern detection (BUY/SELL/HOLD) |
+
+### MEDIUM Priority - Implemented ✅
+| Feature | Component | Description |
+|---------|-----------|-------------|
+| F3: Negotiation Dojo | `src/components/NegotiationDojo.tsx` | Nash Bargaining AI opponent training |
+| F5: Corporate War Room | `src/components/CorporateWarRoom.tsx` | Enterprise team-based wargaming |
+| F8: Scenario Marketplace | `src/components/ScenarioMarketplace.tsx` | Creator economy with 70/30 revenue share |
+| F10: Bias Profile | `src/components/BiasProfileDashboard.tsx` | 10-bias cognitive tracking & debiasing |
+
+### Edge Functions Deployed
+```bash
+# New monetization functions
+supabase functions deploy monte-carlo-simulator --project-ref YOUR_PROJECT
+supabase functions deploy trading-signals --project-ref YOUR_PROJECT
+supabase functions deploy brier-weighted-consensus --project-ref YOUR_PROJECT
+```
+
+---
+
 **Built with ❤️ using React, TypeScript, Vite, Supabase, and Nobel Prize-winning game theory**

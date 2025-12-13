@@ -529,3 +529,28 @@ Use platform's collective strategic intelligence to make testable predictions ab
 - Strategic Time Travel Simulation
 - Strategic Reality Prediction
 - Full deployment of Phase 4: Universal Strategic Mastery
+
+---
+
+## 💰 Monetization Features (Dec 2024)
+
+### HIGH Priority (Implemented)
+- **F1: Monte Carlo Simulator** - 1000-10000 iteration agent-based market simulation
+- **F2: Brier-Weighted Consensus** - Superforecaster reputation-weighted feeds
+- **F4: Game Tree Builder** - Visual extensive form game designer with SPE solver
+- **F6: Whop Integration** - Tier-based feature gating and license management
+- **F9: Trading Signals** - Game-theoretic market pattern detection
+
+### MEDIUM Priority (Implemented)
+- **F3: Negotiation Dojo** - Nash Bargaining AI opponent training
+- **F5: Corporate War Room** - Enterprise team-based strategic wargaming
+- **F8: Scenario Marketplace** - Creator economy with 70/30 revenue share
+- **F10: Bias Profile Dashboard** - Cognitive bias tracking and debiasing
+
+### LOW Priority (Pending)
+- **F7: Crypto Betting** - Deferred (Whop platform constraints)
+
+### Edge Functions Deployed
+- `monte-carlo-simulator` - ABM simulation engine
+- `trading-signals` - Signal generation service
+- `brier-weighted-consensus` - Forecast aggregation
