@@ -67,3 +67,5 @@ junit.xml
 # ---- Misc ----
 Thumbs.db
 Desktop.ini
+# Local Netlify folder
+.netlify

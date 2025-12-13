@@ -89,6 +89,40 @@ for func in "${NEW_FUNCTIONS[@]}"; do
 done
 
 echo ""
+echo "📦 Deploying monetization functions..."
+
+MONETIZATION_FUNCTIONS=(
+  "export-analysis"
+  "stripe-webhook"
+)
+
+for func in "${MONETIZATION_FUNCTIONS[@]}"; do
+  if [ -d "supabase/functions/$func" ]; then
+    echo "  Deploying $func..."
+    supabase functions deploy "$func" --project-ref "$PROJECT_REF" --no-verify-jwt || echo "  ⚠️  Failed to deploy $func"
+  else
+    echo "  ⚠️  Skipping $func (not found)"
+  fi
+done
+
+echo ""
+echo "📦 Deploying Phase 2 functions (LMS, SSO, Enterprise)..."
+
+PHASE2_FUNCTIONS=(
+  "lti-launch"
+  "sso-auth"
+)
+
+for func in "${PHASE2_FUNCTIONS[@]}"; do
+  if [ -d "supabase/functions/$func" ]; then
+    echo "  Deploying $func..."
+    supabase functions deploy "$func" --project-ref "$PROJECT_REF" --no-verify-jwt || echo "  ⚠️  Failed to deploy $func"
+  else
+    echo "  ⚠️  Skipping $func (not found)"
+  fi
+done
+
+echo ""
 echo "✅ Deployment complete!"
 echo ""
 echo "Test with:"

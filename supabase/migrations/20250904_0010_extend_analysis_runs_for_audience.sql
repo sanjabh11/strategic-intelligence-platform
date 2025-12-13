@@ -93,10 +93,21 @@ ALTER TABLE public.asset_storage ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.game_definitions ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY IF NOT EXISTS read_human_reviews ON public.human_reviews FOR SELECT USING (true);
-CREATE POLICY IF NOT EXISTS read_asset_storage ON public.asset_storage FOR SELECT USING (true);
-CREATE POLICY IF NOT EXISTS read_users ON public.users FOR SELECT USING (true);
-CREATE POLICY IF NOT EXISTS read_game_definitions ON public.game_definitions FOR SELECT USING (true);
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE schemaname='public' AND tablename='human_reviews' AND policyname='read_human_reviews') THEN
+    CREATE POLICY read_human_reviews ON public.human_reviews FOR SELECT USING (true);
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE schemaname='public' AND tablename='asset_storage' AND policyname='read_asset_storage') THEN
+    CREATE POLICY read_asset_storage ON public.asset_storage FOR SELECT USING (true);
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE schemaname='public' AND tablename='users' AND policyname='read_users') THEN
+    CREATE POLICY read_users ON public.users FOR SELECT USING (true);
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE schemaname='public' AND tablename='game_definitions' AND policyname='read_game_definitions') THEN
+    CREATE POLICY read_game_definitions ON public.game_definitions FOR SELECT USING (true);
+  END IF;
+END$$;
 
 -- Indexes
 CREATE INDEX IF NOT EXISTS idx_human_reviews_analysis_id ON public.human_reviews (analysis_run_id);
@@ -111,10 +122,20 @@ CREATE INDEX IF NOT EXISTS idx_retrievals_id ON public.retrievals (id);
 
 -- RLS policies
 ALTER TABLE public.schema_failures ENABLE ROW LEVEL SECURITY;
-CREATE POLICY IF NOT EXISTS read_schema_failures ON public.schema_failures FOR SELECT USING (true);
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE schemaname='public' AND tablename='schema_failures' AND policyname='read_schema_failures') THEN
+    CREATE POLICY read_schema_failures ON public.schema_failures FOR SELECT USING (true);
+  END IF;
+END$$;
 
 ALTER TABLE public.retrievals ENABLE ROW LEVEL SECURITY;
-CREATE POLICY IF NOT EXISTS read_retrievals ON public.retrievals FOR SELECT USING (true);
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE schemaname='public' AND tablename='retrievals' AND policyname='read_retrievals') THEN
+    CREATE POLICY read_retrievals ON public.retrievals FOR SELECT USING (true);
+  END IF;
+END$$;
 
 ALTER TABLE public.user_overrides ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.simulation_runs ENABLE ROW LEVEL SECURITY;
@@ -122,9 +143,10 @@ ALTER TABLE public.simulation_runs ENABLE ROW LEVEL SECURITY;
 -- Add needs_review status support
 ALTER TABLE public.analysis_runs ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'queued' CHECK (status IN ('queued', 'processing', 'completed', 'failed', 'under_review', 'approved', 'rejected', 'needs_review'));
 
--- Create review queue view
-CREATE VIEW IF NOT EXISTS review_queue AS
-SELECT id, request_id, user_id, created_at, analysis_json->'provenance' as provenance, analysis_json->'summary'->'text' as summary_text
-FROM analysis_runs
-WHERE status = 'needs_review'
-ORDER BY created_at DESC;
+-- Create review queue view (Postgres doesn't support CREATE VIEW IF NOT EXISTS, so wrap in DO block)
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_class WHERE relname = 'review_queue' AND relnamespace = 'public'::regnamespace) THEN
+    EXECUTE 'CREATE VIEW public.review_queue AS SELECT id, request_id, user_id, created_at, analysis_json->''provenance'' as provenance, analysis_json->''summary''->''text'' as summary_text FROM public.analysis_runs WHERE status = ''needs_review'' ORDER BY created_at DESC';
+  END IF;
+END$$;

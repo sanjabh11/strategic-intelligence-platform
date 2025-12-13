@@ -15,86 +15,148 @@ AS $$
 $$;
 
 -- Enable RLS on review_queue view (views inherit from underlying table policies)
-ALTER VIEW review_queue SET (security_barrier = true);
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM pg_class c
+    JOIN pg_namespace n ON n.oid = c.relnamespace
+    WHERE n.nspname = 'public'
+      AND c.relname = 'review_queue'
+      AND c.relkind = 'v'
+  ) THEN
+    EXECUTE 'ALTER VIEW public.review_queue SET (security_barrier = true)';
+  END IF;
+END;
+$$;
 
 -- DROP existing open policies (need to replace with role-based access)
-DROP POLICY IF EXISTS read_human_reviews ON human_reviews;
-DROP POLICY IF EXISTS read_anon_runs ON analysis_runs;
-DROP POLICY IF EXISTS read_public_runs ON analysis_runs;
-DROP POLICY IF EXISTS read_runs ON analysis_runs;
+-- Wrap in DO block to handle missing tables gracefully
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM pg_class WHERE relname = 'human_reviews' AND relnamespace = 'public'::regnamespace) THEN
+    EXECUTE 'DROP POLICY IF EXISTS read_human_reviews ON public.human_reviews';
+  END IF;
+  IF EXISTS (SELECT 1 FROM pg_class WHERE relname = 'analysis_runs' AND relnamespace = 'public'::regnamespace) THEN
+    EXECUTE 'DROP POLICY IF EXISTS read_anon_runs ON public.analysis_runs';
+    EXECUTE 'DROP POLICY IF EXISTS read_public_runs ON public.analysis_runs';
+    EXECUTE 'DROP POLICY IF EXISTS read_runs ON public.analysis_runs';
+  END IF;
+END$$;
 
--- Human Reviews Policies
--- Reviewers can read all reviews for audit trail and history
-CREATE POLICY reviewer_read_human_reviews ON human_reviews
-  FOR SELECT
-  USING (get_user_role() = 'reviewer');
+-- Human Reviews Policies (wrapped for idempotency)
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM pg_class WHERE relname = 'human_reviews' AND relnamespace = 'public'::regnamespace) THEN
+    -- Reviewers can read all reviews
+    IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE schemaname='public' AND tablename='human_reviews' AND policyname='reviewer_read_human_reviews') THEN
+      CREATE POLICY reviewer_read_human_reviews ON public.human_reviews FOR SELECT USING (get_user_role() = 'reviewer');
+    END IF;
+    -- Reviewers can write their own reviews
+    IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE schemaname='public' AND tablename='human_reviews' AND policyname='reviewer_write_human_reviews') THEN
+      CREATE POLICY reviewer_write_human_reviews ON public.human_reviews FOR ALL USING (get_user_role() = 'reviewer' AND reviewer_id::uuid = auth.uid()) WITH CHECK (get_user_role() = 'reviewer');
+    END IF;
+    -- Admins have full access
+    IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE schemaname='public' AND tablename='human_reviews' AND policyname='admin_access_human_reviews') THEN
+      CREATE POLICY admin_access_human_reviews ON public.human_reviews FOR ALL USING (get_user_role() = 'admin');
+    END IF;
+  END IF;
+END$$;
 
--- Reviewers can create and update their own reviews
-CREATE POLICY reviewer_write_human_reviews ON human_reviews
-  FOR ALL
-  USING (get_user_role() = 'reviewer' AND reviewer_id::uuid = auth.uid())
-  WITH CHECK (get_user_role() = 'reviewer');
-
--- Admins have full access to all reviews
-CREATE POLICY admin_access_human_reviews ON human_reviews
-  FOR ALL
-  USING (get_user_role() = 'admin');
-
--- Analysis Runs Policies
--- Reviewers can read analysis runs that need review
-CREATE POLICY reviewer_read_analysis_runs ON analysis_runs
-  FOR SELECT
-  USING (
-    get_user_role() = 'reviewer' AND
-    status IN ('needs_review', 'under_review')
-  );
-
--- Reviewers can update analysis runs for status changes
-CREATE POLICY reviewer_update_analysis_runs ON analysis_runs
-  FOR UPDATE
-  USING (get_user_role() = 'reviewer' AND status IN ('needs_review', 'under_review'))
-  WITH CHECK (get_user_role() = 'reviewer');
-
--- Admins have full access to analysis runs
-CREATE POLICY admin_access_analysis_runs ON analysis_runs
-  FOR ALL
-  USING (get_user_role() = 'admin');
-
--- Regular users have no access to review-related data (as per requirements)
--- Allow public read for completed analyses not under review (optional enhancement)
--- This preserves existing anonymous read for non-sensitive data
-CREATE POLICY public_read_completed_runs ON analysis_runs
-  FOR SELECT
-  USING (
-    status NOT IN ('needs_review', 'under_review') AND
-    get_user_role() IS NULL  -- anonymous/public access only for completed runs
-  );
+-- Analysis Runs Policies (wrapped for idempotency)
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM pg_class WHERE relname = 'analysis_runs' AND relnamespace = 'public'::regnamespace) THEN
+    -- Reviewers can read analysis runs that need review
+    IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE schemaname='public' AND tablename='analysis_runs' AND policyname='reviewer_read_analysis_runs') THEN
+      CREATE POLICY reviewer_read_analysis_runs ON public.analysis_runs FOR SELECT USING (get_user_role() = 'reviewer' AND status IN ('needs_review', 'under_review'));
+    END IF;
+    -- Reviewers can update analysis runs for status changes
+    IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE schemaname='public' AND tablename='analysis_runs' AND policyname='reviewer_update_analysis_runs') THEN
+      CREATE POLICY reviewer_update_analysis_runs ON public.analysis_runs FOR UPDATE USING (get_user_role() = 'reviewer' AND status IN ('needs_review', 'under_review')) WITH CHECK (get_user_role() = 'reviewer');
+    END IF;
+    -- Admins have full access to analysis runs
+    IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE schemaname='public' AND tablename='analysis_runs' AND policyname='admin_access_analysis_runs') THEN
+      CREATE POLICY admin_access_analysis_runs ON public.analysis_runs FOR ALL USING (get_user_role() = 'admin');
+    END IF;
+    -- Public read for completed runs
+    IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE schemaname='public' AND tablename='analysis_runs' AND policyname='public_read_completed_runs') THEN
+      CREATE POLICY public_read_completed_runs ON public.analysis_runs FOR SELECT USING (status NOT IN ('needs_review', 'under_review') AND get_user_role() IS NULL);
+    END IF;
+  END IF;
+END$$;
 
 -- Review Queue Policies (inherits from analysis_runs, but explicit for clarity)
-CREATE POLICY reviewer_read_review_queue ON review_queue
-  FOR SELECT
-  USING (get_user_role() = 'reviewer');
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM pg_class c
+    JOIN pg_namespace n ON n.oid = c.relnamespace
+    WHERE n.nspname = 'public'
+      AND c.relname = 'review_queue'
+      AND c.relkind IN ('r', 'p')
+  ) THEN
+    EXECUTE 'DROP POLICY IF EXISTS reviewer_read_review_queue ON public.review_queue';
+    EXECUTE 'CREATE POLICY reviewer_read_review_queue ON public.review_queue FOR SELECT USING (get_user_role() = ''reviewer'')';
 
-CREATE POLICY admin_read_review_queue ON review_queue
-  FOR SELECT
-  USING (get_user_role() = 'admin');
+    EXECUTE 'DROP POLICY IF EXISTS admin_read_review_queue ON public.review_queue';
+    EXECUTE 'CREATE POLICY admin_read_review_queue ON public.review_queue FOR SELECT USING (get_user_role() = ''admin'')';
+  END IF;
+END;
+$$;
 
--- Performance indexes for role-based queries
--- Index on user roles for policy checks
-CREATE INDEX IF NOT EXISTS idx_users_role ON users (role);
-CREATE INDEX IF NOT EXISTS idx_users_auth_id ON users (auth_id);
+-- Performance indexes for role-based queries (wrapped for safety)
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM pg_class WHERE relname = 'users' AND relnamespace = 'public'::regnamespace) THEN
+    CREATE INDEX IF NOT EXISTS idx_users_role ON public.users (role);
+    CREATE INDEX IF NOT EXISTS idx_users_auth_id ON public.users (auth_id);
+  END IF;
+  IF EXISTS (SELECT 1 FROM pg_class WHERE relname = 'analysis_runs' AND relnamespace = 'public'::regnamespace) THEN
+    CREATE INDEX IF NOT EXISTS idx_analysis_runs_status_role_filter ON public.analysis_runs (status) WHERE status IN ('needs_review', 'under_review');
+  END IF;
+  IF EXISTS (SELECT 1 FROM pg_class WHERE relname = 'human_reviews' AND relnamespace = 'public'::regnamespace) THEN
+    CREATE INDEX IF NOT EXISTS idx_human_reviews_reviewer_role_auth ON public.human_reviews (reviewer_id) WHERE reviewer_id IS NOT NULL;
+  END IF;
+END$$;
 
--- Index on analysis_runs status for reviewer queries
-CREATE INDEX IF NOT EXISTS idx_analysis_runs_status_role_filter ON analysis_runs (status) WHERE status IN ('needs_review', 'under_review');
-
--- Index on human_reviews for role-based access
-CREATE INDEX IF NOT EXISTS idx_human_reviews_reviewer_role_auth ON human_reviews (reviewer_id) WHERE reviewer_id IS NOT NULL;
-
--- Comment for testing guidance
-COMMENT ON FUNCTION get_user_role() IS 'Returns user role from JWT for RLS policies. Assumes JWT sub claim matches users.auth_id';
-COMMENT ON TABLE human_reviews IS 'RLS enabled: reviewers see all reviews, admins full access, regular users none';
-COMMENT ON TABLE analysis_runs IS 'RLS enabled: reviewers see review-queue runs, admins full access, regular users none for review data';
-COMMENT ON VIEW review_queue IS 'RLS enabled: reviewers and admins can access review queue, regular users none';
+-- Comments for testing guidance (wrapped for safety)
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM pg_proc WHERE proname = 'get_user_role') THEN
+    EXECUTE 'COMMENT ON FUNCTION get_user_role() IS ''Returns user role from JWT for RLS policies. Assumes JWT sub claim matches users.auth_id''';
+  END IF;
+  IF EXISTS (SELECT 1 FROM pg_class WHERE relname = 'human_reviews' AND relnamespace = 'public'::regnamespace) THEN
+    EXECUTE 'COMMENT ON TABLE public.human_reviews IS ''RLS enabled: reviewers see all reviews, admins full access, regular users none''';
+  END IF;
+  IF EXISTS (SELECT 1 FROM pg_class WHERE relname = 'analysis_runs' AND relnamespace = 'public'::regnamespace) THEN
+    EXECUTE 'COMMENT ON TABLE public.analysis_runs IS ''RLS enabled: reviewers see review-queue runs, admins full access, regular users none for review data''';
+  END IF;
+END$$;
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM pg_class c
+    JOIN pg_namespace n ON n.oid = c.relnamespace
+    WHERE n.nspname = 'public'
+      AND c.relname = 'review_queue'
+      AND c.relkind = 'v'
+  ) THEN
+    EXECUTE 'COMMENT ON VIEW public.review_queue IS ''RLS enabled: reviewers and admins can access review queue, regular users none''';
+  ELSIF EXISTS (
+    SELECT 1
+    FROM pg_class c
+    JOIN pg_namespace n ON n.oid = c.relnamespace
+    WHERE n.nspname = 'public'
+      AND c.relname = 'review_queue'
+      AND c.relkind IN ('r', 'p')
+  ) THEN
+    EXECUTE 'COMMENT ON TABLE public.review_queue IS ''RLS enabled: reviewers and admins can access review queue, regular users none''';
+  END IF;
+END;
+$$;
 
 -- Test cases for policy verification:
 -- - Reviewer user: can SELECT human_reviews, SELECT analysis_runs WHERE status IN ('needs_review', 'under_review'), ALL on their human_reviews

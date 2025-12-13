@@ -11,7 +11,12 @@ CREATE TABLE IF NOT EXISTS public.third_party_noise (
 );
 
 ALTER TABLE public.third_party_noise ENABLE ROW LEVEL SECURITY;
-CREATE POLICY IF NOT EXISTS read_third_party_noise ON public.third_party_noise FOR SELECT USING (true);
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE schemaname='public' AND tablename='third_party_noise' AND policyname='read_third_party_noise') THEN
+    CREATE POLICY read_third_party_noise ON public.third_party_noise FOR SELECT USING (true);
+  END IF;
+END$$;
 
 -- monitoring_alerts: persistent dashboard alerts raised by edge functions
 CREATE TABLE IF NOT EXISTS public.monitoring_alerts (
@@ -25,7 +30,12 @@ CREATE TABLE IF NOT EXISTS public.monitoring_alerts (
 );
 
 ALTER TABLE public.monitoring_alerts ENABLE ROW LEVEL SECURITY;
-CREATE POLICY IF NOT EXISTS read_monitoring_alerts ON public.monitoring_alerts FOR SELECT USING (true);
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE schemaname='public' AND tablename='monitoring_alerts' AND policyname='read_monitoring_alerts') THEN
+    CREATE POLICY read_monitoring_alerts ON public.monitoring_alerts FOR SELECT USING (true);
+  END IF;
+END$$;
 CREATE INDEX IF NOT EXISTS idx_monitoring_alerts_status ON public.monitoring_alerts(status);
 CREATE INDEX IF NOT EXISTS idx_monitoring_alerts_type ON public.monitoring_alerts(alert_type);
 
@@ -40,5 +50,10 @@ CREATE TABLE IF NOT EXISTS public.rpc_errors (
 );
 
 ALTER TABLE public.rpc_errors ENABLE ROW LEVEL SECURITY;
-CREATE POLICY IF NOT EXISTS read_rpc_errors ON public.rpc_errors FOR SELECT USING (true);
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE schemaname='public' AND tablename='rpc_errors' AND policyname='read_rpc_errors') THEN
+    CREATE POLICY read_rpc_errors ON public.rpc_errors FOR SELECT USING (true);
+  END IF;
+END$$;
 CREATE INDEX IF NOT EXISTS idx_rpc_errors_created ON public.rpc_errors(created_at DESC);
