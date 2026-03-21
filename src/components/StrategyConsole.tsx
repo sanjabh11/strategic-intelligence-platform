@@ -8,11 +8,13 @@ import {
   FileText, Search, Loader2, CheckCircle2, AlertCircle, Clock,
   Atom, GitBranch, Layers, TrendingUp, Target, Info, Lock, Shield
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useStrategyAnalysis, getExampleScenarios } from '../hooks/useStrategyAnalysis';
 import { useSubscription, SubscriptionTier } from '../hooks/useSubscription';
 import { AudienceViewRouter } from './audience-views';
+import { assessForecastReadiness, assessPublishGovernance, getAnalysisFreshness, type ForecastGovernanceDraft } from '../lib/forecastGovernance';
 import type { AudienceAnalysisData } from '../types/audience-views';
-import { supabase } from '../lib/supabase';
+import { ENDPOINTS, getUserAuthHeaders, supabase } from '../lib/supabase';
 import WelcomeToConsole from './WelcomeToConsole';
 
 // Engine configuration with tier requirements
@@ -99,6 +101,7 @@ const tierHierarchy: Record<string, number> = {
 };
 
 const StrategyConsole: React.FC = () => {
+  const navigate = useNavigate();
   const {
     analysis,
     loading,
@@ -121,6 +124,23 @@ const StrategyConsole: React.FC = () => {
   const [audienceLoading, setAudienceLoading] = useState(false);
   const [showWelcome, setShowWelcome] = useState(true);
   const [analysisRunCount, setAnalysisRunCount] = useState(0);
+  const [analysisReviewState, setAnalysisReviewState] = useState<{
+    status: string | null;
+    reviewReason: string | null;
+    evidenceBacked: boolean | null;
+    createdAt: string | null;
+    loading: boolean;
+    requesting: boolean;
+    message: string | null;
+  }>({
+    status: null,
+    reviewReason: null,
+    evidenceBacked: null,
+    createdAt: null,
+    loading: false,
+    requesting: false,
+    message: null
+  });
 
   // Load run count from localStorage
   useEffect(() => {
@@ -129,6 +149,163 @@ const StrategyConsole: React.FC = () => {
   }, []);
 
   const exampleScenarios = getExampleScenarios();
+
+  const inferForecastCategory = (text: string): 'geopolitical' | 'financial' | 'technology' | 'economic' | 'social' | 'other' => {
+    const lower = text.toLowerCase();
+    if (/(war|sanction|nato|china|russia|border|diplomatic|election|conflict)/.test(lower)) return 'geopolitical';
+    if (/(gold|oil|stock|market|equity|bond|fx|currency|price)/.test(lower)) return 'financial';
+    if (/(gdp|inflation|rates|trade|economy|recession|growth)/.test(lower)) return 'economic';
+    if (/(ai|model|chip|software|platform|technology|compute)/.test(lower)) return 'technology';
+    if (/(society|public|consumer|population|social|labor)/.test(lower)) return 'social';
+    return 'other';
+  };
+
+  const buildForecastDraft = (): ForecastGovernanceDraft & {
+    description: string;
+    category: 'geopolitical' | 'financial' | 'technology' | 'economic' | 'social' | 'other';
+  } | null => {
+    if (!analysis?.multiAgentForecast) return null;
+
+    const multiAgentForecast = analysis.multiAgentForecast;
+    const scenarioText = analysis.scenario_text || prompt;
+    const category = inferForecastCategory(`${scenarioText} ${multiAgentForecast.question.question}`);
+    const tags = Array.from(new Set([
+      category,
+      'multi-agent',
+      'strategy-console',
+      ...(multiAgentForecast.question.questionType === 'directional' ? ['directional'] : ['binary'])
+    ])).join(', ');
+
+    return {
+      title: multiAgentForecast.question.title,
+      description: [
+        scenarioText,
+        `Champion consensus: ${(multiAgentForecast.consensus.champion.probability * 100).toFixed(1)}% with ${(multiAgentForecast.consensus.champion.confidence * 100).toFixed(0)}% confidence.`,
+        `Adversarial recommendation: ${multiAgentForecast.adversarialReview.recommendation}`
+      ].filter(Boolean).join('\n\n'),
+      category,
+      question: multiAgentForecast.question.question,
+      resolution_criteria: [
+        multiAgentForecast.question.resolutionCriteria,
+        `Primary source: ${multiAgentForecast.question.resolutionSource}.`,
+        `Fallback: ${multiAgentForecast.question.fallbackResolution}`
+      ].join(' '),
+      resolution_date: multiAgentForecast.question.closeTime ? multiAgentForecast.question.closeTime.slice(0, 10) : '',
+      tags,
+      analysis_run_id: analysisRunId || '',
+      game_theory_model: {
+        source: 'strategy-console',
+        multi_agent_forecast: {
+          champion: multiAgentForecast.consensus.champion,
+          challengers: multiAgentForecast.consensus.challengers,
+          confidenceBand: multiAgentForecast.consensus.confidenceBand,
+          disagreementIndex: multiAgentForecast.panel.disagreementIndex,
+          skepticProbability: multiAgentForecast.adversarialReview.skepticProbability,
+          contradictionPoints: multiAgentForecast.adversarialReview.contradictionPoints,
+          missingEvidence: multiAgentForecast.adversarialReview.missingEvidence,
+          evidenceCount: multiAgentForecast.metadata.evidenceCount
+        },
+        provenance: analysis.provenance || null
+      }
+    };
+  };
+
+  const handleCreateForecastDraft = () => {
+    const draft = buildForecastDraft();
+    if (!draft) return;
+
+    sessionStorage.setItem('forecast-registry-draft', JSON.stringify(draft));
+    navigate('/forecasts', { state: { prefillDraft: draft, openCreate: true } });
+  };
+
+  // Load audience data when analysis completes
+  useEffect(() => {
+    async function loadAudience() {
+      if (status === 'completed' && analysis && analysisRunId) {
+        setAudienceLoading(true);
+        setAnalysisReviewState(prev => ({ ...prev, loading: true }));
+        try {
+          const { data, error: qErr } = await supabase
+            .from('analysis_runs')
+            .select('analysis_json, status, review_reason, evidence_backed, created_at')
+            .eq('id', analysisRunId)
+            .maybeSingle();
+          
+          if (!qErr && data?.analysis_json) {
+            setAudienceData(data.analysis_json as AudienceAnalysisData);
+          }
+
+          if (!qErr && data) {
+            setAnalysisReviewState(prev => ({
+              ...prev,
+              status: typeof data.status === 'string' ? data.status : null,
+              reviewReason: typeof data.review_reason === 'string' ? data.review_reason : null,
+              evidenceBacked: typeof data.evidence_backed === 'boolean' ? data.evidence_backed : null,
+              createdAt: typeof data.created_at === 'string' ? data.created_at : null,
+              loading: false,
+              message: null
+            }));
+          } else {
+            setAnalysisReviewState(prev => ({ ...prev, loading: false }));
+          }
+        } catch (e) {
+          console.error('Failed to load audience analysis_json:', e);
+          setAnalysisReviewState(prev => ({ ...prev, loading: false }));
+        } finally {
+          setAudienceLoading(false);
+        }
+      } else {
+        setAnalysisReviewState({
+          status: null,
+          reviewReason: null,
+          evidenceBacked: null,
+          createdAt: null,
+          loading: false,
+          requesting: false,
+          message: null
+        });
+      }
+    }
+    loadAudience();
+  }, [status, analysis, analysisRunId]);
+
+  const handleRequestHumanReview = async () => {
+    if (!analysisRunId) {
+      return;
+    }
+
+    try {
+      setAnalysisReviewState(prev => ({ ...prev, requesting: true, message: null }));
+      const headers = await getUserAuthHeaders();
+      const response = await fetch(`${ENDPOINTS.HUMAN_REVIEW_POST}/${analysisRunId}/request-review`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          reason: 'Requested from Strategy Console after reviewing the forecast package'
+        })
+      });
+      const json = await response.json().catch(() => null);
+
+      if (!response.ok || !json?.ok) {
+        throw new Error(json?.message || 'Failed to request human review');
+      }
+
+      setAnalysisReviewState(prev => ({
+        ...prev,
+        status: typeof json.status === 'string' ? json.status : 'under_review',
+        reviewReason: typeof json.review_reason === 'string' ? json.review_reason : prev.reviewReason,
+        requesting: false,
+        message: typeof json.message === 'string' ? json.message : 'Analysis submitted for human review'
+      }));
+    } catch (e) {
+      console.error('Failed to request human review:', e);
+      setAnalysisReviewState(prev => ({
+        ...prev,
+        requesting: false,
+        message: e instanceof Error ? e.message : 'Failed to request human review'
+      }));
+    }
+  };
 
   // Check if engine is accessible for current tier
   const canAccessEngine = (engine: EngineConfig): boolean => {
@@ -152,31 +329,6 @@ const StrategyConsole: React.FC = () => {
     );
   };
 
-  // Load audience data when analysis completes
-  useEffect(() => {
-    async function loadAudience() {
-      if (status === 'completed' && analysis && analysisRunId) {
-        setAudienceLoading(true);
-        try {
-          const { data, error: qErr } = await supabase
-            .from('analysis_runs')
-            .select('analysis_json')
-            .eq('id', analysisRunId)
-            .maybeSingle();
-          
-          if (!qErr && data?.analysis_json) {
-            setAudienceData(data.analysis_json as AudienceAnalysisData);
-          }
-        } catch (e) {
-          console.error('Failed to load audience data:', e);
-        } finally {
-          setAudienceLoading(false);
-        }
-      }
-    }
-    loadAudience();
-  }, [status, analysis, analysisRunId]);
-
   // Run analysis handler
   const handleRunAnalysis = async () => {
     if (!prompt.trim()) return;
@@ -189,6 +341,341 @@ const StrategyConsole: React.FC = () => {
         iterations: selectedEngines.length > 2 ? 1000 : 500
       }
     });
+  };
+
+  const MultiAgentForecastPanel = () => {
+    const multiAgentForecast = analysis?.multiAgentForecast;
+    if (!multiAgentForecast) return null;
+
+    const champion = multiAgentForecast.consensus.champion;
+    const quality = multiAgentForecast.question.quality;
+    const disagreementPct = (multiAgentForecast.panel.disagreementIndex * 100).toFixed(0);
+    const reviewStatus = analysisReviewState.status;
+    const draft = buildForecastDraft();
+    const draftReadiness = draft ? assessForecastReadiness(draft) : null;
+    const draftGovernance = draft && draftReadiness
+      ? assessPublishGovernance(draft, draftReadiness, {
+          status: analysisReviewState.status,
+          reviewReason: analysisReviewState.reviewReason,
+          evidenceBacked: analysisReviewState.evidenceBacked,
+          createdAt: analysisReviewState.createdAt,
+          loading: analysisReviewState.loading
+        })
+      : null;
+    const analysisFreshness = getAnalysisFreshness(analysisReviewState.createdAt);
+    const reviewTone = reviewStatus === 'approved'
+      ? 'border-emerald-500/20 bg-emerald-500/5 text-emerald-200'
+      : reviewStatus === 'under_review' || reviewStatus === 'needs_review'
+        ? 'border-rose-500/20 bg-rose-500/5 text-rose-200'
+        : reviewStatus === 'rejected'
+          ? 'border-rose-500/20 bg-rose-500/5 text-rose-200'
+          : 'border-slate-700 bg-slate-900/60 text-slate-300';
+
+    return (
+      <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
+        <div className="flex items-start justify-between gap-4 mb-6">
+          <div>
+            <div className="flex items-center gap-2 text-white font-semibold text-lg">
+              <Brain className="w-5 h-5 text-cyan-400" />
+              Multi-Agent Prediction Engine
+            </div>
+            <p className="text-sm text-slate-400 mt-1">
+              Structured forecast question, specialist panel, adversarial review, and challenger consensus variants.
+            </p>
+          </div>
+          <div className="px-3 py-1.5 rounded-lg bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 text-sm font-medium">
+            {Math.round(champion.probability * 100)}% consensus
+          </div>
+        </div>
+
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-6 rounded-lg border border-cyan-500/20 bg-cyan-500/5 px-4 py-3">
+          <div>
+            <div className="text-sm font-medium text-cyan-200">Ready for the Forecast Registry lifecycle</div>
+            <div className="text-xs text-slate-400">Carry this structured forecast into a public draft with the same governance checks the registry will enforce.</div>
+          </div>
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              onClick={handleRequestHumanReview}
+              disabled={!analysisRunId || analysisReviewState.requesting || reviewStatus === 'under_review'}
+              className="px-4 py-2 bg-amber-500/90 hover:bg-amber-400 disabled:bg-slate-700 disabled:text-slate-400 text-slate-950 rounded-lg font-medium"
+            >
+              {analysisReviewState.requesting ? 'Requesting review…' : reviewStatus === 'under_review' ? 'Review Pending' : 'Request Human Review'}
+            </button>
+            <button
+              onClick={handleCreateForecastDraft}
+              className="px-4 py-2 bg-cyan-500 hover:bg-cyan-400 text-white rounded-lg font-medium"
+            >
+              Open Registry Draft
+            </button>
+          </div>
+        </div>
+
+        {draftGovernance && draftReadiness && (
+          <div className={`mb-6 rounded-lg border px-4 py-3 ${
+            draftGovernance.status === 'ready'
+              ? 'border-emerald-500/20 bg-emerald-500/5'
+              : draftGovernance.status === 'review_required'
+                ? 'border-amber-500/20 bg-amber-500/5'
+                : 'border-rose-500/20 bg-rose-500/5'
+          }`}>
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <div className="text-sm font-medium text-white">
+                  Registry publish governance preview: {draftGovernance.status === 'ready'
+                    ? 'Ready'
+                    : draftGovernance.status === 'review_required'
+                      ? 'Review required'
+                      : draftGovernance.status === 'blocked'
+                        ? 'Blocked'
+                        : 'Proceed with caution'}
+                </div>
+                <div className="text-xs text-slate-400 mt-1">
+                  Draft quality: {draftReadiness.status === 'strong' ? 'Strong' : draftReadiness.status === 'review' ? 'Needs review' : 'Needs work'}
+                </div>
+              </div>
+              {analysisFreshness && (
+                <span className={`px-2 py-1 rounded-full text-xs border ${analysisFreshness.tone}`}>
+                  {analysisFreshness.label}
+                </span>
+              )}
+            </div>
+            {draftGovernance.blockers.length > 0 && (
+              <div className="mt-3 space-y-1 text-xs text-rose-300">
+                {draftGovernance.blockers.map(issue => (
+                  <div key={issue}>{issue}</div>
+                ))}
+              </div>
+            )}
+            {draftGovernance.reviewRequired.length > 0 && (
+              <div className="mt-3 space-y-1 text-xs text-amber-200">
+                {draftGovernance.reviewRequired.map(item => (
+                  <div key={item}>{item}</div>
+                ))}
+              </div>
+            )}
+            {draftGovernance.warnings.length > 0 && (
+              <div className="mt-3 space-y-1 text-xs text-slate-300">
+                {draftGovernance.warnings.map(item => (
+                  <div key={item}>{item}</div>
+                ))}
+              </div>
+            )}
+            {draftGovernance.status !== 'ready' && (
+              <div className="mt-3 text-xs text-slate-400">
+                Opening the registry draft is still allowed so you can revise question quality or provenance before attempting public creation.
+              </div>
+            )}
+          </div>
+        )}
+
+        <div className={`mb-6 rounded-lg border px-4 py-3 ${reviewTone}`}>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <div className="text-sm font-medium text-white">Human review status: {analysisReviewState.loading ? 'Loading…' : reviewStatus ? reviewStatus.replace(/_/g, ' ') : 'not requested'}</div>
+              <div className="text-xs mt-1 text-slate-400">
+                {analysisReviewState.reviewReason || (analysisReviewState.evidenceBacked ? 'Evidence-backed analysis available for linked forecast provenance.' : 'Use human review for high-stakes or contested forecast packages.')}
+              </div>
+            </div>
+            {analysisRunId && (
+              <div className="text-xs text-slate-500 break-all">Analysis run `{analysisRunId}`</div>
+            )}
+          </div>
+          {analysisReviewState.message && (
+            <div className="mt-2 text-xs text-slate-300">{analysisReviewState.message}</div>
+          )}
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div className="bg-slate-900/60 rounded-lg p-4 border border-slate-700">
+            <div className="text-xs uppercase tracking-wide text-slate-500 mb-2">Champion</div>
+            <div className="text-3xl font-bold text-emerald-400">{(champion.probability * 100).toFixed(1)}%</div>
+            <div className="text-sm text-slate-400 mt-1">Confidence {(champion.confidence * 100).toFixed(0)}%</div>
+            <div className="text-xs text-slate-500 mt-2">{champion.method}</div>
+          </div>
+          <div className="bg-slate-900/60 rounded-lg p-4 border border-slate-700">
+            <div className="text-xs uppercase tracking-wide text-slate-500 mb-2">Question Quality</div>
+            <div className="text-3xl font-bold text-cyan-400">{(quality.overall * 100).toFixed(0)}%</div>
+            <div className="text-sm text-slate-400 mt-1">Clarity {(quality.clarity * 100).toFixed(0)}% · Resolvability {(quality.resolvability * 100).toFixed(0)}%</div>
+            <div className="text-xs text-slate-500 mt-2">Evidence coverage {(quality.evidenceCoverage * 100).toFixed(0)}%</div>
+          </div>
+          <div className="bg-slate-900/60 rounded-lg p-4 border border-slate-700">
+            <div className="text-xs uppercase tracking-wide text-slate-500 mb-2">Panel Disagreement</div>
+            <div className="text-3xl font-bold text-amber-400">{disagreementPct}%</div>
+            <div className="text-sm text-slate-400 mt-1">{multiAgentForecast.panel.agents.length} specialist agents</div>
+            <div className="text-xs text-slate-500 mt-2">Fresh evidence {multiAgentForecast.metadata.freshEvidenceCount}</div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+          <div className="bg-slate-900/60 rounded-lg p-4 border border-slate-700">
+            <div className="flex items-center gap-2 text-white font-medium mb-3">
+              <FileText className="w-4 h-4 text-cyan-400" />
+              Forecast Question Package
+            </div>
+            <div className="space-y-3 text-sm">
+              <div>
+                <div className="text-slate-500 text-xs mb-1">Title</div>
+                <div className="text-slate-200">{multiAgentForecast.question.title}</div>
+              </div>
+              <div>
+                <div className="text-slate-500 text-xs mb-1">Question</div>
+                <div className="text-slate-200">{multiAgentForecast.question.question}</div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div>
+                  <div className="text-slate-500 text-xs mb-1">Resolution Source</div>
+                  <div className="text-slate-300">{multiAgentForecast.question.resolutionSource}</div>
+                </div>
+                <div>
+                  <div className="text-slate-500 text-xs mb-1">Fallback Resolution</div>
+                  <div className="text-slate-300">{multiAgentForecast.question.fallbackResolution}</div>
+                </div>
+              </div>
+              <div>
+                <div className="text-slate-500 text-xs mb-1">Resolution Criteria</div>
+                <div className="text-slate-300">{multiAgentForecast.question.resolutionCriteria}</div>
+              </div>
+              {multiAgentForecast.question.quality.issues.length > 0 && (
+                <div>
+                  <div className="text-slate-500 text-xs mb-1">Question Issues</div>
+                  <div className="space-y-1">
+                    {multiAgentForecast.question.quality.issues.map((issue) => (
+                      <div key={issue} className="text-amber-300 bg-amber-500/10 border border-amber-500/20 rounded px-3 py-2">
+                        {issue}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="bg-slate-900/60 rounded-lg p-4 border border-slate-700">
+            <div className="flex items-center gap-2 text-white font-medium mb-3">
+              <AlertCircle className="w-4 h-4 text-amber-400" />
+              Adversarial Review
+            </div>
+            <div className="space-y-3 text-sm">
+              <div className="bg-slate-800 rounded-lg p-3 border border-slate-700">
+                <div className="text-slate-500 text-xs mb-1">Skeptic Probability</div>
+                <div className="text-amber-300 text-xl font-semibold">
+                  {(multiAgentForecast.adversarialReview.skepticProbability * 100).toFixed(1)}%
+                </div>
+              </div>
+              <div>
+                <div className="text-slate-500 text-xs mb-1">Recommendation</div>
+                <div className="text-slate-200">{multiAgentForecast.adversarialReview.recommendation}</div>
+              </div>
+              <div>
+                <div className="text-slate-500 text-xs mb-1">Contradiction Points</div>
+                <div className="space-y-1">
+                  {multiAgentForecast.adversarialReview.contradictionPoints.length > 0 ? multiAgentForecast.adversarialReview.contradictionPoints.map((point) => (
+                    <div key={point} className="text-slate-300 bg-slate-800 rounded px-3 py-2 border border-slate-700">{point}</div>
+                  )) : (
+                    <div className="text-slate-500 bg-slate-800 rounded px-3 py-2 border border-slate-700">No material contradictions surfaced in this pass.</div>
+                  )}
+                </div>
+              </div>
+              <div>
+                <div className="text-slate-500 text-xs mb-1">Missing Evidence</div>
+                <div className="space-y-1">
+                  {multiAgentForecast.adversarialReview.missingEvidence.length > 0 ? multiAgentForecast.adversarialReview.missingEvidence.map((item) => (
+                    <div key={item} className="text-amber-300 bg-amber-500/10 border border-amber-500/20 rounded px-3 py-2">{item}</div>
+                  )) : (
+                    <div className="text-slate-500 bg-slate-800 rounded px-3 py-2 border border-slate-700">No major evidence gaps were flagged by the skeptic layer.</div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="mb-6">
+          <div className="flex items-center gap-2 text-white font-medium mb-3">
+            <Target className="w-4 h-4 text-emerald-400" />
+            Specialist Agent Panel
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {multiAgentForecast.panel.agents.map((agent) => (
+              <div key={agent.id} className="bg-slate-900/60 rounded-lg p-4 border border-slate-700">
+                <div className="flex items-start justify-between gap-3 mb-3">
+                  <div>
+                    <div className="text-white font-medium">{agent.label}</div>
+                    <div className="text-xs text-slate-500">Weight {(agent.weight * 100).toFixed(0)}%</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-lg font-semibold text-cyan-300">{(agent.probability * 100).toFixed(1)}%</div>
+                    <div className="text-xs text-slate-500">Conf {(agent.confidence * 100).toFixed(0)}%</div>
+                  </div>
+                </div>
+                <p className="text-sm text-slate-300 mb-3">{agent.thesis}</p>
+                <div className="space-y-2">
+                  <div>
+                    <div className="text-xs text-slate-500 mb-1">Drivers</div>
+                    <div className="flex flex-wrap gap-2">
+                      {agent.drivers.map((driver) => (
+                        <span key={driver} className="text-xs px-2 py-1 rounded bg-slate-800 text-slate-300 border border-slate-700">
+                          {driver}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="text-xs text-slate-500 mb-1">Evidence IDs</div>
+                    <div className="text-xs text-slate-400">{agent.evidence_ids.length > 0 ? agent.evidence_ids.join(', ') : 'No linked evidence ids'}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className="bg-slate-900/60 rounded-lg p-4 border border-slate-700">
+            <div className="flex items-center gap-2 text-white font-medium mb-3">
+              <TrendingUp className="w-4 h-4 text-purple-400" />
+              Challenger Variants
+            </div>
+            <div className="space-y-2">
+              {multiAgentForecast.consensus.challengers.map((challenger) => (
+                <div key={challenger.id} className="flex items-center justify-between bg-slate-800 rounded-lg px-3 py-3 border border-slate-700">
+                  <div>
+                    <div className="text-sm text-slate-200">{challenger.label}</div>
+                    <div className="text-xs text-slate-500">{challenger.method}</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-sm font-semibold text-purple-300">{(challenger.probability * 100).toFixed(1)}%</div>
+                    <div className={`text-xs ${challenger.deltaFromChampion >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                      {challenger.deltaFromChampion >= 0 ? '+' : ''}{(challenger.deltaFromChampion * 100).toFixed(1)} pts
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="bg-slate-900/60 rounded-lg p-4 border border-slate-700">
+            <div className="flex items-center gap-2 text-white font-medium mb-3">
+              <Shield className="w-4 h-4 text-emerald-400" />
+              Execution Checkpoints
+            </div>
+            <div className="space-y-2">
+              {multiAgentForecast.consensus.executionCheckpoints.map((checkpoint) => (
+                <div key={checkpoint.id} className="bg-slate-800 rounded-lg px-3 py-3 border border-slate-700">
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="text-sm text-slate-200">{checkpoint.title}</div>
+                    <span className={`text-xs px-2 py-1 rounded-full ${checkpoint.status === 'pass' ? 'bg-emerald-500/20 text-emerald-300' : 'bg-amber-500/20 text-amber-300'}`}>
+                      {checkpoint.status}
+                    </span>
+                  </div>
+                  <div className="text-xs text-slate-500 mt-1">{checkpoint.detail}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   // Status configuration
@@ -484,6 +971,8 @@ const StrategyConsole: React.FC = () => {
               analysisRunId={analysisRunId || undefined}
               isLoading={audienceLoading}
             />
+
+            <MultiAgentForecastPanel />
           </div>
         )}
 

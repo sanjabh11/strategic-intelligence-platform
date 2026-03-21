@@ -9,5 +9,7 @@
 | PBI-04 | Analyst | As an analyst, I want symmetric strategy mining via pgvector. | Proposed | Vector search returns pattern_matches with calibrated scores. |
 | PBI-05 | Analyst | As a user, I want evidence retrieval and citations for analyses. | Proposed | retrievals populated; provenance.evidence_backed and retrieval_count accurate. |
 | PBI-07 | Operator | As an operator, I need system-status and health observability. | InReview | Endpoint reports DB/edge/worker/external APIs statuses and metrics. |
+| PBI-08 | Analyst | As an analyst, I want a canonical multi-agent prediction engine so the platform can turn evidence-backed scenarios into explicit, adversarially reviewed forecasts. | InProgress | Multi-agent forecast orchestration returns question specification, specialist-agent outputs, adversarial review, challenger comparisons, and consensus in the current analysis flow without new schema migrations. |
+
 
 

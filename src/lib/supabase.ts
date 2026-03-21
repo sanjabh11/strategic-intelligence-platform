@@ -24,6 +24,9 @@ export const ENDPOINTS = {
   SYSTEM_STATUS: `${API_BASE}/system-status`,
   HEALTH: `${API_BASE}/health`,
   ANALYZE_STREAM: `${API_BASE}/analyze-stream`,
+  MULTI_AGENT_FORECAST: `${API_BASE}/multi-agent-forecast`,
+  FORECAST_CREATE: `${API_BASE}/forecast-create`,
+  BRIER_WEIGHTED_CONSENSUS: `${API_BASE}/brier-weighted-consensus`,
   SYMMETRY_MINING: `${API_BASE}/symmetry-mining`,
   RECURSIVE_EQ: `${API_BASE}/recursive-equilibrium`,
   QUANTUM_STRATEGY: `${API_BASE}/quantum-strategy-service`,
@@ -49,5 +52,23 @@ export const getAuthHeaders = () => {
     headers['apikey'] = supabaseAnonKey
     headers['Authorization'] = `Bearer ${supabaseAnonKey}`
   }
+  return headers
+}
+
+export const getUserAuthHeaders = async () => {
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+  if (supabaseAnonKey) {
+    headers['apikey'] = supabaseAnonKey
+  }
+
+  const { data } = await supabase.auth.getSession()
+  const accessToken = data.session?.access_token
+
+  if (accessToken) {
+    headers['Authorization'] = `Bearer ${accessToken}`
+  } else if (supabaseAnonKey) {
+    headers['Authorization'] = `Bearer ${supabaseAnonKey}`
+  }
+
   return headers
 }

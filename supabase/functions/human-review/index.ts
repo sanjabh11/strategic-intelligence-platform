@@ -32,7 +32,12 @@ function buildAuthClient(req: Request) {
 function jsonResponse(status: number, body: unknown) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization, apikey, X-Client-Info'
+    },
   })
 }
 
@@ -57,6 +62,54 @@ async function getReviewerUser(req: Request): Promise<{ id: string; role: string
     return { id: authId, role }
   } catch {
     return null
+  }
+}
+
+async function handleRequestReview(analysisId: string, req: Request) {
+  const requester = await getReviewerUser(req)
+
+  if (!requester) {
+    return jsonResponse(401, { ok: false, message: 'Unauthorized' })
+  }
+
+  try {
+    const analysis = await getAnalysisRun(analysisId)
+
+    if (requester.role !== 'reviewer' && analysis.user_id !== requester.id) {
+      return jsonResponse(403, { ok: false, message: 'Forbidden - analysis owner or reviewer required' })
+    }
+
+    if (analysis.status === 'under_review') {
+      return jsonResponse(200, {
+        ok: true,
+        analysis_id: analysisId,
+        status: 'under_review',
+        message: 'Analysis is already pending human review'
+      })
+    }
+
+    const body = await req.json().catch(() => ({}))
+    const reason = typeof body.reason === 'string' && body.reason.trim().length > 0
+      ? body.reason.trim()
+      : 'Requested by analysis owner for additional human validation'
+
+    const flagged = await flagAnalysisForReview(analysisId, reason)
+
+    if (!flagged) {
+      return jsonResponse(500, { ok: false, message: 'Failed to submit analysis for review' })
+    }
+
+    return jsonResponse(200, {
+      ok: true,
+      analysis_id: analysisId,
+      status: 'under_review',
+      message: 'Analysis submitted for human review',
+      review_reason: reason
+    })
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e)
+    console.error('Request review error:', msg)
+    return jsonResponse(500, { ok: false, message: msg })
   }
 }
 
@@ -170,7 +223,17 @@ async function createHumanReview(analysisId: string, reviewerId: string, status:
 }
 
 // --- Route handlers ---
-async function handleReviewQueue() {
+async function handleReviewQueue(req: Request) {
+  const reviewer = await getReviewerUser(req)
+
+  if (!reviewer) {
+    return jsonResponse(401, { ok: false, message: 'Unauthorized' })
+  }
+
+  if (reviewer.role !== 'reviewer') {
+    return jsonResponse(403, { ok: false, message: 'Forbidden - reviewer role required' })
+  }
+
   try {
     const reviews = await getPendingReviews()
 
@@ -278,6 +341,10 @@ async function handleReview(analysisId: string, req: Request) {
 // --- Main handler ---
 Deno.serve(async (req) => {
   try {
+    if (req.method === 'OPTIONS') {
+      return jsonResponse(200, { ok: true })
+    }
+
     const url = new URL(req.url)
     const pathname = url.pathname
     const method = req.method
@@ -285,10 +352,16 @@ Deno.serve(async (req) => {
     // Normalize checks to support function mounted at /functions/v1/human-review
     const isReviewQueue = pathname.endsWith('/review_queue') || pathname.endsWith('/human-review/review_queue')
     const analysisReviewMatch = pathname.match(/\/functions\/v1\/(?:human-review\/)?analysis\/([^/]+)\/review$/)
+    const analysisRequestMatch = pathname.match(/\/functions\/v1\/(?:human-review\/)?analysis\/([^/]+)\/request-review$/)
 
     // GET .../review_queue
     if (method === 'GET' && isReviewQueue) {
-      return await handleReviewQueue()
+      return await handleReviewQueue(req)
+    }
+
+    if (method === 'POST' && analysisRequestMatch) {
+      const analysisId = analysisRequestMatch[1]
+      return await handleRequestReview(analysisId, req)
     }
 
     // POST .../analysis/{id}/review

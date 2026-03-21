@@ -170,14 +170,14 @@ export function useStrategyAnalysis(): UseStrategyAnalysisReturn {
   const [analysisRunId, setAnalysisRunId] = useState<string | null>(null);
   const [audience, setAudience] = useState<'student' | 'learner' | 'researcher' | 'teacher'>('learner');
 
-  const [statusCheckInterval, setStatusCheckInterval] = useState<NodeJS.Timeout | null>(null);
+  const [statusCheckInterval, setStatusCheckInterval] = useState<ReturnType<typeof setTimeout> | null>(null);
   const [pollAttempts, setPollAttempts] = useState(0);
   
   // Cleanup interval on unmount
   useEffect(() => {
     return () => {
       if (statusCheckInterval) {
-        clearInterval(statusCheckInterval);
+        clearTimeout(statusCheckInterval);
       }
     };
   }, [statusCheckInterval]);
@@ -192,7 +192,7 @@ export function useStrategyAnalysis(): UseStrategyAnalysisReturn {
     setPollAttempts(0);
     
     if (statusCheckInterval) {
-      clearInterval(statusCheckInterval);
+      clearTimeout(statusCheckInterval);
       setStatusCheckInterval(null);
     }
   }, [statusCheckInterval]);
@@ -272,7 +272,8 @@ export function useStrategyAnalysis(): UseStrategyAnalysisReturn {
           const enhanced = await enhanceAnalysisWithStrategicEngines(
             reqId || analysisRunId || crypto.randomUUID(),
             normalizedAnalysis.scenario_text || '',
-            (normalizedAnalysis as any).players
+            (normalizedAnalysis as any).players,
+            normalizedAnalysis
           );
           setAnalysis({
             ...(normalizedAnalysis as unknown as AnalysisResult),
@@ -304,40 +305,54 @@ export function useStrategyAnalysis(): UseStrategyAnalysisReturn {
   // Start status polling
   const startStatusPolling = useCallback((reqId: string) => {
     setPollAttempts(0);
+    let attempts = 0;
+    let stopped = false;
+    let activeTimeout: ReturnType<typeof setTimeout> | null = null;
+
+    const clearActiveTimeout = () => {
+      if (activeTimeout) {
+        clearTimeout(activeTimeout);
+        activeTimeout = null;
+      }
+      setStatusCheckInterval(null);
+    };
     
     const poll = async () => {
       const shouldStop = await checkAnalysisStatus(reqId);
       
-      if (shouldStop) {
-        if (statusCheckInterval) {
-          clearInterval(statusCheckInterval);
-          setStatusCheckInterval(null);
-        }
+      if (shouldStop || stopped) {
+        clearActiveTimeout();
         return;
       }
       
-      setPollAttempts(prev => prev + 1);
+      attempts += 1;
+      setPollAttempts(attempts);
+      const nextDelay = Math.min(8000, 2500 + attempts * 750);
+      activeTimeout = setTimeout(poll, nextDelay);
+      setStatusCheckInterval(activeTimeout);
     };
     
     // Initial check
     poll();
-    
-    // Set up polling interval
-    const interval = setInterval(poll, 2500); // Poll every 2.5 seconds
-    setStatusCheckInterval(interval);
-    
+
     // Timeout after 2 minutes
-    setTimeout(() => {
-      if (status === 'processing') {
-        clearInterval(interval);
-        setStatusCheckInterval(null);
+    const timeoutGuard = setTimeout(() => {
+      if (!stopped) {
+        stopped = true;
+        clearActiveTimeout();
         setError('Analysis timed out - computation is taking longer than expected');
         setStatus('failed');
         setLoading(false);
       }
     }, 120000); // 2 minutes timeout
+
+    return () => {
+      stopped = true;
+      clearTimeout(timeoutGuard);
+      clearActiveTimeout();
+    };
     
-  }, [checkAnalysisStatus, status, statusCheckInterval]);
+  }, [checkAnalysisStatus]);
   
   // Run analysis
   const runAnalysis = useCallback(async (request: AnalysisRequest) => {
@@ -359,7 +374,7 @@ export function useStrategyAnalysis(): UseStrategyAnalysisReturn {
         console.log('Using local analysis engine');
         const localResult = await analyzeLocally(request);
         const enhancedAnalysis = await enhanceAnalysisWithStrategicEngines(
-          crypto.randomUUID(), request.scenario_text, localResult.players
+          crypto.randomUUID(), request.scenario_text, localResult.players, localResult
         );
         setAnalysis({
           ...localResult,
@@ -411,11 +426,12 @@ export function useStrategyAnalysis(): UseStrategyAnalysisReturn {
       if (result.mode === 'fallback') {
         const base = result.analysis ?? (result.ok ? buildMinimalAnalysis(request.scenario_text) : null)
         if (base) {
+          const normalizedBase = normalizeAnalysisData(base) as AnalysisResult;
           const enhancedAnalysis = await enhanceAnalysisWithStrategicEngines(
-            result.analysis_run_id || result.request_id || '', request.scenario_text, (base as any).players
+            result.analysis_run_id || result.request_id || crypto.randomUUID(), request.scenario_text, normalizedBase.players, normalizedBase
           );
           setAnalysis({
-            ...(base as AnalysisResult),
+            ...normalizedBase,
             ...enhancedAnalysis
           });
         }
@@ -428,7 +444,7 @@ export function useStrategyAnalysis(): UseStrategyAnalysisReturn {
         // Fallback: if analysis provided but no request id
         const normalizedAnalysis = normalizeAnalysisData(result.analysis);
         const enhancedAnalysis = await enhanceAnalysisWithStrategicEngines(
-          result.analysis_run_id || crypto.randomUUID(), request.scenario_text, normalizedAnalysis.players
+          result.analysis_run_id || crypto.randomUUID(), request.scenario_text, normalizedAnalysis.players, normalizedAnalysis
         );
         setAnalysis({
           ...normalizedAnalysis,
@@ -440,7 +456,7 @@ export function useStrategyAnalysis(): UseStrategyAnalysisReturn {
         // Last resort client-side minimal synthesis to prevent UX breakage
         const base = buildMinimalAnalysis(request.scenario_text)
         const enhancedAnalysis = await enhanceAnalysisWithStrategicEngines(
-          result.analysis_run_id || crypto.randomUUID(), request.scenario_text, (base as any).players
+          result.analysis_run_id || crypto.randomUUID(), request.scenario_text, (base as any).players, base
         );
         setAnalysis({
           ...(base as AnalysisResult),
@@ -470,7 +486,7 @@ export function useStrategyAnalysis(): UseStrategyAnalysisReturn {
           // Fallback to local engine to keep UX unblocked
           const localResult = await analyzeLocally(request);
           const enhancedAnalysis = await enhanceAnalysisWithStrategicEngines(
-            crypto.randomUUID(), request.scenario_text, localResult.players
+            crypto.randomUUID(), request.scenario_text, localResult.players, localResult
           );
           setAnalysis({
             ...localResult,
@@ -518,7 +534,8 @@ export function useStrategyAnalysis(): UseStrategyAnalysisReturn {
 async function enhanceAnalysisWithStrategicEngines(
   analysisRunId: string,
   scenario: string,
-  players: any[] | undefined
+  players: any[] | undefined,
+  analysisContext?: Partial<AnalysisResult>
 ): Promise<any> {
 
   const enhancements = {
@@ -529,6 +546,7 @@ async function enhanceAnalysisWithStrategicEngines(
     informationValue: null,
     temporalOptimization: null,
     outcomeForecasting: null,
+    multiAgentForecast: null,
     strategySuccess: null,
     scaleInvariant: null,
     dynamicRecalibration: null
@@ -734,6 +752,31 @@ async function enhanceAnalysisWithStrategicEngines(
           const forecastArr = points.map((p: any) => ({ t: Number(p.t ?? 0), probability: Number(p.probability ?? 0) }));
           (enhancements as any).forecast = forecastArr;
         } catch {}
+      }
+    }
+
+    const multiAgentForecastResponse = await fetch(ENDPOINTS.MULTI_AGENT_FORECAST, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({
+        runId: analysisRunId,
+        scenario: {
+          title: scenario.slice(0, 120),
+          description: scenario,
+          horizonDays: 14
+        },
+        retrievals: Array.isArray(analysisContext?.retrievals) ? analysisContext.retrievals : [],
+        baseForecast: Array.isArray((enhancements as any).forecast)
+          ? (enhancements as any).forecast
+          : (Array.isArray(analysisContext?.forecast) ? analysisContext?.forecast : []),
+        provenance: analysisContext?.provenance
+      })
+    });
+
+    if (multiAgentForecastResponse.ok) {
+      const multiAgentForecastData = await multiAgentForecastResponse.json();
+      if (multiAgentForecastData.ok && multiAgentForecastData.response) {
+        enhancements.multiAgentForecast = multiAgentForecastData.response;
       }
     }
 

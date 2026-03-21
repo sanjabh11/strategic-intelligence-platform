@@ -38,6 +38,97 @@ export interface Retrieval {
   score?: number;
 }
 
+export interface MultiAgentForecastQuestionQuality {
+  clarity: number;
+  resolvability: number;
+  evidenceCoverage: number;
+  overall: number;
+  issues: string[];
+  requiresHumanRefinement?: boolean;
+}
+
+export interface MultiAgentForecastQuestion {
+  title: string;
+  question: string;
+  questionType: 'binary' | 'directional';
+  horizonDays: number;
+  closeTime: string;
+  resolutionSource: string;
+  fallbackResolution: string;
+  resolutionCriteria: string;
+  quality: MultiAgentForecastQuestionQuality;
+}
+
+export interface MultiAgentForecastAgent {
+  id: string;
+  label: string;
+  probability: number;
+  confidence: number;
+  weight: number;
+  thesis: string;
+  drivers: string[];
+  evidence_ids: string[];
+  objections: string[];
+}
+
+export interface MultiAgentForecastCheckpoint {
+  id: string;
+  title: string;
+  status: 'pass' | 'warn';
+  detail: string;
+}
+
+export interface MultiAgentForecastConsensusVariant {
+  id: string;
+  label: string;
+  probability: number;
+  confidence?: number;
+  method: string;
+  deltaFromChampion: number;
+}
+
+export interface MultiAgentForecastConsensus {
+  champion: {
+    probability: number;
+    confidence: number;
+    method: string;
+    rationale: string;
+  };
+  challengers: MultiAgentForecastConsensusVariant[];
+  confidenceBand: {
+    lower: number;
+    upper: number;
+  };
+  executionCheckpoints: MultiAgentForecastCheckpoint[];
+}
+
+export interface MultiAgentForecastAdversarialReview {
+  skepticProbability: number;
+  contradictionPoints: string[];
+  missingEvidence: string[];
+  overconfidenceRisk: number;
+  recommendation: string;
+}
+
+export interface MultiAgentForecastMetadata {
+  evidenceCount: number;
+  uniqueSourceCount: number;
+  freshEvidenceCount: number;
+  baseForecastProbability: number | null;
+  disagreementIndex: number;
+}
+
+export interface MultiAgentForecast {
+  question: MultiAgentForecastQuestion;
+  panel: {
+    agents: MultiAgentForecastAgent[];
+    disagreementIndex: number;
+  };
+  adversarialReview: MultiAgentForecastAdversarialReview;
+  consensus: MultiAgentForecastConsensus;
+  metadata: MultiAgentForecastMetadata;
+}
+
 export interface AnalysisResult {
   // Optional to match runtime schema; some flows synthesize minimal base
   scenario_text?: string;
@@ -88,6 +179,7 @@ export interface AnalysisResult {
   informationValue?: any;
   temporalOptimization?: any;
   outcomeForecasting?: any;
+  multiAgentForecast?: MultiAgentForecast;
   strategySuccess?: any;
   evpi_analysis?: any;
   outcome_forecasts?: any;

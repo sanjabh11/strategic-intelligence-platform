@@ -11,10 +11,12 @@ import GoldGameModule from './components/GoldGameModule';
 import ScenarioTemplateLibrary from './components/ScenarioTemplateLibrary';
 import ClassroomManager from './components/ClassroomManager';
 import ForecastRegistry from './components/ForecastRegistry';
+import HumanReview from './components/HumanReview';
 import PricingPage from './components/PricingPage';
-import { Brain, BarChart3, Settings, Sparkles, Globe, Coins, BookOpen, GraduationCap, TrendingUp, CreditCard } from 'lucide-react';
+import { Brain, BarChart3, Settings, Sparkles, Globe, Coins, BookOpen, GraduationCap, TrendingUp, CreditCard, MessageSquare } from 'lucide-react';
 import { LearningModeProvider, WelcomeMessage, LearningModeBadge, useLearningMode } from './components/explanations';
 import { useSubscription } from './hooks/useSubscription';
+import { useWhopAuth } from './hooks/useWhopAuth';
 
 // NavLink component for router-based navigation
 const NavButton: React.FC<{ to: string; icon: React.ElementType; label: string }> = ({ to, icon: Icon, label }) => {
@@ -39,6 +41,7 @@ const NavButton: React.FC<{ to: string; icon: React.ElementType; label: string }
 const AppContent: React.FC = () => {
   const { isLearningMode, toggleLearningMode } = useLearningMode();
   const { currentTier } = useSubscription();
+  const { session } = useWhopAuth();
   const navigate = useNavigate();
   
   // Check if user is admin (enterprise tier)
@@ -66,7 +69,10 @@ const AppContent: React.FC = () => {
               <NavButton to="/forecasts" icon={TrendingUp} label="Forecasts" />
               <NavButton to="/pricing" icon={CreditCard} label="Pricing" />
               {isAdmin && (
-                <NavButton to="/system" icon={Settings} label="System" />
+                <>
+                  <NavButton to="/reviews" icon={MessageSquare} label="Reviews" />
+                  <NavButton to="/system" icon={Settings} label="System" />
+                </>
               )}
             </div>
           </div>
@@ -107,7 +113,7 @@ const AppContent: React.FC = () => {
           <Route path="/forecasts" element={
             <div className="min-h-screen bg-slate-900 p-6">
               <div className="max-w-7xl mx-auto">
-                <ForecastRegistry userId="demo-user-id" />
+                <ForecastRegistry userId={session?.userId} />
               </div>
             </div>
           } />
@@ -119,6 +125,17 @@ const AppContent: React.FC = () => {
             </div>
           } />
           <Route path="/pricing" element={<PricingPage />} />
+          <Route path="/reviews" element={
+            isAdmin ? (
+              <div className="min-h-screen bg-slate-900 p-6">
+                <div className="max-w-6xl mx-auto">
+                  <HumanReview />
+                </div>
+              </div>
+            ) : (
+              <Navigate to="/console" replace />
+            )
+          } />
           
           {/* Admin-only system route */}
           <Route path="/system" element={

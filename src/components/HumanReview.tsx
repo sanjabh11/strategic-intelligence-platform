@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { CheckCircle, XCircle, AlertTriangle, Clock, Eye, FileText, Users, TrendingUp, Table, AlertCircle, MessageSquare } from 'lucide-react';
-import { ENDPOINTS, getAuthHeaders } from '../lib/supabase';
+import { ENDPOINTS, getAuthHeaders, getUserAuthHeaders } from '../lib/supabase';
 
 interface ReviewItem {
   id: string;
@@ -50,9 +50,10 @@ const HumanReview: React.FC = () => {
   const fetchReviews = async () => {
     try {
       setLoading(true);
+      const headers = await getUserAuthHeaders();
       const response = await fetch(ENDPOINTS.HUMAN_REVIEW_QUEUE, {
         method: 'GET',
-        headers: getAuthHeaders(),
+        headers,
       });
 
       if (!response.ok) {
@@ -79,10 +80,11 @@ const HumanReview: React.FC = () => {
       setSubmittingReview(analysisId);
       const reviewNotes = notes[analysisId] || '';
       const editedJson = editedData[analysisId];
+      const headers = await getUserAuthHeaders();
 
       const response = await fetch(`${ENDPOINTS.HUMAN_REVIEW_POST}/${analysisId}/review`, {
         method: 'POST',
-        headers: getAuthHeaders(),
+        headers,
         body: JSON.stringify({
           action,
           notes: reviewNotes,

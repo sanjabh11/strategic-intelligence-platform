@@ -247,9 +247,9 @@ Deno.serve(async (req) => {
         }
 
         const result = await calculateWeightedConsensus(supabase, body.forecastId);
+        const persistAggregate = body.persistAggregate === true;
 
-        // Update forecast with new weighted probability
-        if (result.participantCount > 0) {
+        if (persistAggregate && result.participantCount > 0) {
             await supabase
                 .from('forecasts')
                 .update({
