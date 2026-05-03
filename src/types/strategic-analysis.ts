@@ -1,4 +1,18 @@
 // TypeScript types for strategic analysis
+import type {
+  AttributionSummary,
+  CalibrationStatusLike,
+  ConstraintCheckSummary,
+  DriftSignalSummary,
+  GroundedEntityRef,
+} from '../../shared/mlAdvisory'
+import type {
+  CitizenForecastIntent,
+  CitizenRequiredInput,
+  ContextAlignmentSummary,
+  QuestionContextPayload,
+  PublicAnswer,
+} from '../../shared/publicForecasting'
 
 export interface Player {
   id: string;
@@ -27,6 +41,7 @@ export interface AnalysisRequest {
   options?: AnalysisOptions;
   mode?: 'standard' | 'education_quick';
   audience?: 'student' | 'learner' | 'researcher' | 'teacher';
+  question_context?: QuestionContextPayload;
 }
 
 export interface Retrieval {
@@ -36,6 +51,7 @@ export interface Retrieval {
   snippet: string;
   source?: string;
   score?: number;
+  grounded_entities?: GroundedEntityRef[];
 }
 
 export interface MultiAgentForecastQuestionQuality {
@@ -56,7 +72,11 @@ export interface MultiAgentForecastQuestion {
   resolutionSource: string;
   fallbackResolution: string;
   resolutionCriteria: string;
+  intent?: CitizenForecastIntent;
+  requiredInputs?: CitizenRequiredInput[];
+  horizonLabel?: string;
   quality: MultiAgentForecastQuestionQuality;
+  contextAlignment?: ContextAlignmentSummary;
 }
 
 export interface MultiAgentForecastAgent {
@@ -82,6 +102,11 @@ export interface MultiAgentForecastConsensusVariant {
   id: string;
   label: string;
   probability: number;
+  rawProbability?: number;
+  calibratedProbability?: number;
+  calibrationStatus?: CalibrationStatusLike;
+  calibrationVersion?: string | null;
+  calibrationSampleSize?: number;
   confidence?: number;
   method: string;
   deltaFromChampion: number;
@@ -90,6 +115,11 @@ export interface MultiAgentForecastConsensusVariant {
 export interface MultiAgentForecastConsensus {
   champion: {
     probability: number;
+    rawProbability: number;
+    calibratedProbability: number;
+    calibrationStatus: CalibrationStatusLike;
+    calibrationVersion?: string | null;
+    calibrationSampleSize?: number;
     confidence: number;
     method: string;
     rationale: string;
@@ -127,6 +157,7 @@ export interface MultiAgentForecast {
   adversarialReview: MultiAgentForecastAdversarialReview;
   consensus: MultiAgentForecastConsensus;
   metadata: MultiAgentForecastMetadata;
+  publicAnswer?: PublicAnswer;
 }
 
 export interface AnalysisResult {
@@ -167,6 +198,35 @@ export interface AnalysisResult {
     retrieval_ids?: string[];
     model: string;
     warning?: string;
+    grounded_entities?: GroundedEntityRef[];
+    retrieval_policy_id?: string;
+    prompt_policy_id?: string;
+    calibration_status?: CalibrationStatusLike;
+    llm_provider?: string;
+    failure_stage?: string;
+    failure_class?: string;
+    failure_detail?: string;
+    provider_attempts?: Array<{
+      provider: string;
+      model: string;
+      ok: boolean;
+      duration_ms?: number;
+      failure_stage?: string;
+      failure_class?: string;
+      http_status?: number | null;
+      error?: string;
+    }>;
+    retrieval_provider_summary?: {
+      normalizedEvidenceCount: number;
+      distinctProviderCount: number;
+      statuses: Array<{
+        provider: string;
+        status: 'success' | 'empty' | 'degraded' | 'auth_error' | 'rate_limited' | 'config_error';
+        source_count: number;
+        http_status?: number | null;
+        query_variant: string;
+      }>;
+    };
   };
   // Optional temporal forecast of outcome probability (0..1) over time t
   forecast?: Array<{ t: number | string; probability: number }>;
@@ -184,6 +244,9 @@ export interface AnalysisResult {
   evpi_analysis?: any;
   outcome_forecasts?: any;
   sources?: any[];
+  constraint_checks?: ConstraintCheckSummary;
+  drift_signal?: DriftSignalSummary | null;
+  attribution?: AttributionSummary | null;
 
   // Value of Information (VOI) summary
   voi?: {
@@ -191,6 +254,19 @@ export interface AnalysisResult {
     evpi: number;
     evppi: Record<string, number>;
   };
+
+  analysis_id?: string;
+  audience?: 'student' | 'learner' | 'researcher' | 'teacher';
+  summary?: {
+    text?: string;
+  };
+  disclaimer?: string;
+  question_context?: QuestionContextPayload;
+  expected_value_ranking?: Array<{
+    action: string;
+    ev: number;
+    ev_confidence?: number;
+  }>;
 }
 
 export type AnalysisStatus = 'idle' | 'queued' | 'processing' | 'completed' | 'failed';

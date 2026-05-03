@@ -1,13 +1,33 @@
 // Strategic analysis custom hook
 import { useState, useEffect, useCallback } from 'react';
 import { z } from 'zod';
-import { ENDPOINTS, getAuthHeaders, isLocalMode } from '../lib/supabase';
+import { ENDPOINTS, getAuthHeaders, isLocalMode, isLocalPreviewOrigin } from '../lib/supabase';
 import { analyzeLocally } from '../lib/localEngine';
 import type {
   AnalysisRequest,
   AnalysisResult,
-  AnalysisStatus
+  AnalysisStatus,
+  MultiAgentForecast
 } from '../types/strategic-analysis';
+import type { EducationMode } from '../types/education';
+import {
+  generatePlayerInteractions as generateEduPlayerInteractions,
+  generateDecisionAlternatives as generateEduDecisionAlternatives,
+  generateInformationNodes as generateEduInformationNodes,
+  generateCurrentBeliefs as generateEduCurrentBeliefs,
+  generateOutcomeScenarios as generateEduOutcomeScenarios,
+  generateDecayModels as generateEduDecayModels,
+  generateExternalFactors as generateEduExternalFactors,
+  type AnalysisMode as EduAnalysisMode
+} from '../lib/educationHelpers';
+import {
+  assessContextAlignment,
+  buildPublicAnswer,
+  buildQuestionPackageFromRoute,
+  routeCitizenQuestion,
+} from '../../shared/publicForecasting';
+
+const CalibrationStatusSchema = z.enum(['empirical', 'prior_smoothed', 'uncalibrated', 'missing_model', 'calibrated']);
 
 // Zod schemas for safe parsing of backend responses
 const PlayerSchema = z.union([
@@ -59,7 +79,15 @@ const RetrievalSchema = z.object({
   id: z.string(),
   title: z.string().optional(),
   url: z.string().optional(),
-  snippet: z.string().optional()
+  snippet: z.string().optional(),
+  grounded_entities: z.array(z.object({
+    entity_key: z.string(),
+    entity_type: z.string(),
+    domain: z.string(),
+    label: z.string(),
+    confidence: z.number(),
+    matched_text: z.string()
+  })).optional()
 });
 
 const ProcessingStatsSchema = z
@@ -69,14 +97,119 @@ const ProcessingStatsSchema = z
   })
   .optional();
 
+const ProviderAttemptSchema = z.object({
+  provider: z.string(),
+  model: z.string(),
+  ok: z.boolean(),
+  duration_ms: z.number().optional(),
+  failure_stage: z.string().optional(),
+  failure_class: z.string().optional(),
+  http_status: z.number().nullable().optional(),
+  error: z.string().optional(),
+});
+
 const ProvenanceSchema = z
   .object({
     evidence_backed: z.boolean().optional(),
     retrieval_count: z.number().optional(),
     model: z.string().optional(),
-    warning: z.string().optional()
+    provider: z.string().optional(),
+    warning: z.string().optional(),
+    llm_provider: z.string().optional(),
+    failure_stage: z.string().optional(),
+    failure_class: z.string().optional(),
+    failure_detail: z.string().optional(),
+    provider_attempts: z.array(ProviderAttemptSchema).optional(),
+    grounded_entities: z.array(z.object({
+      entity_key: z.string(),
+      entity_type: z.string(),
+      domain: z.string(),
+      label: z.string(),
+      confidence: z.number(),
+      matched_text: z.string()
+    })).optional(),
+    retrieval_policy_id: z.string().optional(),
+    prompt_policy_id: z.string().optional(),
+    calibration_status: CalibrationStatusSchema.optional(),
+    retrieval_provider_summary: z.object({
+      normalizedEvidenceCount: z.number(),
+      distinctProviderCount: z.number(),
+      statuses: z.array(z.object({
+        provider: z.string(),
+        status: z.enum(['success', 'empty', 'degraded', 'auth_error', 'rate_limited', 'config_error']),
+        source_count: z.number(),
+        http_status: z.number().nullable().optional(),
+        query_variant: z.string()
+      }))
+    }).optional()
   })
   .optional();
+
+const ConstraintCheckSummarySchema = z.object({
+  score: z.number(),
+  checks: z.array(z.object({
+    id: z.string(),
+    title: z.string(),
+    status: z.enum(['pass', 'warn', 'fail']),
+    detail: z.string(),
+    penalty: z.number()
+  }))
+}).optional()
+
+const DriftSignalSchema = z.object({
+  surface: z.string(),
+  scope_key: z.string(),
+  detector: z.string(),
+  score: z.number(),
+  threshold: z.number(),
+  state: z.enum(['stable', 'watch', 'triggered']),
+  metadata: z.record(z.unknown()).optional(),
+  triggered_at: z.string().optional()
+}).nullable().optional()
+
+const AttributionSummarySchema = z.object({
+  subjectType: z.string(),
+  drivers: z.array(z.object({
+    label: z.string(),
+    contribution: z.number(),
+    direction: z.enum(['positive', 'negative'])
+  })),
+  series: z.array(z.object({
+    label: z.string(),
+    value: z.number()
+  })).optional()
+}).nullable().optional()
+
+const QuestionContextSchema = z.object({
+  intent: z.string(),
+  decision_use: z.string().nullable().optional(),
+  country: z.string().nullable().optional(),
+  location: z.string().nullable().optional(),
+  time_horizon: z.string().nullable().optional(),
+  risk_tolerance: z.string().nullable().optional(),
+  currency: z.string().nullable().optional(),
+  answers: z.record(z.string()).optional(),
+  completeness_score: z.number().optional(),
+  clarification_status: z.enum(['ready', 'needs_input', 'blocked', 'out_of_scope']).optional(),
+  asked_question_ids: z.array(z.string()).optional(),
+  confidence: z.number().optional(),
+  normalized_prompt: z.string().optional(),
+  context_locked_fields: z.array(z.string()).optional(),
+  unresolved_dimensions: z.array(z.string()).optional(),
+  question_cluster: z.string().optional(),
+  required_inputs: z.array(z.object({
+    id: z.string(),
+    label: z.string(),
+    prompt: z.string(),
+    kind: z.enum(['text', 'select']),
+    options: z.array(z.string()).optional(),
+    required: z.boolean(),
+    blocking: z.boolean(),
+    reason: z.string(),
+    dimension: z.string(),
+    priority: z.number(),
+  })).optional(),
+}).optional()
 
 const ForecastPointSchema = z.object({
   t: z.union([z.number(), z.string()]),
@@ -95,7 +228,11 @@ const AnalysisResultSchema = z.object({
   retrieval_count: z.number().optional(),
   processing_stats: ProcessingStatsSchema,
   provenance: ProvenanceSchema,
-  forecast: z.array(ForecastPointSchema).optional()
+  question_context: QuestionContextSchema,
+  forecast: z.array(ForecastPointSchema).optional(),
+  constraint_checks: ConstraintCheckSummarySchema,
+  drift_signal: DriftSignalSchema,
+  attribution: AttributionSummarySchema,
 }).and(z.object({
   voi: z.object({
     ev_prior: z.number(),
@@ -107,18 +244,22 @@ const AnalysisResultSchema = z.object({
 const AnalyzeResponseSchema = z.object({
   ok: z.boolean(),
   request_id: z.string().optional(),
-  analysis_run_id: z.string().optional(),
+  analysis_run_id: z.string().nullable().optional(),
   analysis: AnalysisResultSchema.optional(),
+  provenance: ProvenanceSchema.optional(),
   mode: z.string().optional(),
   message: z.string().optional(),
   error: z.string().optional(),
   reason: z.string().optional(),
-  action: z.string().optional()
+  action: z.string().optional(),
+  failure_stage: z.string().optional(),
+  failure_class: z.string().optional(),
+  provider_attempts: z.array(ProviderAttemptSchema).optional(),
 });
 
 const StatusResponseSchema = z.object({
   ok: z.boolean(),
-  status: z.enum(['processing', 'completed']),
+  status: z.enum(['processing', 'completed', 'failed']),
   analysis: AnalysisResultSchema.optional(),
   message: z.string().optional()
 });
@@ -142,23 +283,223 @@ export interface UseStrategyAnalysisReturn {
   setAudience: (audience: 'student' | 'learner' | 'researcher' | 'teacher') => void;
 }
 
-// Helper: build a schema-compliant minimal AnalysisResult
-function buildMinimalAnalysis(scenario: string): AnalysisResult {
-  const playersObj = [{ id: 'P1', name: 'Player 1', actions: ['wait'] }]
-  const profile: Record<string, Record<string, { value: number; confidence: number; sources: any[] }>> = {
-    P1: { wait: { value: 0, confidence: 0, sources: [] } }
-  }
+function clampValue(value: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, value));
+}
+
+function buildLocalMultiAgentForecast(analysis: AnalysisResult): MultiAgentForecast {
+  const scenario = analysis.scenario_text?.trim() || 'Strategic scenario';
+  const lowerScenario = scenario.toLowerCase();
+  const directional = /(price|rise|fall|increase|decrease|surge|drop|move|gain|loss)/.test(lowerScenario);
+  const retrievals = Array.isArray(analysis.retrievals) ? analysis.retrievals : [];
+  const evidenceCount = retrievals.length;
+  const uniqueSourceCount = new Set(retrievals.map(retrieval => retrieval.source || retrieval.url || retrieval.id || 'unknown')).size;
+  const freshEvidenceCount = retrievals.filter(retrieval => /202[4-9]|today|latest|recent/i.test(`${retrieval.title || ''} ${retrieval.snippet || ''}`)).length;
+  const baseForecast = Array.isArray(analysis.forecast) ? analysis.forecast : [];
+  const lastForecastProbability = typeof baseForecast[baseForecast.length - 1]?.probability === 'number'
+    ? Number(baseForecast[baseForecast.length - 1]?.probability)
+    : null;
+  const stabilityAnchor = typeof analysis.equilibrium?.stability === 'number' ? analysis.equilibrium.stability : 0.5;
+  const baseProbability = clampValue(lastForecastProbability ?? (0.42 + stabilityAnchor * 0.18), 0.05, 0.95);
+  const evidenceCoverage = clampValue(evidenceCount / 3, 0, 1);
+  const firstSentence = scenario.split(/[.?!]/).map(part => part.trim()).find(Boolean) || scenario;
+  const questionContext = analysis.question_context;
+  const route = routeCitizenQuestion(scenario, questionContext);
+  const clarity = clampValue(firstSentence.length > 30 ? 0.82 : 0.7, 0.6, 0.9);
+  const resolvability = clampValue((directional ? 0.82 : 0.74) + (baseForecast.length > 0 ? 0.08 : 0) + (analysis.provenance?.evidence_backed ? 0.05 : 0), 0.58, 0.95);
+  const overall = clampValue((clarity * 0.35) + (resolvability * 0.35) + (evidenceCoverage * 0.3), 0, 1);
+  const disagreementIndex = clampValue(0.2 - (evidenceCoverage * 0.08) + (analysis.provenance?.evidence_backed ? -0.03 : 0.04), 0.05, 0.32);
+  const horizonDays = route.horizonDays;
+  const alignment = assessContextAlignment({
+    route,
+    questionContext,
+    evidenceBacked: analysis.provenance?.evidence_backed === true,
+    retrievalCount: analysis.provenance?.retrieval_count || evidenceCount,
+    distinctProviderCount: analysis.provenance?.retrieval_provider_summary?.distinctProviderCount || uniqueSourceCount,
+  });
+  const question = {
+    ...buildQuestionPackageFromRoute(route, {
+      title: firstSentence.slice(0, 100),
+      horizonDays,
+    }),
+    intent: route.intent,
+    requiredInputs: route.requiredInputs,
+    horizonLabel: route.horizonLabel,
+    contextAlignment: alignment,
+    quality: {
+      clarity,
+      resolvability,
+      evidenceCoverage,
+      overall,
+      issues: [
+        ...(route.requiredInputs.length > 0
+          ? [`This question still needs ${route.requiredInputs.map((entry) => entry.label.toLowerCase()).join(', ')} before it should be treated as a personal or local forecast.`]
+          : []),
+        ...(evidenceCount < 3 ? ['Evidence bundle is thin; specialist probabilities should be treated as provisional.'] : []),
+        ...(baseForecast.length === 0 ? ['No baseline temporal forecast curve was available for anchoring.'] : [])
+      ],
+      requiresHumanRefinement: overall < 0.72 || route.requiredInputs.length > 0
+    }
+  };
+  const agentProbabilities = [
+    { id: 'geopolitics', label: 'Geopolitics Agent', weight: 0.32, offset: 0.04, thesis: 'The forecast depends primarily on state incentives, alliance posture, and escalation management.' },
+    { id: 'commodities', label: 'Commodities Agent', weight: 0.23, offset: 0.01, thesis: 'The forecast is transmitted through safe-haven demand, supply constraints, and commodity repricing.' },
+    { id: 'macro', label: 'Macro Agent', weight: 0.25, offset: -0.01, thesis: 'The forecast is governed by macro spillovers, liquidity conditions, and policy expectations.' },
+    { id: 'risk', label: 'Risk Agent', weight: 0.2, offset: -0.05, thesis: 'The forecast should be discounted for ambiguity, weak evidence, and nonlinear downside scenarios.' }
+  ].map(agent => ({
+    id: agent.id,
+    label: agent.label,
+    probability: clampValue(baseProbability + agent.offset - disagreementIndex * (agent.id === 'risk' ? 0.18 : 0.06), 0.05, 0.95),
+    confidence: clampValue(0.52 + evidenceCoverage * 0.18 - disagreementIndex * 0.15, 0.35, 0.88),
+    weight: agent.weight,
+    thesis: agent.thesis,
+    drivers: [
+      evidenceCount > 0 ? 'Shared evidence bundle contains cited external reporting.' : 'No retrieval bundle was available; lower confidence is required.',
+      directional ? 'The scenario implies a directional move that can be tracked over time.' : 'The scenario is event-oriented and requires explicit public resolution criteria.',
+      analysis.provenance?.evidence_backed ? 'Underlying analysis reports evidence-backed provenance.' : 'Underlying analysis is fallback-derived and should stay review-visible.'
+    ],
+    evidence_ids: retrievals.slice(0, agent.id === 'macro' ? 3 : 2).map(retrieval => retrieval.id),
+    objections: agent.id === 'risk'
+      ? ['Consensus may be overconfident relative to evidence density.', 'A single unmodeled shock could dominate the base case.']
+      : ['Evidence density may still be insufficient for public deployment.', 'The scenario framing may compress alternative paths.']
+  }));
+  const championProbability = clampValue(agentProbabilities.reduce((sum, agent) => sum + agent.probability * agent.weight, 0), 0.05, 0.95);
+  const championConfidence = clampValue(agentProbabilities.reduce((sum, agent) => sum + agent.confidence, 0) / agentProbabilities.length - disagreementIndex * 0.12, 0.3, 0.9);
+  const sortedProbabilities = agentProbabilities.map(agent => agent.probability).sort((a, b) => a - b);
+  const equalWeightProbability = agentProbabilities.reduce((sum, agent) => sum + agent.probability, 0) / agentProbabilities.length;
+  const trimmedProbability = sortedProbabilities.length > 2 ? (sortedProbabilities[1] + sortedProbabilities[2]) / 2 : equalWeightProbability;
+  const skepticAdjustedProbability = clampValue(championProbability - disagreementIndex * 0.15 - (overall < 0.72 ? 0.04 : 0), 0.03, 0.97);
+  const contradictionPoints = [
+    ...(disagreementIndex > 0.18 ? ['Specialist agents disagree materially on immediate impact magnitude.'] : []),
+    ...(evidenceCount < 3 ? ['Evidence density is low relative to a production-grade forecast question.'] : []),
+    ...(question.questionType === 'binary' ? ['The question is scoreable, but later phases should tighten directional measurement where possible.'] : [])
+  ];
+  const missingEvidence = [
+    ...(evidenceCount < 3 ? ['More external sources are needed before public testing.'] : []),
+    ...(uniqueSourceCount < 2 && evidenceCount > 0 ? ['Source diversity is limited; correlated reporting risk remains.'] : []),
+    ...(lastForecastProbability === null ? ['No baseline temporal forecast curve was available for anchoring.'] : [])
+  ];
+
   return {
-    scenario_text: scenario,
-    players: playersObj,
-    equilibrium: { profile, stability: 0, method: 'heuristic' },
-    quantum: undefined,
-    processing_stats: { processing_time_ms: 0, stability_score: 0 },
-    provenance: { evidence_backed: false, retrieval_count: 0, model: 'n/a' },
-    retrievals: [],
-    pattern_matches: [],
-    forecast: []
+    question,
+    panel: {
+      agents: agentProbabilities,
+      disagreementIndex
+    },
+    adversarialReview: {
+      skepticProbability: clampValue(skepticAdjustedProbability - 0.03, 0.02, 0.95),
+      contradictionPoints,
+      missingEvidence,
+      overconfidenceRisk: clampValue(disagreementIndex * 0.65 + (1 - evidenceCoverage) * 0.35, 0, 1),
+      recommendation: overall >= 0.72 && evidenceCount >= 3
+        ? 'Use the champion consensus with challenger deltas visible and keep skeptic review attached.'
+        : 'Treat this as an analyst-assist forecast until live evidence or human review strengthens provenance.'
+    },
+    consensus: {
+      champion: {
+        probability: championProbability,
+        rawProbability: championProbability,
+        calibratedProbability: championProbability,
+        calibrationStatus: 'uncalibrated',
+        calibrationVersion: null,
+        calibrationSampleSize: 0,
+        confidence: championConfidence,
+        method: 'local fallback consensus',
+        rationale: 'Deterministic local specialist synthesis used because remote forecast packaging was unavailable.'
+      },
+      challengers: [
+        {
+          id: 'equal_weight',
+          label: 'Equal-Weight Challenger',
+          probability: equalWeightProbability,
+          confidence: clampValue(championConfidence - 0.03, 0.2, 0.9),
+          method: 'simple mean',
+          deltaFromChampion: equalWeightProbability - championProbability
+        },
+        {
+          id: 'trimmed_mean',
+          label: 'Trimmed-Mean Challenger',
+          probability: trimmedProbability,
+          confidence: clampValue(championConfidence - 0.02, 0.2, 0.88),
+          method: 'drop extreme agent view',
+          deltaFromChampion: trimmedProbability - championProbability
+        },
+        {
+          id: 'skeptic_adjusted',
+          label: 'Skeptic-Adjusted Challenger',
+          probability: skepticAdjustedProbability,
+          confidence: clampValue(championConfidence - 0.05, 0.2, 0.85),
+          method: 'champion minus disagreement penalty',
+          deltaFromChampion: skepticAdjustedProbability - championProbability
+        }
+      ],
+      confidenceBand: {
+        lower: clampValue(championProbability - (0.06 + disagreementIndex * 0.18), 0, 1),
+        upper: clampValue(championProbability + (0.06 + disagreementIndex * 0.18), 0, 1)
+      },
+      executionCheckpoints: [
+        {
+          id: 'question-quality',
+          title: 'Question quality gate',
+          status: overall >= 0.72 ? 'pass' : 'warn',
+          detail: overall >= 0.72 ? 'Forecast question is explicit enough to score later.' : 'Question wording should be refined before operational use.'
+        },
+        {
+          id: 'evidence-density',
+          title: 'Evidence sufficiency gate',
+          status: evidenceCount >= 3 ? 'pass' : 'warn',
+          detail: evidenceCount >= 3 ? `Shared evidence bundle contains ${evidenceCount} retrievals.` : 'Evidence bundle is sparse and should lower deployment confidence.'
+        },
+        {
+          id: 'disagreement-review',
+          title: 'Panel disagreement review',
+          status: disagreementIndex <= 0.18 ? 'pass' : 'warn',
+          detail: disagreementIndex <= 0.18 ? 'Specialist panel is directionally aligned.' : 'Panel disagreement is material and should remain visible in the UI.'
+        },
+        {
+          id: 'champion-challenger',
+          title: 'Champion vs challenger comparison',
+          status: Math.abs(skepticAdjustedProbability - championProbability) <= 0.08 ? 'pass' : 'warn',
+          detail: Math.abs(skepticAdjustedProbability - championProbability) <= 0.08 ? 'Shadow challengers are close to the champion consensus.' : 'Alternative aggregation rules differ materially; treat this as unstable.'
+        }
+      ]
+    },
+    metadata: {
+      evidenceCount,
+      uniqueSourceCount,
+      freshEvidenceCount,
+      baseForecastProbability: lastForecastProbability,
+      disagreementIndex
+    },
+    publicAnswer: buildPublicAnswer({
+      prompt: scenario,
+      summary: analysis.summary?.text || scenario,
+      route,
+      probability: championProbability,
+      confidence: championConfidence,
+      evidenceBacked: analysis.provenance?.evidence_backed === true,
+      retrievalCount: analysis.provenance?.retrieval_count || evidenceCount,
+      distinctProviderCount: analysis.provenance?.retrieval_provider_summary?.distinctProviderCount || uniqueSourceCount,
+      disagreementIndex,
+      contradictionPoints,
+      missingEvidence,
+      questionContext,
+      alignment,
+    }),
+  };
+}
+
+function finalizeAnalysisResult(baseAnalysis: AnalysisResult, enhancedAnalysis?: Partial<AnalysisResult> | null): AnalysisResult {
+  const merged = {
+    ...baseAnalysis,
+    ...(enhancedAnalysis || {})
+  } as AnalysisResult;
+
+  if (!merged.multiAgentForecast) {
+    merged.multiAgentForecast = buildLocalMultiAgentForecast(merged);
   }
+
+  return merged;
 }
 
 export function useStrategyAnalysis(): UseStrategyAnalysisReturn {
@@ -275,13 +616,9 @@ export function useStrategyAnalysis(): UseStrategyAnalysisReturn {
             (normalizedAnalysis as any).players,
             normalizedAnalysis
           );
-          setAnalysis({
-            ...(normalizedAnalysis as unknown as AnalysisResult),
-            ...enhanced
-          });
+          setAnalysis(finalizeAnalysisResult(normalizedAnalysis as unknown as AnalysisResult, enhanced));
         } catch (e) {
-          // Fall back to base analysis if enhancement calls fail
-          setAnalysis(normalizedAnalysis as unknown as AnalysisResult);
+          setAnalysis(finalizeAnalysisResult(normalizedAnalysis as unknown as AnalysisResult));
         }
         setStatus('completed');
         setLoading(false);
@@ -364,6 +701,23 @@ export function useStrategyAnalysis(): UseStrategyAnalysisReturn {
     try {
       // Analysis request submitted;
 
+      // Prefer the deterministic local path during localhost preview QA.
+      if (isLocalPreviewOrigin) {
+        console.log('Using local preview analysis engine');
+        const localRunId = crypto.randomUUID();
+        setAnalysisRunId(localRunId);
+        const localResult = await analyzeLocally(request);
+        (localResult as AnalysisResult).question_context = request.question_context;
+        const enhancedAnalysis = await enhanceAnalysisWithStrategicEngines(
+          localRunId, request.scenario_text, localResult.players, localResult, request.question_context
+        );
+        setAnalysis(finalizeAnalysisResult(localResult, enhancedAnalysis));
+        setError(null);
+        setStatus('completed');
+        setLoading(false);
+        return;
+      }
+
       // Check if local mode is enabled; block in production builds
       if (isLocalMode) {
         // Vite exposes PROD flag at build time
@@ -372,25 +726,30 @@ export function useStrategyAnalysis(): UseStrategyAnalysisReturn {
           throw new Error('Local demo engine is disabled in production builds. Please configure Supabase endpoints.');
         }
         console.log('Using local analysis engine');
+        const localRunId = crypto.randomUUID();
+        setAnalysisRunId(localRunId);
         const localResult = await analyzeLocally(request);
+        (localResult as AnalysisResult).question_context = request.question_context;
         const enhancedAnalysis = await enhanceAnalysisWithStrategicEngines(
-          crypto.randomUUID(), request.scenario_text, localResult.players, localResult
+          localRunId, request.scenario_text, localResult.players, localResult, request.question_context
         );
-        setAnalysis({
-          ...localResult,
-          ...enhancedAnalysis
-        });
+        setAnalysis(finalizeAnalysisResult(localResult, enhancedAnalysis));
         setStatus('completed');
         setLoading(false);
         return;
       }
 
       // Use API for production flow
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30s timeout
+
       const response = await fetch(ENDPOINTS.ANALYZE, {
         method: 'POST',
         headers: getAuthHeaders(),
-        body: JSON.stringify({ ...request, audience })
+        body: JSON.stringify({ ...request, audience }),
+        signal: controller.signal
       });
+      clearTimeout(timeoutId);
       const raw = await response.text();
       const json = (() => {
         try { return JSON.parse(raw); } catch { return null; }
@@ -400,6 +759,16 @@ export function useStrategyAnalysis(): UseStrategyAnalysisReturn {
         const msg = json && typeof json === 'object' && 'message' in (json as any)
           ? (json as any).message
           : raw || response.statusText;
+
+        if (
+          response.status === 502 &&
+          json &&
+          typeof json === 'object' &&
+          ((((json as any).error === 'llm_failed') || ((json as any).error === 'llm_exception')))
+        ) {
+          throw new Error(`Hosted analysis backend degraded before producing a verified result: ${msg}`);
+        }
+
         throw new Error(`Analyze HTTP ${response.status}: ${msg}`);
       }
 
@@ -424,46 +793,47 @@ export function useStrategyAnalysis(): UseStrategyAnalysisReturn {
       if (result.analysis_run_id) setAnalysisRunId(result.analysis_run_id);
 
       if (result.mode === 'fallback') {
-        const base = result.analysis ?? (result.ok ? buildMinimalAnalysis(request.scenario_text) : null)
-        if (base) {
-          const normalizedBase = normalizeAnalysisData(base) as AnalysisResult;
+        if (result.analysis) {
+          const fallbackRunId = result.analysis_run_id || result.request_id || crypto.randomUUID();
+          setAnalysisRunId(fallbackRunId);
+          const normalizedBase = normalizeAnalysisData(result.analysis) as AnalysisResult;
+          normalizedBase.question_context = normalizedBase.question_context || request.question_context;
           const enhancedAnalysis = await enhanceAnalysisWithStrategicEngines(
-            result.analysis_run_id || result.request_id || crypto.randomUUID(), request.scenario_text, normalizedBase.players, normalizedBase
+            fallbackRunId, request.scenario_text, normalizedBase.players, normalizedBase, normalizedBase.question_context
           );
-          setAnalysis({
-            ...normalizedBase,
-            ...enhancedAnalysis
-          });
+          setAnalysis(finalizeAnalysisResult(normalizedBase, enhancedAnalysis));
+          const failureClass = result.provenance?.failure_class || normalizedBase.provenance?.failure_class;
+          const fallbackMessage = failureClass === 'quota_exceeded'
+            ? `${result.message || 'Hosted synthesis hit a provider quota limit.'} Public answers remain withheld until a working fallback provider succeeds.`
+            : failureClass === 'config_missing'
+              ? `${result.message || 'Hosted synthesis has no configured fallback provider.'} Public answers remain withheld until a secondary provider key is configured.`
+              : failureClass === 'provider_failure'
+                ? `${result.message || 'Hosted synthesis is temporarily unavailable.'} Public answers remain withheld until a verified provider completes the run.`
+              : result.message || 'Hosted analysis returned a degraded fallback package. Keep the result review-visible.';
+          setError(fallbackMessage);
+          setStatus('completed');
+          setLoading(false);
+          return;
         }
-        setStatus('completed');
-        setLoading(false);
+
+        throw new Error('Hosted analysis returned fallback mode without a usable analysis payload.');
       } else if (result.request_id) {
         setStatus('processing');
         startStatusPolling(result.request_id);
       } else if (result.analysis) {
         // Fallback: if analysis provided but no request id
         const normalizedAnalysis = normalizeAnalysisData(result.analysis);
+        normalizedAnalysis.question_context = normalizedAnalysis.question_context || request.question_context;
+        const directRunId = result.analysis_run_id || crypto.randomUUID();
+        setAnalysisRunId(directRunId);
         const enhancedAnalysis = await enhanceAnalysisWithStrategicEngines(
-          result.analysis_run_id || crypto.randomUUID(), request.scenario_text, normalizedAnalysis.players, normalizedAnalysis
+          directRunId, request.scenario_text, normalizedAnalysis.players, normalizedAnalysis, normalizedAnalysis.question_context
         );
-        setAnalysis({
-          ...normalizedAnalysis,
-          ...enhancedAnalysis
-        });
+        setAnalysis(finalizeAnalysisResult(normalizedAnalysis, enhancedAnalysis));
         setStatus('completed');
         setLoading(false);
       } else {
-        // Last resort client-side minimal synthesis to prevent UX breakage
-        const base = buildMinimalAnalysis(request.scenario_text)
-        const enhancedAnalysis = await enhanceAnalysisWithStrategicEngines(
-          result.analysis_run_id || crypto.randomUUID(), request.scenario_text, (base as any).players, base
-        );
-        setAnalysis({
-          ...(base as AnalysisResult),
-          ...enhancedAnalysis
-        });
-        setStatus('completed');
-        setLoading(false);
+        throw new Error('Hosted analysis completed without a request id or analysis payload.');
       }
       
     } catch (err) {
@@ -471,34 +841,23 @@ export function useStrategyAnalysis(): UseStrategyAnalysisReturn {
       
       // Enhanced error message extraction
       let errorMessage = 'Analysis service unavailable';
+      let errorName = '';
       if (err instanceof Error) {
         errorMessage = err.message;
+        errorName = err.name;
       } else if (typeof err === 'string') {
         errorMessage = err;
       } else if (err && typeof err === 'object') {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         errorMessage = (err as any).message || (err as any).error || JSON.stringify(err);
+        errorName = (err as any).name || '';
       }
       
-      const isNetworkError = errorMessage.includes('fetch') || errorMessage.includes('network') || errorMessage.includes('ECONNREFUSED');
+      const isNetworkError = errorName === 'AbortError' || errorMessage.includes('fetch') || errorMessage.includes('network') || errorMessage.includes('ECONNREFUSED') || errorMessage.includes('timeout');
       if (isNetworkError) {
-        try {
-          // Fallback to local engine to keep UX unblocked
-          const localResult = await analyzeLocally(request);
-          const enhancedAnalysis = await enhanceAnalysisWithStrategicEngines(
-            crypto.randomUUID(), request.scenario_text, localResult.players, localResult
-          );
-          setAnalysis({
-            ...localResult,
-            ...enhancedAnalysis
-          });
-          setStatus('completed');
-          setLoading(false);
-          return;
-        } catch (localErr) {
-          console.warn('Local analysis fallback failed:', localErr);
-          errorMessage = 'Cannot connect to analysis service. Please ensure Supabase is running: `supabase start`';
-        }
+        errorMessage = isLocalPreviewOrigin || isLocalMode
+          ? 'Cannot connect to analysis service. Please ensure Supabase is running: `supabase start`'
+          : 'Hosted analysis timed out or became unreachable before producing a verified result. Please retry.';
       }
       
       setError(errorMessage);
@@ -535,8 +894,12 @@ async function enhanceAnalysisWithStrategicEngines(
   analysisRunId: string,
   scenario: string,
   players: any[] | undefined,
-  analysisContext?: Partial<AnalysisResult>
+  analysisContext?: Partial<AnalysisResult>,
+  questionContext?: AnalysisRequest['question_context']
 ): Promise<any> {
+  if (isLocalPreviewOrigin) {
+    return {}
+  }
 
   const enhancements = {
     recursiveEquilibrium: null,
@@ -755,29 +1118,33 @@ async function enhanceAnalysisWithStrategicEngines(
       }
     }
 
-    const multiAgentForecastResponse = await fetch(ENDPOINTS.MULTI_AGENT_FORECAST, {
-      method: 'POST',
-      headers: getAuthHeaders(),
-      body: JSON.stringify({
-        runId: analysisRunId,
-        scenario: {
-          title: scenario.slice(0, 120),
-          description: scenario,
-          horizonDays: 14
-        },
-        retrievals: Array.isArray(analysisContext?.retrievals) ? analysisContext.retrievals : [],
-        baseForecast: Array.isArray((enhancements as any).forecast)
-          ? (enhancements as any).forecast
-          : (Array.isArray(analysisContext?.forecast) ? analysisContext?.forecast : []),
-        provenance: analysisContext?.provenance
-      })
-    });
+    try {
+      const multiAgentForecastResponse = await fetch(ENDPOINTS.MULTI_AGENT_FORECAST, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({
+          runId: analysisRunId,
+          scenario: {
+            description: scenario,
+          },
+          retrievals: Array.isArray(analysisContext?.retrievals) ? analysisContext.retrievals : [],
+          baseForecast: Array.isArray((enhancements as any).forecast)
+            ? (enhancements as any).forecast
+            : (Array.isArray(analysisContext?.forecast) ? analysisContext?.forecast : []),
+          provenance: analysisContext?.provenance,
+          questionContext: questionContext || analysisContext?.question_context || null,
+          mode: questionContext?.decision_use?.includes('public') ? 'public' : 'internal',
+        })
+      });
 
-    if (multiAgentForecastResponse.ok) {
-      const multiAgentForecastData = await multiAgentForecastResponse.json();
-      if (multiAgentForecastData.ok && multiAgentForecastData.response) {
-        enhancements.multiAgentForecast = multiAgentForecastData.response;
+      if (multiAgentForecastResponse.ok) {
+        const multiAgentForecastData = await multiAgentForecastResponse.json();
+        if (multiAgentForecastData.ok && multiAgentForecastData.response) {
+          enhancements.multiAgentForecast = multiAgentForecastData.response;
+        }
       }
+    } catch {
+      // The UI already has a deterministic local fallback for the forecast surface.
     }
 
     // Additional engines to close PRD gaps
@@ -879,173 +1246,61 @@ function extractStakeholdersFromScenario(scenario: string): string[] {
   return ['stakeholder_1', 'stakeholder_2'];
 }
 
-// Generate player interactions for quantum analysis
-function generatePlayerInteractions(players: any[]): Array<{ player1: string; player2: string; strength: number }> {
-  const interactions = [];
-  for (let i = 0; i < players.length; i++) {
-    for (let j = i + 1; j < players.length; j++) {
-      interactions.push({
-        player1: players[i].id,
-        player2: players[j].id,
-        strength: 0.5 + Math.random() * 0.5 // Random interaction strength
-      });
-    }
+// Generate player interactions for quantum analysis - mode-aware with provenance
+function generatePlayerInteractions(players: any[], mode: EduAnalysisMode = 'analysis'): Array<{ player1: string; player2: string; strength: number }> {
+  const interactions = generateEduPlayerInteractions(players, { mode });
+  // Strip provenance for backward compatibility, but it's available in the helper
+  return interactions.map(({ provenance, ...rest }) => rest);
+}
+
+// Generate decision alternatives for information value assessment - mode-aware
+function generateDecisionAlternatives(players: any[], mode: EduAnalysisMode = 'analysis'): any[] {
+  if (mode === 'education' || mode === 'classroom') {
+    // Return empty for education - students should determine these
+    return [];
   }
-  return interactions;
+  const alternatives = generateEduDecisionAlternatives(players, { mode });
+  // Strip provenance for backward compatibility
+  return alternatives.map(({ provenance, ...rest }) => rest);
 }
 
-// Generate decision alternatives for information value assessment
-function generateDecisionAlternatives(players: any[]): any[] {
-  return players.flatMap(player => 
-    player.actions.map((action: string, index: number) => ({
-      id: `${player.id}_${action}`,
-      name: `${player.name} - ${action}`,
-      expectedPayoff: 0.3 + Math.random() * 0.4,
-      payoffVariance: 0.1 + Math.random() * 0.2,
-      informationSensitivity: {
-        market_conditions: Math.random() * 0.5,
-        competitor_actions: Math.random() * 0.5,
-        regulatory_changes: Math.random() * 0.3
-      }
-    }))
-  );
+// Generate information nodes for EVPI calculation - mode-aware
+function generateInformationNodes(scenario: string, mode: EduAnalysisMode = 'analysis'): any[] {
+  const nodes = generateEduInformationNodes(scenario, { mode });
+  // Strip provenance for backward compatibility
+  return nodes.map(({ provenance, ...rest }) => rest);
 }
 
-// Generate information nodes for EVPI calculation
-function generateInformationNodes(scenario: string): any[] {
-  const baseNodes = [
-    {
-      id: 'market_conditions',
-      name: 'Market Conditions',
-      currentUncertainty: 0.4,
-      informationType: 'market' as const,
-      acquisitionCost: 500,
-      acquisitionTime: 2,
-      reliability: 0.8,
-      dependencies: []
-    },
-    {
-      id: 'competitor_actions',
-      name: 'Competitor Actions',
-      currentUncertainty: 0.6,
-      informationType: 'competitor' as const,
-      acquisitionCost: 800,
-      acquisitionTime: 4,
-      reliability: 0.7,
-      dependencies: ['market_conditions']
-    },
-    {
-      id: 'regulatory_changes',
-      name: 'Regulatory Changes',
-      currentUncertainty: 0.3,
-      informationType: 'regulatory' as const,
-      acquisitionCost: 300,
-      acquisitionTime: 1,
-      reliability: 0.9,
-      dependencies: []
-    }
-  ];
-  
-  return baseNodes;
+// Generate current beliefs for Bayesian updating - mode-aware
+function generateCurrentBeliefs(scenario: string, mode: EduAnalysisMode = 'analysis'): Record<string, number> {
+  const result = generateEduCurrentBeliefs(scenario, { mode });
+  return result.beliefs;
 }
 
-// Generate current beliefs for Bayesian updating
-function generateCurrentBeliefs(scenario: string): Record<string, number> {
-  return {
-    market_conditions: 0.4,
-    competitor_actions: 0.6,
-    regulatory_changes: 0.3,
-    economic_stability: 0.5,
-    technological_disruption: 0.35
-  };
+// Generate outcome scenarios for forecasting - mode-aware
+function generateOutcomeScenarios(scenario: string, players: any[], mode: EduAnalysisMode = 'analysis'): any[] {
+  const scenarios = generateEduOutcomeScenarios(scenario, players, { mode });
+  // Strip provenance for backward compatibility
+  return scenarios.map(({ provenance, ...rest }) => rest);
 }
 
-// Generate outcome scenarios for forecasting
-function generateOutcomeScenarios(scenario: string, players: any[]): any[] {
-  const scenarios = [
-    {
-      id: 'success_scenario',
-      name: 'Strategic Success',
-      description: 'Primary strategic objectives achieved',
-      baselineProbability: 0.6,
-      impactMagnitude: 0.8,
-      dependencies: []
-    },
-    {
-      id: 'partial_success',
-      name: 'Partial Success',
-      description: 'Some objectives achieved with complications',
-      baselineProbability: 0.3,
-      impactMagnitude: 0.5,
-      dependencies: [{
-        scenarioId: 'success_scenario',
-        correlationType: 'negative' as const,
-        strength: 0.7
-      }]
-    },
-    {
-      id: 'failure_scenario',
-      name: 'Strategic Failure',
-      description: 'Major strategic objectives not achieved',
-      baselineProbability: 0.1,
-      impactMagnitude: 0.9,
-      dependencies: [{
-        scenarioId: 'success_scenario',
-        correlationType: 'negative' as const,
-        strength: 0.9
-      }]
-    }
-  ];
-  
-  return scenarios;
+// Generate decay models for forecasting - mode-aware
+function generateDecayModels(mode: EduAnalysisMode = 'analysis'): Record<string, any> {
+  const models = generateEduDecayModels({ mode });
+  // Strip provenance for backward compatibility
+  const result: Record<string, any> = {};
+  for (const [key, value] of Object.entries(models)) {
+    const { provenance, ...rest } = value;
+    result[key] = rest;
+  }
+  return result;
 }
 
-// Generate decay models for forecasting
-function generateDecayModels(): Record<string, any> {
-  return {
-    success_scenario: {
-      type: 'exponential',
-      parameters: { decayRate: 0.05 },
-      halfLife: Math.log(2) / 0.05
-    },
-    partial_success: {
-      type: 'power_law',
-      parameters: { exponent: 1.2 },
-      halfLife: 10
-    },
-    failure_scenario: {
-      type: 'logistic',
-      parameters: { growthRate: 0.1, carryingCapacity: 0.8 },
-      halfLife: 7
-    }
-  };
-}
-
-// Generate external factors for forecasting
-function generateExternalFactors(scenario: string): any[] {
-  return [
-    {
-      name: 'Economic Conditions',
-      influence: 0.3,
-      timeProfile: 'cyclical' as const,
-      cyclePeriod: 168 // Weekly cycle
-    },
-    {
-      name: 'Competitive Pressure',
-      influence: -0.2,
-      timeProfile: 'increasing' as const
-    },
-    {
-      name: 'Regulatory Support',
-      influence: 0.15,
-      timeProfile: 'constant' as const
-    },
-    {
-      name: 'Market Volatility',
-      influence: -0.25,
-      timeProfile: 'decreasing' as const
-    }
-  ];
+// Generate external factors for forecasting - mode-aware
+function generateExternalFactors(scenario: string, mode: EduAnalysisMode = 'analysis'): any[] {
+  const factors = generateEduExternalFactors(scenario, { mode });
+  // Strip provenance for backward compatibility
+  return factors.map(({ provenance, ...rest }) => rest);
 }
 
 // Utility function to create example scenarios

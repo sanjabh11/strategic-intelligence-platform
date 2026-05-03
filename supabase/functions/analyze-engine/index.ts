@@ -6,7 +6,7 @@
 //
 // ENV (required):
 // SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
-// PERPLEXITY_KEY
+// EXA_API_KEY
 // GEMINI_API_KEY
 // OPENAI_KEY (fallback)
 // WORKER_URL (optional)
@@ -18,24 +18,44 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import Ajv from "https://esm.sh/ajv@8.17.1";
 import addFormats from "https://esm.sh/ajv-formats@2.1.1";
-import { GoogleGenerativeAI } from "https://esm.sh/@google/generative-ai@0.21.0";
 import { computeEVs, PayoffEstimate, ActionEntry } from "../evEngine.ts";
 import { runSensitivity, handleSensitivityJob } from "../sensitivityRunner.ts";
-import { fetchAllRetrievals, cacheRetrievalResults, getCachedRetrievals } from "./retrievalClient.ts";
+import { fetchAllRetrievals } from "./retrievalClient.ts";
 import { computeCombinedSimilarity, extractScenarioFeatures } from "./similarityEngine.ts";
+import { buildFunctionUrl } from "../_shared/function-url.ts";
+import { DEFAULT_PROMPT_POLICY_ID, DEFAULT_RETRIEVAL_POLICY_ID, buildConstraintChecks, deriveEntityRefs, fetchLatestDriftSignal } from "../_shared/ml-platform.ts";
+import { prepareAnalysisArtifactPersistence } from "../_shared/analysis-artifacts.ts";
+import { buildDoctrinePromptPack, buildDoctrinePromptText } from "../../../shared/gameTheoryKnowledge.ts";
+import {
+  appendPublicQuestionContext,
+  evaluateQuestionIntake,
+  stripPublicQuestionContext,
+  type QuestionContextPayload,
+} from "../../../shared/publicForecasting.ts";
 
 // --- Env helpers ---
 const getEnv = (k: string) => Deno.env.get(k) || undefined
 const SUPABASE_PROJECT_REF = getEnv('SUPABASE_PROJECT_REF')
 const SUPABASE_URL = getEnv('SUPABASE_URL') || (SUPABASE_PROJECT_REF ? `https://${SUPABASE_PROJECT_REF}.supabase.co` : undefined)!
 const SUPABASE_SERVICE_ROLE_KEY = getEnv('SUPABASE_SERVICE_ROLE_KEY') || getEnv('EDGE_SUPABASE_SERVICE_ROLE_KEY')!
-// Accept PERPLEXITY_API_KEY (preferred), EDGE_PERPLEXITY_API_KEY (supported), and PERPLEXITY_KEY (legacy)
-const PERPLEXITY_KEY = getEnv('PERPLEXITY_API_KEY')
-  ?? getEnv('EDGE_PERPLEXITY_API_KEY')
-  ?? getEnv('PERPLEXITY_KEY')
+const GEMINI_KEY = getEnv('GEMINI_API_KEY')
+  ?? getEnv('GOOGLE_AI_API_KEY')
+  ?? getEnv('VITE_GEMINI_API_KEY')
   ?? ""
-const GEMINI_KEY = getEnv('GEMINI_API_KEY') ?? ""
-const OPENAI_KEY = getEnv('OPENAI_KEY') ?? ""
+const GEMINI_MODEL = getEnv('GEMINI_ANALYZE_MODEL')
+  ?? getEnv('GEMINI_STRATEGIST_MODEL')
+  ?? 'gemini-3-flash-preview'
+const GEMINI_FALLBACK_MODEL = getEnv('GEMINI_FALLBACK_ANALYZE_MODEL')
+  ?? getEnv('GEMINI_FALLBACK_STRATEGIST_MODEL')
+  ?? 'gemini-2.5-flash'
+const OPENAI_KEY = getEnv('OPENAI_KEY') ?? getEnv('OPENAI_API_KEY') ?? ""
+const OPENAI_MODEL = getEnv('OPENAI_ANALYZE_MODEL')
+  ?? getEnv('OPENAI_STRATEGIST_MODEL')
+  ?? 'gpt-4o-mini'
+const XAI_KEY = getEnv('XAI_API_KEY') ?? getEnv('GROK_API_KEY') ?? ""
+const XAI_MODEL = getEnv('XAI_ANALYZE_MODEL')
+  ?? getEnv('XAI_STRATEGIST_MODEL')
+  ?? 'grok-4.20-reasoning'
 const WORKER_URL = getEnv('WORKER_URL') ?? ""
 
 if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
@@ -43,6 +63,21 @@ if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
 }
 
 const supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
+
+async function buildAnalysisRunArtifactColumns(requestId: string, analysisJson: Record<string, unknown>) {
+  return await prepareAnalysisArtifactPersistence(supabaseAdmin, {
+    requestId,
+    analysisJson,
+    sourceHint: 'analysis-runs',
+  })
+}
+
+async function insertAnalysisRunOrThrow(row: Record<string, unknown>) {
+  const { error } = await supabaseAdmin.from("analysis_runs").insert(row)
+  if (error) {
+    throw new Error(`analysis_runs_insert_failed: ${error.message}`)
+  }
+}
 
 // --- Utility helpers ---
 function uuid() {
@@ -383,119 +418,164 @@ function computeSensitivityAnalysis(decisionTable: any[], scenario: string, pert
   }
 }
 
-// --- Perplexity wrapper with retry, caching, and rate limiting ---
-async function perplexitySearch(query: string, top_k = 5, attempts = 3, userId?: string) {
-  if (!PERPLEXITY_KEY) return { ok: false, error: "no_perplexity_key" }
+// --- LLM callers ---
+type LlmProvider = 'gemini' | 'openai' | 'xai'
+type LlmFailureClass =
+  | 'config_missing'
+  | 'quota_exceeded'
+  | 'rate_limited'
+  | 'auth_error'
+  | 'provider_http_error'
+  | 'provider_transport_error'
+  | 'provider_empty_output'
+  | 'provider_parse_error'
+  | 'provider_unknown'
 
-  // Check rate limit before making API call
+type ProviderAttempt = {
+  provider: LlmProvider
+  model: string
+  ok: boolean
+  duration_ms: number
+  failure_stage?: string
+  failure_class?: LlmFailureClass
+  http_status?: number | null
+  error?: string
+}
+
+type ProviderCallSuccess = {
+  ok: true
+  provider: LlmProvider
+  model: string
+  text: string
+  duration_ms: number
+}
+
+type ProviderCallFailure = {
+  ok: false
+  provider: LlmProvider
+  model: string
+  duration_ms: number
+  failure_stage: string
+  failure_class: LlmFailureClass
+  http_status: number | null
+  error: string
+}
+
+type ProviderCallResult = ProviderCallSuccess | ProviderCallFailure
+
+function classifyProviderFailure(error: string, httpStatus: number | null): LlmFailureClass {
+  const lower = String(error || '').toLowerCase()
+  if (lower.includes('no_') && lower.includes('_key')) return 'config_missing'
+  if (lower.includes('spending cap') || lower.includes('quota') || lower.includes('billing')) return 'quota_exceeded'
+  if (httpStatus === 429 || lower.includes('rate limit')) return 'rate_limited'
+  if (httpStatus === 401 || httpStatus === 403 || lower.includes('unauthorized') || lower.includes('forbidden') || lower.includes('invalid api key')) {
+    return 'auth_error'
+  }
+  if (lower.includes('no content') || lower.includes('empty') || lower.includes('no structured text')) return 'provider_empty_output'
+  if (lower.includes('parse')) return 'provider_parse_error'
+  if (httpStatus !== null) return 'provider_http_error'
+  if (lower.includes('fetch') || lower.includes('network') || lower.includes('timeout') || lower.includes('connection')) {
+    return 'provider_transport_error'
+  }
+  return 'provider_unknown'
+}
+
+function buildProviderFailure(
+  provider: LlmProvider,
+  model: string,
+  durationMs: number,
+  failureStage: string,
+  error: string,
+  httpStatus: number | null = null
+): ProviderCallFailure {
+  return {
+    ok: false,
+    provider,
+    model,
+    duration_ms: durationMs,
+    failure_stage: failureStage,
+    failure_class: classifyProviderFailure(error, httpStatus),
+    http_status: httpStatus,
+    error,
+  }
+}
+
+function extractResponsesApiText(payload: Record<string, unknown>) {
+  if (typeof payload.output_text === 'string' && payload.output_text.trim().length > 0) {
+    return payload.output_text.trim()
+  }
+
+  const output = Array.isArray(payload.output) ? payload.output as Array<Record<string, unknown>> : []
+  const message = output.find((item) => item.type === 'message')
+  const content = Array.isArray(message?.content) ? message.content as Array<Record<string, unknown>> : []
+  const textEntry = content.find((entry) => entry.type === 'output_text')
+  return typeof textEntry?.text === 'string' ? textEntry.text.trim() : null
+}
+
+async function callGeminiSingle(prompt: string, model: string): Promise<ProviderCallResult> {
+  if (!GEMINI_KEY) {
+    return buildProviderFailure('gemini', model, 0, 'gemini_config_missing', 'no_gemini_key')
+  }
+
+  const startedAt = Date.now()
   try {
-    const { data: rateCheck } = await supabaseAdmin.rpc('check_rate_limit', {
-      service_name_param: 'perplexity',
-      user_id_param: userId,
-      max_requests: 50, // 50 requests per hour for Perplexity
-      window_minutes: 60
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${GEMINI_KEY}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        contents: [
+          {
+            parts: [
+              { text: prompt },
+            ],
+          },
+        ],
+        generationConfig: {
+          temperature: 0,
+          candidateCount: 1,
+          responseMimeType: 'application/json',
+        },
+      }),
     })
 
-    if (!rateCheck) {
-      console.warn('Perplexity rate limit exceeded')
-      return {
-        ok: false,
-        error: "rate_limit_exceeded",
-        retry_after: 3600 // 1 hour
-      }
+    const durationMs = Date.now() - startedAt
+    const text = await res.text()
+    const parsed = await safeJsonParse(text)
+    if (!res.ok) {
+      const message = parsed.ok
+        ? parsed.json?.error?.message || parsed.json?.message || `gemini_http_${res.status}`
+        : `gemini_http_${res.status}`
+      return buildProviderFailure('gemini', model, durationMs, 'gemini_transport_error', String(message), res.status)
     }
-  } catch (err) {
-    console.warn('Failed to check rate limit:', err)
-    // Continue without rate limiting if check fails
-  }
-
-  const url = "https://api.perplexity.ai/chat/completions"
-
-  for (let i = 0; i < attempts; i++) {
-    try {
-      const res = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${PERPLEXITY_KEY}`
-        },
-        body: JSON.stringify({
-          model: 'sonar-pro',
-          messages: [
-            { role: 'system', content: 'You are a research assistant. Return concise, authoritative sources with citations.' },
-            { role: 'user', content: `${query}\n\nPlease search the live web and provide ${Math.min(5, Math.max(1, top_k))} relevant sources with citations.` }
-          ],
-          temperature: 0.2,
-          top_k: top_k,
-          search_recency_filter: 'month',
-          return_images: false,
-          stream: false,
-          max_tokens: 600
-        })
-      })
-
-      // Handle rate limit errors
-      if (res.status === 429) {
-        const retryAfter = res.headers.get('retry-after')
-        console.warn(`Perplexity rate limit hit, retry after: ${retryAfter}s`)
-        return {
-          ok: false,
-          error: "rate_limit_exceeded",
-          retry_after: retryAfter ? parseInt(retryAfter) : 3600
-        }
-      }
-
-      if (!res.ok) {
-        // Other API errors
-        const text = await res.text()
-        throw new Error(`Perplexity API error ${res.status}: ${text}`)
-      }
-
-      const text = await res.text()
-      const parsed = await safeJsonParse(text)
-      if (!parsed.ok) throw new Error(parsed.error || "perplexity_json_parse_failed")
-
-      const raw = parsed.json
-      const results = raw.choices?.[0]?.message?.content || raw.results || raw.data || raw.hits || []
-      const hits = (Array.isArray(results) ? results : []).map((r: any, idx: number) => ({
-        id: r.id ?? `perp-${Date.now()}-${idx}`,
-        title: r.title ?? r.name ?? 'Source',
-        url: r.url ?? r.source?.url ?? '',
-        snippet: r.snippet ?? r.summary ?? r.excerpt ?? ''
-      }))
-
-      return { ok: true, hits }
-    } catch (err: any) {
-      console.warn(`Perplexity attempt ${i + 1} failed:`, err?.message ?? err)
-      if (i === attempts - 1) return { ok: false, error: String(err?.message ?? err) }
-      await new Promise(r => setTimeout(r, 300 * (i + 1)))
+    if (!parsed.ok) {
+      return buildProviderFailure('gemini', model, durationMs, 'gemini_parse_error', 'gemini_json_parse_failed')
     }
-  }
-  return { ok: false, error: "perplexity_failed" }
-}
 
-// --- LLM callers ---
-// Primary: Gemini 2.5 Pro
-async function callGemini(prompt: string) {
-  if (!GEMINI_KEY) return { ok: false, error: "no_gemini_key" }
+    const parts = parsed.json?.candidates?.[0]?.content?.parts || []
+    const responseText = parts
+      .map((part: any) => typeof part?.text === 'string' ? part.text : '')
+      .filter(Boolean)
+      .join('\n')
+      .trim()
 
-  try {
-    const genAI = new GoogleGenerativeAI(GEMINI_KEY)
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash-exp' })
+    if (!responseText) {
+      return buildProviderFailure('gemini', model, durationMs, 'gemini_empty_output', 'gemini_no_content')
+    }
 
-    const result = await model.generateContent(prompt)
-    const responseText = result.response.text()
-
-    return { ok: true, text: responseText, model: "gemini-2.0-flash-exp" }
+    return { ok: true, text: responseText, model, provider: 'gemini', duration_ms: durationMs }
   } catch (err: any) {
-    return { ok: false, error: String(err?.message ?? err) }
+    return buildProviderFailure('gemini', model, Date.now() - startedAt, 'gemini_transport_error', String(err?.message ?? err))
   }
 }
 
-// Fallback: OpenAI GPT-4o-mini
-async function callOpenAIFallback(prompt: string) {
-  if (!OPENAI_KEY) return { ok: false, error: "no_openai_key" }
+async function callOpenAIFallback(prompt: string): Promise<ProviderCallResult> {
+  if (!OPENAI_KEY) {
+    return buildProviderFailure('openai', OPENAI_MODEL, 0, 'openai_config_missing', 'no_openai_key')
+  }
 
+  const startedAt = Date.now()
   try {
     const res = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
@@ -504,23 +584,136 @@ async function callOpenAIFallback(prompt: string) {
         "Authorization": `Bearer ${OPENAI_KEY}`
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
-        messages: [{ role: "user", content: prompt }],
-        max_tokens: 1200,
-        temperature: 0.0
+        model: OPENAI_MODEL,
+        messages: [
+          { role: "system", content: "Return valid JSON only. Do not wrap the answer in markdown fences." },
+          { role: "user", content: prompt }
+        ],
+        max_tokens: 1600,
+        temperature: 0.0,
+        response_format: { type: "json_object" }
       })
     })
 
+    const durationMs = Date.now() - startedAt
     const text = await res.text()
     const parsed = await safeJsonParse(text)
+    if (!res.ok) {
+      const message = parsed.ok
+        ? parsed.json?.error?.message || parsed.json?.message || `openai_http_${res.status}`
+        : `openai_http_${res.status}`
+      return buildProviderFailure('openai', OPENAI_MODEL, durationMs, 'openai_transport_error', String(message), res.status)
+    }
 
-    if (!parsed.ok) throw new Error("openai_json_parse_failed")
-    if (!parsed.json.choices?.[0]?.message?.content) throw new Error("openai_no_content")
+    if (!parsed.ok) {
+      return buildProviderFailure('openai', OPENAI_MODEL, durationMs, 'openai_parse_error', 'openai_json_parse_failed')
+    }
+    const content = parsed.json.choices?.[0]?.message?.content
+    if (!content || typeof content !== 'string') {
+      return buildProviderFailure('openai', OPENAI_MODEL, durationMs, 'openai_empty_output', 'openai_no_content')
+    }
 
-    return { ok: true, text: parsed.json.choices[0].message.content, model: "gpt-4o-mini" }
+    return { ok: true, text: content, model: OPENAI_MODEL, provider: 'openai', duration_ms: durationMs }
   } catch (err: any) {
-    return { ok: false, error: String(err?.message ?? err) }
+    return buildProviderFailure('openai', OPENAI_MODEL, Date.now() - startedAt, 'openai_transport_error', String(err?.message ?? err))
   }
+}
+
+async function callXaiFallback(prompt: string): Promise<ProviderCallResult> {
+  if (!XAI_KEY) {
+    return buildProviderFailure('xai', XAI_MODEL, 0, 'xai_config_missing', 'no_xai_key')
+  }
+
+  const startedAt = Date.now()
+  try {
+    const res = await fetch("https://api.x.ai/v1/responses", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${XAI_KEY}`
+      },
+      body: JSON.stringify({
+        model: XAI_MODEL,
+        input: [
+          { role: 'system', content: 'Return valid JSON only. Do not wrap the answer in markdown fences.' },
+          { role: 'user', content: prompt }
+        ],
+        temperature: 0.0,
+      })
+    })
+
+    const durationMs = Date.now() - startedAt
+    const text = await res.text()
+    const parsed = await safeJsonParse(text)
+    if (!res.ok) {
+      const message = parsed.ok
+        ? parsed.json?.error?.message || parsed.json?.message || `xai_http_${res.status}`
+        : `xai_http_${res.status}`
+      return buildProviderFailure('xai', XAI_MODEL, durationMs, 'xai_transport_error', String(message), res.status)
+    }
+
+    if (!parsed.ok) {
+      return buildProviderFailure('xai', XAI_MODEL, durationMs, 'xai_parse_error', 'xai_json_parse_failed')
+    }
+    const content = extractResponsesApiText(parsed.json)
+    if (!content) {
+      return buildProviderFailure('xai', XAI_MODEL, durationMs, 'xai_empty_output', 'xai_no_content')
+    }
+
+    return { ok: true, text: content, model: XAI_MODEL, provider: 'xai', duration_ms: durationMs }
+  } catch (err: any) {
+    return buildProviderFailure('xai', XAI_MODEL, Date.now() - startedAt, 'xai_transport_error', String(err?.message ?? err))
+  }
+}
+
+function summarizeProviderFailures(attempts: ProviderAttempt[]) {
+  const firstMeaningfulFailure = attempts.find((attempt) => !attempt.ok && attempt.failure_class !== 'config_missing')
+  const primaryFailure = firstMeaningfulFailure || attempts.find((attempt) => !attempt.ok)
+  const failureClass = primaryFailure?.failure_class || 'provider_unknown'
+  const failureStage = primaryFailure?.failure_stage || 'llm_failed'
+  const detail = attempts
+    .filter((attempt) => !attempt.ok)
+    .map((attempt) => `${attempt.provider}:${attempt.model}:${attempt.failure_class}${attempt.http_status ? `:${attempt.http_status}` : ''}`)
+    .join(', ')
+  const userMessage = primaryFailure?.failure_class === 'quota_exceeded'
+    ? 'Hosted synthesis is currently unavailable because the primary Gemini project is over its spend cap and no working fallback provider completed the request.'
+    : primaryFailure?.failure_class === 'config_missing'
+      ? 'Hosted synthesis is currently unavailable because no configured fallback provider key is available for analyze-engine.'
+      : 'Hosted synthesis was unavailable before a verified structured answer could be produced.'
+
+  return {
+    failureClass,
+    failureStage,
+    detail,
+    userMessage,
+  }
+}
+
+function extractBearerToken(value: string | null) {
+  if (!value) return null
+  const match = value.match(/^Bearer\s+(.+)$/i)
+  return match?.[1]?.trim() || null
+}
+
+function hasPrivilegedDiagnosticsAccess(req: Request) {
+  const bearer = extractBearerToken(req.headers.get('authorization'))
+  const apiKey = req.headers.get('apikey')?.trim() || null
+  const serviceRole = SUPABASE_SERVICE_ROLE_KEY?.trim() || null
+  if (!serviceRole) return false
+  return bearer === serviceRole || apiKey === serviceRole
+}
+
+function publicFailureClass(failureClass: LlmFailureClass | null | undefined) {
+  return failureClass ? 'provider_failure' : undefined
+}
+
+function publicFailureStage(failureStage: string | null | undefined) {
+  return failureStage ? 'llm_unavailable' : undefined
+}
+
+function clientFailureMessage(message: string, canExposeProviderDiagnostics: boolean) {
+  if (canExposeProviderDiagnostics) return message
+  return 'Hosted synthesis is temporarily unavailable before a verified answer could be produced.'
 }
 
 // --- Audience prompt templates with Ph4.md evidence-backed requirements ---
@@ -529,6 +722,11 @@ function buildPrompt(audience: string, scenario: string, retrievals: any[], comp
   const retrievalBlock = (retrievals && retrievals.length)
     ? `Retrievals:\n${retrievals.map((r:any,i:number)=>`retrievals[${i}]: ${r.title || r.url || "source"} — ${r.url || ""}\nSnippet: ${r.snippet || ""}`).join("\n")}`
     : `Retrievals: NONE`
+  const doctrinePromptPack = buildDoctrinePromptPack({
+    scenarioText: scenario,
+    evidenceIds: (retrievals || []).map((retrieval: any, index: number) => retrieval.id || `retrieval_${index + 1}`)
+  })
+  const doctrineBlock = buildDoctrinePromptText(doctrinePromptPack)
 
   // Include solver results in prompt if available
   const solverBlock = computedData?.solverResults ?
@@ -553,8 +751,10 @@ RULES:
 
 Adopt the Game Theory Strategist framework.`
 
+  const doctrineInstructions = `\n\n${doctrineBlock}\n\nApply the doctrine pack before producing audience-specific JSON.`
+
   if (audience === "student") {
-    return `${baseSystem}
+    return `${baseSystem}${doctrineInstructions}
 
 Audience: Student - Produce short actionable steps with simple explanations.
 
@@ -568,7 +768,7 @@ For numeric claims in top_2_actions, use {"value": <number>, "confidence": <0-1>
     const evData = computedData?.ev || { ranking: [], computation_notes: "EV computation pending" }
     const sensitivityData = computedData?.sensitivity || { param_samples: [], analysis_notes: "Sensitivity analysis pending" }
 
-    return `${baseSystem}
+    return `${baseSystem}${doctrineInstructions}
 
 Audience: Learner - Include decision table with EV computations and sensitivity analysis.
 
@@ -582,7 +782,7 @@ For numeric claims in decision_table, use {"value": <number>, "confidence": <0-1
   } else if (audience === "researcher") {
     const sensitivityData = computedData?.sensitivity || { param_samples: [], analysis_notes: "Sensitivity analysis pending" }
 
-    return `${baseSystem}
+    return `${baseSystem}${doctrineInstructions}
 
 Audience: Researcher - Include detailed numeric tables and simulation results.
 
@@ -595,7 +795,7 @@ Produce researcher JSON with analysis_id, audience, long_summary, assumptions, p
 For all numeric claims, use {"value": <number>, "confidence": <0-1>, "sources": ["url"]} format.`
   } else {
     // teacher
-    return `${baseSystem}
+    return `${baseSystem}${doctrineInstructions}
 
 Audience: Teacher - Include lesson plans and assessment methods.
 
@@ -769,9 +969,10 @@ async function enforceNumericPassages(llmJson: any, retrievals: any[]): Promise<
     });
   }
 
-  // Update provenance.evidence_backed
+  // Update provenance.evidence_backed from retrieval sufficiency rather than
+  // only from numeric passage attachment.
   if (llmJson.provenance) {
-    llmJson.provenance.evidence_backed = attachedPassages > 0;
+    llmJson.provenance.evidence_backed = evidence_backed;
   }
 
   console.log(`🔍 Completed: ${attachedPassages} passages attached, ${unverifiedClaims} unverified claims`);
@@ -1251,25 +1452,120 @@ Deno.serve(async (req) => {
   }
 
   const start = Date.now()
+  const canExposeProviderDiagnostics = hasPrivilegedDiagnosticsAccess(req)
   try {
     const requestBody = await req.json().catch(() => ({}))
     const request_id = requestBody.request_id ?? uuid()
     const user_id = requestBody.user_id ?? null
     const audience = requestBody.audience ?? "learner"
     const mode = requestBody.mode ?? "standard"
-    const scenario_text = String(requestBody.scenario_text ?? "").trim()
+    const rawScenarioText = String(requestBody.scenario_text ?? "").trim()
+    const incomingQuestionContext = requestBody.question_context ?? requestBody.questionContext
+    const rawQuestionContext = incomingQuestionContext && typeof incomingQuestionContext === 'object'
+      ? incomingQuestionContext as Partial<QuestionContextPayload>
+      : null
+    const commonCountries = [
+      'India',
+      'Brazil',
+      'United States',
+      'US',
+      'China',
+      'Russia',
+      'Ukraine',
+      'Israel',
+      'Iran',
+      'Saudi Arabia',
+      'Turkey',
+      'Germany',
+      'France',
+      'United Kingdom',
+      'UK',
+      'Japan',
+      'South Korea',
+      'North Korea',
+      'Taiwan',
+      'Pakistan',
+      'Canada',
+      'Mexico',
+      'Australia',
+      'South Africa',
+      'South Asia',
+      'Middle East',
+    ]
+    const inferCountryFromCurrency = (value?: string | null) => {
+      if (!value) return null
+      for (const country of commonCountries) {
+        const pattern = new RegExp(`\\b${country.replace(/\s+/g, '\\s+')}\\b`, 'i')
+        if (pattern.test(value)) return country
+      }
+      const leading = value.split('/')[0]?.trim()
+      return leading && /^[A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z]+){0,2}$/.test(leading) ? leading : null
+    }
+    const normalizedQuestionContext = rawQuestionContext
+      ? (() => {
+          const next = structuredClone(rawQuestionContext)
+          const mergedAnswers = {
+            ...(next.answers || {}),
+          }
+          const inferredCountry = next.country || mergedAnswers.country || inferCountryFromCurrency(next.currency || mergedAnswers.currency)
+          if (inferredCountry) {
+            next.country = inferredCountry
+            next.answers = {
+              ...mergedAnswers,
+              country: inferredCountry,
+            }
+          }
+          return next
+        })()
+      : null
 
   // Basic validation
-  if (!scenario_text) {
+  if (!rawScenarioText) {
     return new Response(JSON.stringify({ ok: false, error: "missing_scenario_text" }), {
       status: 400,
       headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
     })
   }
 
+    const clarificationMode = (normalizedQuestionContext?.decision_use || '').includes('public') ? 'public' : 'internal'
+    const questionIntake = evaluateQuestionIntake({
+      prompt: rawScenarioText,
+      knownContext: normalizedQuestionContext,
+      clarificationState: normalizedQuestionContext
+        ? {
+            answers: normalizedQuestionContext.answers,
+            askedQuestionIds: normalizedQuestionContext.asked_question_ids,
+            totalQuestionsAsked: normalizedQuestionContext.asked_question_ids?.length,
+          }
+        : null,
+      mode: clarificationMode,
+      audience,
+    })
+    const question_context: QuestionContextPayload = {
+      ...questionIntake.question_context,
+      ...normalizedQuestionContext,
+      decision_use: normalizedQuestionContext?.decision_use || null,
+    }
+    const scenario_text = question_context.normalized_prompt
+      || appendPublicQuestionContext(stripPublicQuestionContext(rawScenarioText), question_context.answers)
+
+    if (clarificationMode === 'public' && question_context.clarification_status !== 'ready') {
+      return new Response(JSON.stringify({
+        ok: false,
+        error: 'needs_more_input',
+        reason: 'needs_more_input',
+        message: questionIntake.relevance_summary,
+        required_inputs: question_context.required_inputs,
+        question_context,
+      }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+      })
+    }
+
     console.log(`[${request_id}] stage=start, audience=${audience}, mode=${mode}`)
     console.log(`[${request_id}] entry method=${req.method} origin=${req.headers.get('origin') || 'unknown'} has_apikey=${req.headers.has('apikey')} has_auth=${req.headers.has('authorization')}`)
-    console.log(`[${request_id}] env has_perplexity=${Boolean(Deno.env.get('PERPLEXITY_API_KEY') || Deno.env.get('PERPLEXITY_KEY'))} has_gemini=${Boolean(Deno.env.get('GEMINI_API_KEY'))} has_openai=${Boolean(Deno.env.get('OPENAI_KEY'))}`)
+    console.log(`[${request_id}] env has_exa=${Boolean(Deno.env.get('EXA_API_KEY'))} has_gemini=${Boolean(Deno.env.get('GEMINI_API_KEY') || Deno.env.get('GOOGLE_AI_API_KEY') || Deno.env.get('VITE_GEMINI_API_KEY'))} gemini_model=${GEMINI_MODEL} gemini_fallback_model=${GEMINI_FALLBACK_MODEL} has_openai=${Boolean(Deno.env.get('OPENAI_KEY') || Deno.env.get('OPENAI_API_KEY'))} openai_model=${OPENAI_MODEL} has_xai=${Boolean(Deno.env.get('XAI_API_KEY') || Deno.env.get('GROK_API_KEY'))} xai_model=${XAI_MODEL}`)
 
   // Validate audience type
   const validAudiences = ['student', 'learner', 'researcher', 'teacher', 'reviewer']
@@ -1346,26 +1642,18 @@ Deno.serve(async (req) => {
   // Enhanced evidence-backed determination function (Gap Fix #4)
   function determineEvidenceBacked(retrievals: any[], rid?: string | null): boolean {
     if (!Array.isArray(retrievals) || retrievals.length === 0) return false
-    
-    // Count sources by type
-    const perplexityCount = retrievals.filter(r => r.source === 'perplexity').length
-    const otherSourcesCount = retrievals.filter(r => r.source !== 'perplexity').length
-    
-    // Check for high-quality retrievals (score > 0.7) - lowered threshold
-    const highQualityCount = retrievals.filter(r => (r.score || 0) > 0.7).length
-    
-    // FIXED: More lenient threshold - 4+ sources from any combination
-    // OR at least 1 Perplexity source
-    // This matches the gap analysis requirement
-    const hasPerplexity = perplexityCount >= 1
-    const hasSufficientTotal = retrievals.length >= 4  // Changed from 3 to 4
-    const hasReasonableQuality = highQualityCount >= 1 || retrievals.length >= 6
-    
-    // More lenient: 4+ sources OR 1+ Perplexity OR 6+ sources of any quality
-    const isEvidenceBacked = hasPerplexity || (hasSufficientTotal && hasReasonableQuality) || retrievals.length >= 6
+    const distinctProviders = new Set(retrievals.map((entry) => entry.source || entry.provider || 'unknown'))
+    const hasHighCredibility = retrievals.some((entry) => {
+      const provider = entry.source || entry.provider || ''
+      if (provider === 'exa') return true
+      if (provider === 'firecrawl') return true
+      if (provider === 'imf' || provider === 'worldbank' || provider === 'uncomtrade') return true
+      return Number(entry.score || entry.credibility_score || 0) >= 0.7
+    })
+    const isEvidenceBacked = retrievals.length >= 3 && distinctProviders.size >= 2 && hasHighCredibility
   
     const _rid = rid ?? 'n/a'
-    console.log(`[${_rid}] Evidence check: perplexity=${perplexityCount}, other=${otherSourcesCount}, total=${retrievals.length}, high_quality=${highQualityCount}, result=${isEvidenceBacked}`)
+    console.log(`[${_rid}] Evidence check: total=${retrievals.length}, distinct_providers=${distinctProviders.size}, high_credibility=${hasHighCredibility}, result=${isEvidenceBacked}`)
   
     return isEvidenceBacked
   }
@@ -1374,26 +1662,10 @@ Deno.serve(async (req) => {
     let retrievals: any[] = []
     let evidence_backed = false
     let cache_hit = false
+    let retrievalProviderSummary: any = null
     const scenario_hash = simpleHash(scenario_text)
 
-  // Try to load from cache first
-  if (mode !== "education_quick") {
-    try {
-      const cachedRetrievals = await getCachedRetrievals(scenario_hash)
-      if (cachedRetrievals && cachedRetrievals.length > 0) {
-        retrievals = cachedRetrievals
-        evidence_backed = determineEvidenceBacked(retrievals, request_id)
-        cache_hit = true
-        console.log(`[${request_id}] stage=cache_hit, hits=${retrievals.length}, evidence_backed=${evidence_backed}, scenario_hash=${scenario_hash}`)
-      } else {
-        console.log(`[${request_id}] stage=cache_miss, will fetch from streaming APIs, scenario_hash=${scenario_hash}`)
-      }
-    } catch (e) {
-      console.log(`[${request_id}] stage=cache_miss, will fetch from streaming APIs (error: ${e})`)
-    }
-  }
-
-  if (mode === "standard" && retrievals.length === 0) {
+  if (mode === "standard") {
     console.log(`[${request_id}] stage=streaming_rag_start, high_risk=${highRisk}`)
 
     // Extract entities for API calls
@@ -1405,23 +1677,18 @@ Deno.serve(async (req) => {
       entities,
       timeoutMs: 15000,
       requiredSources: [],
-      audience: audience
+      audience: audience,
+      requestId: request_id,
     })
 
     const ragCount = rag?.retrieval_count ?? (rag?.retrievals?.length ?? 0)
 
     if (rag && ragCount > 0) {
       retrievals = rag.retrievals
-      evidence_backed = determineEvidenceBacked(retrievals, request_id)
-      console.log(`[${request_id}] stage=streaming_rag_success, hits=${retrievals.length}, evidence_backed=${evidence_backed}, sources=${new Set(retrievals.map(r => r.source)).size}`)
-
-      // Cache retrievals using new retrieval_cache table
-      try {
-        await cacheRetrievalResults(scenario_hash, retrievals, undefined, scenario_text, audience)
-        console.log(`[${request_id}] stage=retrievals_cached, count=${retrievals.length}`)
-      } catch (e) {
-        console.warn("retrieval_cache failed:", e)
-      }
+      evidence_backed = Boolean(rag.evidence_backed ?? determineEvidenceBacked(retrievals, request_id))
+      cache_hit = Boolean(rag.cache_hit)
+      retrievalProviderSummary = rag.retrieval_provider_summary || null
+      console.log(`[${request_id}] stage=streaming_rag_success, hits=${retrievals.length}, evidence_backed=${evidence_backed}, sources=${new Set(retrievals.map(r => r.source)).size}, cache_hit=${cache_hit}`)
     } else {
       console.warn(`[${request_id}] stage=streaming_rag_failed, no results returned`)
       // For high-risk scenarios, this is a critical failure
@@ -1432,15 +1699,18 @@ Deno.serve(async (req) => {
 
         // Mark for review
         try {
-          await supabaseAdmin.from('analysis_runs').insert({
+        const reviewAnalysisJson = {
+            analysis_id: uuid(),
+            audience,
+            question_context,
+            summary: { text: `Analysis paused: Unable to retrieve external evidence for high-risk geopolitical scenario.` },
+            provenance: { retrieval_count: 0, retrieval_ids: [], evidence_backed: false }
+          }
+          await insertAnalysisRunOrThrow({
             request_id,
             status: 'needs_review',
-            analysis_json: {
-              analysis_id: uuid(),
-              audience,
-              summary: { text: `Analysis paused: Unable to retrieve external evidence for high-risk geopolitical scenario.` },
-              provenance: { retrieval_count: 0, retrieval_ids: [], evidence_backed: false }
-            },
+            review_reason: 'Unable to retrieve external evidence for a high-risk geopolitical scenario.',
+            ...(await buildAnalysisRunArtifactColumns(request_id, reviewAnalysisJson)),
             evidence_backed: false,
             created_at: new Date().toISOString()
           })
@@ -1461,6 +1731,7 @@ Deno.serve(async (req) => {
           analysis_id: uuid(),
           audience,
           scenario_text,
+          question_context,
           players: playersObj,
           equilibrium: {
             profile,
@@ -1536,6 +1807,7 @@ Produce educational analysis in JSON format.`
         fallbackJson.evidence_backed = false
         fallbackJson.disclaimer = "UNVERIFIED — human review recommended"
         fallbackJson.reason = "insufficient_external_sources"
+        fallbackJson.question_context = question_context
 
         // Persist fallback analysis
         const fallbackAnalysis = {
@@ -1543,14 +1815,14 @@ Produce educational analysis in JSON format.`
           user_id,
           audience,
           status: "completed",
-          analysis_json: fallbackJson,
+          ...(await buildAnalysisRunArtifactColumns(request_id, fallbackJson)),
           retrieval_ids: retrievals.map((r:any)=>r.id),
           evidence_backed: false,
           created_at: new Date().toISOString()
         }
 
         try {
-          await supabaseAdmin.from("analysis_runs").insert(fallbackAnalysis)
+          await insertAnalysisRunOrThrow(fallbackAnalysis)
         } catch (e) {
           console.error("Failed to persist fallback analysis:", e)
         }
@@ -1560,7 +1832,7 @@ Produce educational analysis in JSON format.`
           analysis_id: fallbackJson.analysis_id || uuid(),
           analysis: fallbackJson,
           provenance: {
-            model: "gemini-2.0-flash-exp",
+            model: GEMINI_MODEL,
             fallback_used: true,
             llm_duration_ms: 0,
             retrieval_count: retrievals.length,
@@ -1782,60 +2054,210 @@ Return a single JSON object with these top-level keys:
   // Append micro-prompt to ensure strict JSON output
   prompt += microPrompt
 
-  // Try Gemini primary
     let llmText: string | null = null
     let modelUsed = ""
+    let modelProvider: LlmProvider | null = null
     let fallbackUsed = false
     let llmDurationMs = 0
+    let providerAttempts: ProviderAttempt[] = []
+    let lastLlmFailureStage: string | null = null
+    let lastLlmFailureClass: LlmFailureClass | null = null
+
+  const buildEmergencyFallbackResponse = async (
+    reason: string,
+    message: string,
+    errorId: string,
+    failureMeta?: {
+      failureStage?: string | null
+      failureClass?: LlmFailureClass | null
+      providerAttempts?: ProviderAttempt[]
+      detail?: string | null
+    }
+  ) => {
+    fallbackUsed = true
+    const warningMessage = clientFailureMessage(message, canExposeProviderDiagnostics)
+    const responseFailureClass = canExposeProviderDiagnostics
+      ? failureMeta?.failureClass || undefined
+      : publicFailureClass(failureMeta?.failureClass)
+    const responseFailureStage = canExposeProviderDiagnostics
+      ? failureMeta?.failureStage || undefined
+      : publicFailureStage(failureMeta?.failureStage)
+    const responseProviderAttempts = canExposeProviderDiagnostics
+      ? (failureMeta?.providerAttempts || providerAttempts)
+      : undefined
+    const responseFailureDetail = canExposeProviderDiagnostics
+      ? failureMeta?.detail || undefined
+      : undefined
+    const inferredPlayers = Array.from(new Set((scenario_text.match(/\b([A-Z]{2,}|[A-Z][a-z]{2,})\b/g) || []))).slice(0, 3)
+    const playersObj = (inferredPlayers.length ? inferredPlayers : ['PlayerA']).map((p: string, idx: number) => ({
+      id: p || `P${idx + 1}`,
+      name: p || undefined,
+      actions: ['wait']
+    }))
+    const profile: Record<string, Record<string, number>> = {}
+    playersObj.forEach((player) => {
+      profile[player.id] = { wait: 0 }
+    })
+
+    const minimalAnalysis = {
+      analysis_id: uuid(),
+      audience,
+      scenario_text,
+      players: playersObj,
+      equilibrium: {
+        profile,
+        stability: 0,
+        method: 'heuristic'
+      },
+      quantum: undefined,
+      processing_stats: { processing_time_ms: llmDurationMs, stability_score: 0 },
+      provenance: {
+        evidence_backed: false,
+        retrieval_count: retrievals.length,
+        model: modelUsed || 'unavailable',
+        warning: warningMessage,
+        retrieval_provider_summary: retrievalProviderSummary,
+        failure_stage: responseFailureStage,
+        failure_class: responseFailureClass,
+        provider_attempts: responseProviderAttempts,
+        failure_detail: responseFailureDetail,
+      },
+      pattern_matches: [],
+      retrievals,
+      forecast: [],
+      summary: { text: 'UNVERIFIED fallback analysis generated because hosted LLM providers were unavailable.' },
+      disclaimer: 'UNVERIFIED — human review recommended'
+    }
+
+    let analysisRunId: string | null = null
+    try {
+      const { data, error } = await supabaseAdmin
+        .from('analysis_runs')
+        .insert({
+          request_id,
+          user_id,
+          audience,
+          status: 'needs_review',
+          review_reason: message,
+          ...(await buildAnalysisRunArtifactColumns(request_id, minimalAnalysis)),
+          retrieval_ids: retrievals.map((retrieval: any) => retrieval.id),
+          evidence_backed: false,
+          created_at: new Date().toISOString()
+        })
+        .select('id')
+        .single()
+
+      if (!error) {
+        analysisRunId = data?.id ?? null
+      }
+    } catch (persistError) {
+      console.warn(`[${request_id}] fallback_persist_failed: ${String((persistError as any)?.message ?? persistError)}`)
+    }
+
+    return new Response(JSON.stringify({
+      ok: true,
+      mode: 'fallback',
+      request_id,
+      analysis_id: minimalAnalysis.analysis_id,
+      ...(analysisRunId ? { analysis_run_id: analysisRunId } : {}),
+      analysis: minimalAnalysis,
+      message: warningMessage,
+      provenance: {
+        model: modelUsed || 'unavailable',
+        provider: canExposeProviderDiagnostics ? modelProvider : undefined,
+        fallback_used: true,
+        llm_duration_ms: llmDurationMs,
+        retrieval_count: retrievals.length,
+        retrieval_sources: retrievals.map((retrieval: any) => retrieval.source).filter(Boolean),
+        evidence_backed: false,
+        retrieval_provider_summary: retrievalProviderSummary,
+        reason,
+        error_id: errorId,
+        failure_stage: responseFailureStage,
+        failure_class: responseFailureClass,
+        provider_attempts: responseProviderAttempts,
+        failure_detail: responseFailureDetail,
+      }
+    }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Access-Control-Expose-Headers': 'Content-Type' }
+    })
+  }
 
   try {
     console.log(`[${request_id}] stage=llm_start`)
-    const t0 = Date.now()
-    const gem = await callGemini(prompt)
-    llmDurationMs = Date.now() - t0
-    if (gem.ok && gem.text) {
-      llmText = gem.text
-      modelUsed = "gemini-2.0-flash-exp"
-      console.log(`[${request_id}] stage=llm_success, model=${modelUsed}`)
-    } else {
-      // Fallback to OpenAI
-      console.log(`[${request_id}] stage=llm_fallback, gemini_error=${gem.error}`)
-      fallbackUsed = true
-      const t1 = Date.now()
-      const openai = await callOpenAIFallback(prompt)
-      llmDurationMs = Date.now() - t1
-      if (openai.ok && openai.text) {
-        llmText = openai.text
-        modelUsed = "gpt-4o-mini"
-        console.log(`[${request_id}] stage=llm_fallback_success, model=${modelUsed}`)
-      } else {
-        // Totally failed
-        const errorId = uuid()
-        await logRpcError(request_id, errorId, `LLM both failed: gemErr=${gem.error} openaiErr=${openai.error}`, { gemErr: gem.error, openaiErr: openai.error })
-        console.warn(`[${request_id}] response_path=llm_failed adding_cors=true status=502`)
-        return new Response(JSON.stringify({
-          ok: false,
-          error: "llm_failed",
-          message: "No available LLM results",
-          error_id: errorId
-        }), {
-          status: 502,
-          headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Access-Control-Expose-Headers': 'Content-Type' }
+    const geminiModels = GEMINI_MODEL === GEMINI_FALLBACK_MODEL
+      ? [GEMINI_MODEL]
+      : [GEMINI_MODEL, GEMINI_FALLBACK_MODEL]
+    const providerQueue: Array<() => Promise<ProviderCallResult>> = [
+      ...geminiModels.map((model) => () => callGeminiSingle(prompt, model)),
+      () => callOpenAIFallback(prompt),
+      () => callXaiFallback(prompt),
+    ]
+
+    for (const providerCall of providerQueue) {
+      const attempt = await providerCall()
+      llmDurationMs += attempt.duration_ms
+
+      if (attempt.ok) {
+        llmText = attempt.text
+        modelUsed = attempt.model
+        modelProvider = attempt.provider
+        providerAttempts.push({
+          provider: attempt.provider,
+          model: attempt.model,
+          ok: true,
+          duration_ms: attempt.duration_ms,
         })
+        console.log(`[${request_id}] stage=llm_success, provider=${attempt.provider}, model=${attempt.model}`)
+        break
       }
+
+      providerAttempts.push({
+        provider: attempt.provider,
+        model: attempt.model,
+        ok: false,
+        duration_ms: attempt.duration_ms,
+        failure_stage: attempt.failure_stage,
+        failure_class: attempt.failure_class,
+        http_status: attempt.http_status,
+        error: attempt.error,
+      })
+      fallbackUsed = fallbackUsed || attempt.provider !== 'gemini' || attempt.model !== GEMINI_MODEL
+      lastLlmFailureStage = attempt.failure_stage
+      lastLlmFailureClass = attempt.failure_class
+      console.log(`[${request_id}] stage=llm_attempt_failed, provider=${attempt.provider}, model=${attempt.model}, failure_stage=${attempt.failure_stage}, failure_class=${attempt.failure_class}, error=${attempt.error}`)
+    }
+
+    if (!llmText) {
+      const failureSummary = summarizeProviderFailures(providerAttempts)
+      const errorId = uuid()
+      await logRpcError(
+        request_id,
+        errorId,
+        `LLM retry chain failed: ${failureSummary.detail || 'no_attempts'}`,
+        {
+          failure_stage: failureSummary.failureStage,
+          failure_class: failureSummary.failureClass,
+          provider_attempts: providerAttempts,
+        }
+      )
+      console.warn(`[${request_id}] response_path=llm_failed returning_fallback=true status=200`)
+      return await buildEmergencyFallbackResponse('llm_failed', failureSummary.userMessage, errorId, {
+        failureStage: failureSummary.failureStage,
+        failureClass: failureSummary.failureClass,
+        providerAttempts,
+        detail: failureSummary.detail,
+      })
     }
   } catch (err: any) {
     const errorId = uuid()
     await logRpcError(request_id, errorId, `llm_exception: ${String(err?.message ?? err)}`, { prompt: prompt.slice(0, 2000) })
-    console.warn(`[${request_id}] response_path=llm_exception adding_cors=true status=502`)
-    return new Response(JSON.stringify({
-      ok: false,
-      error: "llm_exception",
-      message: "LLM exception occurred",
-      error_id: errorId
-    }), {
-      status: 502,
-      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Access-Control-Expose-Headers': 'Content-Type' }
+    console.warn(`[${request_id}] response_path=llm_exception returning_fallback=true status=200`)
+    return await buildEmergencyFallbackResponse('llm_exception', 'Hosted synthesis encountered an exception before it could produce a verified answer.', errorId, {
+      failureStage: lastLlmFailureStage,
+      failureClass: lastLlmFailureClass,
+      providerAttempts,
     })
   }
 
@@ -1864,7 +2286,10 @@ Return a single JSON object with these top-level keys:
     await logRpcError(request_id, errorId, errorMessage, {
       raw_response: parsed.raw,
       error_type: parsed.error,
-      sanitization_attempted: true
+      sanitization_attempted: true,
+      provider: modelProvider,
+      model: modelUsed,
+      provider_attempts: providerAttempts,
     })
 
     // For education_quick we may synthesize a minimal JSON fallback (schema-compliant)
@@ -1887,12 +2312,12 @@ Return a single JSON object with these top-level keys:
       }
       // Persist
       try {
-        await supabaseAdmin.from("analysis_runs").insert({
+        await insertAnalysisRunOrThrow({
           request_id,
           user_id,
           audience,
           status: "completed",
-          analysis_json: minimal,
+          ...(await buildAnalysisRunArtifactColumns(request_id, minimal)),
           retrieval_ids: retrievals.map((r:any)=>r.id),
           evidence_backed: false,
           created_at: new Date().toISOString()
@@ -1918,10 +2343,13 @@ Return a single JSON object with these top-level keys:
       return new Response(JSON.stringify({
         ok: false,
         error: "llm_output_not_json",
-        message: userMessage,
+        message: clientFailureMessage(userMessage, canExposeProviderDiagnostics),
         suggestions,
         error_id: errorId,
-        request_id
+        request_id,
+        failure_stage: canExposeProviderDiagnostics ? `${modelProvider || 'llm'}_parse_error` : 'llm_unavailable',
+        failure_class: canExposeProviderDiagnostics ? 'provider_parse_error' : 'provider_failure',
+        provider_attempts: canExposeProviderDiagnostics ? providerAttempts : undefined,
       }), {
         status: 502,
         headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Access-Control-Expose-Headers': 'Content-Type' }
@@ -1990,6 +2418,46 @@ Return a single JSON object with these top-level keys:
         text: llmJson.summary?.text || scenario_text || "Strategic analysis completed"
       }
     }
+
+    if (audience === 'researcher') {
+      if (typeof llmJson.long_summary === 'string' && llmJson.long_summary.trim().length > 0) {
+        llmJson.long_summary = { text: llmJson.long_summary.trim() }
+      } else if (!llmJson.long_summary || typeof llmJson.long_summary !== 'object') {
+        const fallbackLongSummary =
+          llmJson.summary?.text
+          || llmJson.executive_summary?.text
+          || llmJson.recommendation?.text
+          || `Researcher analysis generated for scenario: ${scenario_text}`
+        llmJson.long_summary = {
+          text: String(fallbackLongSummary),
+        }
+      } else if (typeof llmJson.long_summary?.text !== 'string' || llmJson.long_summary.text.trim().length === 0) {
+        llmJson.long_summary.text = llmJson.summary?.text || `Researcher analysis generated for scenario: ${scenario_text}`
+      }
+    }
+
+    const normalizedRetrievalIds = (retrievals || []).map((_retrieval: any, index: number) => `rid_${index + 1}`)
+    const validUsedRetrievalIds = Array.isArray(llmJson.provenance?.used_retrieval_ids)
+      ? llmJson.provenance.used_retrieval_ids.filter((value: unknown) => typeof value === 'string' && /^rid_/.test(value))
+      : []
+    const normalizedRetrievalSources = Array.from(new Set((retrievals || []).map((retrieval: any) => String(retrieval.source || retrieval.provider || 'unknown'))))
+    llmJson.provenance = {
+      ...(llmJson.provenance && typeof llmJson.provenance === 'object' ? llmJson.provenance : {}),
+      retrieval_count: Number.isFinite(llmJson.provenance?.retrieval_count) ? llmJson.provenance.retrieval_count : retrievals.length,
+      used_retrieval_ids: validUsedRetrievalIds.length ? validUsedRetrievalIds : normalizedRetrievalIds,
+      retrieval_sources: Array.isArray(llmJson.provenance?.retrieval_sources) ? llmJson.provenance.retrieval_sources : normalizedRetrievalSources,
+      cache_hit: typeof llmJson.provenance?.cache_hit === 'boolean' ? llmJson.provenance.cache_hit : cache_hit,
+      evidence_backed: typeof llmJson.provenance?.evidence_backed === 'boolean' ? llmJson.provenance.evidence_backed : evidence_backed,
+      llm_model: typeof llmJson.provenance?.llm_model === 'string' && llmJson.provenance.llm_model.trim().length > 0 ? llmJson.provenance.llm_model : (modelUsed || GEMINI_MODEL),
+      llm_duration_ms: Number.isFinite(llmJson.provenance?.llm_duration_ms) ? llmJson.provenance.llm_duration_ms : llmDurationMs,
+      fallback_used: typeof llmJson.provenance?.fallback_used === 'boolean' ? llmJson.provenance.fallback_used : fallbackUsed,
+      llm_provider: canExposeProviderDiagnostics
+        ? (typeof llmJson.provenance?.llm_provider === 'string' && llmJson.provenance.llm_provider.trim().length > 0 ? llmJson.provenance.llm_provider : (modelProvider || 'unknown'))
+        : undefined,
+      provider_attempts: canExposeProviderDiagnostics
+        ? (Array.isArray(llmJson.provenance?.provider_attempts) ? llmJson.provenance.provider_attempts : providerAttempts)
+        : undefined,
+    }
   } catch (normErr) {
     console.warn(`[${request_id}] normalization_warning:`, (normErr as any)?.message ?? normErr)
   }
@@ -2033,12 +2501,12 @@ Return a single JSON object with these top-level keys:
       }
       // Persist
       try {
-        await supabaseAdmin.from("analysis_runs").insert({
+        await insertAnalysisRunOrThrow({
           request_id,
           user_id,
           audience,
           status: "completed",
-          analysis_json: minimal,
+          ...(await buildAnalysisRunArtifactColumns(request_id, minimal)),
           retrieval_ids: retrievals.map((r:any)=>r.id),
           evidence_backed: false,
           created_at: new Date().toISOString()
@@ -2065,7 +2533,10 @@ Return a single JSON object with these top-level keys:
         error: "schema_validation_failed",
         message: "LLM response failed schema validation",
         error_id: errorId,
-        details: audienceValidate.errors
+        details: audienceValidate.errors,
+        failure_stage: canExposeProviderDiagnostics ? "schema_validation_failed" : 'llm_unavailable',
+        failure_class: canExposeProviderDiagnostics ? "provider_parse_error" : 'provider_failure',
+        provider_attempts: canExposeProviderDiagnostics ? providerAttempts : undefined,
       }), {
         status: 422,
         headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Access-Control-Expose-Headers': 'Content-Type' }
@@ -2220,13 +2691,53 @@ Return a single JSON object with these top-level keys:
   }
 
   // OK validated — persist analysis_runs
-    const analysis_id = llmJson.analysis_id ?? uuid()
-    const analysisRow = {
+    const inferredSurface = /(gold|oil|commodity|price|inflation|market|supplier|shipping|tariff)/i.test(scenario_text)
+      ? 'market_stream'
+      : 'geopolitical_radar'
+    const inferredScopeKey = /gold/i.test(scenario_text)
+      ? 'gold'
+      : /oil/i.test(scenario_text)
+        ? 'oil'
+        : 'global'
+    const groundedEntities = deriveEntityRefs(
+      [
+        scenario_text,
+        ...(retrievals || []).flatMap((retrieval: any) => [retrieval.title, retrieval.snippet, retrieval.url]),
+      ],
+      /(gold|oil|commodity|supplier|shipping|tariff|inventory|buyer)/i.test(scenario_text) ? 'commodity_procurement' : null,
+    )
+    const constraintSummary = buildConstraintChecks({
+      scenarioText: scenario_text,
+      questionText: llmJson?.summary?.text || llmJson?.explain_brief || '',
+      recommendedStrategy: llmJson?.recommendation || llmJson?.top_2_actions?.map((entry: any) => entry?.action || entry).join(' ') || '',
+      evidenceCount: retrievals.length,
+      groundedEntityCount: groundedEntities.length,
+      contradictionCount: Array.isArray(llmJson?.multi_agent_forecast?.contradictionPoints) ? llmJson.multi_agent_forecast.contradictionPoints.length : 0,
+    })
+    const driftSignal = await fetchLatestDriftSignal(supabaseAdmin, inferredSurface, inferredScopeKey).catch(() => null)
+    llmJson.provenance = {
+      ...(llmJson.provenance || {}),
+      grounded_entities: groundedEntities,
+      retrieval_policy_id: DEFAULT_RETRIEVAL_POLICY_ID,
+      prompt_policy_id: DEFAULT_PROMPT_POLICY_ID,
+      calibration_status: 'uncalibrated',
+      retrieval_provider_summary: retrievalProviderSummary,
+    }
+    llmJson.question_context = question_context
+    llmJson.constraint_checks = constraintSummary
+    if (driftSignal) {
+      llmJson.drift_signal = driftSignal
+    }
+
+  const analysis_id = llmJson.analysis_id ?? uuid()
+  const artifactColumns = await buildAnalysisRunArtifactColumns(request_id, llmJson)
+  const analysisRow = {
     request_id,
     user_id,
     audience,
     status: analysisStatus,
-    analysis_json: llmJson,
+    review_reason: reviewMetadata?.review_reasons?.join('; ') ?? null,
+    ...artifactColumns,
     retrieval_ids: retrievals.map((r:any)=>r.id),
     evidence_backed,
     solver_invocations: solverInvocations.length > 0 ? solverInvocations : null,
@@ -2235,7 +2746,7 @@ Return a single JSON object with these top-level keys:
   }
 
     try {
-      await supabaseAdmin.from("analysis_runs").insert(analysisRow)
+      await insertAnalysisRunOrThrow(analysisRow)
     } catch (e:any) {
     const errorId = uuid()
     await logRpcError(request_id, errorId, `db_insert_failed: ${String(e?.message ?? e)}`, { analysisRow })
@@ -2256,7 +2767,7 @@ Return a single JSON object with these top-level keys:
   try {
     // Generate notebook for researcher audience
     if (audience === "researcher") {
-      const notebookResponse = await fetch("http://localhost:54321/functions/v1/notebook-export", {
+      const notebookResponse = await fetch(buildFunctionUrl("notebook-export"), {
         method: "POST",
         headers: { "Content-Type": "application/json", "Authorization": `Bearer ${SUPABASE_SERVICE_ROLE_KEY}` },
         body: JSON.stringify({
@@ -2272,7 +2783,7 @@ Return a single JSON object with these top-level keys:
 
     // Generate teacher packet for teacher audience
     if (audience === "teacher") {
-      const teacherResponse = await fetch("http://localhost:54321/functions/v1/teacher-packet", {
+      const teacherResponse = await fetch(buildFunctionUrl("teacher-packet"), {
         method: "POST",
         headers: { "Content-Type": "application/json", "Authorization": `Bearer ${SUPABASE_SERVICE_ROLE_KEY}` },
         body: JSON.stringify({
@@ -2287,7 +2798,7 @@ Return a single JSON object with these top-level keys:
     }
 
     // Generate strategic playbook for all audiences
-    const playbookResponse = await fetch("http://localhost:54321/functions/v1/strategic-playbook", {
+    const playbookResponse = await fetch(buildFunctionUrl("strategic-playbook"), {
       method: "POST",
       headers: { "Content-Type": "application/json", "Authorization": `Bearer ${SUPABASE_SERVICE_ROLE_KEY}` },
       body: JSON.stringify({
@@ -2651,6 +3162,7 @@ Return a single JSON object with these top-level keys:
     },
     provenance: {
       model: modelUsed,
+      provider: canExposeProviderDiagnostics ? modelProvider : undefined,
       fallback_used: fallbackUsed,
       llm_duration_ms: llmDurationMs,
       total_duration_ms: totalDuration,
@@ -2658,7 +3170,9 @@ Return a single JSON object with these top-level keys:
       retrieval_count: retrievals.length,
       retrieval_sources: retrievals.map(r => r.source).filter(Boolean),
       evidence_backed: evidence_backed,
+      retrieval_provider_summary: retrievalProviderSummary,
       schema_validation_passed: true,
+      provider_attempts: canExposeProviderDiagnostics ? providerAttempts : undefined,
       solver_invocations: solverInvocations.length > 0 ? solverInvocations : undefined,
       ...sanitizationInfo
     }
