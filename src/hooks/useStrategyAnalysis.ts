@@ -741,7 +741,8 @@ export function useStrategyAnalysis(): UseStrategyAnalysisReturn {
 
       // Use API for production flow
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30s timeout
+      // Hosted public analysis can legitimately run longer than the local demo path.
+      const timeoutId = setTimeout(() => controller.abort(), 120000);
 
       const response = await fetch(ENDPOINTS.ANALYZE, {
         method: 'POST',
@@ -915,12 +916,66 @@ async function enhanceAnalysisWithStrategicEngines(
     dynamicRecalibration: null
   };
 
+  const logEnhancementFailure = (engine: string, detail: {
+    status?: number
+    reason?: string
+  }) => {
+    const status = typeof detail.status === 'number' ? detail.status : 'network'
+    const reason = detail.reason || 'request_failed'
+    console.warn(`[strategy-analysis] enhancement_failed engine=${engine} status=${status} reason=${reason}`)
+  }
+
+  const parseEnhancementResponse = async (engine: string, response: Response) => {
+    if (!response.ok) {
+      const raw = await response.text().catch(() => '')
+      logEnhancementFailure(engine, {
+        status: response.status,
+        reason: raw.slice(0, 160) || response.statusText || 'http_error',
+      })
+      return null
+    }
+
+    let json: any = null
+    try {
+      json = await response.json()
+    } catch {
+      logEnhancementFailure(engine, {
+        status: response.status,
+        reason: 'invalid_json',
+      })
+      return null
+    }
+
+    if (!json?.ok || !json?.response) {
+      logEnhancementFailure(engine, {
+        status: response.status,
+        reason: json?.message || json?.error || 'empty_response',
+      })
+      return null
+    }
+
+    return json.response
+  }
+
+  const postEnhancement = async (engine: string, url: string, body: unknown) => {
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(body),
+      })
+      return await parseEnhancementResponse(engine, response)
+    } catch (error) {
+      logEnhancementFailure(engine, {
+        reason: error instanceof Error ? error.message : String(error),
+      })
+      return null
+    }
+  }
+
   try {
     // Call Recursive Equilibrium Engine
-    const recursiveResponse = await fetch(ENDPOINTS.RECURSIVE_EQ, {
-      method: 'POST',
-      headers: getAuthHeaders(),
-      body: JSON.stringify({
+    const recursiveData = await postEnhancement('recursive-equilibrium', ENDPOINTS.RECURSIVE_EQ, {
         runId: analysisRunId,
         scenario: {
           players: players?.map(p => ({
@@ -937,20 +992,12 @@ async function enhanceAnalysisWithStrategicEngines(
           quantumEnabled: true
         }
       })
-    });
-
-    if (recursiveResponse.ok) {
-      const recursiveData = await recursiveResponse.json();
-      if (recursiveData.ok && recursiveData.response) {
-        enhancements.recursiveEquilibrium = recursiveData.response;
-      }
+    if (recursiveData) {
+      enhancements.recursiveEquilibrium = recursiveData;
     }
 
     // Call Enhanced Symmetry Mining Engine
-    const symmetryResponse = await fetch(ENDPOINTS.SYMMETRY_MINING, {
-      method: 'POST',
-      headers: getAuthHeaders(),
-      body: JSON.stringify({
+    const symmetryData = await postEnhancement('symmetry-mining', ENDPOINTS.SYMMETRY_MINING, {
         runId: analysisRunId,
         currentScenario: {
           title: "Strategic Analysis Scenario",
@@ -972,31 +1019,23 @@ async function enhanceAnalysisWithStrategicEngines(
           returnStructuredResults: true
         }
       })
-    });
+    if (symmetryData) {
+      enhancements.symmetryAnalysis = symmetryData;
+      enhancements.crossDomainInsights = symmetryData.strategicRecommendations;
 
-    if (symmetryResponse.ok) {
-      const symmetryData = await symmetryResponse.json();
-      if (symmetryData.ok && symmetryData.response) {
-        enhancements.symmetryAnalysis = symmetryData.response;
-        enhancements.crossDomainInsights = symmetryData.response.strategicRecommendations;
-
-        // Map to analysis.pattern_matches expected by UI
-        try {
-          const analogies = symmetryData.response.strategicAnalogies || [];
-          const patternMatches = analogies.slice(0, 5).map((a: any, idx: number) => ({
-            id: String(a.sourceScenario || `pattern_${idx + 1}`),
-            score: Number(a.structuralSimilarity ?? a.successProbability ?? 0)
-          }));
-          (enhancements as any).pattern_matches = patternMatches;
-        } catch {}
-      }
+      // Map to analysis.pattern_matches expected by UI
+      try {
+        const analogies = symmetryData.strategicAnalogies || [];
+        const patternMatches = analogies.slice(0, 5).map((a: any, idx: number) => ({
+          id: String(a.sourceScenario || `pattern_${idx + 1}`),
+          score: Number(a.structuralSimilarity ?? a.successProbability ?? 0)
+        }));
+        (enhancements as any).pattern_matches = patternMatches;
+      } catch {}
     }
 
     // Call Quantum Strategy Service
-    const quantumResponse = await fetch(ENDPOINTS.QUANTUM_STRATEGY, {
-      method: 'POST',
-      headers: getAuthHeaders(),
-      body: JSON.stringify({
+    const quantumData = await postEnhancement('quantum-strategy-service', ENDPOINTS.QUANTUM_STRATEGY, {
         runId: analysisRunId,
         scenario: {
           players: players?.map(p => ({
@@ -1013,38 +1052,30 @@ async function enhanceAnalysisWithStrategicEngines(
           timeHorizon: 24
         }
       })
-    });
-
-    if (quantumResponse.ok) {
-      const quantumData = await quantumResponse.json();
-      if (quantumData.ok && quantumData.response) {
-        enhancements.quantumAnalysis = quantumData.response;
-        // Map to analysis.quantum expected by UI (collapsed + influence)
-        try {
-          const q = quantumData.response;
-          const states: any[] = q.quantumStates || [];
-          const actionProb: Record<string, number> = {};
-          let count = 0;
-          for (const st of states) {
-            for (const s of st.coherentStrategies || []) {
-              actionProb[s.action] = (actionProb[s.action] || 0) + (typeof s.probability === 'number' ? s.probability : 0);
-            }
-            count++;
+    if (quantumData) {
+      enhancements.quantumAnalysis = quantumData;
+      // Map to analysis.quantum expected by UI (collapsed + influence)
+      try {
+        const q = quantumData;
+        const states: any[] = q.quantumStates || [];
+        const actionProb: Record<string, number> = {};
+        let count = 0;
+        for (const st of states) {
+          for (const s of st.coherentStrategies || []) {
+            actionProb[s.action] = (actionProb[s.action] || 0) + (typeof s.probability === 'number' ? s.probability : 0);
           }
-          const collapsed = Object.entries(actionProb).map(([action, p]) => ({ action, probability: count ? (p as number) / count : 0 }));
-          const influence = (q.entanglementMatrix?.correlationMatrix && Array.isArray(q.entanglementMatrix.correlationMatrix))
-            ? q.entanglementMatrix.correlationMatrix
-            : undefined;
-          (enhancements as any).quantum = { collapsed, influence };
-        } catch {}
-      }
+          count++;
+        }
+        const collapsed = Object.entries(actionProb).map(([action, p]) => ({ action, probability: count ? (p as number) / count : 0 }));
+        const influence = (q.entanglementMatrix?.correlationMatrix && Array.isArray(q.entanglementMatrix.correlationMatrix))
+          ? q.entanglementMatrix.correlationMatrix
+          : undefined;
+        (enhancements as any).quantum = { collapsed, influence };
+      } catch {}
     }
 
     // Call Information Value Assessment
-    const infoValueResponse = await fetch(ENDPOINTS.INFO_VALUE, {
-      method: 'POST',
-      headers: getAuthHeaders(),
-      body: JSON.stringify({
+    const infoValueData = await postEnhancement('information-value-assessment', ENDPOINTS.INFO_VALUE, {
         runId: analysisRunId,
         scenario: {
           title: scenario,
@@ -1062,28 +1093,20 @@ async function enhanceAnalysisWithStrategicEngines(
           prioritizeSpeed: false
         }
       })
-    });
-
-    if (infoValueResponse.ok) {
-      const infoValueData = await infoValueResponse.json();
-      if (infoValueData.ok && infoValueData.response) {
-        enhancements.informationValue = infoValueData.response;
-        // Derive a compact VOI summary when possible
-        try {
-          const summary = infoValueData.response.summary || infoValueData.response.metrics || {};
-          const ev_prior = typeof summary.ev_prior === 'number' ? summary.ev_prior : (summary.expectedValuePrior ?? 0);
-          const evpi = typeof summary.evpi === 'number' ? summary.evpi : (summary.expectedValueOfPerfectInformation ?? 0);
-          const evppi = summary.evppi || summary.signal_evppi || {};
-          (enhancements as any).voi = { ev_prior: Number(ev_prior) || 0, evpi: Number(evpi) || 0, evppi };
-        } catch {}
-      }
+    if (infoValueData) {
+      enhancements.informationValue = infoValueData;
+      // Derive a compact VOI summary when possible
+      try {
+        const summary = infoValueData.summary || infoValueData.metrics || {};
+        const ev_prior = typeof summary.ev_prior === 'number' ? summary.ev_prior : (summary.expectedValuePrior ?? 0);
+        const evpi = typeof summary.evpi === 'number' ? summary.evpi : (summary.expectedValueOfPerfectInformation ?? 0);
+        const evppi = summary.evppi || summary.signal_evppi || {};
+        (enhancements as any).voi = { ev_prior: Number(ev_prior) || 0, evpi: Number(evpi) || 0, evppi };
+      } catch {}
     }
 
     // Call Outcome Forecasting
-    const forecastResponse = await fetch(ENDPOINTS.OUTCOME_FORECAST, {
-      method: 'POST',
-      headers: getAuthHeaders(),
-      body: JSON.stringify({
+    const forecastData = await postEnhancement('outcome-forecasting', ENDPOINTS.OUTCOME_FORECAST, {
         runId: analysisRunId,
         scenario: {
           title: scenario,
@@ -1099,30 +1122,21 @@ async function enhanceAnalysisWithStrategicEngines(
           confidenceLevel: 0.95
         }
       })
-    });
-
-    if (forecastResponse.ok) {
-      const forecastData = await forecastResponse.json();
-      if (forecastData.ok && forecastData.response) {
-        enhancements.outcomeForecasting = forecastData.response;
-        // Map to analysis.forecast expected by UI (pick primary outcome if present)
-        try {
-          const f = forecastData.response;
-          const forecasts = f.forecasts || {};
-          const outcomeKeys = Object.keys(forecasts);
-          const primaryKey = outcomeKeys.find(k => k.includes('success')) || outcomeKeys[0];
-          const points = Array.isArray(forecasts[primaryKey]) ? forecasts[primaryKey] : [];
-          const forecastArr = points.map((p: any) => ({ t: Number(p.t ?? 0), probability: Number(p.probability ?? 0) }));
-          (enhancements as any).forecast = forecastArr;
-        } catch {}
-      }
+    if (forecastData) {
+      enhancements.outcomeForecasting = forecastData;
+      // Map to analysis.forecast expected by UI (pick primary outcome if present)
+      try {
+        const f = forecastData;
+        const forecasts = f.forecasts || {};
+        const outcomeKeys = Object.keys(forecasts);
+        const primaryKey = outcomeKeys.find(k => k.includes('success')) || outcomeKeys[0];
+        const points = Array.isArray(forecasts[primaryKey]) ? forecasts[primaryKey] : [];
+        const forecastArr = points.map((p: any) => ({ t: Number(p.t ?? 0), probability: Number(p.probability ?? 0) }));
+        (enhancements as any).forecast = forecastArr;
+      } catch {}
     }
 
-    try {
-      const multiAgentForecastResponse = await fetch(ENDPOINTS.MULTI_AGENT_FORECAST, {
-        method: 'POST',
-        headers: getAuthHeaders(),
-        body: JSON.stringify({
+    const multiAgentForecastData = await postEnhancement('multi-agent-forecast', ENDPOINTS.MULTI_AGENT_FORECAST, {
           runId: analysisRunId,
           scenario: {
             description: scenario,
@@ -1135,37 +1149,25 @@ async function enhanceAnalysisWithStrategicEngines(
           questionContext: questionContext || analysisContext?.question_context || null,
           mode: questionContext?.decision_use?.includes('public') ? 'public' : 'internal',
         })
-      });
-
-      if (multiAgentForecastResponse.ok) {
-        const multiAgentForecastData = await multiAgentForecastResponse.json();
-        if (multiAgentForecastData.ok && multiAgentForecastData.response) {
-          enhancements.multiAgentForecast = multiAgentForecastData.response;
-        }
-      }
-    } catch {
-      // The UI already has a deterministic local fallback for the forecast surface.
+    if (multiAgentForecastData) {
+      enhancements.multiAgentForecast = multiAgentForecastData;
     }
 
     // Additional engines to close PRD gaps
-    try {
-      // Strategy Success Analysis (historical effectiveness)
-      const topPattern = (enhancements.symmetryAnalysis?.strategicAnalogies?.[0]?.sourceScenario) || 'Flanking Maneuver';
-      const successRes = await fetch(ENDPOINTS.STRATEGY_SUCCESS, {
-        method: 'POST', headers: getAuthHeaders(),
-        body: JSON.stringify({ runId: analysisRunId, strategyPattern: topPattern, contextFilters: { minSampleSize: 10 }, analysisType: 'comprehensive' })
-      });
-      if (successRes.ok) {
-        const sjson = await successRes.json();
-        if (sjson.ok && sjson.response) enhancements.strategySuccess = sjson.response;
-      }
-    } catch {}
+    // Strategy Success Analysis (historical effectiveness)
+    const topPattern = (enhancements.symmetryAnalysis?.strategicAnalogies?.[0]?.sourceScenario) || 'Flanking Maneuver';
+    const strategySuccessData = await postEnhancement('strategy-success-analysis', ENDPOINTS.STRATEGY_SUCCESS, {
+      runId: analysisRunId,
+      strategyPattern: topPattern,
+      contextFilters: { minSampleSize: 10 },
+      analysisType: 'comprehensive'
+    })
+    if (strategySuccessData) {
+      enhancements.strategySuccess = strategySuccessData
+    }
 
-    try {
-      // Scale-Invariant Templates (cross-scale adaptation)
-      const scaleRes = await fetch(ENDPOINTS.SCALE_INVARIANT, {
-        method: 'POST', headers: getAuthHeaders(),
-        body: JSON.stringify({
+    // Scale-Invariant Templates (cross-scale adaptation)
+    const scaleInvariantData = await postEnhancement('scale-invariant-templates', ENDPOINTS.SCALE_INVARIANT, {
           runId: analysisRunId,
           sourceTemplate: 'coordination_equilibrium',
           sourceScale: 5,
@@ -1174,18 +1176,12 @@ async function enhanceAnalysisWithStrategicEngines(
           targetDomain: extractDomainFromScenario(scenario),
           scenarioContext: { description: scenario, stakeholders: extractStakeholdersFromScenario(scenario), timeframe: 'medium', resources: [] }
         })
-      });
-      if (scaleRes.ok) {
-        const scjson = await scaleRes.json();
-        if (scjson.ok && scjson.response) enhancements.scaleInvariant = scjson.response;
-      }
-    } catch {}
+    if (scaleInvariantData) {
+      enhancements.scaleInvariant = scaleInvariantData
+    }
 
-    try {
-      // Dynamic Strategy Recalibration (continuous optimization)
-      const recalcRes = await fetch(ENDPOINTS.DYNAMIC_RECALIBRATION, {
-        method: 'POST', headers: getAuthHeaders(),
-        body: JSON.stringify({
+    // Dynamic Strategy Recalibration (continuous optimization)
+    const dynamicRecalibrationData = await postEnhancement('dynamic-recalibration', ENDPOINTS.DYNAMIC_RECALIBRATION, {
           runId: analysisRunId,
           currentStrategy: {
             actions: (players || []).flatMap((p: any) => (p.actions || []).map((a: string, i: number) => ({ id: `${p.id}_${a}`, name: a, currentPriority: 0.5, performance: 1.0 }))),
@@ -1205,12 +1201,9 @@ async function enhanceAnalysisWithStrategicEngines(
           },
           constraints: { maxStrategyChanges: 3, minConfidenceThreshold: 0.3, resourceLimitations: {} }
         })
-      });
-      if (recalcRes.ok) {
-        const rjson = await recalcRes.json();
-        if (rjson.ok && rjson.response) enhancements.dynamicRecalibration = rjson.response;
-      }
-    } catch {}
+    if (dynamicRecalibrationData) {
+      enhancements.dynamicRecalibration = dynamicRecalibrationData
+    }
 
   } catch (error) {
     console.warn('Strategic engine enhancements failed:', error);
