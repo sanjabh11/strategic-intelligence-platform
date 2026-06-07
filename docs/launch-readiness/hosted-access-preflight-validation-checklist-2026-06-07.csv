@@ -1,0 +1,10 @@
+gate,status,proof_bucket,evidence,next_action
+supabase_cli_available,passed,local,Supabase CLI source global_supabase; version 2.95.4.,No CLI install action needed for access preflight.
+core_hosted_env_present,passed,local,All required core hosted env keys are present by name.,Keep values redacted; do not store secrets in artifacts.
+strategist_provider_key_present,passed,local,At least one strategist provider key is present by name.,Run hosted strategist smoke only after owner approval.
+project_visibility_checked,passed,hosted_live_access_check,projects list access=visible; listed_project_count=12; target_project_visible=true.,Proceed to project-scoped function/secret access checks.
+function_management_access,passed,hosted_live_access_check,functions list access=visible.,Proceed to hosted function drift proof.
+secret_management_access,passed,hosted_live_access_check,secrets list access=visible.,Proceed to redacted secret manifest and hosted smoke.
+hosted_runtime_health_reachable,passed,hosted_live_access_check,runtime_host=jxdihzqoaxtydolmltdr.supabase.co; health_path=/functions/v1/health; runtime_status=reachable_ok; http_status=200; error_code=n/a.,Proceed to hosted function smoke after management access is also ready.
+forecast_runtime_functions_load,passed,hosted_live_access_check,All probed runtime functions loaded via read-only OPTIONS/GET checks.,Proceed to hosted forecast freeze.
+payment_proof_values_present,blocked,local,"Missing STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, STRIPE_ACADEMIC_PRICE_ID.",Provide Stripe proof values before pricing/payment hosted proof.

@@ -1,0 +1,220 @@
+{
+  "schema_version": "hosted-access-preflight-validation-v1",
+  "generated_at": "2026-06-07T15:02:33.842Z",
+  "status": "hosted_access_preflight_partial_payment_proof_missing",
+  "source": {
+    "project_ref": "jxdihzqoaxtydolmltdr",
+    "env_file": ".env",
+    "supabase_cli_source": "global_supabase",
+    "supabase_cli_version": "2.95.4",
+    "supabase_access_token_source": "env_token_allowed",
+    "launch_evidence": "docs/launch-readiness/launch-evidence-2026-06-06.json"
+  },
+  "summary": {
+    "cli_available": true,
+    "core_env_present": true,
+    "missing_core_env_key_count": 0,
+    "strategist_provider_key_present": true,
+    "missing_provider_key_option_count": 5,
+    "stripe_proof_ready": false,
+    "missing_stripe_proof_key_count": 3,
+    "projects_list_access": "visible",
+    "listed_project_count": 12,
+    "target_project_visible": true,
+    "functions_list_access": "visible",
+    "secrets_list_access": "visible",
+    "management_access_ready": true,
+    "hosted_runtime_health_status": "reachable_ok",
+    "hosted_runtime_health_error_code": null,
+    "hosted_runtime_host": "jxdihzqoaxtydolmltdr.supabase.co",
+    "hosted_runtime_health_reachable": true,
+    "forecast_runtime_functions_load": true,
+    "failed_runtime_function_probe_count": 0,
+    "hosted_access_ready_for_smoke": true,
+    "hosted_claim_allowed": false,
+    "active_release_hold_count": 3
+  },
+  "missing_keys_by_name_only": {
+    "core_env": [],
+    "provider_options": [
+      "OPENAI_API_KEY",
+      "XAI_API_KEY",
+      "GROK_API_KEY",
+      "GOOGLE_AI_API_KEY",
+      "VITE_GEMINI_API_KEY"
+    ],
+    "stripe_proof": [
+      "STRIPE_SECRET_KEY",
+      "STRIPE_WEBHOOK_SECRET",
+      "STRIPE_ACADEMIC_PRICE_ID"
+    ]
+  },
+  "command_exit_summary": {
+    "version_exit_code": 0,
+    "projects_list_exit_code": 0,
+    "functions_list_exit_code": 0,
+    "secrets_list_exit_code": 0,
+    "runtime_health_http_status": 200
+  },
+  "runtime_function_probes": [
+    {
+      "status": "load_ok",
+      "function_name": "health",
+      "method": "GET",
+      "runtime_host": "jxdihzqoaxtydolmltdr.supabase.co",
+      "url_path": "/functions/v1/health",
+      "http_status": 200,
+      "error_code": null,
+      "load_error_code": null,
+      "required_for": "runtime_health"
+    },
+    {
+      "status": "load_ok",
+      "function_name": "question-intake",
+      "method": "OPTIONS",
+      "runtime_host": "jxdihzqoaxtydolmltdr.supabase.co",
+      "url_path": "/functions/v1/question-intake",
+      "http_status": 200,
+      "error_code": null,
+      "load_error_code": null,
+      "required_for": "question_routing"
+    },
+    {
+      "status": "load_ok",
+      "function_name": "analyze-engine",
+      "method": "OPTIONS",
+      "runtime_host": "jxdihzqoaxtydolmltdr.supabase.co",
+      "url_path": "/functions/v1/analyze-engine",
+      "http_status": 200,
+      "error_code": null,
+      "load_error_code": null,
+      "required_for": "forecast_analysis"
+    },
+    {
+      "status": "load_ok",
+      "function_name": "multi-agent-forecast",
+      "method": "OPTIONS",
+      "runtime_host": "jxdihzqoaxtydolmltdr.supabase.co",
+      "url_path": "/functions/v1/multi-agent-forecast",
+      "http_status": 200,
+      "error_code": null,
+      "load_error_code": null,
+      "required_for": "forecast_consensus"
+    },
+    {
+      "status": "load_ok",
+      "function_name": "brier-weighted-consensus",
+      "method": "OPTIONS",
+      "runtime_host": "jxdihzqoaxtydolmltdr.supabase.co",
+      "url_path": "/functions/v1/brier-weighted-consensus",
+      "http_status": 200,
+      "error_code": null,
+      "load_error_code": null,
+      "required_for": "forecast_registry_consensus"
+    }
+  ],
+  "acceptance_gates": [
+    {
+      "gate": "supabase_cli_available",
+      "status": "passed",
+      "proof_bucket": "local",
+      "evidence": "Supabase CLI source global_supabase; version 2.95.4.",
+      "next_action": "No CLI install action needed for access preflight."
+    },
+    {
+      "gate": "core_hosted_env_present",
+      "status": "passed",
+      "proof_bucket": "local",
+      "evidence": "All required core hosted env keys are present by name.",
+      "next_action": "Keep values redacted; do not store secrets in artifacts."
+    },
+    {
+      "gate": "strategist_provider_key_present",
+      "status": "passed",
+      "proof_bucket": "local",
+      "evidence": "At least one strategist provider key is present by name.",
+      "next_action": "Run hosted strategist smoke only after owner approval."
+    },
+    {
+      "gate": "project_visibility_checked",
+      "status": "passed",
+      "proof_bucket": "hosted_live_access_check",
+      "evidence": "projects list access=visible; listed_project_count=12; target_project_visible=true.",
+      "next_action": "Proceed to project-scoped function/secret access checks."
+    },
+    {
+      "gate": "function_management_access",
+      "status": "passed",
+      "proof_bucket": "hosted_live_access_check",
+      "evidence": "functions list access=visible.",
+      "next_action": "Proceed to hosted function drift proof."
+    },
+    {
+      "gate": "secret_management_access",
+      "status": "passed",
+      "proof_bucket": "hosted_live_access_check",
+      "evidence": "secrets list access=visible.",
+      "next_action": "Proceed to redacted secret manifest and hosted smoke."
+    },
+    {
+      "gate": "hosted_runtime_health_reachable",
+      "status": "passed",
+      "proof_bucket": "hosted_live_access_check",
+      "evidence": "runtime_host=jxdihzqoaxtydolmltdr.supabase.co; health_path=/functions/v1/health; runtime_status=reachable_ok; http_status=200; error_code=n/a.",
+      "next_action": "Proceed to hosted function smoke after management access is also ready."
+    },
+    {
+      "gate": "forecast_runtime_functions_load",
+      "status": "passed",
+      "proof_bucket": "hosted_live_access_check",
+      "evidence": "All probed runtime functions loaded via read-only OPTIONS/GET checks.",
+      "next_action": "Proceed to hosted forecast freeze."
+    },
+    {
+      "gate": "payment_proof_values_present",
+      "status": "blocked",
+      "proof_bucket": "local",
+      "evidence": "Missing STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, STRIPE_ACADEMIC_PRICE_ID.",
+      "next_action": "Provide Stripe proof values before pricing/payment hosted proof."
+    }
+  ],
+  "release_holds": [
+    {
+      "hold": "target_project_management_access_missing",
+      "severity": "P1",
+      "status": "cleared",
+      "evidence_needed": "Supabase functions and secrets list commands succeed for the intended project ref without exposing values."
+    },
+    {
+      "hold": "hosted_runtime_health_unreachable",
+      "severity": "P1",
+      "status": "cleared",
+      "evidence_needed": "The configured Supabase runtime host resolves and /functions/v1/health returns a reachable HTTP response without exposing secret values."
+    },
+    {
+      "hold": "forecast_runtime_function_load_failure",
+      "severity": "P1",
+      "status": "cleared",
+      "evidence_needed": "The hosted analyze-engine and multi-agent-forecast edge functions load successfully through read-only runtime probes."
+    },
+    {
+      "hold": "hosted_url_and_deploy_binding_missing",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "Owner-approved hosted URL plus deploy id, release id, or commit SHA for browser and smoke evidence."
+    },
+    {
+      "hold": "stripe_payment_proof_values_missing",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, STRIPE_ACADEMIC_PRICE_ID, and APP_URL are present for owner-approved payment proof."
+    },
+    {
+      "hold": "hosted_browser_screenshots_missing",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "Browser screenshots or externally supplied evidence for buyer-visible hosted routes after deploy binding."
+    }
+  ],
+  "proof_boundary": "This artifact validates local, management, and runtime-access readiness only. It does not prove hosted route behavior, browser rendering, buyer-safe hosted claims, payment readiness, enterprise readiness, or prediction accuracy."
+}

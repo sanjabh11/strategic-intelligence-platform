@@ -36,6 +36,7 @@ function usage() {
     '  [--app-snapshot-csv-output docs/launch-readiness/prediction-benchmark-app-snapshots-frozen-<date>.csv]',
     '  [--scorecard-csv-output docs/launch-readiness/prediction-benchmark-scorecard-frozen-<date>.csv]',
     '  [--offline-only]',
+    '  [--require-hosted]',
     '  [--hosted-timeout-ms 120000]',
   ].join('\n'));
 }
@@ -327,6 +328,7 @@ async function main() {
   const questions = Array.isArray(suite.forecast_benchmark_questions) ? suite.forecast_benchmark_questions : [];
   const env = loadBenchmarkEnv();
   const offlineOnly = hasFlag('--offline-only');
+  const requireHosted = hasFlag('--require-hosted');
   const forecasts = [];
 
   for (const question of questions) {
@@ -338,10 +340,13 @@ async function main() {
         continue;
       } catch (error) {
         const message = redactSensitive(`${error?.message || error} ${JSON.stringify(error?.payload ?? '')}`, env);
+        const errorCode = error?.cause?.code || error?.name || null;
         const hostedFailure = {
           status: 'failed',
           digest: errorDigest(message),
           message,
+          error_code: errorCode,
+          error_host: error?.cause?.hostname || null,
         };
         const fallback = buildLocalForecast({ question, generatedAt, dateSuffix, hostedFailure });
         forecasts.push(fallback);
@@ -361,6 +366,18 @@ async function main() {
     generatedAt,
     dateSuffix,
   });
+  if (requireHosted && freeze.summary.hosted_rows !== questions.length) {
+    const digests = freeze.summary.hosted_failure_digests?.join(',') || 'none';
+    console.error(JSON.stringify({
+      status: 'hosted_flow_required_but_unavailable',
+      hosted_rows: freeze.summary.hosted_rows,
+      expected_hosted_rows: questions.length,
+      hosted_failure_rows: freeze.summary.hosted_failure_rows,
+      hosted_failure_digests: digests,
+      message: 'The hosted analyze-engine plus multi-agent-forecast flow did not return every benchmark probability. Local mirror fallback is not accepted when --require-hosted is set.',
+    }, null, 2));
+    process.exit(1);
+  }
   const validation = validateAppForecastFreeze(freeze);
   if (validation.status !== 'passed') {
     console.error(JSON.stringify(validation, null, 2));
@@ -380,6 +397,8 @@ async function main() {
     app_probability_rows_captured: freeze.summary.app_probability_rows_captured,
     hosted_rows: freeze.summary.hosted_rows,
     local_mirror_rows: freeze.summary.local_mirror_rows,
+    hosted_failure_rows: freeze.summary.hosted_failure_rows,
+    hosted_flow_reachable: freeze.summary.hosted_flow_reachable,
     accuracy_claim_allowed: freeze.summary.accuracy_claim_allowed,
     top_three_claim_allowed: freeze.summary.top_three_claim_allowed,
   }, null, 2));
