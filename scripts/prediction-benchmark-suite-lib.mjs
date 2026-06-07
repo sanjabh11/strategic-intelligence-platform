@@ -81,6 +81,17 @@ export const PROVIDER_MAP_COLUMNS = [
   'claim_boundary',
 ];
 
+export const APP_FORECAST_SOURCE_POLICY = {
+  hosted: {
+    model_or_team: 'hosted_analyze_engine_multi_agent_forecast',
+    coverage_status: 'app_probability_frozen_hosted_flow',
+  },
+  localMirror: {
+    model_or_team: 'local_multi_agent_role_weighted_mirror',
+    coverage_status: 'app_probability_frozen_local_mirror',
+  },
+};
+
 export const TOP_10_SCENARIOS = [
   {
     id: 'pbq-geo-escalation-001',
@@ -372,6 +383,334 @@ export function marketPriceToProbability({ bestBid = null, bestAsk = null, lastT
     method: 'no_public_price_available',
     spread: bid !== null && ask !== null && ask >= bid ? Math.round((ask - bid) * 1_000_000) / 1_000_000 : null,
   };
+}
+
+export function clamp(value, min, max) {
+  return Math.min(max, Math.max(min, value));
+}
+
+export function hashFloat(input) {
+  let h = 2166136261;
+  for (let index = 0; index < input.length; index += 1) {
+    h ^= input.charCodeAt(index);
+    h += (h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24);
+  }
+  return (h >>> 0) / 0xffffffff;
+}
+
+function average(values) {
+  if (!values.length) return 0;
+  return values.reduce((sum, value) => sum + value, 0) / values.length;
+}
+
+function standardDeviation(values) {
+  if (values.length < 2) return 0;
+  const mean = average(values);
+  const variance = average(values.map((value) => (value - mean) ** 2));
+  return Math.sqrt(variance);
+}
+
+export function scenarioKeywords(text) {
+  const lower = String(text ?? '').toLowerCase();
+  return {
+    geopolitical: ['war', 'sanction', 'nato', 'china', 'russia', 'border', 'missile', 'conflict', 'diplomatic', 'election'].some((keyword) => lower.includes(keyword)),
+    commodities: ['gold', 'oil', 'commodity', 'energy', 'metal', 'inflation', 'shipping', 'supply'].some((keyword) => lower.includes(keyword)),
+    macro: ['gdp', 'inflation', 'rates', 'currency', 'trade', 'economy', 'growth', 'dollar', 'spx', 'market'].some((keyword) => lower.includes(keyword)),
+    risk: ['volatility', 'uncertain', 'risk', 'shock', 'escalation', 'crisis', 'tail', 'contagion'].some((keyword) => lower.includes(keyword)),
+    directional: ['price', 'rise', 'fall', 'increase', 'decrease', 'surge', 'drop', 'move', 'gain', 'loss'].some((keyword) => lower.includes(keyword)),
+  };
+}
+
+export function roleBias(roleId, description, evidenceCount) {
+  const keywords = scenarioKeywords(description);
+  let bias = 0;
+
+  if (roleId === 'geopolitics') bias += keywords.geopolitical ? 0.08 : 0.01;
+  if (roleId === 'commodities') bias += keywords.commodities ? 0.07 : 0.015;
+  if (roleId === 'macro') bias += keywords.macro ? 0.06 : 0.02;
+  if (roleId === 'risk') bias -= keywords.risk ? 0.015 : 0.03;
+
+  bias += clamp((evidenceCount - 3) * 0.01, -0.03, 0.05);
+  return bias;
+}
+
+export function buildQuestionQuality(description, retrievals = []) {
+  const firstSentence = String(description ?? '').split(/[.?!]/).map((part) => part.trim()).find(Boolean) || String(description ?? '').trim();
+  const keywords = scenarioKeywords(description);
+  const evidenceCoverage = clamp(retrievals.length / 6, 0, 1);
+  const clarity = clamp(firstSentence.length > 30 ? 0.84 : 0.7, 0, 1);
+  const resolvability = clamp((keywords.directional ? 0.8 : 0.74) + evidenceCoverage * 0.15, 0, 0.96);
+  const overall = clamp((clarity * 0.35) + (resolvability * 0.35) + (evidenceCoverage * 0.3), 0, 1);
+  return {
+    clarity,
+    resolvability,
+    evidenceCoverage,
+    overall,
+    requiresHumanRefinement: overall < 0.72,
+  };
+}
+
+export function buildBenchmarkScenarioDescription(question) {
+  return [
+    question.question_text,
+    `Resolution criteria: ${question.resolution_criteria}`,
+    `Resolution source: ${question.expected_resolution_source_url}`,
+    `Ambiguity policy: ${question.ambiguity_policy}`,
+    `Exclusion rule: ${question.exclusion_rule}`,
+  ].filter(Boolean).join('\n\n');
+}
+
+export function buildLocalRoleWeightedForecast({
+  description,
+  runId,
+  retrievals = [],
+  baseForecast = [],
+} = {}) {
+  const baseForecastProbability = baseForecast.length > 0
+    ? clamp(Number(baseForecast[baseForecast.length - 1]?.probability ?? 0.5), 0, 1)
+    : null;
+  const evidenceCount = retrievals.length;
+  const question = {
+    quality: buildQuestionQuality(description, retrievals),
+  };
+  const roles = [
+    { id: 'geopolitics', label: 'Geopolitics Agent', weight: 0.32 },
+    { id: 'commodities', label: 'Commodities Agent', weight: 0.23 },
+    { id: 'macro', label: 'Macro Agent', weight: 0.25 },
+    { id: 'risk', label: 'Risk Agent', weight: 0.2 },
+  ];
+
+  const agentProbabilities = roles.map((role) => {
+    const seed = `${description}:${role.id}:${runId}`;
+    const latentSignal = (hashFloat(seed) - 0.5) * 0.18;
+    const anchor = baseForecastProbability ?? (0.46 + hashFloat(`${seed}:anchor`) * 0.12);
+    const probability = clamp(anchor + latentSignal + roleBias(role.id, description, evidenceCount), 0.05, 0.95);
+    const confidence = clamp(0.48 + question.quality.evidenceCoverage * 0.2 + hashFloat(`${seed}:confidence`) * 0.16, 0.38, 0.9);
+    return {
+      id: role.id,
+      label: role.label,
+      probability,
+      confidence,
+      weight: role.weight,
+    };
+  });
+
+  const disagreementIndex = clamp(standardDeviation(agentProbabilities.map((agent) => agent.probability)) * 3.5, 0, 1);
+  const normalizedWeightSum = agentProbabilities.reduce((sum, agent) => sum + agent.weight, 0) || 1;
+  const championProbability = clamp(agentProbabilities.reduce((sum, agent) => sum + agent.probability * agent.weight, 0) / normalizedWeightSum, 0, 1);
+  const championConfidence = clamp(average(agentProbabilities.map((agent) => agent.confidence)) - disagreementIndex * 0.15, 0.25, 0.92);
+  const sortedProbabilities = agentProbabilities.map((agent) => agent.probability).sort((a, b) => a - b);
+  const equalWeightProbability = average(agentProbabilities.map((agent) => agent.probability));
+  const trimmedProbability = sortedProbabilities.length > 2 ? average(sortedProbabilities.slice(1, sortedProbabilities.length - 1)) : equalWeightProbability;
+  const skepticAdjustedProbability = clamp(championProbability - disagreementIndex * 0.12 - (question.quality.overall < 0.72 ? 0.04 : 0), 0.03, 0.97);
+
+  return {
+    source: APP_FORECAST_SOURCE_POLICY.localMirror.model_or_team,
+    run_id: runId,
+    base_forecast_probability: baseForecastProbability,
+    probability: Number(championProbability.toFixed(6)),
+    confidence: Number(championConfidence.toFixed(6)),
+    calibrated_probability: Number(championProbability.toFixed(6)),
+    calibration_status: 'uncalibrated_local_mirror',
+    disagreement_index: Number(disagreementIndex.toFixed(6)),
+    question_quality: Object.fromEntries(
+      Object.entries(question.quality).map(([key, value]) => [key, typeof value === 'number' ? Number(value.toFixed(6)) : value]),
+    ),
+    agents: agentProbabilities.map((agent) => ({
+      id: agent.id,
+      label: agent.label,
+      probability: Number(agent.probability.toFixed(6)),
+      confidence: Number(agent.confidence.toFixed(6)),
+      weight: agent.weight,
+    })),
+    challengers: {
+      equal_weight_probability: Number(equalWeightProbability.toFixed(6)),
+      trimmed_probability: Number(trimmedProbability.toFixed(6)),
+      skeptic_adjusted_probability: Number(skepticAdjustedProbability.toFixed(6)),
+    },
+  };
+}
+
+function formatProbability(value) {
+  const probability = normalizeProbability(value);
+  return probability === null ? '' : probability.toFixed(6);
+}
+
+function buildScorecardRowsFromFreeze({ suite, forecasts, generatedAt }) {
+  const baselineByQuestion = new Map(
+    (suite.forecast_baseline_snapshots || []).map((baseline) => [baseline.question_id, baseline]),
+  );
+  const forecastByQuestion = new Map(forecasts.map((forecast) => [forecast.question_id, forecast]));
+
+  return (suite.forecast_benchmark_questions || []).map((question) => {
+    const forecast = forecastByQuestion.get(question.question_id);
+    const baseline = baselineByQuestion.get(question.question_id);
+    const probability = normalizeProbability(forecast?.probability);
+    const policy = forecast?.source_type === 'hosted'
+      ? APP_FORECAST_SOURCE_POLICY.hosted
+      : APP_FORECAST_SOURCE_POLICY.localMirror;
+
+    return {
+      scorecard_row_id: `${question.question_id}-pre-resolution-freeze-v1`,
+      question_id: question.question_id,
+      category: question.niche,
+      track: 'live_shadow',
+      app_source: policy.model_or_team,
+      app_probability: formatProbability(probability),
+      external_baseline_id: baseline?.baseline_snapshot_id || `${question.question_id}-trivial-prior-v1`,
+      external_probability: formatProbability(baseline?.probability ?? 0.5),
+      prediction_timestamp: generatedAt,
+      resolution_outcome: '',
+      resolved_at: '',
+      brier_score: '',
+      log_score: '',
+      calibration_bin: probability === null ? '' : calibrationBin(probability),
+      coverage_status: policy.coverage_status,
+      leakage_status: 'pre_resolution_frozen_unresolved',
+      claim_tier: 'shadow_benchmark_not_accuracy_proof',
+      notes: `Frozen before resolution; source_type=${forecast?.source_type || 'local'}; evidence_gate=${forecast?.evidence_gate || 'not_applicable'}; unresolved row, not accuracy proof.`,
+    };
+  });
+}
+
+export function buildAppForecastFreezeArtifacts({
+  suite,
+  forecasts,
+  generatedAt,
+  dateSuffix = '2026-06-07',
+} = {}) {
+  const forecastByQuestion = new Map(forecasts.map((forecast) => [forecast.question_id, forecast]));
+  const snapshotRows = (suite.forecast_benchmark_questions || []).map((question) => {
+    const forecast = forecastByQuestion.get(question.question_id);
+    const probability = normalizeProbability(forecast?.probability);
+    const policy = forecast?.source_type === 'hosted'
+      ? APP_FORECAST_SOURCE_POLICY.hosted
+      : APP_FORECAST_SOURCE_POLICY.localMirror;
+
+    return {
+      snapshot_id: `${question.question_id}-app-freeze-v1`,
+      question_id: question.question_id,
+      prediction_source: 'strategic_intelligence_platform',
+      forecaster_type: 'app_lane',
+      model_or_team: policy.model_or_team,
+      probability: formatProbability(probability),
+      prediction_timestamp: generatedAt,
+      evidence_bundle_ref: `docs/launch-readiness/prediction-benchmark-app-forecast-freeze-${dateSuffix}.json#${question.question_id}`,
+      prompt_or_policy_version: 'multi-agent-forecast-freeze-v1',
+      retrieval_cutoff: generatedAt,
+      source_cutoff: generatedAt,
+      abstained: probability === null ? 'true' : 'false',
+      abstention_reason: probability === null ? 'No probability returned by hosted flow or local mirror.' : '',
+      notes: `Pre-resolution freeze; source_type=${forecast?.source_type || 'local'}; evidence_gate=${forecast?.evidence_gate || 'not_applicable'}; unresolved row, not accuracy proof.`,
+    };
+  });
+
+  const scorecardRows = buildScorecardRowsFromFreeze({ suite, forecasts, generatedAt });
+  const capturedRows = snapshotRows.filter((row) => normalizeProbability(row.probability) !== null && row.abstained !== 'true').length;
+  const hostedRows = forecasts.filter((forecast) => forecast.source_type === 'hosted').length;
+  const localMirrorRows = forecasts.filter((forecast) => forecast.source_type !== 'hosted').length;
+  const freeze = {
+    schema_version: 'prediction-benchmark-app-forecast-freeze-v1',
+    generated_at: generatedAt,
+    status: capturedRows === 10
+      ? 'pre_resolution_app_probabilities_frozen_not_accuracy_proof'
+      : 'pre_resolution_app_probability_freeze_incomplete',
+    proof_boundary: 'This artifact freezes app-lane probabilities before resolution for the benchmark top-10. It is not a resolved accuracy result, top-three claim, buyer approval, or external benchmark ranking.',
+    source_policy: {
+      hosted: 'Preferred source: hosted analyze-engine plus multi-agent-forecast edge functions when callable with available environment.',
+      local_mirror: 'Fallback source: deterministic local mirror of the multi-agent-forecast role-weighted probability lane when the hosted path fails for a question.',
+    },
+    summary: {
+      benchmark_question_count: suite.forecast_benchmark_questions?.length || 0,
+      app_probability_rows_captured: capturedRows,
+      hosted_rows: hostedRows,
+      local_mirror_rows: localMirrorRows,
+      unresolved_rows: snapshotRows.length,
+      accuracy_claim_allowed: false,
+      top_three_claim_allowed: false,
+    },
+    forecasts,
+    forecast_pre_resolution_snapshots: snapshotRows,
+    forecast_scorecard_rows: scorecardRows,
+  };
+
+  return {
+    freeze,
+    csvs: {
+      forecastSnapshots: rowsToCsv(FORECAST_SNAPSHOT_COLUMNS, snapshotRows),
+      scorecard: rowsToCsv(SCORECARD_COLUMNS, scorecardRows),
+    },
+  };
+}
+
+export function validateAppForecastFreeze(freeze) {
+  const issues = [];
+  const forecasts = Array.isArray(freeze?.forecasts) ? freeze.forecasts : [];
+  const snapshots = Array.isArray(freeze?.forecast_pre_resolution_snapshots) ? freeze.forecast_pre_resolution_snapshots : [];
+  const scorecardRows = Array.isArray(freeze?.forecast_scorecard_rows) ? freeze.forecast_scorecard_rows : [];
+  const forecastQuestionIds = new Set(forecasts.map((forecast) => forecast.question_id));
+  const snapshotQuestionIds = new Set(snapshots.map((snapshot) => snapshot.question_id));
+
+  if (forecasts.length !== 10) issues.push('Expected exactly 10 frozen forecast rows.');
+  if (snapshots.length !== 10) issues.push('Expected exactly 10 frozen app snapshot rows.');
+  if (scorecardRows.length !== 10) issues.push('Expected exactly 10 frozen scorecard rows.');
+  if (freeze?.summary?.accuracy_claim_allowed !== false) issues.push('accuracy_claim_allowed must remain false.');
+  if (freeze?.summary?.top_three_claim_allowed !== false) issues.push('top_three_claim_allowed must remain false.');
+
+  for (const forecast of forecasts) {
+    if (normalizeProbability(forecast.probability) === null) issues.push(`Forecast ${forecast.question_id || '<missing>'} has invalid probability.`);
+    if (!forecast.prediction_timestamp) issues.push(`Forecast ${forecast.question_id || '<missing>'} is missing prediction_timestamp.`);
+    if (!['hosted', 'local_mirror'].includes(forecast.source_type)) issues.push(`Forecast ${forecast.question_id || '<missing>'} has invalid source_type.`);
+  }
+
+  for (const snapshot of snapshots) {
+    if (!forecastQuestionIds.has(snapshot.question_id)) issues.push(`Snapshot ${snapshot.snapshot_id} has no matching frozen forecast.`);
+    if (normalizeProbability(snapshot.probability) === null || snapshot.abstained === 'true') issues.push(`Snapshot ${snapshot.snapshot_id} is not a captured pre-resolution probability.`);
+  }
+
+  for (const questionId of forecastQuestionIds) {
+    if (!snapshotQuestionIds.has(questionId)) issues.push(`Missing snapshot for frozen forecast ${questionId}.`);
+  }
+
+  return {
+    status: issues.length ? 'failed' : 'passed',
+    issue_count: issues.length,
+    issues,
+  };
+}
+
+export function renderAppForecastFreezeMarkdown(freeze) {
+  const forecastRows = freeze.forecasts
+    .map((forecast, index) => `| ${index + 1} | ${mdCell(forecast.question_id)} | ${Number(forecast.probability).toFixed(3)} | ${mdCell(forecast.source_type)} | ${mdCell(forecast.evidence_gate)} | ${mdCell(forecast.title)} |`)
+    .join('\n');
+
+  return `# Prediction Benchmark App Forecast Freeze - ${freeze.generated_at.slice(0, 10)}
+
+Status: \`${freeze.status}\`
+
+${freeze.proof_boundary}
+
+## Summary
+
+| Metric | Value |
+|---|---:|
+| Benchmark questions | ${freeze.summary.benchmark_question_count} |
+| App probabilities frozen | ${freeze.summary.app_probability_rows_captured} |
+| Hosted rows | ${freeze.summary.hosted_rows} |
+| Local mirror rows | ${freeze.summary.local_mirror_rows} |
+| Accuracy claim allowed | ${freeze.summary.accuracy_claim_allowed} |
+| Top-three claim allowed | ${freeze.summary.top_three_claim_allowed} |
+
+## Frozen App Probabilities
+
+| # | Question ID | App Probability | Source | Evidence Gate | Title |
+|---:|---|---:|---|---|---|
+${forecastRows}
+
+## Claim Boundary
+
+These are pre-resolution frozen probabilities. They can be scored only after outcomes resolve and leakage review passes.
+`;
 }
 
 export function csvCell(value) {

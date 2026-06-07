@@ -1,0 +1,466 @@
+{
+  "schema_version": "forecast-evaluation-execution-readiness-v1",
+  "generated_at": "2026-06-07T12:27:43.484Z",
+  "status": "forecast_evaluation_execution_ready_for_owner_export_no_real_outcomes",
+  "source": {
+    "forecast_evaluation_protocol": "docs/launch-readiness/forecast-evaluation-protocol-2026-06-06.json",
+    "accuracy_input_validation": "docs/launch-readiness/accuracy-evidence-input-validation-2026-06-06.json",
+    "leakage_review_validation": "docs/launch-readiness/forecast-leakage-review-validation-2026-06-06.json",
+    "scoring_validation": "docs/launch-readiness/forecast-scoring-evidence-validation-2026-06-06.json",
+    "prediction_science_validation": "docs/launch-readiness/prediction-science-evidence-validation-2026-06-06.json",
+    "hosted_access_preflight": "docs/launch-readiness/hosted-access-preflight-validation-2026-06-06.json",
+    "hosted_proof_validation": "docs/launch-readiness/hosted-operational-proof-evidence-validation-2026-06-06.json",
+    "rls_proof_validation": "docs/launch-readiness/rls-proof-evidence-validation-2026-06-06.json",
+    "resolved_forecast_template": "docs/launch-readiness/approved-resolved-forecast-export-template-2026-06-06.csv",
+    "baseline_template": "docs/launch-readiness/forecast-baseline-template-2026-06-06.csv",
+    "pre_resolution_capture_kit": "docs/launch-readiness/forecast-pre-resolution-capture-kit-2026-06-06.json",
+    "pre_resolution_capture_validation": "docs/launch-readiness/forecast-pre-resolution-capture-validation-2026-06-06.json",
+    "question_register_template": "docs/launch-readiness/forecast-question-register-template-2026-06-06.csv",
+    "pre_resolution_snapshot_template": "docs/launch-readiness/forecast-pre-resolution-snapshot-template-2026-06-06.csv",
+    "baseline_snapshot_template": "docs/launch-readiness/forecast-baseline-snapshot-template-2026-06-06.csv",
+    "launch_evidence": "docs/launch-readiness/launch-evidence-2026-06-06.json"
+  },
+  "summary": {
+    "current_execution_source_count": 7,
+    "protocol_stage_count": 8,
+    "missing_protocol_stage_count": 0,
+    "required_repo_surface_count": 10,
+    "present_repo_surface_count": 10,
+    "repo_surface_ready": true,
+    "owner_template_count": 2,
+    "owner_template_ready_count": 2,
+    "owner_templates_ready": true,
+    "pre_resolution_capture_kit_status": "forecast_pre_resolution_capture_kit_ready_not_accuracy_proof",
+    "pre_resolution_template_count": 3,
+    "pre_resolution_template_ready_count": 3,
+    "pre_resolution_capture_kit_ready": true,
+    "pre_resolution_capture_validation_status": "forecast_pre_resolution_capture_validation_ready_no_owner_rows",
+    "pre_resolution_capture_validator_ready": true,
+    "pre_resolution_owner_rows_present": false,
+    "pre_resolution_valid_question_count": 0,
+    "pre_resolution_ready_for_freeze": false,
+    "valid_resolved_forecast_count": 0,
+    "real_resolved_outcome_count": 0,
+    "valid_baseline_count": 0,
+    "real_baseline_comparison_count": 0,
+    "accuracy_inputs_ready_for_scoring": false,
+    "leakage_ready_control_count": 0,
+    "leakage_required_control_count": 8,
+    "leakage_review_passed": false,
+    "scoring_output_ready_for_claim_review": false,
+    "scoring_sample_only": true,
+    "scoring_included_point_count": 30,
+    "scoring_max_source_sample_size": 6,
+    "scoring_comparisons_made": 15,
+    "prediction_science_framework_alignment_ready": true,
+    "prediction_science_ready_for_claim_review": false,
+    "hosted_access_ready_for_smoke": false,
+    "hosted_claim_allowed": false,
+    "hosted_ready_for_buyer_safe_claims": false,
+    "rls_tenant_isolation_proof_ready": false,
+    "active_release_hold_count": 7,
+    "execution_ready_for_owner_resolved_export": true,
+    "scoring_chain_ready_for_owner_claim_review": false,
+    "accuracy_claim_allowed": false,
+    "world_class_prediction_claim_allowed": false
+  },
+  "repo_surface_checks": [
+    {
+      "id": "forecast_registry_capture_ui",
+      "label": "Forecast registry capture UI",
+      "proof_bucket": "repo_artifact",
+      "path": "src/components/ForecastRegistry.tsx",
+      "tokens": [
+        "is_resolved",
+        "resolution_outcome",
+        "resolution_criteria",
+        "current_probability",
+        "game_theory_model"
+      ],
+      "exists": true,
+      "present": true,
+      "missing_tokens": [],
+      "evidence": "src/components/ForecastRegistry.tsx contains 5/5 required markers."
+    },
+    {
+      "id": "resolved_forecast_schema",
+      "label": "Resolved forecast schema",
+      "proof_bucket": "repo_artifact",
+      "path": "supabase/migrations/20251212120000_enterprise_sso.sql",
+      "tokens": [
+        "CREATE TABLE IF NOT EXISTS public.forecasts",
+        "is_resolved boolean",
+        "resolution_outcome text",
+        "resolved_at timestamptz",
+        "game_theory_model jsonb"
+      ],
+      "exists": true,
+      "present": true,
+      "missing_tokens": [],
+      "evidence": "supabase/migrations/20251212120000_enterprise_sso.sql contains 5/5 required markers."
+    },
+    {
+      "id": "whitebox_release_scoring_schema",
+      "label": "Whitebox release scoring schema",
+      "proof_bucket": "repo_artifact",
+      "path": "supabase/migrations/20260429000100_whitebox_release_governance.sql",
+      "tokens": [
+        "whitebox_release_evaluations",
+        "brier_score numeric",
+        "UNIQUE (forecast_id, variant_id)",
+        "whitebox_pending_forecasts"
+      ],
+      "exists": true,
+      "present": true,
+      "missing_tokens": [],
+      "evidence": "supabase/migrations/20260429000100_whitebox_release_governance.sql contains 4/4 required markers."
+    },
+    {
+      "id": "ml_calibration_drift_shadow_schema",
+      "label": "ML calibration, drift, and shadow schema",
+      "proof_bucket": "repo_artifact",
+      "path": "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql",
+      "tokens": [
+        "calibration_models",
+        "drift_signals",
+        "whitebox_experiment_evaluations",
+        "shadow_model_registry",
+        "shadow_predictions"
+      ],
+      "exists": true,
+      "present": true,
+      "missing_tokens": [],
+      "evidence": "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql contains 5/5 required markers."
+    },
+    {
+      "id": "whitebox_release_scoring_code",
+      "label": "Whitebox release scoring code",
+      "proof_bucket": "repo_artifact",
+      "path": "supabase/functions/_shared/whitebox-release.ts",
+      "tokens": [
+        "calculateBrierScore",
+        "whitebox_release_evaluations",
+        "fetchPendingWhiteboxForecasts",
+        "insertWhiteboxEvaluations",
+        "minimumSampleSize"
+      ],
+      "exists": true,
+      "present": true,
+      "missing_tokens": [],
+      "evidence": "supabase/functions/_shared/whitebox-release.ts contains 5/5 required markers."
+    },
+    {
+      "id": "release_evaluation_function",
+      "label": "Release evaluation function",
+      "proof_bucket": "repo_artifact",
+      "path": "supabase/functions/release-evaluation/index.ts",
+      "tokens": [
+        "buildReleaseEvaluation",
+        "persistReleaseState",
+        "whitebox"
+      ],
+      "exists": true,
+      "present": true,
+      "missing_tokens": [],
+      "evidence": "supabase/functions/release-evaluation/index.ts contains 3/3 required markers."
+    },
+    {
+      "id": "whitebox_scheduled_function",
+      "label": "Whitebox scheduled function",
+      "proof_bucket": "repo_artifact",
+      "path": "supabase/functions/whitebox-scheduled/index.ts",
+      "tokens": [
+        "fetchPendingWhiteboxForecasts",
+        "backfilled",
+        "whitebox"
+      ],
+      "exists": true,
+      "present": true,
+      "missing_tokens": [],
+      "evidence": "supabase/functions/whitebox-scheduled/index.ts contains 3/3 required markers."
+    },
+    {
+      "id": "calibration_refresh_function",
+      "label": "Calibration refresh function",
+      "proof_bucket": "repo_artifact",
+      "path": "supabase/functions/calibration-refresh/index.ts",
+      "tokens": [
+        "/ops/calibration-refresh",
+        "callMlService",
+        "calibration"
+      ],
+      "exists": true,
+      "present": true,
+      "missing_tokens": [],
+      "evidence": "supabase/functions/calibration-refresh/index.ts contains 3/3 required markers."
+    },
+    {
+      "id": "drift_evaluate_function",
+      "label": "Drift evaluate function",
+      "proof_bucket": "repo_artifact",
+      "path": "supabase/functions/drift-evaluate/index.ts",
+      "tokens": [
+        "/ops/drift-evaluate",
+        "callMlService",
+        "drift"
+      ],
+      "exists": true,
+      "present": true,
+      "missing_tokens": [],
+      "evidence": "supabase/functions/drift-evaluate/index.ts contains 3/3 required markers."
+    },
+    {
+      "id": "shadow_model_refresh_function",
+      "label": "Shadow model refresh function",
+      "proof_bucket": "repo_artifact",
+      "path": "supabase/functions/shadow-model-refresh/index.ts",
+      "tokens": [
+        "upsertShadowModel",
+        "upsertShadowPredictions",
+        "brier_score",
+        "resolved"
+      ],
+      "exists": true,
+      "present": true,
+      "missing_tokens": [],
+      "evidence": "supabase/functions/shadow-model-refresh/index.ts contains 4/4 required markers."
+    }
+  ],
+  "owner_template_checks": [
+    {
+      "id": "resolved_forecast_export_template",
+      "path": "docs/launch-readiness/approved-resolved-forecast-export-template-2026-06-06.csv",
+      "exists": true,
+      "required_column_count": 13,
+      "present_required_column_count": 13,
+      "missing_columns": [],
+      "ready": true
+    },
+    {
+      "id": "baseline_export_template",
+      "path": "docs/launch-readiness/forecast-baseline-template-2026-06-06.csv",
+      "exists": true,
+      "required_column_count": 10,
+      "present_required_column_count": 10,
+      "missing_columns": [],
+      "ready": true
+    }
+  ],
+  "pre_resolution_template_checks": [
+    {
+      "id": "question_register_template",
+      "path": "docs/launch-readiness/forecast-question-register-template-2026-06-06.csv",
+      "exists": true,
+      "required_column_count": 17,
+      "present_required_column_count": 17,
+      "missing_columns": [],
+      "ready": true
+    },
+    {
+      "id": "pre_resolution_snapshot_template",
+      "path": "docs/launch-readiness/forecast-pre-resolution-snapshot-template-2026-06-06.csv",
+      "exists": true,
+      "required_column_count": 14,
+      "present_required_column_count": 14,
+      "missing_columns": [],
+      "ready": true
+    },
+    {
+      "id": "baseline_snapshot_template",
+      "path": "docs/launch-readiness/forecast-baseline-snapshot-template-2026-06-06.csv",
+      "exists": true,
+      "required_column_count": 11,
+      "present_required_column_count": 11,
+      "missing_columns": [],
+      "ready": true
+    }
+  ],
+  "current_execution_sources": [
+    {
+      "source": "ForecastBench - Forecasting Research Institute",
+      "url": "https://forecastingresearch.org/research/forecastbench",
+      "requirement": "Use dynamic, continuously updated questions and human comparison groups before forecasting accuracy claims."
+    },
+    {
+      "source": "ForecastBench documentation",
+      "url": "https://www.forecastbench.org/docs/",
+      "requirement": "Evaluate on generated question sets, resolved forecasts, and difficulty-adjusted Brier-style scoring rather than static demos."
+    },
+    {
+      "source": "ForecastBench paper",
+      "url": "https://arxiv.org/abs/2409.19839",
+      "requirement": "Avoid data leakage by forecasting questions whose answers are unknown at submission time and compare ML systems with expert and public human forecasts."
+    },
+    {
+      "source": "Metaculus FutureEval methodology",
+      "url": "https://www.metaculus.com/futureeval/methodology/",
+      "requirement": "Score probabilistic forecasts as questions resolve and compare model results with community and pro forecaster baselines."
+    },
+    {
+      "source": "Metaculus scoring FAQ",
+      "url": "https://www.metaculus.com/help/scores-faq/",
+      "requirement": "Use proper scoring rules and aggregate over many timestamped predictions rather than single-question anecdotes."
+    },
+    {
+      "source": "NIST AI RMF",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "requirement": "Treat AI trust claims as documented governance, measurement, evaluation, monitoring, and risk-management evidence."
+    },
+    {
+      "source": "NIST AI RMF Generative AI Profile",
+      "url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf",
+      "requirement": "Measure claims with empirically validated methods, deployment-like conditions, regular evaluation, and documented release decisions."
+    }
+  ],
+  "acceptance_gates": [
+    {
+      "gate": "current_execution_sources_attached",
+      "status": "passed",
+      "proof_bucket": "repo_artifact",
+      "evidence": "7 current forecasting execution source anchors attached.",
+      "next_action": "Refresh source anchors when forecasting benchmark methodology changes."
+    },
+    {
+      "gate": "forecast_protocol_complete",
+      "status": "passed",
+      "proof_bucket": "repo_artifact",
+      "evidence": "8 protocol stages present; missing=none.",
+      "next_action": "No protocol action needed before owner export."
+    },
+    {
+      "gate": "repo_evaluation_surface_present",
+      "status": "passed",
+      "proof_bucket": "repo_artifact",
+      "evidence": "10/10 required UI/schema/function surfaces contain expected evaluation markers.",
+      "next_action": "No repo-surface repair needed before owner export."
+    },
+    {
+      "gate": "owner_input_templates_ready",
+      "status": "passed",
+      "proof_bucket": "repo_artifact",
+      "evidence": "2/2 owner export templates are present with required columns.",
+      "next_action": "Use these templates for owner-approved forecast and baseline exports."
+    },
+    {
+      "gate": "pre_resolution_capture_kit_ready",
+      "status": "passed",
+      "proof_bucket": "repo_artifact",
+      "evidence": "3/3 pre-resolution templates ready; kit status=forecast_pre_resolution_capture_kit_ready_not_accuracy_proof; accuracy_claim_allowed=false; world_class_prediction_claim_allowed=false.",
+      "next_action": "Owner can start timestamped pre-resolution capture before outcomes resolve."
+    },
+    {
+      "gate": "pre_resolution_capture_validator_ready",
+      "status": "passed",
+      "proof_bucket": "repo_artifact",
+      "evidence": "validator_status=forecast_pre_resolution_capture_validation_ready_no_owner_rows; schema_ready=true; owner_rows_present=false; ready_for_pre_resolution_freeze=false; accuracy_claim_allowed=false.",
+      "next_action": "Run the validator again after owner fills the pre-resolution packet; empty templates remain owner-blocked, not accuracy proof."
+    },
+    {
+      "gate": "owner_approved_resolved_export_present",
+      "status": "open_no_real_resolved_forecast_export",
+      "proof_bucket": "owner_input",
+      "evidence": "0 valid resolved forecasts and 0 real resolved outcomes currently validated.",
+      "next_action": "Owner exports pre-resolution forecasts with resolved outcomes, sources, criteria, and exclusion review."
+    },
+    {
+      "gate": "real_comparable_baseline_export_present",
+      "status": "open_no_real_comparable_baseline_export",
+      "proof_bucket": "owner_input",
+      "evidence": "0 valid baselines and 0 real baseline comparisons currently validated.",
+      "next_action": "Owner supplies comparable human, community, pro, model, or market baselines with timestamps, source URLs, and sample sizes."
+    },
+    {
+      "gate": "leakage_review_ready_for_claim_scoring",
+      "status": "open_leakage_review_not_ready",
+      "proof_bucket": "owner_input",
+      "evidence": "0/8 leakage controls ready; leakage_review_passed=false.",
+      "next_action": "Run leakage review on owner-approved forecast and baseline rows before scoring claims."
+    },
+    {
+      "gate": "scoring_output_ready_for_claim_review",
+      "status": "open_scoring_sample_only_or_not_ready",
+      "proof_bucket": "owner_input",
+      "evidence": "scoring_ready=false; sample_only=true; included_points=30; max_source_sample_size=6; comparisons=15.",
+      "next_action": "Run calibration ledger and scoring validation on owner-approved rows only."
+    },
+    {
+      "gate": "hosted_and_rls_boundaries_ready",
+      "status": "open_hosted_or_rls_boundary_not_ready",
+      "proof_bucket": "hosted_live",
+      "evidence": "hosted_access_ready_for_smoke=false; hosted_ready_for_buyer_safe_claims=false; rls_tenant_isolation_ready=false.",
+      "next_action": "Clear hosted preflight, hosted evidence validation, and RLS proof before using scoring in external claims."
+    },
+    {
+      "gate": "execution_ready_for_owner_resolved_export",
+      "status": "passed",
+      "proof_bucket": "repo_artifact",
+      "evidence": "protocol=true; repo_surfaces=true; resolved_templates=true; pre_resolution_kit=true; pre_resolution_validator=true; science_alignment=true; accuracy_claim_allowed=false; world_class_prediction_claim_allowed=false.",
+      "next_action": "Owner can now create the resolved forecast and baseline export; claims remain blocked."
+    }
+  ],
+  "release_holds": [
+    {
+      "hold": "owner_approved_resolved_forecast_export_missing",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "Owner-approved pre-resolution forecast export with resolved outcomes, resolution source URLs, criteria, and exclusion review."
+    },
+    {
+      "hold": "real_comparable_baseline_export_missing",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "Comparable human, community, pro, model, or market baselines with timestamp policy, source URL, and sample size."
+    },
+    {
+      "hold": "leakage_review_on_real_rows_missing",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "Leakage and contamination review against the owner-approved forecast and baseline rows."
+    },
+    {
+      "hold": "scoring_run_on_real_rows_missing",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "Calibration, Brier, reliability, and baseline comparison outputs generated from real owner-approved rows."
+    },
+    {
+      "hold": "hosted_access_and_operational_proof_missing",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "Hosted preflight access, deploy binding, redacted logs/screenshots, and validated hosted smoke evidence."
+    },
+    {
+      "hold": "rls_tenant_isolation_proof_missing",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "Executed local and linked RLS/evaluation-table proof accepted by the RLS validator."
+    },
+    {
+      "hold": "owner_approved_accuracy_claim_language_missing",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "Owner-approved external wording after real scoring, leakage review, hosted/RLS proof, and buyer-safe claim consistency checks."
+    }
+  ],
+  "owner_action_order": [
+    "Start the timestamped pre-resolution capture packet: question register, app/model/team forecast snapshots, and comparable baseline snapshots.",
+    "After outcomes resolve, export owner-approved forecast rows with resolved outcomes using the resolved forecast template.",
+    "Export comparable human, community, pro, model, or market baselines using the baseline template.",
+    "Run accuracy input validation and leakage review against those owner-approved rows.",
+    "Run calibration ledger, benchmark comparison, and forecast scoring validation on the validated real rows.",
+    "Clear hosted access, hosted operational proof, and RLS tenant-isolation proof before any external accuracy claim review.",
+    "Rerun prediction science validation, this execution-readiness gate, claim consistency, and commercial confidence before changing market language."
+  ],
+  "proof_boundary": {
+    "proves": [
+      "The repo has enough forecast capture, resolved outcome, scoring, calibration, drift, shadow-model, and template surfaces to ask the owner for a real resolved-outcome export.",
+      "The repo has a pre-resolution capture kit for starting timestamped admissible evidence before outcomes resolve.",
+      "The repo has a pre-resolution capture validator that can check owner-filled question, forecast snapshot, and baseline snapshot packets before freeze.",
+      "The execution path is aligned with current forecasting benchmark practice at the mechanics and workflow level."
+    ],
+    "does_not_prove": [
+      "Prediction accuracy, benchmark superiority, buyer-safe hosted proof, tenant-isolation proof, or world-class forecasting.",
+      "That the generated scoring chain has run on real owner-approved resolved outcomes and comparable baselines."
+    ]
+  }
+}

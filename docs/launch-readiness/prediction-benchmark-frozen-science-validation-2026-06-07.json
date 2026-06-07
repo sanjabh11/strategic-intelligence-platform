@@ -1,0 +1,208 @@
+{
+  "schema_version": "prediction-science-evidence-validation-v1",
+  "generated_at": "2026-06-07T12:27:43.348Z",
+  "status": "prediction_science_evidence_validation_ready_no_real_outcomes",
+  "source": {
+    "forecast_evaluation_protocol": "docs/launch-readiness/forecast-evaluation-protocol-2026-06-06.json",
+    "forecast_claim_governance": "docs/launch-readiness/forecast-claim-governance-2026-06-06.json",
+    "accuracy_input_validation": "docs/launch-readiness/accuracy-evidence-input-validation-2026-06-06.json",
+    "leakage_review_validation": "docs/launch-readiness/forecast-leakage-review-validation-2026-06-06.json",
+    "scoring_validation": "docs/launch-readiness/forecast-scoring-evidence-validation-2026-06-06.json",
+    "calibration_ledger": "docs/launch-readiness/resolved-forecast-calibration-ledger-2026-06-06.json",
+    "benchmark_comparison": "docs/launch-readiness/forecast-benchmark-comparison-2026-06-06.json",
+    "hosted_proof_validation": "docs/launch-readiness/hosted-operational-proof-evidence-validation-2026-06-06.json",
+    "rls_proof_validation": "docs/launch-readiness/rls-proof-evidence-validation-2026-06-06.json",
+    "launch_evidence": "docs/launch-readiness/launch-evidence-2026-06-06.json"
+  },
+  "summary": {
+    "scientific_source_count": 5,
+    "protocol_stage_count": 8,
+    "missing_protocol_stage_count": 0,
+    "metric_count": 6,
+    "missing_metric_count": 0,
+    "claim_tier_count": 4,
+    "governance_threshold_count": 5,
+    "governance_release_hold_count": 7,
+    "valid_resolved_forecast_count": 0,
+    "real_resolved_outcome_count": 0,
+    "valid_baseline_count": 0,
+    "real_baseline_comparison_count": 0,
+    "accuracy_inputs_ready_for_scoring": false,
+    "leakage_ready_control_count": 0,
+    "leakage_required_control_count": 8,
+    "leakage_review_passed": false,
+    "scoring_output_ready_for_claim_review": false,
+    "scoring_sample_only": true,
+    "scoring_included_point_count": 30,
+    "scoring_max_source_sample_size": 6,
+    "scoring_release_hold_count": 7,
+    "calibration_ledger_mode": "sample_fixture",
+    "calibration_ledger_claim_status": "not_launch_proof",
+    "benchmark_status": "sample_only_not_launch_proof",
+    "benchmark_baseline_count": 3,
+    "source_backed_baseline_count": 0,
+    "comparisons_made": 15,
+    "hosted_ready_for_buyer_safe_claims": false,
+    "rls_tenant_isolation_proof_ready": false,
+    "active_release_hold_count": 7,
+    "scientific_framework_alignment_ready": true,
+    "prediction_science_ready_for_claim_review": false,
+    "mechanics_only_claim_allowed": true,
+    "internal_accuracy_claim_allowed": false,
+    "benchmark_aware_accuracy_claim_allowed": false,
+    "accuracy_claim_allowed": false,
+    "world_class_prediction_claim_allowed": false
+  },
+  "current_forecasting_science_sources": [
+    {
+      "source": "ForecastBench",
+      "url": "https://www.forecastbench.org/about/",
+      "requirement": "Dynamic, continuously updated, contamination-resistant forecasting benchmark with human comparison groups."
+    },
+    {
+      "source": "ForecastBench paper",
+      "url": "https://arxiv.org/abs/2409.19839",
+      "requirement": "Compare ML systems with expert forecasters, the public, and other LLMs on forecast questions."
+    },
+    {
+      "source": "Metaculus FutureEval methodology",
+      "url": "https://www.metaculus.com/futureeval/methodology/",
+      "requirement": "Evaluate on open/resolved forecasting questions and compare with pro/community human baselines where humans and bots both forecast."
+    },
+    {
+      "source": "NIST AI Risk Management Framework",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "requirement": "Use documented test, evaluation, verification, validation, monitoring, and risk-management evidence before trust claims."
+    },
+    {
+      "source": "NIST GenAI evaluation program",
+      "url": "https://ai-challenges.nist.gov/genai",
+      "requirement": "Treat evolving benchmark construction and measurement science as part of generative-AI evaluation rather than static demo proof."
+    }
+  ],
+  "acceptance_gates": [
+    {
+      "gate": "current_scientific_framework_sources_attached",
+      "status": "passed",
+      "evidence": "5 current forecasting/evaluation source anchors attached.",
+      "proof_bucket": "repo_artifact"
+    },
+    {
+      "gate": "forecast_protocol_complete",
+      "status": "passed",
+      "evidence": "8 protocol stages present; missing=none.",
+      "proof_bucket": "repo_artifact"
+    },
+    {
+      "gate": "proper_scoring_metric_suite_present",
+      "status": "passed",
+      "evidence": "6 metrics present; missing=none.",
+      "proof_bucket": "repo_artifact"
+    },
+    {
+      "gate": "claim_tiers_and_governance_thresholds_present",
+      "status": "passed",
+      "evidence": "4 claim tiers and 5 governance thresholds present.",
+      "proof_bucket": "repo_artifact"
+    },
+    {
+      "gate": "owner_approved_resolved_outcomes_present",
+      "status": "open_no_real_resolved_outcomes",
+      "evidence": "0 valid resolved forecasts from input validation; 0 real resolved outcomes in claim governance.",
+      "proof_bucket": "owner_input"
+    },
+    {
+      "gate": "real_comparable_baselines_present",
+      "status": "open_no_real_comparable_baselines",
+      "evidence": "0 valid baselines; 0 real baseline comparisons; 0/3 benchmark baselines have source URLs and sample sizes.",
+      "proof_bucket": "owner_input"
+    },
+    {
+      "gate": "sample_size_and_reliability_bins_ready",
+      "status": "open_sample_only_or_underpowered",
+      "evidence": "ledger mode=sample_fixture; ledger status=not_launch_proof; max source sample size=6/25; reliability-ready sources=0; sample_only=true.",
+      "proof_bucket": "owner_input"
+    },
+    {
+      "gate": "leakage_and_contamination_review_passed",
+      "status": "open_leakage_review_not_ready",
+      "evidence": "0/8 leakage controls ready; leakage_review_passed=false.",
+      "proof_bucket": "owner_input"
+    },
+    {
+      "gate": "benchmark_comparison_usable",
+      "status": "open_benchmark_not_claim_proof",
+      "evidence": "scoring_ready=false; benchmark_status=sample_only_not_launch_proof; comparisons=15; source-backed baselines=0/3.",
+      "proof_bucket": "owner_input"
+    },
+    {
+      "gate": "hosted_and_rls_evaluation_boundary_ready",
+      "status": "open_hosted_or_security_boundary_not_ready",
+      "evidence": "hosted_ready=false; rls_tenant_isolation_proof_ready=false.",
+      "proof_bucket": "hosted_live"
+    },
+    {
+      "gate": "accuracy_claim_language_still_blocked",
+      "status": "passed",
+      "evidence": "accuracy_claim_allowed=false; world_class_prediction_claim_allowed=false.",
+      "proof_bucket": "repo_artifact"
+    }
+  ],
+  "release_holds": [
+    {
+      "hold": "owner_approved_resolved_outcomes_missing",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "Owner-approved pre-resolution forecast export with resolved outcomes and explicit inclusion/exclusion rules."
+    },
+    {
+      "hold": "real_human_model_or_market_baselines_missing",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "Comparable human/community/pro/model/market baselines with source URLs, timestamps, and sample sizes."
+    },
+    {
+      "hold": "sample_size_and_reliability_underpowered",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "At least the protocol minimum sample size and non-empty reliability bins for each scored source used in a claim."
+    },
+    {
+      "hold": "leakage_and_contamination_review_not_passed",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "Adversarial leakage review covering pre-resolution timestamps, retrieval cutoffs, benchmark contamination, and baseline comparability."
+    },
+    {
+      "hold": "benchmark_comparison_not_claim_proof",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "Scoring validator passes on approved export with real comparable baselines and usable benchmark status."
+    },
+    {
+      "hold": "hosted_and_security_evaluation_boundary_missing",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "Hosted calibration/release proof and RLS/evaluation-table boundary proof."
+    },
+    {
+      "hold": "owner_approved_accuracy_claim_language_missing",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "Owner-approved claim tier and buyer-safe language before any external use."
+    }
+  ],
+  "recommended_market_language": [
+    "calibration-aware decision support",
+    "forecast scoring and benchmark mechanics are implemented locally",
+    "prediction-science claim review is ready for owner data, not accuracy claims"
+  ],
+  "prohibited_market_language": [
+    "world-class accurate predictions",
+    "best-in-class forecasting",
+    "ForecastBench/Metaculus/Good Judgment parity",
+    "benchmark superiority",
+    "production calibrated accuracy"
+  ],
+  "proof_boundary": "This validator maps the repo forecast evidence to current forecasting evaluation practice. It proves framework alignment and mechanics only; it does not prove prediction accuracy, benchmark superiority, or world-class forecasting."
+}
