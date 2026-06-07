@@ -22,6 +22,8 @@
     "diag:functions:hosted": "node scripts/hosted-function-drift.mjs",
     "diag:auth:hosted": "node scripts/hosted-auth-diagnostics.mjs",
     "proof:stripe:hosted": "node scripts/hosted-stripe-proof.mjs",
+    "audit:forecast:benchmark-suite": "node scripts/build-prediction-benchmark-suite.mjs",
+    "audit:forecast:benchmark-suite:validate": "node scripts/build-prediction-benchmark-suite.mjs --validate-only",
     "smoke:gdelt:live": "node scripts/gdelt-live-smoke.mjs",
     "smoke:market:live": "node scripts/market-live-smoke.mjs",
     "smoke:retrieval:hosted": "node scripts/retrieval-provider-smoke.mjs",

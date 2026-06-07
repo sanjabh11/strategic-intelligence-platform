@@ -1,0 +1,535 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-06-07T06:20:30.301Z",
+  "source": {
+    "ledger": "docs/launch-readiness/resolved-forecast-calibration-ledger-2026-06-06.json",
+    "ledger_sha256": "803eaf77aaa8ad16c9a81928789184b3bfc3cbbd2f8d8252b17647a4c8641f94",
+    "ledger_mode": "sample_fixture",
+    "ledger_commercial_claim_status": "not_launch_proof",
+    "baseline": "docs/launch-readiness/fixtures/forecast-benchmark-baseline-sample.json",
+    "baseline_sha256": "8791957070fba733b1d42c482e84b106de0c0a4677fee1079e38416326172a27"
+  },
+  "commercial_benchmark_status": "sample_only_not_launch_proof",
+  "summary": {
+    "sources_compared": 5,
+    "baselines_loaded": 3,
+    "comparisons_made": 15,
+    "note": "This benchmark comparison does not prove commercial prediction superiority. Use approved resolved forecasts and real human/community/external baselines before making market claims."
+  },
+  "methodology_alignment": [
+    {
+      "framework": "ForecastBench",
+      "alignment": "partial",
+      "requirement": "Brier-style scoring with comparable baselines and reproducible methodology."
+    },
+    {
+      "framework": "Metaculus FutureEval",
+      "alignment": "partial",
+      "requirement": "Compare model forecasts against human/community or pro forecasting baselines on shared resolved questions."
+    },
+    {
+      "framework": "NIST AI RMF Measure",
+      "alignment": "partial",
+      "requirement": "Benchmark and monitor performance in deployment-relevant conditions before relying on system claims."
+    }
+  ],
+  "baselines": [
+    {
+      "baseline_id": "sample_base_rate",
+      "label": "Sample base-rate baseline",
+      "baseline_type": "base_rate",
+      "avg_brier": 0.25,
+      "sample_size": 6,
+      "source_url": null,
+      "notes": "Base-rate sanity baseline for the sample fixture only."
+    },
+    {
+      "baseline_id": "sample_external_reference",
+      "label": "Sample external reference",
+      "baseline_type": "synthetic_external",
+      "avg_brier": 0.17,
+      "sample_size": 6,
+      "source_url": null,
+      "notes": "Synthetic aggregate baseline used only to verify delta and skill calculations."
+    },
+    {
+      "baseline_id": "sample_forecast_mean",
+      "label": "Sample per-forecast baseline",
+      "baseline_type": "per_forecast",
+      "avg_brier": 0.143567,
+      "sample_size": 6,
+      "source_url": null,
+      "notes": null
+    }
+  ],
+  "source_comparisons": [
+    {
+      "source_id": "challenger_equal_weight",
+      "source_label": "Equal-Weight Challenger",
+      "app_avg_brier": 0.15435,
+      "comparisons": [
+        {
+          "source_id": "challenger_equal_weight",
+          "source_label": "Equal-Weight Challenger",
+          "app_sample_size": 6,
+          "app_avg_brier": 0.15435,
+          "baseline_id": "sample_base_rate",
+          "baseline_label": "Sample base-rate baseline",
+          "baseline_type": "base_rate",
+          "baseline_sample_size": 6,
+          "baseline_avg_brier": 0.25,
+          "brier_delta": -0.09565,
+          "brier_skill_vs_baseline": 0.3826,
+          "verdict": "app_lower_brier"
+        },
+        {
+          "source_id": "challenger_equal_weight",
+          "source_label": "Equal-Weight Challenger",
+          "app_sample_size": 6,
+          "app_avg_brier": 0.15435,
+          "baseline_id": "sample_external_reference",
+          "baseline_label": "Sample external reference",
+          "baseline_type": "synthetic_external",
+          "baseline_sample_size": 6,
+          "baseline_avg_brier": 0.17,
+          "brier_delta": -0.01565,
+          "brier_skill_vs_baseline": 0.092059,
+          "verdict": "app_lower_brier"
+        },
+        {
+          "source_id": "challenger_equal_weight",
+          "source_label": "Equal-Weight Challenger",
+          "app_sample_size": 6,
+          "app_avg_brier": 0.15435,
+          "baseline_id": "sample_forecast_mean",
+          "baseline_label": "Sample per-forecast baseline",
+          "baseline_type": "per_forecast",
+          "baseline_sample_size": 6,
+          "baseline_avg_brier": 0.143567,
+          "brier_delta": 0.010783,
+          "brier_skill_vs_baseline": -0.075108,
+          "verdict": "baseline_lower_brier"
+        }
+      ],
+      "best_verdict": "app_lower_brier"
+    },
+    {
+      "source_id": "challenger_skeptic_adjusted",
+      "source_label": "Skeptic-Adjusted Challenger",
+      "app_avg_brier": 0.1332,
+      "comparisons": [
+        {
+          "source_id": "challenger_skeptic_adjusted",
+          "source_label": "Skeptic-Adjusted Challenger",
+          "app_sample_size": 6,
+          "app_avg_brier": 0.1332,
+          "baseline_id": "sample_base_rate",
+          "baseline_label": "Sample base-rate baseline",
+          "baseline_type": "base_rate",
+          "baseline_sample_size": 6,
+          "baseline_avg_brier": 0.25,
+          "brier_delta": -0.1168,
+          "brier_skill_vs_baseline": 0.4672,
+          "verdict": "app_lower_brier"
+        },
+        {
+          "source_id": "challenger_skeptic_adjusted",
+          "source_label": "Skeptic-Adjusted Challenger",
+          "app_sample_size": 6,
+          "app_avg_brier": 0.1332,
+          "baseline_id": "sample_external_reference",
+          "baseline_label": "Sample external reference",
+          "baseline_type": "synthetic_external",
+          "baseline_sample_size": 6,
+          "baseline_avg_brier": 0.17,
+          "brier_delta": -0.0368,
+          "brier_skill_vs_baseline": 0.216471,
+          "verdict": "app_lower_brier"
+        },
+        {
+          "source_id": "challenger_skeptic_adjusted",
+          "source_label": "Skeptic-Adjusted Challenger",
+          "app_sample_size": 6,
+          "app_avg_brier": 0.1332,
+          "baseline_id": "sample_forecast_mean",
+          "baseline_label": "Sample per-forecast baseline",
+          "baseline_type": "per_forecast",
+          "baseline_sample_size": 6,
+          "baseline_avg_brier": 0.143567,
+          "brier_delta": -0.010367,
+          "brier_skill_vs_baseline": 0.07221,
+          "verdict": "app_lower_brier"
+        }
+      ],
+      "best_verdict": "app_lower_brier"
+    },
+    {
+      "source_id": "community_prediction_mean",
+      "source_label": "Community prediction mean",
+      "app_avg_brier": 0.131317,
+      "comparisons": [
+        {
+          "source_id": "community_prediction_mean",
+          "source_label": "Community prediction mean",
+          "app_sample_size": 6,
+          "app_avg_brier": 0.131317,
+          "baseline_id": "sample_base_rate",
+          "baseline_label": "Sample base-rate baseline",
+          "baseline_type": "base_rate",
+          "baseline_sample_size": 6,
+          "baseline_avg_brier": 0.25,
+          "brier_delta": -0.118683,
+          "brier_skill_vs_baseline": 0.474732,
+          "verdict": "app_lower_brier"
+        },
+        {
+          "source_id": "community_prediction_mean",
+          "source_label": "Community prediction mean",
+          "app_sample_size": 6,
+          "app_avg_brier": 0.131317,
+          "baseline_id": "sample_external_reference",
+          "baseline_label": "Sample external reference",
+          "baseline_type": "synthetic_external",
+          "baseline_sample_size": 6,
+          "baseline_avg_brier": 0.17,
+          "brier_delta": -0.038683,
+          "brier_skill_vs_baseline": 0.227547,
+          "verdict": "app_lower_brier"
+        },
+        {
+          "source_id": "community_prediction_mean",
+          "source_label": "Community prediction mean",
+          "app_sample_size": 6,
+          "app_avg_brier": 0.131317,
+          "baseline_id": "sample_forecast_mean",
+          "baseline_label": "Sample per-forecast baseline",
+          "baseline_type": "per_forecast",
+          "baseline_sample_size": 6,
+          "baseline_avg_brier": 0.143567,
+          "brier_delta": -0.01225,
+          "brier_skill_vs_baseline": 0.085326,
+          "verdict": "app_lower_brier"
+        }
+      ],
+      "best_verdict": "app_lower_brier"
+    },
+    {
+      "source_id": "multi_agent_role_weighted",
+      "source_label": "Role-Weighted Champion",
+      "app_avg_brier": 0.139417,
+      "comparisons": [
+        {
+          "source_id": "multi_agent_role_weighted",
+          "source_label": "Role-Weighted Champion",
+          "app_sample_size": 6,
+          "app_avg_brier": 0.139417,
+          "baseline_id": "sample_base_rate",
+          "baseline_label": "Sample base-rate baseline",
+          "baseline_type": "base_rate",
+          "baseline_sample_size": 6,
+          "baseline_avg_brier": 0.25,
+          "brier_delta": -0.110583,
+          "brier_skill_vs_baseline": 0.442332,
+          "verdict": "app_lower_brier"
+        },
+        {
+          "source_id": "multi_agent_role_weighted",
+          "source_label": "Role-Weighted Champion",
+          "app_sample_size": 6,
+          "app_avg_brier": 0.139417,
+          "baseline_id": "sample_external_reference",
+          "baseline_label": "Sample external reference",
+          "baseline_type": "synthetic_external",
+          "baseline_sample_size": 6,
+          "baseline_avg_brier": 0.17,
+          "brier_delta": -0.030583,
+          "brier_skill_vs_baseline": 0.1799,
+          "verdict": "app_lower_brier"
+        },
+        {
+          "source_id": "multi_agent_role_weighted",
+          "source_label": "Role-Weighted Champion",
+          "app_sample_size": 6,
+          "app_avg_brier": 0.139417,
+          "baseline_id": "sample_forecast_mean",
+          "baseline_label": "Sample per-forecast baseline",
+          "baseline_type": "per_forecast",
+          "baseline_sample_size": 6,
+          "baseline_avg_brier": 0.143567,
+          "brier_delta": -0.00415,
+          "brier_skill_vs_baseline": 0.028906,
+          "verdict": "app_lower_brier"
+        }
+      ],
+      "best_verdict": "app_lower_brier"
+    },
+    {
+      "source_id": "registry_current_probability",
+      "source_label": "Registry current probability",
+      "app_avg_brier": 0.139417,
+      "comparisons": [
+        {
+          "source_id": "registry_current_probability",
+          "source_label": "Registry current probability",
+          "app_sample_size": 6,
+          "app_avg_brier": 0.139417,
+          "baseline_id": "sample_base_rate",
+          "baseline_label": "Sample base-rate baseline",
+          "baseline_type": "base_rate",
+          "baseline_sample_size": 6,
+          "baseline_avg_brier": 0.25,
+          "brier_delta": -0.110583,
+          "brier_skill_vs_baseline": 0.442332,
+          "verdict": "app_lower_brier"
+        },
+        {
+          "source_id": "registry_current_probability",
+          "source_label": "Registry current probability",
+          "app_sample_size": 6,
+          "app_avg_brier": 0.139417,
+          "baseline_id": "sample_external_reference",
+          "baseline_label": "Sample external reference",
+          "baseline_type": "synthetic_external",
+          "baseline_sample_size": 6,
+          "baseline_avg_brier": 0.17,
+          "brier_delta": -0.030583,
+          "brier_skill_vs_baseline": 0.1799,
+          "verdict": "app_lower_brier"
+        },
+        {
+          "source_id": "registry_current_probability",
+          "source_label": "Registry current probability",
+          "app_sample_size": 6,
+          "app_avg_brier": 0.139417,
+          "baseline_id": "sample_forecast_mean",
+          "baseline_label": "Sample per-forecast baseline",
+          "baseline_type": "per_forecast",
+          "baseline_sample_size": 6,
+          "baseline_avg_brier": 0.143567,
+          "brier_delta": -0.00415,
+          "brier_skill_vs_baseline": 0.028906,
+          "verdict": "app_lower_brier"
+        }
+      ],
+      "best_verdict": "app_lower_brier"
+    }
+  ],
+  "all_comparisons": [
+    {
+      "source_id": "challenger_equal_weight",
+      "source_label": "Equal-Weight Challenger",
+      "app_sample_size": 6,
+      "app_avg_brier": 0.15435,
+      "baseline_id": "sample_base_rate",
+      "baseline_label": "Sample base-rate baseline",
+      "baseline_type": "base_rate",
+      "baseline_sample_size": 6,
+      "baseline_avg_brier": 0.25,
+      "brier_delta": -0.09565,
+      "brier_skill_vs_baseline": 0.3826,
+      "verdict": "app_lower_brier"
+    },
+    {
+      "source_id": "challenger_equal_weight",
+      "source_label": "Equal-Weight Challenger",
+      "app_sample_size": 6,
+      "app_avg_brier": 0.15435,
+      "baseline_id": "sample_external_reference",
+      "baseline_label": "Sample external reference",
+      "baseline_type": "synthetic_external",
+      "baseline_sample_size": 6,
+      "baseline_avg_brier": 0.17,
+      "brier_delta": -0.01565,
+      "brier_skill_vs_baseline": 0.092059,
+      "verdict": "app_lower_brier"
+    },
+    {
+      "source_id": "challenger_equal_weight",
+      "source_label": "Equal-Weight Challenger",
+      "app_sample_size": 6,
+      "app_avg_brier": 0.15435,
+      "baseline_id": "sample_forecast_mean",
+      "baseline_label": "Sample per-forecast baseline",
+      "baseline_type": "per_forecast",
+      "baseline_sample_size": 6,
+      "baseline_avg_brier": 0.143567,
+      "brier_delta": 0.010783,
+      "brier_skill_vs_baseline": -0.075108,
+      "verdict": "baseline_lower_brier"
+    },
+    {
+      "source_id": "challenger_skeptic_adjusted",
+      "source_label": "Skeptic-Adjusted Challenger",
+      "app_sample_size": 6,
+      "app_avg_brier": 0.1332,
+      "baseline_id": "sample_base_rate",
+      "baseline_label": "Sample base-rate baseline",
+      "baseline_type": "base_rate",
+      "baseline_sample_size": 6,
+      "baseline_avg_brier": 0.25,
+      "brier_delta": -0.1168,
+      "brier_skill_vs_baseline": 0.4672,
+      "verdict": "app_lower_brier"
+    },
+    {
+      "source_id": "challenger_skeptic_adjusted",
+      "source_label": "Skeptic-Adjusted Challenger",
+      "app_sample_size": 6,
+      "app_avg_brier": 0.1332,
+      "baseline_id": "sample_external_reference",
+      "baseline_label": "Sample external reference",
+      "baseline_type": "synthetic_external",
+      "baseline_sample_size": 6,
+      "baseline_avg_brier": 0.17,
+      "brier_delta": -0.0368,
+      "brier_skill_vs_baseline": 0.216471,
+      "verdict": "app_lower_brier"
+    },
+    {
+      "source_id": "challenger_skeptic_adjusted",
+      "source_label": "Skeptic-Adjusted Challenger",
+      "app_sample_size": 6,
+      "app_avg_brier": 0.1332,
+      "baseline_id": "sample_forecast_mean",
+      "baseline_label": "Sample per-forecast baseline",
+      "baseline_type": "per_forecast",
+      "baseline_sample_size": 6,
+      "baseline_avg_brier": 0.143567,
+      "brier_delta": -0.010367,
+      "brier_skill_vs_baseline": 0.07221,
+      "verdict": "app_lower_brier"
+    },
+    {
+      "source_id": "community_prediction_mean",
+      "source_label": "Community prediction mean",
+      "app_sample_size": 6,
+      "app_avg_brier": 0.131317,
+      "baseline_id": "sample_base_rate",
+      "baseline_label": "Sample base-rate baseline",
+      "baseline_type": "base_rate",
+      "baseline_sample_size": 6,
+      "baseline_avg_brier": 0.25,
+      "brier_delta": -0.118683,
+      "brier_skill_vs_baseline": 0.474732,
+      "verdict": "app_lower_brier"
+    },
+    {
+      "source_id": "community_prediction_mean",
+      "source_label": "Community prediction mean",
+      "app_sample_size": 6,
+      "app_avg_brier": 0.131317,
+      "baseline_id": "sample_external_reference",
+      "baseline_label": "Sample external reference",
+      "baseline_type": "synthetic_external",
+      "baseline_sample_size": 6,
+      "baseline_avg_brier": 0.17,
+      "brier_delta": -0.038683,
+      "brier_skill_vs_baseline": 0.227547,
+      "verdict": "app_lower_brier"
+    },
+    {
+      "source_id": "community_prediction_mean",
+      "source_label": "Community prediction mean",
+      "app_sample_size": 6,
+      "app_avg_brier": 0.131317,
+      "baseline_id": "sample_forecast_mean",
+      "baseline_label": "Sample per-forecast baseline",
+      "baseline_type": "per_forecast",
+      "baseline_sample_size": 6,
+      "baseline_avg_brier": 0.143567,
+      "brier_delta": -0.01225,
+      "brier_skill_vs_baseline": 0.085326,
+      "verdict": "app_lower_brier"
+    },
+    {
+      "source_id": "multi_agent_role_weighted",
+      "source_label": "Role-Weighted Champion",
+      "app_sample_size": 6,
+      "app_avg_brier": 0.139417,
+      "baseline_id": "sample_base_rate",
+      "baseline_label": "Sample base-rate baseline",
+      "baseline_type": "base_rate",
+      "baseline_sample_size": 6,
+      "baseline_avg_brier": 0.25,
+      "brier_delta": -0.110583,
+      "brier_skill_vs_baseline": 0.442332,
+      "verdict": "app_lower_brier"
+    },
+    {
+      "source_id": "multi_agent_role_weighted",
+      "source_label": "Role-Weighted Champion",
+      "app_sample_size": 6,
+      "app_avg_brier": 0.139417,
+      "baseline_id": "sample_external_reference",
+      "baseline_label": "Sample external reference",
+      "baseline_type": "synthetic_external",
+      "baseline_sample_size": 6,
+      "baseline_avg_brier": 0.17,
+      "brier_delta": -0.030583,
+      "brier_skill_vs_baseline": 0.1799,
+      "verdict": "app_lower_brier"
+    },
+    {
+      "source_id": "multi_agent_role_weighted",
+      "source_label": "Role-Weighted Champion",
+      "app_sample_size": 6,
+      "app_avg_brier": 0.139417,
+      "baseline_id": "sample_forecast_mean",
+      "baseline_label": "Sample per-forecast baseline",
+      "baseline_type": "per_forecast",
+      "baseline_sample_size": 6,
+      "baseline_avg_brier": 0.143567,
+      "brier_delta": -0.00415,
+      "brier_skill_vs_baseline": 0.028906,
+      "verdict": "app_lower_brier"
+    },
+    {
+      "source_id": "registry_current_probability",
+      "source_label": "Registry current probability",
+      "app_sample_size": 6,
+      "app_avg_brier": 0.139417,
+      "baseline_id": "sample_base_rate",
+      "baseline_label": "Sample base-rate baseline",
+      "baseline_type": "base_rate",
+      "baseline_sample_size": 6,
+      "baseline_avg_brier": 0.25,
+      "brier_delta": -0.110583,
+      "brier_skill_vs_baseline": 0.442332,
+      "verdict": "app_lower_brier"
+    },
+    {
+      "source_id": "registry_current_probability",
+      "source_label": "Registry current probability",
+      "app_sample_size": 6,
+      "app_avg_brier": 0.139417,
+      "baseline_id": "sample_external_reference",
+      "baseline_label": "Sample external reference",
+      "baseline_type": "synthetic_external",
+      "baseline_sample_size": 6,
+      "baseline_avg_brier": 0.17,
+      "brier_delta": -0.030583,
+      "brier_skill_vs_baseline": 0.1799,
+      "verdict": "app_lower_brier"
+    },
+    {
+      "source_id": "registry_current_probability",
+      "source_label": "Registry current probability",
+      "app_sample_size": 6,
+      "app_avg_brier": 0.139417,
+      "baseline_id": "sample_forecast_mean",
+      "baseline_label": "Sample per-forecast baseline",
+      "baseline_type": "per_forecast",
+      "baseline_sample_size": 6,
+      "baseline_avg_brier": 0.143567,
+      "brier_delta": -0.00415,
+      "brier_skill_vs_baseline": 0.028906,
+      "verdict": "app_lower_brier"
+    }
+  ],
+  "claim_rules": [
+    "Do not claim prediction superiority from sample fixtures.",
+    "Do not compare against human/community/pro baselines unless forecasts were made on the same or explicitly comparable questions.",
+    "Report sample sizes, question inclusion rules, and source URLs with every benchmark claim.",
+    "Use base-rate comparisons as a minimum sanity check, not as proof of world-class forecasting."
+  ]
+}
