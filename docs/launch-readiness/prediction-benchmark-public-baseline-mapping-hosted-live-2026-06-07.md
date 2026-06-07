@@ -9,10 +9,10 @@ This read-only scan compares app probabilities with public prediction-market can
 | Metric | Value |
 |---|---:|
 | Questions checked | 10 |
-| Public candidate rows | 94 |
+| Public candidate rows | 1653 |
 | Same-question candidates | 0 |
 | Close public proxies | 0 |
-| Diagnostic-only rows | 94 |
+| Diagnostic-only rows | 1653 |
 | Accuracy claim allowed | false |
 | Top-three claim allowed | false |
 
@@ -20,22 +20,22 @@ This read-only scan compares app probabilities with public prediction-market can
 
 | # | Question ID | App Probability | Best Public Candidate | Candidate Probability | Mapping Tier | App Gap | Claim Status |
 |---:|---|---:|---|---:|---|---:|---|
-| 1 | pbq-geo-escalation-001 | 0.593312 | forecastbench | 0.495 | not_comparable | 0.098312 | no_same_question_public_baseline_found |
-| 2 | pbq-election-policy-002 | 0.5756 | forecastbench | 0.595 | weak_public_proxy | -0.0194 | no_same_question_public_baseline_found |
-| 3 | pbq-fed-rates-003 | 0.559904 | forecastbench | 0.9745 | weak_public_proxy | -0.414596 | no_same_question_public_baseline_found |
-| 4 | pbq-energy-brent-004 | 0.552128 | manifold | 0.9549064276674347 | weak_public_proxy | -0.402778 | no_same_question_public_baseline_found |
-| 5 | pbq-gold-safe-haven-005 | 0.589856 | forecastbench | 0.0855 | not_comparable | 0.504356 | no_same_question_public_baseline_found |
-| 6 | pbq-equity-drawdown-006 | 0.560408 | forecastbench | 0.495 | weak_public_proxy | 0.065408 | no_same_question_public_baseline_found |
-| 7 | pbq-fx-sovereign-007 | 0.533192 | forecastbench | 0.495 | weak_public_proxy | 0.038192 | no_same_question_public_baseline_found |
-| 8 | pbq-trade-dispute-008 | 0.60044 | forecastbench | 0.8169350142935761 | not_comparable | -0.216495 | no_same_question_public_baseline_found |
-| 9 | pbq-climate-disaster-009 | 0.569552 | forecastbench | 0.8250000000000001 | not_comparable | -0.255448 | no_same_question_public_baseline_found |
-| 10 | pbq-ai-regulation-010 | 0.57524 | forecastbench | 0.495 | not_comparable | 0.08024 | no_same_question_public_baseline_found |
+| 1 | pbq-geo-escalation-001 | 0.524696 | forecastbench | 0.495 | not_comparable | 0.029696 | no_same_question_public_baseline_found |
+| 2 | pbq-election-policy-002 | 0.552632 | forecastbench | 0.595 | weak_public_proxy | -0.042368 | no_same_question_public_baseline_found |
+| 3 | pbq-fed-rates-003 | 0.54572 | polymarket | 0.0005 | weak_public_proxy | 0.54522 | no_same_question_public_baseline_found |
+| 4 | pbq-energy-brent-004 | 0.577328 | manifold | 0.9549064276674347 | weak_public_proxy | -0.377578 | no_same_question_public_baseline_found |
+| 5 | pbq-gold-safe-haven-005 | 0.537872 | forecastbench | 0.0855 | not_comparable | 0.452372 | no_same_question_public_baseline_found |
+| 6 | pbq-equity-drawdown-006 | 0.58352 | polymarket | 1 | weak_public_proxy | -0.41648 | no_same_question_public_baseline_found |
+| 7 | pbq-fx-sovereign-007 | 0.570056 | forecastbench | 0.495 | weak_public_proxy | 0.075056 | no_same_question_public_baseline_found |
+| 8 | pbq-trade-dispute-008 | 0.606416 | forecastbench | 0.8169350142935761 | not_comparable | -0.210519 | no_same_question_public_baseline_found |
+| 9 | pbq-climate-disaster-009 | 0.575456 | forecastbench | 0.8250000000000001 | not_comparable | -0.249544 | no_same_question_public_baseline_found |
+| 10 | pbq-ai-regulation-010 | 0.575384 | forecastbench | 0.495 | not_comparable | 0.080384 | no_same_question_public_baseline_found |
 
 ## Provider Status
 
 | Provider | Status | Queries | Candidates | Error |
 |---|---:|---:|---:|---|
-| polymarket | failed | 10 | 0 | fetch failed:ENOTFOUND:gamma-api.polymarket.com |
+| polymarket | queried | 30 | 1559 |  |
 | manifold | queried | 40 | 14 |  |
 | kalshi | queried | 18 | 0 |  |
 | forecastbench | queried | 2 | 80 |  |

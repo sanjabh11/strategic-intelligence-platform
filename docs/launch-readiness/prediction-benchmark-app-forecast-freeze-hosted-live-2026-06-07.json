@@ -1,6 +1,6 @@
 {
   "schema_version": "prediction-benchmark-app-forecast-freeze-v1",
-  "generated_at": "2026-06-07T15:02:50.000Z",
+  "generated_at": "2026-06-07T15:43:19.318Z",
   "status": "pre_resolution_app_probabilities_frozen_not_accuracy_proof",
   "proof_boundary": "This artifact freezes app-lane probabilities before resolution for the benchmark top-10. It is not a resolved accuracy result, top-three claim, buyer approval, or external benchmark ranking.",
   "source_policy": {
@@ -24,13 +24,13 @@
       "question_id": "pbq-geo-escalation-001",
       "title": "Major conflict escalation monitor",
       "question_text": "Will the CFR Global Conflict Tracker classify at least one monitored conflict as worsening by 2026-09-30?",
-      "prediction_timestamp": "2026-06-07T15:02:50.000Z",
+      "prediction_timestamp": "2026-06-07T15:43:19.318Z",
       "source_type": "hosted",
       "source_label": "hosted_analyze_engine_multi_agent_forecast",
-      "probability": 0.593312,
-      "confidence": 0.7715,
-      "evidence_gate": "hosted_evidence_thin:evidence_backed=false:retrievals=8:providers=2",
-      "analysis_run_id": "39756c6e-789f-40d7-b5a1-eb2800b9a116",
+      "probability": 0.524696,
+      "confidence": 0.7821,
+      "evidence_gate": "hosted_evidence_gate_passed",
+      "analysis_run_id": "6245e0f5-8ed3-4bec-a709-3b61ad8355a5",
       "hydrated_ok": true,
       "retrieval_count": 8,
       "retrieval_provider_summary": {
@@ -51,38 +51,43 @@
             "http_status": null,
             "query_variant": "canonical_query"
           }
-        ]
+        ],
+        "evidenceBackedDecision": {
+          "upstreamEvidenceBacked": true,
+          "legacyEvidenceBacked": true,
+          "reconciledEvidenceBacked": true
+        }
       },
       "consensus": {
         "champion": {
-          "probability": 0.593312,
-          "calibrated_probability": 0.593312,
-          "confidence": 0.7715
+          "probability": 0.524696,
+          "calibrated_probability": 0.524696,
+          "confidence": 0.7821
         },
         "challengers": [
           {
             "id": "equal_weight",
             "label": "Equal-Weight Challenger",
-            "probability": 0.6144,
-            "confidence": 0.7415,
+            "probability": 0.5345,
+            "confidence": 0.7521,
             "method": "simple mean",
-            "deltaFromChampion": -0.0153
+            "deltaFromChampion": 0.0001
           },
           {
             "id": "trimmed_mean",
             "label": "Trimmed-Mean Challenger",
-            "probability": 0.5821,
-            "confidence": 0.7615,
+            "probability": 0.5316,
+            "confidence": 0.7721,
             "method": "drop extreme agent view",
-            "deltaFromChampion": -0.0475
+            "deltaFromChampion": -0.0027
           },
           {
             "id": "skeptic_adjusted",
             "label": "Skeptic-Adjusted Challenger",
-            "probability": 0.5916,
-            "confidence": 0.7215,
+            "probability": 0.5168,
+            "confidence": 0.7321,
             "method": "champion minus disagreement penalty",
-            "deltaFromChampion": -0.038
+            "deltaFromChampion": -0.0175
           }
         ]
       },
@@ -93,13 +98,13 @@
       "question_id": "pbq-election-policy-002",
       "title": "G7 leadership change outcome",
       "question_text": "Will any G7 country install a new head of government through a national election or parliamentary confidence process by 2026-12-31?",
-      "prediction_timestamp": "2026-06-07T15:02:50.000Z",
+      "prediction_timestamp": "2026-06-07T15:43:19.318Z",
       "source_type": "hosted",
       "source_label": "hosted_analyze_engine_multi_agent_forecast",
-      "probability": 0.5756,
-      "confidence": 0.7083,
-      "evidence_gate": "hosted_evidence_thin:evidence_backed=false:retrievals=8:providers=2",
-      "analysis_run_id": "1517fbfa-11a0-4695-a953-0a540b0e70b5",
+      "probability": 0.552632,
+      "confidence": 0.7384,
+      "evidence_gate": "hosted_evidence_gate_passed",
+      "analysis_run_id": "2bfd13a2-ecb4-450f-a0ab-1f654a1432b8",
       "hydrated_ok": true,
       "retrieval_count": 8,
       "retrieval_provider_summary": {
@@ -120,38 +125,43 @@
             "http_status": null,
             "query_variant": "canonical_query"
           }
-        ]
+        ],
+        "evidenceBackedDecision": {
+          "upstreamEvidenceBacked": true,
+          "legacyEvidenceBacked": true,
+          "reconciledEvidenceBacked": true
+        }
       },
       "consensus": {
         "champion": {
-          "probability": 0.5756,
-          "calibrated_probability": 0.5756,
-          "confidence": 0.7083
+          "probability": 0.552632,
+          "calibrated_probability": 0.552632,
+          "confidence": 0.7384
         },
         "challengers": [
           {
             "id": "equal_weight",
             "label": "Equal-Weight Challenger",
-            "probability": 0.5912,
-            "confidence": 0.6783,
+            "probability": 0.5709,
+            "confidence": 0.7084,
             "method": "simple mean",
-            "deltaFromChampion": -0.0137
+            "deltaFromChampion": -0.0022
           },
           {
             "id": "trimmed_mean",
             "label": "Trimmed-Mean Challenger",
-            "probability": 0.5593,
-            "confidence": 0.6983,
+            "probability": 0.5877,
+            "confidence": 0.7284,
             "method": "drop extreme agent view",
-            "deltaFromChampion": -0.0457
+            "deltaFromChampion": 0.0146
           },
           {
             "id": "skeptic_adjusted",
             "label": "Skeptic-Adjusted Challenger",
-            "probability": 0.5676,
-            "confidence": 0.6583,
+            "probability": 0.5584,
+            "confidence": 0.6884,
             "method": "champion minus disagreement penalty",
-            "deltaFromChampion": -0.0373
+            "deltaFromChampion": -0.0147
           }
         ]
       },
@@ -162,13 +172,13 @@
       "question_id": "pbq-fed-rates-003",
       "title": "Federal Reserve easing surprise",
       "question_text": "Will the FOMC target range upper bound be at least 50 basis points lower on 2026-09-30 than the range in force on 2026-06-07?",
-      "prediction_timestamp": "2026-06-07T15:02:50.000Z",
+      "prediction_timestamp": "2026-06-07T15:43:19.318Z",
       "source_type": "hosted",
       "source_label": "hosted_analyze_engine_multi_agent_forecast",
-      "probability": 0.559904,
-      "confidence": 0.702,
-      "evidence_gate": "hosted_evidence_thin:evidence_backed=false:retrievals=8:providers=2",
-      "analysis_run_id": "74e0584b-df1d-474e-bebe-2fc281792510",
+      "probability": 0.54572,
+      "confidence": 0.7157,
+      "evidence_gate": "hosted_evidence_gate_passed",
+      "analysis_run_id": "c6a5f5a8-7bc7-46a7-bff2-a60d5f499cdc",
       "hydrated_ok": true,
       "retrieval_count": 8,
       "retrieval_provider_summary": {
@@ -184,10 +194,10 @@
           },
           {
             "provider": "gdelt",
-            "status": "degraded",
+            "status": "rate_limited",
             "source_count": 0,
-            "http_status": null,
-            "query_variant": "canonical_query"
+            "http_status": 429,
+            "query_variant": "entity_query"
           },
           {
             "provider": "firecrawl",
@@ -210,38 +220,43 @@
             "http_status": 403,
             "query_variant": "entity_query"
           }
-        ]
+        ],
+        "evidenceBackedDecision": {
+          "upstreamEvidenceBacked": true,
+          "legacyEvidenceBacked": true,
+          "reconciledEvidenceBacked": true
+        }
       },
       "consensus": {
         "champion": {
-          "probability": 0.559904,
-          "calibrated_probability": 0.559904,
-          "confidence": 0.702
+          "probability": 0.54572,
+          "calibrated_probability": 0.54572,
+          "confidence": 0.7157
         },
         "challengers": [
           {
             "id": "equal_weight",
             "label": "Equal-Weight Challenger",
-            "probability": 0.5698,
-            "confidence": 0.672,
+            "probability": 0.5664,
+            "confidence": 0.6857,
             "method": "simple mean",
-            "deltaFromChampion": -0.0134
+            "deltaFromChampion": 0.0029
           },
           {
             "id": "trimmed_mean",
             "label": "Trimmed-Mean Challenger",
-            "probability": 0.5683,
-            "confidence": 0.692,
+            "probability": 0.551,
+            "confidence": 0.7057,
             "method": "drop extreme agent view",
-            "deltaFromChampion": -0.0149
+            "deltaFromChampion": -0.0125
           },
           {
             "id": "skeptic_adjusted",
             "label": "Skeptic-Adjusted Challenger",
-            "probability": 0.5498,
-            "confidence": 0.652,
+            "probability": 0.5481,
+            "confidence": 0.6657,
             "method": "champion minus disagreement penalty",
-            "deltaFromChampion": -0.0334
+            "deltaFromChampion": -0.0154
           }
         ]
       },
@@ -252,239 +267,17 @@
       "question_id": "pbq-energy-brent-004",
       "title": "Brent crude upside shock",
       "question_text": "Will front-month Brent crude settle above USD 95 on any trading day by 2026-12-31?",
-      "prediction_timestamp": "2026-06-07T15:02:50.000Z",
+      "prediction_timestamp": "2026-06-07T15:43:19.318Z",
       "source_type": "hosted",
       "source_label": "hosted_analyze_engine_multi_agent_forecast",
-      "probability": 0.552128,
-      "confidence": 0.7346,
-      "evidence_gate": "hosted_evidence_thin:evidence_backed=false:retrievals=8:providers=2",
-      "analysis_run_id": "301efe6a-50a1-4fd5-b68a-4d9d8f0ce18e",
+      "probability": 0.577328,
+      "confidence": 0.7573,
+      "evidence_gate": "hosted_evidence_gate_passed",
+      "analysis_run_id": "93ed2963-5d1b-437c-9230-bc011b66b7f6",
       "hydrated_ok": true,
       "retrieval_count": 8,
       "retrieval_provider_summary": {
-        "normalizedEvidenceCount": 10,
-        "distinctProviderCount": 2,
-        "statuses": [
-          {
-            "provider": "exa",
-            "status": "success",
-            "source_count": 5,
-            "http_status": 200,
-            "query_variant": "canonical_query"
-          },
-          {
-            "provider": "gdelt",
-            "status": "rate_limited",
-            "source_count": 0,
-            "http_status": 429,
-            "query_variant": "entity_query"
-          },
-          {
-            "provider": "firecrawl",
-            "status": "empty",
-            "source_count": 0,
-            "http_status": 200,
-            "query_variant": "institutional_query"
-          },
-          {
-            "provider": "crossref",
-            "status": "success",
-            "source_count": 5,
-            "http_status": 200,
-            "query_variant": "institutional_query"
-          },
-          {
-            "provider": "gemini",
-            "status": "config_error",
-            "source_count": 0,
-            "http_status": 403,
-            "query_variant": "entity_query"
-          },
-          {
-            "provider": "worldbank",
-            "status": "empty",
-            "source_count": 0,
-            "http_status": 200,
-            "query_variant": "institutional_query"
-          },
-          {
-            "provider": "imf",
-            "status": "empty",
-            "source_count": 0,
-            "http_status": 200,
-            "query_variant": "institutional_query"
-          },
-          {
-            "provider": "uncomtrade",
-            "status": "empty",
-            "source_count": 0,
-            "http_status": 200,
-            "query_variant": "institutional_query"
-          }
-        ]
-      },
-      "consensus": {
-        "champion": {
-          "probability": 0.552128,
-          "calibrated_probability": 0.552128,
-          "confidence": 0.7346
-        },
-        "challengers": [
-          {
-            "id": "equal_weight",
-            "label": "Equal-Weight Challenger",
-            "probability": 0.5702,
-            "confidence": 0.7046,
-            "method": "simple mean",
-            "deltaFromChampion": -0.0023
-          },
-          {
-            "id": "trimmed_mean",
-            "label": "Trimmed-Mean Challenger",
-            "probability": 0.5809,
-            "confidence": 0.7246,
-            "method": "drop extreme agent view",
-            "deltaFromChampion": 0.0084
-          },
-          {
-            "id": "skeptic_adjusted",
-            "label": "Skeptic-Adjusted Challenger",
-            "probability": 0.5461,
-            "confidence": 0.6846,
-            "method": "champion minus disagreement penalty",
-            "deltaFromChampion": -0.0263
-          }
-        ]
-      },
-      "agents": [],
-      "claim_boundary": "pre_resolution_hosted_app_flow_freeze_not_accuracy_proof"
-    },
-    {
-      "question_id": "pbq-gold-safe-haven-005",
-      "title": "Gold safe-haven breakout",
-      "question_text": "Will the LBMA PM gold price exceed USD 3800 per troy ounce on any fixing day by 2026-12-31?",
-      "prediction_timestamp": "2026-06-07T15:02:50.000Z",
-      "source_type": "hosted",
-      "source_label": "hosted_analyze_engine_multi_agent_forecast",
-      "probability": 0.589856,
-      "confidence": 0.7515,
-      "evidence_gate": "hosted_evidence_thin:evidence_backed=false:retrievals=8:providers=2",
-      "analysis_run_id": "05f8972e-e463-4946-b3c6-b0d1ff147eb2",
-      "hydrated_ok": true,
-      "retrieval_count": 8,
-      "retrieval_provider_summary": {
-        "normalizedEvidenceCount": 10,
-        "distinctProviderCount": 2,
-        "statuses": [
-          {
-            "provider": "exa",
-            "status": "success",
-            "source_count": 5,
-            "http_status": 200,
-            "query_variant": "canonical_query"
-          },
-          {
-            "provider": "gdelt",
-            "status": "rate_limited",
-            "source_count": 0,
-            "http_status": 429,
-            "query_variant": "entity_query"
-          },
-          {
-            "provider": "firecrawl",
-            "status": "empty",
-            "source_count": 0,
-            "http_status": 200,
-            "query_variant": "institutional_query"
-          },
-          {
-            "provider": "crossref",
-            "status": "success",
-            "source_count": 5,
-            "http_status": 200,
-            "query_variant": "institutional_query"
-          },
-          {
-            "provider": "gemini",
-            "status": "config_error",
-            "source_count": 0,
-            "http_status": 403,
-            "query_variant": "entity_query"
-          },
-          {
-            "provider": "worldbank",
-            "status": "empty",
-            "source_count": 0,
-            "http_status": 200,
-            "query_variant": "institutional_query"
-          },
-          {
-            "provider": "imf",
-            "status": "empty",
-            "source_count": 0,
-            "http_status": 200,
-            "query_variant": "institutional_query"
-          },
-          {
-            "provider": "uncomtrade",
-            "status": "empty",
-            "source_count": 0,
-            "http_status": 200,
-            "query_variant": "institutional_query"
-          }
-        ]
-      },
-      "consensus": {
-        "champion": {
-          "probability": 0.589856,
-          "calibrated_probability": 0.589856,
-          "confidence": 0.7515
-        },
-        "challengers": [
-          {
-            "id": "equal_weight",
-            "label": "Equal-Weight Challenger",
-            "probability": 0.6225,
-            "confidence": 0.7215,
-            "method": "simple mean",
-            "deltaFromChampion": -0.0023
-          },
-          {
-            "id": "trimmed_mean",
-            "label": "Trimmed-Mean Challenger",
-            "probability": 0.619,
-            "confidence": 0.7415,
-            "method": "drop extreme agent view",
-            "deltaFromChampion": -0.0058
-          },
-          {
-            "id": "skeptic_adjusted",
-            "label": "Skeptic-Adjusted Challenger",
-            "probability": 0.5969,
-            "confidence": 0.7015,
-            "method": "champion minus disagreement penalty",
-            "deltaFromChampion": -0.0279
-          }
-        ]
-      },
-      "agents": [],
-      "claim_boundary": "pre_resolution_hosted_app_flow_freeze_not_accuracy_proof"
-    },
-    {
-      "question_id": "pbq-equity-drawdown-006",
-      "title": "S&P 500 drawdown risk",
-      "question_text": "Will the S&P 500 close at least 10 percent below its 2026-06-07 reference close on any trading day by 2026-12-31?",
-      "prediction_timestamp": "2026-06-07T15:02:50.000Z",
-      "source_type": "hosted",
-      "source_label": "hosted_analyze_engine_multi_agent_forecast",
-      "probability": 0.560408,
-      "confidence": 0.7069,
-      "evidence_gate": "hosted_evidence_thin:evidence_backed=false:retrievals=8:providers=3",
-      "analysis_run_id": "ee4f4536-c83f-4ba3-a307-f98422494c22",
-      "hydrated_ok": true,
-      "retrieval_count": 8,
-      "retrieval_provider_summary": {
-        "normalizedEvidenceCount": 15,
+        "normalizedEvidenceCount": 12,
         "distinctProviderCount": 3,
         "statuses": [
           {
@@ -497,7 +290,7 @@
           {
             "provider": "gdelt",
             "status": "success",
-            "source_count": 5,
+            "source_count": 2,
             "http_status": 200,
             "query_variant": "entity_query"
           },
@@ -521,39 +314,65 @@
             "source_count": 0,
             "http_status": 403,
             "query_variant": "entity_query"
+          },
+          {
+            "provider": "worldbank",
+            "status": "empty",
+            "source_count": 0,
+            "http_status": 200,
+            "query_variant": "institutional_query"
+          },
+          {
+            "provider": "imf",
+            "status": "empty",
+            "source_count": 0,
+            "http_status": 200,
+            "query_variant": "institutional_query"
+          },
+          {
+            "provider": "uncomtrade",
+            "status": "empty",
+            "source_count": 0,
+            "http_status": 200,
+            "query_variant": "institutional_query"
           }
-        ]
+        ],
+        "evidenceBackedDecision": {
+          "upstreamEvidenceBacked": true,
+          "legacyEvidenceBacked": true,
+          "reconciledEvidenceBacked": true
+        }
       },
       "consensus": {
         "champion": {
-          "probability": 0.560408,
-          "calibrated_probability": 0.560408,
-          "confidence": 0.7069
+          "probability": 0.577328,
+          "calibrated_probability": 0.577328,
+          "confidence": 0.7573
         },
         "challengers": [
           {
             "id": "equal_weight",
             "label": "Equal-Weight Challenger",
-            "probability": 0.5862,
-            "confidence": 0.6769,
+            "probability": 0.5985,
+            "confidence": 0.7273,
             "method": "simple mean",
-            "deltaFromChampion": 0.0023
+            "deltaFromChampion": -0.0088
           },
           {
             "id": "trimmed_mean",
             "label": "Trimmed-Mean Challenger",
-            "probability": 0.5447,
-            "confidence": 0.6969,
+            "probability": 0.5919,
+            "confidence": 0.7473,
             "method": "drop extreme agent view",
-            "deltaFromChampion": -0.0392
+            "deltaFromChampion": -0.0155
           },
           {
             "id": "skeptic_adjusted",
             "label": "Skeptic-Adjusted Challenger",
-            "probability": 0.5432,
-            "confidence": 0.6569,
+            "probability": 0.5674,
+            "confidence": 0.7073,
             "method": "champion minus disagreement penalty",
-            "deltaFromChampion": -0.0407
+            "deltaFromChampion": -0.0399
           }
         ]
       },
@@ -561,16 +380,16 @@
       "claim_boundary": "pre_resolution_hosted_app_flow_freeze_not_accuracy_proof"
     },
     {
-      "question_id": "pbq-fx-sovereign-007",
-      "title": "US dollar index upside risk",
-      "question_text": "Will the US Dollar Index close above 110 on any trading day by 2026-12-31?",
-      "prediction_timestamp": "2026-06-07T15:02:50.000Z",
+      "question_id": "pbq-gold-safe-haven-005",
+      "title": "Gold safe-haven breakout",
+      "question_text": "Will the LBMA PM gold price exceed USD 3800 per troy ounce on any fixing day by 2026-12-31?",
+      "prediction_timestamp": "2026-06-07T15:43:19.318Z",
       "source_type": "hosted",
       "source_label": "hosted_analyze_engine_multi_agent_forecast",
-      "probability": 0.533192,
-      "confidence": 0.7401,
-      "evidence_gate": "hosted_evidence_thin:evidence_backed=false:retrievals=8:providers=2",
-      "analysis_run_id": "af7066ad-b81c-4c32-83fa-bd286ddfde16",
+      "probability": 0.537872,
+      "confidence": 0.7342,
+      "evidence_gate": "hosted_evidence_gate_passed",
+      "analysis_run_id": "0a13ab2d-1f37-445f-9874-0c404f6b01c3",
       "hydrated_ok": true,
       "retrieval_count": 8,
       "retrieval_provider_summary": {
@@ -586,9 +405,9 @@
           },
           {
             "provider": "gdelt",
-            "status": "degraded",
+            "status": "rate_limited",
             "source_count": 0,
-            "http_status": null,
+            "http_status": 429,
             "query_variant": "canonical_query"
           },
           {
@@ -633,38 +452,43 @@
             "http_status": 200,
             "query_variant": "institutional_query"
           }
-        ]
+        ],
+        "evidenceBackedDecision": {
+          "upstreamEvidenceBacked": true,
+          "legacyEvidenceBacked": true,
+          "reconciledEvidenceBacked": true
+        }
       },
       "consensus": {
         "champion": {
-          "probability": 0.533192,
-          "calibrated_probability": 0.533192,
-          "confidence": 0.7401
+          "probability": 0.537872,
+          "calibrated_probability": 0.537872,
+          "confidence": 0.7342
         },
         "challengers": [
           {
             "id": "equal_weight",
             "label": "Equal-Weight Challenger",
-            "probability": 0.546,
-            "confidence": 0.7101,
+            "probability": 0.5414,
+            "confidence": 0.7042,
             "method": "simple mean",
-            "deltaFromChampion": -0.0001
+            "deltaFromChampion": -0.0112
           },
           {
             "id": "trimmed_mean",
             "label": "Trimmed-Mean Challenger",
-            "probability": 0.5456,
-            "confidence": 0.7301,
+            "probability": 0.5525,
+            "confidence": 0.7242,
             "method": "drop extreme agent view",
-            "deltaFromChampion": -0.0005
+            "deltaFromChampion": 0
           },
           {
             "id": "skeptic_adjusted",
             "label": "Skeptic-Adjusted Challenger",
-            "probability": 0.5308,
-            "confidence": 0.6901,
+            "probability": 0.5238,
+            "confidence": 0.6842,
             "method": "champion minus disagreement penalty",
-            "deltaFromChampion": -0.0153
+            "deltaFromChampion": -0.0287
           }
         ]
       },
@@ -672,154 +496,16 @@
       "claim_boundary": "pre_resolution_hosted_app_flow_freeze_not_accuracy_proof"
     },
     {
-      "question_id": "pbq-trade-dispute-008",
-      "title": "Major trade-dispute initiation",
-      "question_text": "Will the WTO publish a new dispute involving the United States, European Union, or China as a complainant or respondent by 2026-12-31?",
-      "prediction_timestamp": "2026-06-07T15:02:50.000Z",
+      "question_id": "pbq-equity-drawdown-006",
+      "title": "S&P 500 drawdown risk",
+      "question_text": "Will the S&P 500 close at least 10 percent below its 2026-06-07 reference close on any trading day by 2026-12-31?",
+      "prediction_timestamp": "2026-06-07T15:43:19.318Z",
       "source_type": "hosted",
       "source_label": "hosted_analyze_engine_multi_agent_forecast",
-      "probability": 0.60044,
-      "confidence": 0.7652,
-      "evidence_gate": "hosted_evidence_thin:evidence_backed=false:retrievals=8:providers=2",
-      "analysis_run_id": "0d7f2ea4-baf9-411d-a517-294f394bb99c",
-      "hydrated_ok": true,
-      "retrieval_count": 8,
-      "retrieval_provider_summary": {
-        "normalizedEvidenceCount": 8,
-        "distinctProviderCount": 2,
-        "statuses": [
-          {
-            "provider": "exa",
-            "status": "success",
-            "source_count": 5,
-            "http_status": null,
-            "query_variant": "canonical_query"
-          },
-          {
-            "provider": "crossref",
-            "status": "success",
-            "source_count": 3,
-            "http_status": null,
-            "query_variant": "canonical_query"
-          }
-        ]
-      },
-      "consensus": {
-        "champion": {
-          "probability": 0.60044,
-          "calibrated_probability": 0.60044,
-          "confidence": 0.7652
-        },
-        "challengers": [
-          {
-            "id": "equal_weight",
-            "label": "Equal-Weight Challenger",
-            "probability": 0.6284,
-            "confidence": 0.7352,
-            "method": "simple mean",
-            "deltaFromChampion": -0.011
-          },
-          {
-            "id": "trimmed_mean",
-            "label": "Trimmed-Mean Challenger",
-            "probability": 0.5966,
-            "confidence": 0.7552,
-            "method": "drop extreme agent view",
-            "deltaFromChampion": -0.0429
-          },
-          {
-            "id": "skeptic_adjusted",
-            "label": "Skeptic-Adjusted Challenger",
-            "probability": 0.6089,
-            "confidence": 0.7152,
-            "method": "champion minus disagreement penalty",
-            "deltaFromChampion": -0.0306
-          }
-        ]
-      },
-      "agents": [],
-      "claim_boundary": "pre_resolution_hosted_app_flow_freeze_not_accuracy_proof"
-    },
-    {
-      "question_id": "pbq-climate-disaster-009",
-      "title": "Atlantic major hurricane occurrence",
-      "question_text": "Will NOAA report at least one Atlantic named storm reaching Category 4 or 5 intensity by 2026-11-30?",
-      "prediction_timestamp": "2026-06-07T15:02:50.000Z",
-      "source_type": "hosted",
-      "source_label": "hosted_analyze_engine_multi_agent_forecast",
-      "probability": 0.569552,
-      "confidence": 0.736,
-      "evidence_gate": "hosted_evidence_thin:evidence_backed=false:retrievals=8:providers=2",
-      "analysis_run_id": "6ac2deaf-88e0-469b-96f1-3c046cc8d827",
-      "hydrated_ok": true,
-      "retrieval_count": 8,
-      "retrieval_provider_summary": {
-        "normalizedEvidenceCount": 8,
-        "distinctProviderCount": 2,
-        "statuses": [
-          {
-            "provider": "exa",
-            "status": "success",
-            "source_count": 5,
-            "http_status": null,
-            "query_variant": "canonical_query"
-          },
-          {
-            "provider": "crossref",
-            "status": "success",
-            "source_count": 3,
-            "http_status": null,
-            "query_variant": "canonical_query"
-          }
-        ]
-      },
-      "consensus": {
-        "champion": {
-          "probability": 0.569552,
-          "calibrated_probability": 0.569552,
-          "confidence": 0.736
-        },
-        "challengers": [
-          {
-            "id": "equal_weight",
-            "label": "Equal-Weight Challenger",
-            "probability": 0.5917,
-            "confidence": 0.706,
-            "method": "simple mean",
-            "deltaFromChampion": -0.0049
-          },
-          {
-            "id": "trimmed_mean",
-            "label": "Trimmed-Mean Challenger",
-            "probability": 0.6021,
-            "confidence": 0.726,
-            "method": "drop extreme agent view",
-            "deltaFromChampion": 0.0055
-          },
-          {
-            "id": "skeptic_adjusted",
-            "label": "Skeptic-Adjusted Challenger",
-            "probability": 0.5661,
-            "confidence": 0.686,
-            "method": "champion minus disagreement penalty",
-            "deltaFromChampion": -0.0305
-          }
-        ]
-      },
-      "agents": [],
-      "claim_boundary": "pre_resolution_hosted_app_flow_freeze_not_accuracy_proof"
-    },
-    {
-      "question_id": "pbq-ai-regulation-010",
-      "title": "EU AI Act high-risk timing change",
-      "question_text": "Will the EU publish binding law by 2026-12-31 that delays the first application date for EU AI Act high-risk AI obligations?",
-      "prediction_timestamp": "2026-06-07T15:02:50.000Z",
-      "source_type": "hosted",
-      "source_label": "hosted_analyze_engine_multi_agent_forecast",
-      "probability": 0.57524,
-      "confidence": 0.7217,
-      "evidence_gate": "hosted_evidence_thin:evidence_backed=false:retrievals=8:providers=2",
-      "analysis_run_id": "0e449def-2f1e-4c51-aa46-c779453ddd5b",
+      "probability": 0.58352,
+      "confidence": 0.7017,
+      "evidence_gate": "hosted_evidence_gate_passed",
+      "analysis_run_id": "85a92e59-d78e-4ab0-9111-47dbb0f2bc28",
       "hydrated_ok": true,
       "retrieval_count": 8,
       "retrieval_provider_summary": {
@@ -860,6 +546,365 @@
             "source_count": 0,
             "http_status": 403,
             "query_variant": "entity_query"
+          }
+        ],
+        "evidenceBackedDecision": {
+          "upstreamEvidenceBacked": true,
+          "legacyEvidenceBacked": true,
+          "reconciledEvidenceBacked": true
+        }
+      },
+      "consensus": {
+        "champion": {
+          "probability": 0.58352,
+          "calibrated_probability": 0.58352,
+          "confidence": 0.7017
+        },
+        "challengers": [
+          {
+            "id": "equal_weight",
+            "label": "Equal-Weight Challenger",
+            "probability": 0.6142,
+            "confidence": 0.6717,
+            "method": "simple mean",
+            "deltaFromChampion": -0.0017
+          },
+          {
+            "id": "trimmed_mean",
+            "label": "Trimmed-Mean Challenger",
+            "probability": 0.6037,
+            "confidence": 0.6917,
+            "method": "drop extreme agent view",
+            "deltaFromChampion": -0.0123
+          },
+          {
+            "id": "skeptic_adjusted",
+            "label": "Skeptic-Adjusted Challenger",
+            "probability": 0.5958,
+            "confidence": 0.6517,
+            "method": "champion minus disagreement penalty",
+            "deltaFromChampion": -0.0202
+          }
+        ]
+      },
+      "agents": [],
+      "claim_boundary": "pre_resolution_hosted_app_flow_freeze_not_accuracy_proof"
+    },
+    {
+      "question_id": "pbq-fx-sovereign-007",
+      "title": "US dollar index upside risk",
+      "question_text": "Will the US Dollar Index close above 110 on any trading day by 2026-12-31?",
+      "prediction_timestamp": "2026-06-07T15:43:19.318Z",
+      "source_type": "hosted",
+      "source_label": "hosted_analyze_engine_multi_agent_forecast",
+      "probability": 0.570056,
+      "confidence": 0.7083,
+      "evidence_gate": "hosted_evidence_gate_passed",
+      "analysis_run_id": "57ba1498-d314-4563-a75d-733e0afc88f6",
+      "hydrated_ok": true,
+      "retrieval_count": 8,
+      "retrieval_provider_summary": {
+        "normalizedEvidenceCount": 10,
+        "distinctProviderCount": 2,
+        "statuses": [
+          {
+            "provider": "exa",
+            "status": "success",
+            "source_count": 5,
+            "http_status": 200,
+            "query_variant": "canonical_query"
+          },
+          {
+            "provider": "gdelt",
+            "status": "rate_limited",
+            "source_count": 0,
+            "http_status": 429,
+            "query_variant": "canonical_query"
+          },
+          {
+            "provider": "firecrawl",
+            "status": "empty",
+            "source_count": 0,
+            "http_status": 200,
+            "query_variant": "institutional_query"
+          },
+          {
+            "provider": "crossref",
+            "status": "success",
+            "source_count": 5,
+            "http_status": 200,
+            "query_variant": "institutional_query"
+          },
+          {
+            "provider": "gemini",
+            "status": "config_error",
+            "source_count": 0,
+            "http_status": 403,
+            "query_variant": "entity_query"
+          },
+          {
+            "provider": "worldbank",
+            "status": "empty",
+            "source_count": 0,
+            "http_status": 200,
+            "query_variant": "institutional_query"
+          },
+          {
+            "provider": "imf",
+            "status": "empty",
+            "source_count": 0,
+            "http_status": 200,
+            "query_variant": "institutional_query"
+          },
+          {
+            "provider": "uncomtrade",
+            "status": "empty",
+            "source_count": 0,
+            "http_status": 200,
+            "query_variant": "institutional_query"
+          }
+        ],
+        "evidenceBackedDecision": {
+          "upstreamEvidenceBacked": true,
+          "legacyEvidenceBacked": true,
+          "reconciledEvidenceBacked": true
+        }
+      },
+      "consensus": {
+        "champion": {
+          "probability": 0.570056,
+          "calibrated_probability": 0.570056,
+          "confidence": 0.7083
+        },
+        "challengers": [
+          {
+            "id": "equal_weight",
+            "label": "Equal-Weight Challenger",
+            "probability": 0.5936,
+            "confidence": 0.6783,
+            "method": "simple mean",
+            "deltaFromChampion": -0.0038
+          },
+          {
+            "id": "trimmed_mean",
+            "label": "Trimmed-Mean Challenger",
+            "probability": 0.624,
+            "confidence": 0.6983,
+            "method": "drop extreme agent view",
+            "deltaFromChampion": 0.0267
+          },
+          {
+            "id": "skeptic_adjusted",
+            "label": "Skeptic-Adjusted Challenger",
+            "probability": 0.5521,
+            "confidence": 0.6583,
+            "method": "champion minus disagreement penalty",
+            "deltaFromChampion": -0.0452
+          }
+        ]
+      },
+      "agents": [],
+      "claim_boundary": "pre_resolution_hosted_app_flow_freeze_not_accuracy_proof"
+    },
+    {
+      "question_id": "pbq-trade-dispute-008",
+      "title": "Major trade-dispute initiation",
+      "question_text": "Will the WTO publish a new dispute involving the United States, European Union, or China as a complainant or respondent by 2026-12-31?",
+      "prediction_timestamp": "2026-06-07T15:43:19.318Z",
+      "source_type": "hosted",
+      "source_label": "hosted_analyze_engine_multi_agent_forecast",
+      "probability": 0.606416,
+      "confidence": 0.7467,
+      "evidence_gate": "hosted_evidence_gate_passed",
+      "analysis_run_id": "48811499-19c2-4fc8-9103-f28f4ca670cf",
+      "hydrated_ok": true,
+      "retrieval_count": 8,
+      "retrieval_provider_summary": {
+        "normalizedEvidenceCount": 8,
+        "distinctProviderCount": 2,
+        "statuses": [
+          {
+            "provider": "exa",
+            "status": "success",
+            "source_count": 5,
+            "http_status": null,
+            "query_variant": "canonical_query"
+          },
+          {
+            "provider": "crossref",
+            "status": "success",
+            "source_count": 3,
+            "http_status": null,
+            "query_variant": "canonical_query"
+          }
+        ],
+        "evidenceBackedDecision": {
+          "upstreamEvidenceBacked": true,
+          "legacyEvidenceBacked": true,
+          "reconciledEvidenceBacked": true
+        }
+      },
+      "consensus": {
+        "champion": {
+          "probability": 0.606416,
+          "calibrated_probability": 0.606416,
+          "confidence": 0.7467
+        },
+        "challengers": [
+          {
+            "id": "equal_weight",
+            "label": "Equal-Weight Challenger",
+            "probability": 0.6424,
+            "confidence": 0.7167,
+            "method": "simple mean",
+            "deltaFromChampion": -0.0054
+          },
+          {
+            "id": "trimmed_mean",
+            "label": "Trimmed-Mean Challenger",
+            "probability": 0.6339,
+            "confidence": 0.7367,
+            "method": "drop extreme agent view",
+            "deltaFromChampion": -0.0139
+          },
+          {
+            "id": "skeptic_adjusted",
+            "label": "Skeptic-Adjusted Challenger",
+            "probability": 0.6348,
+            "confidence": 0.6967,
+            "method": "champion minus disagreement penalty",
+            "deltaFromChampion": -0.0129
+          }
+        ]
+      },
+      "agents": [],
+      "claim_boundary": "pre_resolution_hosted_app_flow_freeze_not_accuracy_proof"
+    },
+    {
+      "question_id": "pbq-climate-disaster-009",
+      "title": "Atlantic major hurricane occurrence",
+      "question_text": "Will NOAA report at least one Atlantic named storm reaching Category 4 or 5 intensity by 2026-11-30?",
+      "prediction_timestamp": "2026-06-07T15:43:19.318Z",
+      "source_type": "hosted",
+      "source_label": "hosted_analyze_engine_multi_agent_forecast",
+      "probability": 0.575456,
+      "confidence": 0.7006,
+      "evidence_gate": "hosted_evidence_gate_passed",
+      "analysis_run_id": "d3fa05d7-67ce-4e56-b1f6-40f9ce030cf1",
+      "hydrated_ok": true,
+      "retrieval_count": 8,
+      "retrieval_provider_summary": {
+        "normalizedEvidenceCount": 8,
+        "distinctProviderCount": 2,
+        "statuses": [
+          {
+            "provider": "exa",
+            "status": "success",
+            "source_count": 5,
+            "http_status": null,
+            "query_variant": "canonical_query"
+          },
+          {
+            "provider": "crossref",
+            "status": "success",
+            "source_count": 3,
+            "http_status": null,
+            "query_variant": "canonical_query"
+          }
+        ],
+        "evidenceBackedDecision": {
+          "upstreamEvidenceBacked": true,
+          "legacyEvidenceBacked": true,
+          "reconciledEvidenceBacked": true
+        }
+      },
+      "consensus": {
+        "champion": {
+          "probability": 0.575456,
+          "calibrated_probability": 0.575456,
+          "confidence": 0.7006
+        },
+        "challengers": [
+          {
+            "id": "equal_weight",
+            "label": "Equal-Weight Challenger",
+            "probability": 0.6049,
+            "confidence": 0.6706,
+            "method": "simple mean",
+            "deltaFromChampion": 0.0001
+          },
+          {
+            "id": "trimmed_mean",
+            "label": "Trimmed-Mean Challenger",
+            "probability": 0.5892,
+            "confidence": 0.6906,
+            "method": "drop extreme agent view",
+            "deltaFromChampion": -0.0156
+          },
+          {
+            "id": "skeptic_adjusted",
+            "label": "Skeptic-Adjusted Challenger",
+            "probability": 0.5798,
+            "confidence": 0.6506,
+            "method": "champion minus disagreement penalty",
+            "deltaFromChampion": -0.0249
+          }
+        ]
+      },
+      "agents": [],
+      "claim_boundary": "pre_resolution_hosted_app_flow_freeze_not_accuracy_proof"
+    },
+    {
+      "question_id": "pbq-ai-regulation-010",
+      "title": "EU AI Act high-risk timing change",
+      "question_text": "Will the EU publish binding law by 2026-12-31 that delays the first application date for EU AI Act high-risk AI obligations?",
+      "prediction_timestamp": "2026-06-07T15:43:19.318Z",
+      "source_type": "hosted",
+      "source_label": "hosted_analyze_engine_multi_agent_forecast",
+      "probability": 0.575384,
+      "confidence": 0.71,
+      "evidence_gate": "hosted_evidence_gate_passed",
+      "analysis_run_id": "b942018f-209d-4a4e-952c-42859e49a792",
+      "hydrated_ok": true,
+      "retrieval_count": 8,
+      "retrieval_provider_summary": {
+        "normalizedEvidenceCount": 11,
+        "distinctProviderCount": 3,
+        "statuses": [
+          {
+            "provider": "exa",
+            "status": "success",
+            "source_count": 5,
+            "http_status": 200,
+            "query_variant": "canonical_query"
+          },
+          {
+            "provider": "gdelt",
+            "status": "success",
+            "source_count": 1,
+            "http_status": 200,
+            "query_variant": "entity_query"
+          },
+          {
+            "provider": "firecrawl",
+            "status": "empty",
+            "source_count": 0,
+            "http_status": 200,
+            "query_variant": "institutional_query"
+          },
+          {
+            "provider": "crossref",
+            "status": "success",
+            "source_count": 5,
+            "http_status": 200,
+            "query_variant": "institutional_query"
+          },
+          {
+            "provider": "gemini",
+            "status": "config_error",
+            "source_count": 0,
+            "http_status": 403,
+            "query_variant": "entity_query"
           },
           {
             "provider": "worldbank",
@@ -875,38 +920,43 @@
             "http_status": 200,
             "query_variant": "institutional_query"
           }
-        ]
+        ],
+        "evidenceBackedDecision": {
+          "upstreamEvidenceBacked": true,
+          "legacyEvidenceBacked": true,
+          "reconciledEvidenceBacked": true
+        }
       },
       "consensus": {
         "champion": {
-          "probability": 0.57524,
-          "calibrated_probability": 0.57524,
-          "confidence": 0.7217
+          "probability": 0.575384,
+          "calibrated_probability": 0.575384,
+          "confidence": 0.71
         },
         "challengers": [
           {
             "id": "equal_weight",
             "label": "Equal-Weight Challenger",
-            "probability": 0.6032,
-            "confidence": 0.6917,
+            "probability": 0.5978,
+            "confidence": 0.68,
             "method": "simple mean",
-            "deltaFromChampion": -0.0013
+            "deltaFromChampion": -0.0069
           },
           {
             "id": "trimmed_mean",
             "label": "Trimmed-Mean Challenger",
-            "probability": 0.6145,
-            "confidence": 0.7117,
+            "probability": 0.61,
+            "confidence": 0.7,
             "method": "drop extreme agent view",
-            "deltaFromChampion": 0.01
+            "deltaFromChampion": 0.0053
           },
           {
             "id": "skeptic_adjusted",
             "label": "Skeptic-Adjusted Challenger",
-            "probability": 0.5751,
-            "confidence": 0.6717,
+            "probability": 0.5687,
+            "confidence": 0.66,
             "method": "champion minus disagreement penalty",
-            "deltaFromChampion": -0.0294
+            "deltaFromChampion": -0.0359
           }
         ]
       },
@@ -921,15 +971,15 @@
       "prediction_source": "strategic_intelligence_platform",
       "forecaster_type": "app_lane",
       "model_or_team": "hosted_analyze_engine_multi_agent_forecast",
-      "probability": "0.593312",
-      "prediction_timestamp": "2026-06-07T15:02:50.000Z",
-      "evidence_bundle_ref": "docs/launch-readiness/prediction-benchmark-app-forecast-freeze-2026-06-07-hosted-live.json#pbq-geo-escalation-001",
+      "probability": "0.524696",
+      "prediction_timestamp": "2026-06-07T15:43:19.318Z",
+      "evidence_bundle_ref": "docs/launch-readiness/prediction-benchmark-app-forecast-freeze-2026-06-07.json#pbq-geo-escalation-001",
       "prompt_or_policy_version": "multi-agent-forecast-freeze-v1",
-      "retrieval_cutoff": "2026-06-07T15:02:50.000Z",
-      "source_cutoff": "2026-06-07T15:02:50.000Z",
+      "retrieval_cutoff": "2026-06-07T15:43:19.318Z",
+      "source_cutoff": "2026-06-07T15:43:19.318Z",
       "abstained": "false",
       "abstention_reason": "",
-      "notes": "Pre-resolution freeze; source_type=hosted; evidence_gate=hosted_evidence_thin:evidence_backed=false:retrievals=8:providers=2; unresolved row, not accuracy proof."
+      "notes": "Pre-resolution freeze; source_type=hosted; evidence_gate=hosted_evidence_gate_passed; unresolved row, not accuracy proof."
     },
     {
       "snapshot_id": "pbq-election-policy-002-app-freeze-v1",
@@ -937,15 +987,15 @@
       "prediction_source": "strategic_intelligence_platform",
       "forecaster_type": "app_lane",
       "model_or_team": "hosted_analyze_engine_multi_agent_forecast",
-      "probability": "0.575600",
-      "prediction_timestamp": "2026-06-07T15:02:50.000Z",
-      "evidence_bundle_ref": "docs/launch-readiness/prediction-benchmark-app-forecast-freeze-2026-06-07-hosted-live.json#pbq-election-policy-002",
+      "probability": "0.552632",
+      "prediction_timestamp": "2026-06-07T15:43:19.318Z",
+      "evidence_bundle_ref": "docs/launch-readiness/prediction-benchmark-app-forecast-freeze-2026-06-07.json#pbq-election-policy-002",
       "prompt_or_policy_version": "multi-agent-forecast-freeze-v1",
-      "retrieval_cutoff": "2026-06-07T15:02:50.000Z",
-      "source_cutoff": "2026-06-07T15:02:50.000Z",
+      "retrieval_cutoff": "2026-06-07T15:43:19.318Z",
+      "source_cutoff": "2026-06-07T15:43:19.318Z",
       "abstained": "false",
       "abstention_reason": "",
-      "notes": "Pre-resolution freeze; source_type=hosted; evidence_gate=hosted_evidence_thin:evidence_backed=false:retrievals=8:providers=2; unresolved row, not accuracy proof."
+      "notes": "Pre-resolution freeze; source_type=hosted; evidence_gate=hosted_evidence_gate_passed; unresolved row, not accuracy proof."
     },
     {
       "snapshot_id": "pbq-fed-rates-003-app-freeze-v1",
@@ -953,15 +1003,15 @@
       "prediction_source": "strategic_intelligence_platform",
       "forecaster_type": "app_lane",
       "model_or_team": "hosted_analyze_engine_multi_agent_forecast",
-      "probability": "0.559904",
-      "prediction_timestamp": "2026-06-07T15:02:50.000Z",
-      "evidence_bundle_ref": "docs/launch-readiness/prediction-benchmark-app-forecast-freeze-2026-06-07-hosted-live.json#pbq-fed-rates-003",
+      "probability": "0.545720",
+      "prediction_timestamp": "2026-06-07T15:43:19.318Z",
+      "evidence_bundle_ref": "docs/launch-readiness/prediction-benchmark-app-forecast-freeze-2026-06-07.json#pbq-fed-rates-003",
       "prompt_or_policy_version": "multi-agent-forecast-freeze-v1",
-      "retrieval_cutoff": "2026-06-07T15:02:50.000Z",
-      "source_cutoff": "2026-06-07T15:02:50.000Z",
+      "retrieval_cutoff": "2026-06-07T15:43:19.318Z",
+      "source_cutoff": "2026-06-07T15:43:19.318Z",
       "abstained": "false",
       "abstention_reason": "",
-      "notes": "Pre-resolution freeze; source_type=hosted; evidence_gate=hosted_evidence_thin:evidence_backed=false:retrievals=8:providers=2; unresolved row, not accuracy proof."
+      "notes": "Pre-resolution freeze; source_type=hosted; evidence_gate=hosted_evidence_gate_passed; unresolved row, not accuracy proof."
     },
     {
       "snapshot_id": "pbq-energy-brent-004-app-freeze-v1",
@@ -969,15 +1019,15 @@
       "prediction_source": "strategic_intelligence_platform",
       "forecaster_type": "app_lane",
       "model_or_team": "hosted_analyze_engine_multi_agent_forecast",
-      "probability": "0.552128",
-      "prediction_timestamp": "2026-06-07T15:02:50.000Z",
-      "evidence_bundle_ref": "docs/launch-readiness/prediction-benchmark-app-forecast-freeze-2026-06-07-hosted-live.json#pbq-energy-brent-004",
+      "probability": "0.577328",
+      "prediction_timestamp": "2026-06-07T15:43:19.318Z",
+      "evidence_bundle_ref": "docs/launch-readiness/prediction-benchmark-app-forecast-freeze-2026-06-07.json#pbq-energy-brent-004",
       "prompt_or_policy_version": "multi-agent-forecast-freeze-v1",
-      "retrieval_cutoff": "2026-06-07T15:02:50.000Z",
-      "source_cutoff": "2026-06-07T15:02:50.000Z",
+      "retrieval_cutoff": "2026-06-07T15:43:19.318Z",
+      "source_cutoff": "2026-06-07T15:43:19.318Z",
       "abstained": "false",
       "abstention_reason": "",
-      "notes": "Pre-resolution freeze; source_type=hosted; evidence_gate=hosted_evidence_thin:evidence_backed=false:retrievals=8:providers=2; unresolved row, not accuracy proof."
+      "notes": "Pre-resolution freeze; source_type=hosted; evidence_gate=hosted_evidence_gate_passed; unresolved row, not accuracy proof."
     },
     {
       "snapshot_id": "pbq-gold-safe-haven-005-app-freeze-v1",
@@ -985,15 +1035,15 @@
       "prediction_source": "strategic_intelligence_platform",
       "forecaster_type": "app_lane",
       "model_or_team": "hosted_analyze_engine_multi_agent_forecast",
-      "probability": "0.589856",
-      "prediction_timestamp": "2026-06-07T15:02:50.000Z",
-      "evidence_bundle_ref": "docs/launch-readiness/prediction-benchmark-app-forecast-freeze-2026-06-07-hosted-live.json#pbq-gold-safe-haven-005",
+      "probability": "0.537872",
+      "prediction_timestamp": "2026-06-07T15:43:19.318Z",
+      "evidence_bundle_ref": "docs/launch-readiness/prediction-benchmark-app-forecast-freeze-2026-06-07.json#pbq-gold-safe-haven-005",
       "prompt_or_policy_version": "multi-agent-forecast-freeze-v1",
-      "retrieval_cutoff": "2026-06-07T15:02:50.000Z",
-      "source_cutoff": "2026-06-07T15:02:50.000Z",
+      "retrieval_cutoff": "2026-06-07T15:43:19.318Z",
+      "source_cutoff": "2026-06-07T15:43:19.318Z",
       "abstained": "false",
       "abstention_reason": "",
-      "notes": "Pre-resolution freeze; source_type=hosted; evidence_gate=hosted_evidence_thin:evidence_backed=false:retrievals=8:providers=2; unresolved row, not accuracy proof."
+      "notes": "Pre-resolution freeze; source_type=hosted; evidence_gate=hosted_evidence_gate_passed; unresolved row, not accuracy proof."
     },
     {
       "snapshot_id": "pbq-equity-drawdown-006-app-freeze-v1",
@@ -1001,15 +1051,15 @@
       "prediction_source": "strategic_intelligence_platform",
       "forecaster_type": "app_lane",
       "model_or_team": "hosted_analyze_engine_multi_agent_forecast",
-      "probability": "0.560408",
-      "prediction_timestamp": "2026-06-07T15:02:50.000Z",
-      "evidence_bundle_ref": "docs/launch-readiness/prediction-benchmark-app-forecast-freeze-2026-06-07-hosted-live.json#pbq-equity-drawdown-006",
+      "probability": "0.583520",
+      "prediction_timestamp": "2026-06-07T15:43:19.318Z",
+      "evidence_bundle_ref": "docs/launch-readiness/prediction-benchmark-app-forecast-freeze-2026-06-07.json#pbq-equity-drawdown-006",
       "prompt_or_policy_version": "multi-agent-forecast-freeze-v1",
-      "retrieval_cutoff": "2026-06-07T15:02:50.000Z",
-      "source_cutoff": "2026-06-07T15:02:50.000Z",
+      "retrieval_cutoff": "2026-06-07T15:43:19.318Z",
+      "source_cutoff": "2026-06-07T15:43:19.318Z",
       "abstained": "false",
       "abstention_reason": "",
-      "notes": "Pre-resolution freeze; source_type=hosted; evidence_gate=hosted_evidence_thin:evidence_backed=false:retrievals=8:providers=3; unresolved row, not accuracy proof."
+      "notes": "Pre-resolution freeze; source_type=hosted; evidence_gate=hosted_evidence_gate_passed; unresolved row, not accuracy proof."
     },
     {
       "snapshot_id": "pbq-fx-sovereign-007-app-freeze-v1",
@@ -1017,15 +1067,15 @@
       "prediction_source": "strategic_intelligence_platform",
       "forecaster_type": "app_lane",
       "model_or_team": "hosted_analyze_engine_multi_agent_forecast",
-      "probability": "0.533192",
-      "prediction_timestamp": "2026-06-07T15:02:50.000Z",
-      "evidence_bundle_ref": "docs/launch-readiness/prediction-benchmark-app-forecast-freeze-2026-06-07-hosted-live.json#pbq-fx-sovereign-007",
+      "probability": "0.570056",
+      "prediction_timestamp": "2026-06-07T15:43:19.318Z",
+      "evidence_bundle_ref": "docs/launch-readiness/prediction-benchmark-app-forecast-freeze-2026-06-07.json#pbq-fx-sovereign-007",
       "prompt_or_policy_version": "multi-agent-forecast-freeze-v1",
-      "retrieval_cutoff": "2026-06-07T15:02:50.000Z",
-      "source_cutoff": "2026-06-07T15:02:50.000Z",
+      "retrieval_cutoff": "2026-06-07T15:43:19.318Z",
+      "source_cutoff": "2026-06-07T15:43:19.318Z",
       "abstained": "false",
       "abstention_reason": "",
-      "notes": "Pre-resolution freeze; source_type=hosted; evidence_gate=hosted_evidence_thin:evidence_backed=false:retrievals=8:providers=2; unresolved row, not accuracy proof."
+      "notes": "Pre-resolution freeze; source_type=hosted; evidence_gate=hosted_evidence_gate_passed; unresolved row, not accuracy proof."
     },
     {
       "snapshot_id": "pbq-trade-dispute-008-app-freeze-v1",
@@ -1033,15 +1083,15 @@
       "prediction_source": "strategic_intelligence_platform",
       "forecaster_type": "app_lane",
       "model_or_team": "hosted_analyze_engine_multi_agent_forecast",
-      "probability": "0.600440",
-      "prediction_timestamp": "2026-06-07T15:02:50.000Z",
-      "evidence_bundle_ref": "docs/launch-readiness/prediction-benchmark-app-forecast-freeze-2026-06-07-hosted-live.json#pbq-trade-dispute-008",
+      "probability": "0.606416",
+      "prediction_timestamp": "2026-06-07T15:43:19.318Z",
+      "evidence_bundle_ref": "docs/launch-readiness/prediction-benchmark-app-forecast-freeze-2026-06-07.json#pbq-trade-dispute-008",
       "prompt_or_policy_version": "multi-agent-forecast-freeze-v1",
-      "retrieval_cutoff": "2026-06-07T15:02:50.000Z",
-      "source_cutoff": "2026-06-07T15:02:50.000Z",
+      "retrieval_cutoff": "2026-06-07T15:43:19.318Z",
+      "source_cutoff": "2026-06-07T15:43:19.318Z",
       "abstained": "false",
       "abstention_reason": "",
-      "notes": "Pre-resolution freeze; source_type=hosted; evidence_gate=hosted_evidence_thin:evidence_backed=false:retrievals=8:providers=2; unresolved row, not accuracy proof."
+      "notes": "Pre-resolution freeze; source_type=hosted; evidence_gate=hosted_evidence_gate_passed; unresolved row, not accuracy proof."
     },
     {
       "snapshot_id": "pbq-climate-disaster-009-app-freeze-v1",
@@ -1049,15 +1099,15 @@
       "prediction_source": "strategic_intelligence_platform",
       "forecaster_type": "app_lane",
       "model_or_team": "hosted_analyze_engine_multi_agent_forecast",
-      "probability": "0.569552",
-      "prediction_timestamp": "2026-06-07T15:02:50.000Z",
-      "evidence_bundle_ref": "docs/launch-readiness/prediction-benchmark-app-forecast-freeze-2026-06-07-hosted-live.json#pbq-climate-disaster-009",
+      "probability": "0.575456",
+      "prediction_timestamp": "2026-06-07T15:43:19.318Z",
+      "evidence_bundle_ref": "docs/launch-readiness/prediction-benchmark-app-forecast-freeze-2026-06-07.json#pbq-climate-disaster-009",
       "prompt_or_policy_version": "multi-agent-forecast-freeze-v1",
-      "retrieval_cutoff": "2026-06-07T15:02:50.000Z",
-      "source_cutoff": "2026-06-07T15:02:50.000Z",
+      "retrieval_cutoff": "2026-06-07T15:43:19.318Z",
+      "source_cutoff": "2026-06-07T15:43:19.318Z",
       "abstained": "false",
       "abstention_reason": "",
-      "notes": "Pre-resolution freeze; source_type=hosted; evidence_gate=hosted_evidence_thin:evidence_backed=false:retrievals=8:providers=2; unresolved row, not accuracy proof."
+      "notes": "Pre-resolution freeze; source_type=hosted; evidence_gate=hosted_evidence_gate_passed; unresolved row, not accuracy proof."
     },
     {
       "snapshot_id": "pbq-ai-regulation-010-app-freeze-v1",
@@ -1065,15 +1115,15 @@
       "prediction_source": "strategic_intelligence_platform",
       "forecaster_type": "app_lane",
       "model_or_team": "hosted_analyze_engine_multi_agent_forecast",
-      "probability": "0.575240",
-      "prediction_timestamp": "2026-06-07T15:02:50.000Z",
-      "evidence_bundle_ref": "docs/launch-readiness/prediction-benchmark-app-forecast-freeze-2026-06-07-hosted-live.json#pbq-ai-regulation-010",
+      "probability": "0.575384",
+      "prediction_timestamp": "2026-06-07T15:43:19.318Z",
+      "evidence_bundle_ref": "docs/launch-readiness/prediction-benchmark-app-forecast-freeze-2026-06-07.json#pbq-ai-regulation-010",
       "prompt_or_policy_version": "multi-agent-forecast-freeze-v1",
-      "retrieval_cutoff": "2026-06-07T15:02:50.000Z",
-      "source_cutoff": "2026-06-07T15:02:50.000Z",
+      "retrieval_cutoff": "2026-06-07T15:43:19.318Z",
+      "source_cutoff": "2026-06-07T15:43:19.318Z",
       "abstained": "false",
       "abstention_reason": "",
-      "notes": "Pre-resolution freeze; source_type=hosted; evidence_gate=hosted_evidence_thin:evidence_backed=false:retrievals=8:providers=2; unresolved row, not accuracy proof."
+      "notes": "Pre-resolution freeze; source_type=hosted; evidence_gate=hosted_evidence_gate_passed; unresolved row, not accuracy proof."
     }
   ],
   "forecast_scorecard_rows": [
@@ -1083,10 +1133,10 @@
       "category": "geopolitical_escalation",
       "track": "live_shadow",
       "app_source": "hosted_analyze_engine_multi_agent_forecast",
-      "app_probability": "0.593312",
+      "app_probability": "0.524696",
       "external_baseline_id": "pbq-geo-escalation-001-trivial-prior-v1",
       "external_probability": "0.500000",
-      "prediction_timestamp": "2026-06-07T15:02:50.000Z",
+      "prediction_timestamp": "2026-06-07T15:43:19.318Z",
       "resolution_outcome": "",
       "resolved_at": "",
       "brier_score": "",
@@ -1095,7 +1145,7 @@
       "coverage_status": "app_probability_frozen_hosted_flow",
       "leakage_status": "pre_resolution_frozen_unresolved",
       "claim_tier": "shadow_benchmark_not_accuracy_proof",
-      "notes": "Frozen before resolution; source_type=hosted; evidence_gate=hosted_evidence_thin:evidence_backed=false:retrievals=8:providers=2; unresolved row, not accuracy proof."
+      "notes": "Frozen before resolution; source_type=hosted; evidence_gate=hosted_evidence_gate_passed; unresolved row, not accuracy proof."
     },
     {
       "scorecard_row_id": "pbq-election-policy-002-pre-resolution-freeze-v1",
@@ -1103,10 +1153,10 @@
       "category": "election_policy",
       "track": "live_shadow",
       "app_source": "hosted_analyze_engine_multi_agent_forecast",
-      "app_probability": "0.575600",
+      "app_probability": "0.552632",
       "external_baseline_id": "pbq-election-policy-002-trivial-prior-v1",
       "external_probability": "0.500000",
-      "prediction_timestamp": "2026-06-07T15:02:50.000Z",
+      "prediction_timestamp": "2026-06-07T15:43:19.318Z",
       "resolution_outcome": "",
       "resolved_at": "",
       "brier_score": "",
@@ -1115,7 +1165,7 @@
       "coverage_status": "app_probability_frozen_hosted_flow",
       "leakage_status": "pre_resolution_frozen_unresolved",
       "claim_tier": "shadow_benchmark_not_accuracy_proof",
-      "notes": "Frozen before resolution; source_type=hosted; evidence_gate=hosted_evidence_thin:evidence_backed=false:retrievals=8:providers=2; unresolved row, not accuracy proof."
+      "notes": "Frozen before resolution; source_type=hosted; evidence_gate=hosted_evidence_gate_passed; unresolved row, not accuracy proof."
     },
     {
       "scorecard_row_id": "pbq-fed-rates-003-pre-resolution-freeze-v1",
@@ -1123,10 +1173,10 @@
       "category": "central_bank_macro",
       "track": "live_shadow",
       "app_source": "hosted_analyze_engine_multi_agent_forecast",
-      "app_probability": "0.559904",
+      "app_probability": "0.545720",
       "external_baseline_id": "pbq-fed-rates-003-trivial-prior-v1",
       "external_probability": "0.500000",
-      "prediction_timestamp": "2026-06-07T15:02:50.000Z",
+      "prediction_timestamp": "2026-06-07T15:43:19.318Z",
       "resolution_outcome": "",
       "resolved_at": "",
       "brier_score": "",
@@ -1135,7 +1185,7 @@
       "coverage_status": "app_probability_frozen_hosted_flow",
       "leakage_status": "pre_resolution_frozen_unresolved",
       "claim_tier": "shadow_benchmark_not_accuracy_proof",
-      "notes": "Frozen before resolution; source_type=hosted; evidence_gate=hosted_evidence_thin:evidence_backed=false:retrievals=8:providers=2; unresolved row, not accuracy proof."
+      "notes": "Frozen before resolution; source_type=hosted; evidence_gate=hosted_evidence_gate_passed; unresolved row, not accuracy proof."
     },
     {
       "scorecard_row_id": "pbq-energy-brent-004-pre-resolution-freeze-v1",
@@ -1143,10 +1193,10 @@
       "category": "energy_supply_shock",
       "track": "live_shadow",
       "app_source": "hosted_analyze_engine_multi_agent_forecast",
-      "app_probability": "0.552128",
+      "app_probability": "0.577328",
       "external_baseline_id": "pbq-energy-brent-004-trivial-prior-v1",
       "external_probability": "0.500000",
-      "prediction_timestamp": "2026-06-07T15:02:50.000Z",
+      "prediction_timestamp": "2026-06-07T15:43:19.318Z",
       "resolution_outcome": "",
       "resolved_at": "",
       "brier_score": "",
@@ -1155,7 +1205,7 @@
       "coverage_status": "app_probability_frozen_hosted_flow",
       "leakage_status": "pre_resolution_frozen_unresolved",
       "claim_tier": "shadow_benchmark_not_accuracy_proof",
-      "notes": "Frozen before resolution; source_type=hosted; evidence_gate=hosted_evidence_thin:evidence_backed=false:retrievals=8:providers=2; unresolved row, not accuracy proof."
+      "notes": "Frozen before resolution; source_type=hosted; evidence_gate=hosted_evidence_gate_passed; unresolved row, not accuracy proof."
     },
     {
       "scorecard_row_id": "pbq-gold-safe-haven-005-pre-resolution-freeze-v1",
@@ -1163,10 +1213,10 @@
       "category": "safe_haven_commodity",
       "track": "live_shadow",
       "app_source": "hosted_analyze_engine_multi_agent_forecast",
-      "app_probability": "0.589856",
+      "app_probability": "0.537872",
       "external_baseline_id": "pbq-gold-safe-haven-005-trivial-prior-v1",
       "external_probability": "0.500000",
-      "prediction_timestamp": "2026-06-07T15:02:50.000Z",
+      "prediction_timestamp": "2026-06-07T15:43:19.318Z",
       "resolution_outcome": "",
       "resolved_at": "",
       "brier_score": "",
@@ -1175,7 +1225,7 @@
       "coverage_status": "app_probability_frozen_hosted_flow",
       "leakage_status": "pre_resolution_frozen_unresolved",
       "claim_tier": "shadow_benchmark_not_accuracy_proof",
-      "notes": "Frozen before resolution; source_type=hosted; evidence_gate=hosted_evidence_thin:evidence_backed=false:retrievals=8:providers=2; unresolved row, not accuracy proof."
+      "notes": "Frozen before resolution; source_type=hosted; evidence_gate=hosted_evidence_gate_passed; unresolved row, not accuracy proof."
     },
     {
       "scorecard_row_id": "pbq-equity-drawdown-006-pre-resolution-freeze-v1",
@@ -1183,10 +1233,10 @@
       "category": "equity_volatility",
       "track": "live_shadow",
       "app_source": "hosted_analyze_engine_multi_agent_forecast",
-      "app_probability": "0.560408",
+      "app_probability": "0.583520",
       "external_baseline_id": "pbq-equity-drawdown-006-trivial-prior-v1",
       "external_probability": "0.500000",
-      "prediction_timestamp": "2026-06-07T15:02:50.000Z",
+      "prediction_timestamp": "2026-06-07T15:43:19.318Z",
       "resolution_outcome": "",
       "resolved_at": "",
       "brier_score": "",
@@ -1195,7 +1245,7 @@
       "coverage_status": "app_probability_frozen_hosted_flow",
       "leakage_status": "pre_resolution_frozen_unresolved",
       "claim_tier": "shadow_benchmark_not_accuracy_proof",
-      "notes": "Frozen before resolution; source_type=hosted; evidence_gate=hosted_evidence_thin:evidence_backed=false:retrievals=8:providers=3; unresolved row, not accuracy proof."
+      "notes": "Frozen before resolution; source_type=hosted; evidence_gate=hosted_evidence_gate_passed; unresolved row, not accuracy proof."
     },
     {
       "scorecard_row_id": "pbq-fx-sovereign-007-pre-resolution-freeze-v1",
@@ -1203,10 +1253,10 @@
       "category": "fx_sovereign_risk",
       "track": "live_shadow",
       "app_source": "hosted_analyze_engine_multi_agent_forecast",
-      "app_probability": "0.533192",
+      "app_probability": "0.570056",
       "external_baseline_id": "pbq-fx-sovereign-007-trivial-prior-v1",
       "external_probability": "0.500000",
-      "prediction_timestamp": "2026-06-07T15:02:50.000Z",
+      "prediction_timestamp": "2026-06-07T15:43:19.318Z",
       "resolution_outcome": "",
       "resolved_at": "",
       "brier_score": "",
@@ -1215,7 +1265,7 @@
       "coverage_status": "app_probability_frozen_hosted_flow",
       "leakage_status": "pre_resolution_frozen_unresolved",
       "claim_tier": "shadow_benchmark_not_accuracy_proof",
-      "notes": "Frozen before resolution; source_type=hosted; evidence_gate=hosted_evidence_thin:evidence_backed=false:retrievals=8:providers=2; unresolved row, not accuracy proof."
+      "notes": "Frozen before resolution; source_type=hosted; evidence_gate=hosted_evidence_gate_passed; unresolved row, not accuracy proof."
     },
     {
       "scorecard_row_id": "pbq-trade-dispute-008-pre-resolution-freeze-v1",
@@ -1223,10 +1273,10 @@
       "category": "trade_supply_chain",
       "track": "live_shadow",
       "app_source": "hosted_analyze_engine_multi_agent_forecast",
-      "app_probability": "0.600440",
+      "app_probability": "0.606416",
       "external_baseline_id": "pbq-trade-dispute-008-trivial-prior-v1",
       "external_probability": "0.500000",
-      "prediction_timestamp": "2026-06-07T15:02:50.000Z",
+      "prediction_timestamp": "2026-06-07T15:43:19.318Z",
       "resolution_outcome": "",
       "resolved_at": "",
       "brier_score": "",
@@ -1235,7 +1285,7 @@
       "coverage_status": "app_probability_frozen_hosted_flow",
       "leakage_status": "pre_resolution_frozen_unresolved",
       "claim_tier": "shadow_benchmark_not_accuracy_proof",
-      "notes": "Frozen before resolution; source_type=hosted; evidence_gate=hosted_evidence_thin:evidence_backed=false:retrievals=8:providers=2; unresolved row, not accuracy proof."
+      "notes": "Frozen before resolution; source_type=hosted; evidence_gate=hosted_evidence_gate_passed; unresolved row, not accuracy proof."
     },
     {
       "scorecard_row_id": "pbq-climate-disaster-009-pre-resolution-freeze-v1",
@@ -1243,10 +1293,10 @@
       "category": "climate_disaster",
       "track": "live_shadow",
       "app_source": "hosted_analyze_engine_multi_agent_forecast",
-      "app_probability": "0.569552",
+      "app_probability": "0.575456",
       "external_baseline_id": "pbq-climate-disaster-009-trivial-prior-v1",
       "external_probability": "0.500000",
-      "prediction_timestamp": "2026-06-07T15:02:50.000Z",
+      "prediction_timestamp": "2026-06-07T15:43:19.318Z",
       "resolution_outcome": "",
       "resolved_at": "",
       "brier_score": "",
@@ -1255,7 +1305,7 @@
       "coverage_status": "app_probability_frozen_hosted_flow",
       "leakage_status": "pre_resolution_frozen_unresolved",
       "claim_tier": "shadow_benchmark_not_accuracy_proof",
-      "notes": "Frozen before resolution; source_type=hosted; evidence_gate=hosted_evidence_thin:evidence_backed=false:retrievals=8:providers=2; unresolved row, not accuracy proof."
+      "notes": "Frozen before resolution; source_type=hosted; evidence_gate=hosted_evidence_gate_passed; unresolved row, not accuracy proof."
     },
     {
       "scorecard_row_id": "pbq-ai-regulation-010-pre-resolution-freeze-v1",
@@ -1263,10 +1313,10 @@
       "category": "ai_cyber_regulation",
       "track": "live_shadow",
       "app_source": "hosted_analyze_engine_multi_agent_forecast",
-      "app_probability": "0.575240",
+      "app_probability": "0.575384",
       "external_baseline_id": "pbq-ai-regulation-010-trivial-prior-v1",
       "external_probability": "0.500000",
-      "prediction_timestamp": "2026-06-07T15:02:50.000Z",
+      "prediction_timestamp": "2026-06-07T15:43:19.318Z",
       "resolution_outcome": "",
       "resolved_at": "",
       "brier_score": "",
@@ -1275,7 +1325,7 @@
       "coverage_status": "app_probability_frozen_hosted_flow",
       "leakage_status": "pre_resolution_frozen_unresolved",
       "claim_tier": "shadow_benchmark_not_accuracy_proof",
-      "notes": "Frozen before resolution; source_type=hosted; evidence_gate=hosted_evidence_thin:evidence_backed=false:retrievals=8:providers=2; unresolved row, not accuracy proof."
+      "notes": "Frozen before resolution; source_type=hosted; evidence_gate=hosted_evidence_gate_passed; unresolved row, not accuracy proof."
     }
   ]
 }

@@ -15,7 +15,7 @@
 
 // deno-lint-ignore-file no-explicit-any
 
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { createClient } from 'npm:@supabase/supabase-js@2'
 import Ajv from "https://esm.sh/ajv@8.17.1";
 import addFormats from "https://esm.sh/ajv-formats@2.1.1";
 import { computeEVs, PayoffEstimate, ActionEntry } from "../evEngine.ts";
@@ -23,8 +23,17 @@ import { runSensitivity, handleSensitivityJob } from "../sensitivityRunner.ts";
 import { fetchAllRetrievals } from "./retrievalClient.ts";
 import { computeCombinedSimilarity, extractScenarioFeatures } from "./similarityEngine.ts";
 import { buildFunctionUrl } from "../_shared/function-url.ts";
-import { DEFAULT_PROMPT_POLICY_ID, DEFAULT_RETRIEVAL_POLICY_ID, buildConstraintChecks, deriveEntityRefs, fetchLatestDriftSignal } from "../_shared/ml-platform.ts";
+import { DEFAULT_PROMPT_POLICY_ID, DEFAULT_RETRIEVAL_POLICY_ID, buildConstraintChecks, deriveEntityRefs, fetchLatestDriftSignal, maybeCallMlService } from "../_shared/ml-platform.ts";
 import { prepareAnalysisArtifactPersistence } from "../_shared/analysis-artifacts.ts";
+import {
+  buildFrameworkEnvelope,
+  coerceAdvancedFrameworkEnvelope,
+  isPlainObject,
+  sanitizeAdvancedGameInputs,
+  type AdvancedGameInputs,
+  type AdvancedFrameworkEnvelope,
+  type AdvancedFrameworkKey,
+} from "../_shared/advanced-frameworks.ts";
 import { buildDoctrinePromptPack, buildDoctrinePromptText } from "../../../shared/gameTheoryKnowledge.ts";
 import {
   appendPublicQuestionContext,
@@ -48,6 +57,13 @@ const GEMINI_MODEL = getEnv('GEMINI_ANALYZE_MODEL')
 const GEMINI_FALLBACK_MODEL = getEnv('GEMINI_FALLBACK_ANALYZE_MODEL')
   ?? getEnv('GEMINI_FALLBACK_STRATEGIST_MODEL')
   ?? 'gemini-2.5-flash'
+const OPENROUTER_KEY = getEnv('OPENROUTER_API_KEY') ?? ""
+const OPENROUTER_MODEL_RAW = getEnv('OPENROUTER_MODEL')?.trim() ?? ''
+const OPENROUTER_MODEL = OPENROUTER_MODEL_RAW || 'openrouter/free'
+const OPENROUTER_AUTO_MODEL = 'openrouter/auto'
+const OPENROUTER_BASE_URL = getEnv('OPENROUTER_BASE_URL') ?? 'https://openrouter.ai/api/v1'
+const OPENROUTER_HTTP_REFERER = getEnv('OPENROUTER_HTTP_REFERER') ?? getEnv('APP_URL') ?? ""
+const OPENROUTER_X_TITLE = getEnv('OPENROUTER_X_TITLE') ?? 'Strategic Intelligence Platform'
 const OPENAI_KEY = getEnv('OPENAI_KEY') ?? getEnv('OPENAI_API_KEY') ?? ""
 const OPENAI_MODEL = getEnv('OPENAI_ANALYZE_MODEL')
   ?? getEnv('OPENAI_STRATEGIST_MODEL')
@@ -57,6 +73,8 @@ const XAI_MODEL = getEnv('XAI_ANALYZE_MODEL')
   ?? getEnv('XAI_STRATEGIST_MODEL')
   ?? 'grok-4.20-reasoning'
 const WORKER_URL = getEnv('WORKER_URL') ?? ""
+const OPENROUTER_PRIMARY_ENABLED = Boolean(OPENROUTER_KEY) && OPENROUTER_MODEL_RAW.length > 0 && OPENROUTER_MODEL !== 'openrouter/free'
+const PROVIDER_FETCH_TIMEOUT_MS = Number(getEnv('ANALYZE_PROVIDER_TIMEOUT_MS') ?? '40000')
 
 if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
   console.error("Missing Supabase environment variables")
@@ -73,10 +91,72 @@ async function buildAnalysisRunArtifactColumns(requestId: string, analysisJson: 
 }
 
 async function insertAnalysisRunOrThrow(row: Record<string, unknown>) {
-  const { error } = await supabaseAdmin.from("analysis_runs").insert(row)
+  const { data, error } = await supabaseAdmin
+    .from("analysis_runs")
+    .insert(row)
+    .select('id')
+    .single()
   if (error) {
     throw new Error(`analysis_runs_insert_failed: ${error.message}`)
   }
+  return data?.id ?? null
+}
+
+async function updateAnalysisRunOrThrow(analysisRunId: string, row: Record<string, unknown>) {
+  const { error } = await supabaseAdmin
+    .from("analysis_runs")
+    .update(row)
+    .eq('id', analysisRunId)
+  if (error) {
+    throw new Error(`analysis_runs_update_failed: ${error.message}`)
+  }
+  return analysisRunId
+}
+
+async function getAnalysisRunSummary(analysisRunId: string) {
+  const { data, error } = await supabaseAdmin
+    .from('analysis_runs')
+    .select('id,status,review_reason')
+    .eq('id', analysisRunId)
+    .maybeSingle()
+  if (error) {
+    throw new Error(`analysis_runs_select_failed: ${error.message}`)
+  }
+  return data ?? null
+}
+
+async function createOrReplaceAnalysisJobOrThrow(row: Record<string, unknown>) {
+  const { error } = await supabaseAdmin
+    .from('analysis_jobs')
+    .upsert(row, { onConflict: 'request_id' })
+  if (error) {
+    throw new Error(`analysis_jobs_upsert_failed: ${error.message}`)
+  }
+}
+
+async function updateAnalysisJobBestEffort(requestId: string, row: Record<string, unknown>) {
+  const { error } = await supabaseAdmin
+    .from('analysis_jobs')
+    .update(row)
+    .eq('request_id', requestId)
+  if (error) {
+    console.warn(`[${requestId}] analysis_jobs_update_failed: ${error.message}`)
+  }
+}
+
+async function markAnalysisRunFailedBestEffort(analysisRunId: string, requestId: string, message: string) {
+  try {
+    await updateAnalysisRunOrThrow(analysisRunId, {
+      status: 'failed',
+      review_reason: message,
+    })
+  } catch (error) {
+    console.warn(`[${requestId}] analysis_runs_mark_failed_failed: ${String((error as any)?.message ?? error)}`)
+  }
+}
+
+function isTerminalAnalysisRunStatus(status: string | null | undefined) {
+  return status === 'completed' || status === 'under_review' || status === 'needs_review' || status === 'rejected' || status === 'failed'
 }
 
 // --- Utility helpers ---
@@ -274,10 +354,32 @@ async function createDashboardAlert(alertData: any) {
 }
 
 // Enhanced defensive JSON parsing with multiple strategies
-async function parseLlmOutput(text: string, request_id: string | null = null): Promise<{ ok: true, json: any, sanitized: boolean, patterns: string[] } | { ok: false, error: string, raw: string }> {
+function unwrapAnalysisEnvelope(parsed: unknown) {
+  if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+    return parsed
+  }
+  const record = parsed as Record<string, unknown>
+  if (record.analysis && typeof record.analysis === 'object' && !Array.isArray(record.analysis)) {
+    const analysis = record.analysis as Record<string, unknown>
+    if (!('scenario_text' in record) && ('scenario_text' in analysis || 'summary' in analysis || 'players' in analysis)) {
+      return analysis
+    }
+  }
+  return parsed
+}
+
+function parseJsonCandidate(candidate: string) {
+  const parsed = JSON.parse(candidate)
+  if (typeof parsed === 'string') {
+    return unwrapAnalysisEnvelope(JSON.parse(parsed))
+  }
+  return unwrapAnalysisEnvelope(parsed)
+}
+
+async function parseLlmOutput(text: string, request_id: string | null = null): Promise<{ ok: true, json: any, sanitized: boolean, patterns: string[] } | { ok: false, error: string, raw: string, patterns: string[] }> {
   // Strategy 1: Parse as-is
   try {
-    const parsed = JSON.parse(text.trim())
+    const parsed = parseJsonCandidate(text.trim())
     return { ok: true, json: parsed, sanitized: false, patterns: [] }
   } catch (err1) {
     // Strategy 2: Sanitize first
@@ -288,7 +390,7 @@ async function parseLlmOutput(text: string, request_id: string | null = null): P
     }
 
     try {
-      const parsed = JSON.parse(sanitized)
+      const parsed = parseJsonCandidate(sanitized)
       return { ok: true, json: parsed, sanitized: noiseDetected, patterns }
     } catch (err2) {
       // Strategy 3: Find JSON boundaries more aggressively
@@ -298,7 +400,7 @@ async function parseLlmOutput(text: string, request_id: string | null = null): P
       if (jsonStart >= 0 && jsonEnd > jsonStart) {
         try {
           const extractedJson = sanitized.slice(jsonStart, jsonEnd + 1)
-          const parsed = JSON.parse(extractedJson)
+          const parsed = parseJsonCandidate(extractedJson)
           return { ok: true, json: parsed, sanitized: true, patterns: ['aggressive_extraction'] }
         } catch (err3) {
           // Strategy 4: Remove lines that look like examples or comments
@@ -316,18 +418,610 @@ async function parseLlmOutput(text: string, request_id: string | null = null): P
 
             if (jsonStart2 >= 0 && jsonEnd2 > jsonStart2) {
               const finalJson = cleaned.slice(jsonStart2, jsonEnd2 + 1)
-              const parsed = JSON.parse(finalJson)
+              const parsed = parseJsonCandidate(finalJson)
               return { ok: true, json: parsed, sanitized: true, patterns: ['line_filtering', 'aggressive_extraction'] }
             }
           } catch (err4) {
             // Final fallback
-            return { ok: false, error: "defensive_parsing_failed", raw: text.slice(0, 2000) }
+            return { ok: false, error: "defensive_parsing_failed", raw: text.slice(0, 2000), patterns }
           }
         }
       }
 
-      return { ok: false, error: "json_extraction_failed", raw: text.slice(0, 2000) }
+      return { ok: false, error: "json_extraction_failed", raw: text.slice(0, 2000), patterns }
     }
+  }
+}
+
+function coerceResearcherPayloadShape(llmJson: any, retrievals: any[] = []) {
+  if (!llmJson || typeof llmJson !== 'object' || Array.isArray(llmJson)) {
+    return { payload: llmJson, modified: false }
+  }
+
+  let modified = false
+  const payload = structuredClone(llmJson)
+  const normalizedRetrievalIds = (retrievals || []).map((_retrieval: any, index: number) => `rid_${index + 1}`)
+  const retrievalUrlToId = new Map<string, string>()
+  ;(retrievals || []).forEach((retrieval: any, index: number) => {
+    if (typeof retrieval?.url === 'string' && retrieval.url.trim().length > 0) {
+      retrievalUrlToId.set(retrieval.url.trim(), normalizedRetrievalIds[index] || `rid_${index + 1}`)
+    }
+  })
+  const playerNames = Array.isArray(payload.players)
+    ? payload.players
+        .map((player: any, index: number) => {
+          if (typeof player === 'string' && player.trim().length > 0) return player.trim()
+          if (player && typeof player === 'object') {
+            const candidate = player.name || player.id
+            if (typeof candidate === 'string' && candidate.trim().length > 0) return candidate.trim()
+          }
+          return `player_${index + 1}`
+        })
+        .filter(Boolean)
+    : []
+  const primaryPlayers = playerNames.length >= 2 ? playerNames.slice(0, 2) : ['player_1', 'player_2']
+
+  if (Array.isArray(payload.assumptions)) {
+    const normalizedAssumptions = payload.assumptions.map((assumption: any, index: number) => {
+      if (assumption && typeof assumption === 'object' && !Array.isArray(assumption)) {
+        const fallbackText = typeof assumption.text === 'string' && assumption.text.trim().length > 0
+          ? assumption.text.trim()
+          : JSON.stringify(assumption).slice(0, 240)
+        return {
+          name: typeof assumption.name === 'string' && assumption.name.trim().length > 0
+            ? assumption.name.trim()
+            : fallbackText.slice(0, 80) || `assumption_${index + 1}`,
+          value: Number.isFinite(assumption.value) ? Number(assumption.value) : 0.5,
+          justification: typeof assumption.justification === 'string' && assumption.justification.trim().length > 0
+            ? assumption.justification.trim()
+            : fallbackText || `Model-supplied qualitative assumption ${index + 1}.`,
+        }
+      }
+      const text = String(assumption ?? `assumption_${index + 1}`).trim()
+      return {
+        name: text.slice(0, 80) || `assumption_${index + 1}`,
+        value: 0.5,
+        justification: text || `Model-supplied qualitative assumption ${index + 1}.`,
+      }
+    })
+    if (JSON.stringify(normalizedAssumptions) !== JSON.stringify(payload.assumptions)) {
+      payload.assumptions = normalizedAssumptions
+      modified = true
+    }
+  }
+
+  if (Array.isArray(payload.numeric_claims)) {
+    payload.numeric_claims = payload.numeric_claims.map((claim: any, index: number) => {
+      const rawClaim = claim && typeof claim === 'object' && !Array.isArray(claim) ? claim : {}
+      const fallbackSource = normalizedRetrievalIds[index] || normalizedRetrievalIds[0] || 'rid_1'
+      const normalizedSources = Array.isArray(rawClaim.sources)
+        ? rawClaim.sources
+            .map((source: unknown) => {
+              if (typeof source !== 'string') return null
+              const trimmed = source.trim()
+              if (/^rid_/.test(trimmed)) return trimmed
+              const retrievalIndexMatch = trimmed.match(/^retrievals\[(\d+)\]$/)
+              if (retrievalIndexMatch) {
+                const mapped = normalizedRetrievalIds[Number(retrievalIndexMatch[1])]
+                return mapped || null
+              }
+              if (/^https?:\/\//i.test(trimmed)) {
+                return retrievalUrlToId.get(trimmed) || null
+              }
+              return null
+            })
+            .filter((source: string | null): source is string => Boolean(source))
+        : []
+      const normalizedName = typeof rawClaim.name === 'string' && rawClaim.name.trim().length > 0
+        ? rawClaim.name.trim()
+        : `claim_${index + 1}`
+      const nextClaim = {
+        name: normalizedName,
+        value: Number.isFinite(rawClaim.value) ? Number(rawClaim.value) : 0,
+        confidence: Number.isFinite(rawClaim.confidence) ? Number(rawClaim.confidence) : 0.5,
+        sources: normalizedSources.length > 0 ? normalizedSources : [fallbackSource],
+      }
+      if (
+        nextClaim.name !== rawClaim.name
+        || nextClaim.value !== rawClaim.value
+        || nextClaim.confidence !== rawClaim.confidence
+        || JSON.stringify(nextClaim.sources) !== JSON.stringify(rawClaim.sources)
+      ) {
+        modified = true
+      }
+      return nextClaim
+    })
+  }
+
+  if (!payload.payoff_matrix || Array.isArray(payload.payoff_matrix)) {
+    const rows = Array.isArray(payload.payoff_matrix)
+      ? payload.payoff_matrix.filter((row: any) => Array.isArray(row))
+      : []
+    const rowLabels = rows.slice(1).map((row: any) => typeof row?.[0] === 'string' ? row[0].trim() : '').filter(Boolean)
+    const columnLabels = rows[0]?.slice(1).map((value: any) => String(value).trim()).filter(Boolean) || []
+    const actionsByPlayer = [
+      rowLabels.length > 0 ? rowLabels.slice(0, 3) : ['base_case', 'downside_case'],
+      columnLabels.length > 0 ? columnLabels.slice(0, 3) : ['support', 'shock'],
+    ]
+    const matrixValues = actionsByPlayer[0].map((_, rowIndex) =>
+      actionsByPlayer[1].map((__, colIndex) => {
+        const numericCandidate = Number(rows[rowIndex + 1]?.[colIndex + 1])
+        const numericValue = Number.isFinite(numericCandidate) ? numericCandidate : 0
+        return [numericValue, numericValue]
+      })
+    )
+    payload.payoff_matrix = {
+      players: primaryPlayers,
+      actions_by_player: actionsByPlayer,
+      matrix_values: matrixValues,
+    }
+    modified = true
+  }
+
+  if (Array.isArray(payload.simulation_results?.equilibria)) {
+    payload.simulation_results = {
+      ...payload.simulation_results,
+      equilibria: payload.simulation_results.equilibria.map((equilibrium: any) => {
+        if (equilibrium && typeof equilibrium === 'object' && !Array.isArray(equilibrium)) {
+          return {
+            type: equilibrium.type === 'pure' || equilibrium.type === 'mixed' ? equilibrium.type : 'mixed',
+            profile: equilibrium.profile && typeof equilibrium.profile === 'object' && !Array.isArray(equilibrium.profile)
+              ? equilibrium.profile
+              : {
+                  player: primaryPlayers[0],
+                  action_probabilities: [1],
+                },
+            stability: Number.isFinite(equilibrium.stability) ? Number(equilibrium.stability) : 0.5,
+            confidence: Number.isFinite(equilibrium.confidence) ? Number(equilibrium.confidence) : 0.5,
+          }
+        }
+        return {
+          type: 'mixed',
+          profile: {
+            player: primaryPlayers[0],
+            action_probabilities: [1],
+          },
+          stability: 0.5,
+          confidence: 0.5,
+        }
+      }),
+    }
+    modified = true
+  } else if (payload.simulation_results && typeof payload.simulation_results === 'object' && !Array.isArray(payload.simulation_results) && payload.simulation_results.equilibria !== undefined) {
+    payload.simulation_results = {
+      ...payload.simulation_results,
+      equilibria: [],
+    }
+    modified = true
+  }
+
+  const validSolverMethods = new Set([
+    'recursive_nash',
+    'replicator',
+    'best_response',
+    'shapley_core',
+    'perfect_bayesian',
+    'correlated_equilibrium',
+    'replicator_dynamics',
+    'logit_qre',
+  ])
+  const rawSolverConfig = payload.solver_config && typeof payload.solver_config === 'object' && !Array.isArray(payload.solver_config)
+    ? payload.solver_config
+    : {}
+  const rawMethod = typeof rawSolverConfig.method === 'string' ? rawSolverConfig.method : ''
+  const inferredMethod = validSolverMethods.has(rawMethod)
+    ? rawMethod
+    : payload.game_classification === 'evolutionary_population'
+      || payload.game_classification?.game_family === 'evolutionary_population'
+        ? 'replicator_dynamics'
+        : payload.game_classification === 'coalitional_cooperative'
+          || payload.game_classification?.game_family === 'coalitional_cooperative'
+            ? 'shapley_core'
+            : 'best_response'
+  const inferredIterations = Number.isInteger(rawSolverConfig.iterations)
+    ? rawSolverConfig.iterations
+    : Number.isInteger(rawSolverConfig.parameters?.monte_carlo_iterations)
+      ? rawSolverConfig.parameters.monte_carlo_iterations
+      : 1000
+  const inferredSeed = Number.isInteger(rawSolverConfig.seed) ? rawSolverConfig.seed : 42
+  if (!validSolverMethods.has(rawMethod) || !Number.isInteger(rawSolverConfig.seed) || !Number.isInteger(rawSolverConfig.iterations)) {
+    payload.solver_config = {
+      ...rawSolverConfig,
+      method: inferredMethod,
+      seed: inferredSeed,
+      iterations: inferredIterations,
+    }
+    modified = true
+  }
+
+  if (typeof payload.notebook_snippet !== 'string') {
+    payload.notebook_snippet = typeof payload.notebook_snippet?.text === 'string'
+      ? payload.notebook_snippet.text
+      : ''
+    modified = true
+  }
+
+  if (!payload.data_exports || Array.isArray(payload.data_exports) || typeof payload.data_exports !== 'object') {
+    const nextDataExports: Record<string, string> = {}
+    if (Array.isArray(payload.data_exports)) {
+      for (const entry of payload.data_exports) {
+        if (typeof entry === 'string') {
+          if (!nextDataExports.payoff_csv_url && /\.csv(\?|$)/i.test(entry)) {
+            nextDataExports.payoff_csv_url = entry
+          } else if (!nextDataExports.simulations_json_url && /\.json(\?|$)/i.test(entry)) {
+            nextDataExports.simulations_json_url = entry
+          }
+          continue
+        }
+        if (!entry || typeof entry !== 'object') continue
+        const candidateUrl = typeof entry.url === 'string'
+          ? entry.url
+          : typeof entry.href === 'string'
+            ? entry.href
+            : typeof entry.path === 'string'
+              ? entry.path
+              : null
+        if (!candidateUrl) continue
+        const label = `${String(entry.name || entry.type || entry.kind || '')} ${candidateUrl}`.toLowerCase()
+        if (!nextDataExports.payoff_csv_url && (label.includes('csv') || label.includes('payoff'))) {
+          nextDataExports.payoff_csv_url = candidateUrl
+        } else if (!nextDataExports.simulations_json_url && (label.includes('json') || label.includes('simulation'))) {
+          nextDataExports.simulations_json_url = candidateUrl
+        }
+      }
+    }
+    payload.data_exports = nextDataExports
+    modified = true
+  } else {
+    const currentDataExports = payload.data_exports as Record<string, unknown>
+    const nextDataExports: Record<string, string> = {}
+    if (typeof currentDataExports.payoff_csv_url === 'string' && currentDataExports.payoff_csv_url.trim().length > 0) {
+      nextDataExports.payoff_csv_url = currentDataExports.payoff_csv_url.trim()
+    }
+    if (typeof currentDataExports.simulations_json_url === 'string' && currentDataExports.simulations_json_url.trim().length > 0) {
+      nextDataExports.simulations_json_url = currentDataExports.simulations_json_url.trim()
+    }
+    if (
+      nextDataExports.payoff_csv_url !== currentDataExports.payoff_csv_url
+      || nextDataExports.simulations_json_url !== currentDataExports.simulations_json_url
+      || Object.keys(nextDataExports).length !== Object.keys(currentDataExports).length
+    ) {
+      payload.data_exports = nextDataExports
+      modified = true
+    }
+  }
+
+  return { payload, modified }
+}
+
+function coerceLearnerPayloadShape(llmJson: any, retrievals: any[] = []) {
+  if (!llmJson || typeof llmJson !== 'object' || Array.isArray(llmJson)) {
+    return { payload: llmJson, modified: false }
+  }
+
+  let modified = false
+  const payload = structuredClone(llmJson)
+  const normalizedRetrievalIds = (retrievals || []).map((_retrieval: any, index: number) => `rid_${index + 1}`)
+  const retrievalById = new Map<string, any>()
+  const retrievalByUrl = new Map<string, any>()
+  ;(retrievals || []).forEach((retrieval: any, index: number) => {
+    retrievalById.set(normalizedRetrievalIds[index] || `rid_${index + 1}`, retrieval)
+    if (typeof retrieval?.url === 'string' && retrieval.url.trim().length > 0) {
+      retrievalByUrl.set(retrieval.url.trim(), retrieval)
+    }
+  })
+
+  const normalizeDecisionSources = (sources: unknown) => {
+    const rawSources = Array.isArray(sources) ? sources : []
+    const normalized = rawSources.map((source: any, index: number) => {
+      let retrieval: any = null
+      let retrievalId = normalizedRetrievalIds[index] || normalizedRetrievalIds[0] || 'derived'
+      if (typeof source === 'string') {
+        const trimmed = source.trim()
+        if (/^rid_\d+$/i.test(trimmed)) {
+          retrievalId = trimmed
+          retrieval = retrievalById.get(trimmed) || null
+        } else if (/^retrievals\[(\d+)\]$/i.test(trimmed)) {
+          const match = trimmed.match(/^retrievals\[(\d+)\]$/i)
+          const mappedIndex = match ? Number(match[1]) : index
+          retrievalId = normalizedRetrievalIds[mappedIndex] || retrievalId
+          retrieval = retrievalById.get(retrievalId) || null
+        } else if (/^https?:\/\//i.test(trimmed)) {
+          retrieval = retrievalByUrl.get(trimmed) || null
+          const retrievalIndex = retrieval ? retrievals.indexOf(retrieval) : -1
+          retrievalId = retrievalIndex >= 0 ? (normalizedRetrievalIds[retrievalIndex] || retrievalId) : retrievalId
+        }
+      } else if (source && typeof source === 'object') {
+        const objectSource = source as Record<string, unknown>
+        const candidateId = typeof objectSource.retrieval_id === 'string'
+          ? objectSource.retrieval_id
+          : typeof objectSource.id === 'string'
+            ? objectSource.id
+            : null
+        if (candidateId && /^rid_\d+$/i.test(candidateId)) {
+          retrievalId = candidateId
+          retrieval = retrievalById.get(candidateId) || null
+        } else if (typeof objectSource.url === 'string' && objectSource.url.trim().length > 0) {
+          retrieval = retrievalByUrl.get(objectSource.url.trim()) || null
+          const retrievalIndex = retrieval ? retrievals.indexOf(retrieval) : -1
+          retrievalId = retrievalIndex >= 0 ? (normalizedRetrievalIds[retrievalIndex] || retrievalId) : retrievalId
+        }
+        return {
+          id: retrievalId,
+          retrieval_id: retrievalId,
+          url: typeof objectSource.url === 'string' ? objectSource.url : (retrieval?.url || ''),
+          passage_excerpt: typeof objectSource.passage_excerpt === 'string'
+            ? objectSource.passage_excerpt
+            : typeof objectSource.excerpt === 'string'
+              ? objectSource.excerpt
+              : (retrieval?.snippet || ''),
+          anchor_score: Number.isFinite(objectSource.anchor_score) ? Number(objectSource.anchor_score) : Number.isFinite(objectSource.score) ? Number(objectSource.score) : 0.8,
+        }
+      }
+
+      return {
+        id: retrievalId,
+        retrieval_id: retrievalId,
+        url: retrieval?.url || '',
+        passage_excerpt: retrieval?.snippet || '',
+        anchor_score: Number.isFinite(retrieval?.score) ? Number(retrieval.score) : 0.8,
+      }
+    })
+
+    return normalized.filter((entry: any) => typeof entry.id === 'string' && typeof entry.retrieval_id === 'string')
+  }
+
+  const normalizeRidSources = (sources: unknown, fallbackIndex = 0) => {
+    const rawSources = Array.isArray(sources) ? sources : []
+    const fallbackSource = normalizedRetrievalIds[fallbackIndex] || normalizedRetrievalIds[0] || 'rid_1'
+    const normalized = rawSources
+      .map((source: any, index: number) => {
+        if (typeof source === 'string') {
+          const trimmed = source.trim()
+          if (/^rid_\d+$/i.test(trimmed)) return trimmed
+          const retrievalIndexMatch = trimmed.match(/^retrievals\[(\d+)\]$/i)
+          if (retrievalIndexMatch) {
+            return normalizedRetrievalIds[Number(retrievalIndexMatch[1])] || null
+          }
+          if (/^https?:\/\//i.test(trimmed)) {
+            const retrieval = retrievalByUrl.get(trimmed)
+            const retrievalIndex = retrieval ? retrievals.indexOf(retrieval) : -1
+            return retrievalIndex >= 0 ? (normalizedRetrievalIds[retrievalIndex] || null) : null
+          }
+          return null
+        }
+
+        if (source && typeof source === 'object') {
+          const objectSource = source as Record<string, unknown>
+          const candidateId = typeof objectSource.retrieval_id === 'string'
+            ? objectSource.retrieval_id
+            : typeof objectSource.id === 'string'
+              ? objectSource.id
+              : null
+          if (candidateId && /^rid_\d+$/i.test(candidateId)) {
+            return candidateId
+          }
+          if (typeof objectSource.url === 'string' && objectSource.url.trim().length > 0) {
+            const retrieval = retrievalByUrl.get(objectSource.url.trim())
+            const retrievalIndex = retrieval ? retrievals.indexOf(retrieval) : -1
+            return retrievalIndex >= 0 ? (normalizedRetrievalIds[retrievalIndex] || null) : null
+          }
+        }
+
+        return normalizedRetrievalIds[index] || null
+      })
+      .filter((source: string | null): source is string => Boolean(source))
+
+    return normalized.length > 0 ? normalized : [fallbackSource]
+  }
+
+  if (Array.isArray(payload.decision_table)) {
+    const normalizedDecisionTable = payload.decision_table.map((entry: any, index: number) => {
+      const rawEntry = entry && typeof entry === 'object' && !Array.isArray(entry) ? entry : {}
+      const rawPayoff = rawEntry.payoff_estimate && typeof rawEntry.payoff_estimate === 'object' && !Array.isArray(rawEntry.payoff_estimate)
+        ? rawEntry.payoff_estimate
+        : rawEntry.expected_value && typeof rawEntry.expected_value === 'object' && !Array.isArray(rawEntry.expected_value)
+          ? rawEntry.expected_value
+          : {}
+      const normalizedSources = normalizeDecisionSources(rawPayoff.sources || rawEntry.sources || [])
+      return {
+        actor: typeof rawEntry.actor === 'string' && rawEntry.actor.trim().length > 0 ? rawEntry.actor.trim() : 'Primary Actor',
+        action: typeof rawEntry.action === 'string' && rawEntry.action.trim().length > 0
+          ? rawEntry.action.trim()
+          : typeof rawEntry.action_profile === 'string' && rawEntry.action_profile.trim().length > 0
+            ? rawEntry.action_profile.trim()
+            : `Option ${index + 1}`,
+        payoff_estimate: {
+          value: Number.isFinite(rawPayoff.value) ? Number(rawPayoff.value) : Number.isFinite(rawEntry.value) ? Number(rawEntry.value) : 0,
+          confidence: Number.isFinite(rawPayoff.confidence) ? Number(rawPayoff.confidence) : 0.5,
+          sources: normalizedSources.length > 0 ? normalizedSources : [{
+            id: normalizedRetrievalIds[0] || 'derived',
+            retrieval_id: normalizedRetrievalIds[0] || 'derived',
+            url: retrievals[0]?.url || '',
+            passage_excerpt: retrievals[0]?.snippet || '',
+            anchor_score: Number.isFinite(retrievals[0]?.score) ? Number(retrievals[0].score) : 0.8,
+          }],
+        },
+        risk_notes: typeof rawEntry.risk_notes === 'string' && rawEntry.risk_notes.trim().length > 0
+          ? rawEntry.risk_notes.trim()
+          : typeof rawEntry.rationale === 'string' && rawEntry.rationale.trim().length > 0
+            ? rawEntry.rationale.trim()
+            : '',
+      }
+    })
+    if (JSON.stringify(normalizedDecisionTable) !== JSON.stringify(payload.decision_table)) {
+      payload.decision_table = normalizedDecisionTable
+      modified = true
+    }
+  }
+
+  if (Array.isArray(payload.numeric_claims)) {
+    const normalizedNumericClaims = payload.numeric_claims.map((claim: any, index: number) => {
+      const rawClaim = claim && typeof claim === 'object' && !Array.isArray(claim) ? claim : {}
+      return {
+        name: typeof rawClaim.name === 'string' && rawClaim.name.trim().length > 0
+          ? rawClaim.name.trim()
+          : `claim_${index + 1}`,
+        value: Number.isFinite(rawClaim.value) ? Number(rawClaim.value) : 0,
+        confidence: Number.isFinite(rawClaim.confidence) ? Number(rawClaim.confidence) : 0.5,
+        sources: normalizeRidSources(rawClaim.sources, index),
+      }
+    })
+    if (JSON.stringify(normalizedNumericClaims) !== JSON.stringify(payload.numeric_claims)) {
+      payload.numeric_claims = normalizedNumericClaims
+      modified = true
+    }
+  }
+
+  if (Array.isArray(payload.expected_value_ranking)) {
+    const normalizedExpectedValues = payload.expected_value_ranking.map((entry: any, index: number) => {
+      const rawEntry = entry && typeof entry === 'object' && !Array.isArray(entry) ? entry : {}
+      const rawEv = rawEntry.ev && typeof rawEntry.ev === 'object' && !Array.isArray(rawEntry.ev)
+        ? rawEntry.ev
+        : null
+      return {
+        action: typeof rawEntry.action === 'string' && rawEntry.action.trim().length > 0
+          ? rawEntry.action.trim()
+          : typeof rawEntry.action_profile === 'string' && rawEntry.action_profile.trim().length > 0
+            ? rawEntry.action_profile.trim()
+            : `Option ${index + 1}`,
+        ev: Number.isFinite(rawEntry.ev)
+          ? Number(rawEntry.ev)
+          : Number.isFinite(rawEv?.value)
+            ? Number(rawEv.value)
+            : 0,
+        ev_confidence: Number.isFinite(rawEntry.ev_confidence)
+          ? Number(rawEntry.ev_confidence)
+          : Number.isFinite(rawEntry.confidence)
+            ? Number(rawEntry.confidence)
+            : Number.isFinite(rawEv?.confidence)
+              ? Number(rawEv.confidence)
+              : 0.5,
+      }
+    })
+    if (JSON.stringify(normalizedExpectedValues) !== JSON.stringify(payload.expected_value_ranking)) {
+      payload.expected_value_ranking = normalizedExpectedValues
+      modified = true
+    }
+  }
+
+  if (payload.exercise && typeof payload.exercise === 'object' && !Array.isArray(payload.exercise)) {
+    const rawExercise = payload.exercise as Record<string, unknown>
+    const normalizedExercise = {
+      task: typeof rawExercise.task === 'string' && rawExercise.task.trim().length > 0
+        ? rawExercise.task.trim()
+        : typeof rawExercise.instruction === 'string' && rawExercise.instruction.trim().length > 0
+          ? rawExercise.instruction.trim()
+          : 'Recreate the decision table and compare the top-ranked actions using the cited evidence.',
+      hints: Array.isArray(rawExercise.hints)
+        ? rawExercise.hints.map((hint: unknown) => String(hint).trim()).filter(Boolean)
+        : [
+            'Compare each action using expected value, confidence, and cited retrievals.',
+            'Note which assumptions or signposts would cause the ranking to change.',
+          ],
+    }
+    if (JSON.stringify(normalizedExercise) !== JSON.stringify(payload.exercise)) {
+      payload.exercise = normalizedExercise
+      modified = true
+    }
+  }
+
+  return { payload, modified }
+}
+
+function buildFallbackEquilibriumProfile(players: any[] = []) {
+  const fallbackPlayers = Array.isArray(players) && players.length > 0 ? players : ['P1']
+  const profile: Record<string, Record<string, number>> = {}
+  fallbackPlayers.forEach((player: any, index: number) => {
+    const playerId = typeof player === 'string'
+      ? player.trim() || `P${index + 1}`
+      : typeof player?.id === 'string' && player.id.trim().length > 0
+        ? player.id.trim()
+        : typeof player?.name === 'string' && player.name.trim().length > 0
+          ? player.name.trim()
+          : `P${index + 1}`
+    const preferredAction = Array.isArray(player?.actions) && player.actions.length > 0 && typeof player.actions[0] === 'string'
+      ? player.actions[0].trim() || 'wait'
+      : 'wait'
+    profile[playerId] = {
+      [preferredAction]: 1,
+    }
+  })
+  return profile
+}
+
+function normalizeEquilibriumShape(llmJson: any) {
+  const fallbackProfile = buildFallbackEquilibriumProfile(llmJson?.players)
+  const rawEquilibrium = llmJson?.equilibrium
+
+  if (!rawEquilibrium || typeof rawEquilibrium !== 'object' || Array.isArray(rawEquilibrium)) {
+    return {
+      profile: fallbackProfile,
+      stability: 0.5,
+      method: 'heuristic',
+    }
+  }
+
+  const normalizedProfile: Record<string, Record<string, number | { value: number; confidence: number; sources: any[] }>> = {}
+  const rawProfile = rawEquilibrium.profile
+  if (rawProfile && typeof rawProfile === 'object' && !Array.isArray(rawProfile)) {
+    Object.entries(rawProfile).forEach(([playerId, actionMap], playerIndex) => {
+      const safePlayerId = String(playerId || '').trim() || `P${playerIndex + 1}`
+
+      if (typeof actionMap === 'string' && actionMap.trim().length > 0) {
+        normalizedProfile[safePlayerId] = { [actionMap.trim()]: 1 }
+        return
+      }
+
+      if (actionMap && typeof actionMap === 'object' && !Array.isArray(actionMap)) {
+        const nextActions: Record<string, number | { value: number; confidence: number; sources: any[] }> = {}
+        Object.entries(actionMap).forEach(([action, value], actionIndex) => {
+          const safeAction = String(action || '').trim() || `action_${actionIndex + 1}`
+          if (Number.isFinite(value)) {
+            nextActions[safeAction] = Number(value)
+            return
+          }
+          if (value && typeof value === 'object' && !Array.isArray(value) && Number.isFinite((value as any).value)) {
+            nextActions[safeAction] = {
+              value: Number((value as any).value),
+              confidence: Number.isFinite((value as any).confidence) ? Number((value as any).confidence) : 0.5,
+              sources: Array.isArray((value as any).sources) ? (value as any).sources : [],
+            }
+            return
+          }
+          if (typeof value === 'string' && value.trim().length > 0) {
+            nextActions[value.trim()] = 1
+          }
+        })
+
+        normalizedProfile[safePlayerId] = Object.keys(nextActions).length > 0
+          ? nextActions
+          : (fallbackProfile[safePlayerId] || { wait: 1 })
+        return
+      }
+
+      normalizedProfile[safePlayerId] = fallbackProfile[safePlayerId] || { wait: 1 }
+    })
+  }
+
+  const profile = Object.keys(normalizedProfile).length > 0 ? normalizedProfile : fallbackProfile
+  const numericStability = Number(rawEquilibrium.stability)
+  const stability = Number.isFinite(numericStability)
+    ? numericStability
+    : Number.isFinite(rawEquilibrium.stability_confidence)
+      ? Number(rawEquilibrium.stability_confidence)
+      : 0.5
+  const method = typeof rawEquilibrium.method === 'string' && rawEquilibrium.method.trim().length > 0
+    ? rawEquilibrium.method.trim()
+    : typeof rawEquilibrium.type === 'string' && rawEquilibrium.type.trim().length > 0
+      ? rawEquilibrium.type.trim()
+      : 'heuristic'
+
+  return {
+    ...rawEquilibrium,
+    profile,
+    stability,
+    method,
   }
 }
 
@@ -419,7 +1113,7 @@ function computeSensitivityAnalysis(decisionTable: any[], scenario: string, pert
 }
 
 // --- LLM callers ---
-type LlmProvider = 'gemini' | 'openai' | 'xai'
+type LlmProvider = 'gemini' | 'openai' | 'xai' | 'openrouter'
 type LlmFailureClass =
   | 'config_missing'
   | 'quota_exceeded'
@@ -466,6 +1160,9 @@ type ProviderCallResult = ProviderCallSuccess | ProviderCallFailure
 function classifyProviderFailure(error: string, httpStatus: number | null): LlmFailureClass {
   const lower = String(error || '').toLowerCase()
   if (lower.includes('no_') && lower.includes('_key')) return 'config_missing'
+  if (lower.includes('missing_openrouter_http_referer') || lower.includes('missing_base_url') || lower.includes('config_missing')) {
+    return 'config_missing'
+  }
   if (lower.includes('spending cap') || lower.includes('quota') || lower.includes('billing')) return 'quota_exceeded'
   if (httpStatus === 429 || lower.includes('rate limit')) return 'rate_limited'
   if (httpStatus === 401 || httpStatus === 403 || lower.includes('unauthorized') || lower.includes('forbidden') || lower.includes('invalid api key')) {
@@ -512,6 +1209,56 @@ function extractResponsesApiText(payload: Record<string, unknown>) {
   return typeof textEntry?.text === 'string' ? textEntry.text.trim() : null
 }
 
+function extractChatCompletionText(payload: Record<string, unknown>) {
+  const choices = Array.isArray(payload.choices) ? payload.choices as Array<Record<string, unknown>> : []
+  const message = choices[0] && typeof choices[0].message === 'object' ? choices[0].message as Record<string, unknown> : null
+  if (typeof message?.content === 'string' && message.content.trim().length > 0) {
+    return message.content.trim()
+  }
+
+  const content = Array.isArray(message?.content) ? message.content as Array<Record<string, unknown>> : []
+  const textEntry = content.find((entry) => typeof entry?.text === 'string')
+  return typeof textEntry?.text === 'string' ? textEntry.text.trim() : null
+}
+
+const OPENROUTER_ALLOWED_MODELS = [
+  'anthropic/*',
+  'openai/*',
+  'deepseek/*',
+  'meta-llama/*',
+  'mistralai/*',
+  'qwen/*',
+]
+
+function buildOpenRouterPlugins(model: string) {
+  if (model !== OPENROUTER_AUTO_MODEL) {
+    return undefined
+  }
+
+  return [{
+    id: 'auto-router',
+    allowed_models: OPENROUTER_ALLOWED_MODELS,
+  }]
+}
+
+async function fetchWithProviderTimeout(input: string | URL | Request, init: RequestInit) {
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(`provider_timeout_${PROVIDER_FETCH_TIMEOUT_MS}ms`), PROVIDER_FETCH_TIMEOUT_MS)
+  try {
+    return await fetch(input, {
+      ...init,
+      signal: controller.signal,
+    })
+  } catch (error: any) {
+    if (error?.name === 'AbortError') {
+      throw new Error(`provider_timeout_${PROVIDER_FETCH_TIMEOUT_MS}ms`)
+    }
+    throw error
+  } finally {
+    clearTimeout(timeoutId)
+  }
+}
+
 async function callGeminiSingle(prompt: string, model: string): Promise<ProviderCallResult> {
   if (!GEMINI_KEY) {
     return buildProviderFailure('gemini', model, 0, 'gemini_config_missing', 'no_gemini_key')
@@ -519,7 +1266,7 @@ async function callGeminiSingle(prompt: string, model: string): Promise<Provider
 
   const startedAt = Date.now()
   try {
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${GEMINI_KEY}`, {
+    const res = await fetchWithProviderTimeout(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${GEMINI_KEY}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -577,7 +1324,7 @@ async function callOpenAIFallback(prompt: string): Promise<ProviderCallResult> {
 
   const startedAt = Date.now()
   try {
-    const res = await fetch("https://api.openai.com/v1/chat/completions", {
+    const res = await fetchWithProviderTimeout("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -619,6 +1366,62 @@ async function callOpenAIFallback(prompt: string): Promise<ProviderCallResult> {
   }
 }
 
+async function callOpenRouterFallback(prompt: string): Promise<ProviderCallResult> {
+  if (!OPENROUTER_KEY) {
+    return buildProviderFailure('openrouter', OPENROUTER_MODEL, 0, 'openrouter_config_missing', 'no_openrouter_key')
+  }
+  if (!OPENROUTER_HTTP_REFERER) {
+    return buildProviderFailure('openrouter', OPENROUTER_MODEL, 0, 'openrouter_config_missing', 'missing_openrouter_http_referer')
+  }
+
+  const startedAt = Date.now()
+  try {
+    const plugins = buildOpenRouterPlugins(OPENROUTER_MODEL)
+    const res = await fetchWithProviderTimeout(`${OPENROUTER_BASE_URL}/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${OPENROUTER_KEY}`,
+        'HTTP-Referer': OPENROUTER_HTTP_REFERER,
+        'X-OpenRouter-Title': OPENROUTER_X_TITLE,
+      },
+      body: JSON.stringify({
+        model: OPENROUTER_MODEL,
+        messages: [
+          { role: 'system', content: 'Return valid JSON only. Do not wrap the answer in markdown fences.' },
+          { role: 'user', content: prompt },
+        ],
+        max_tokens: 4000,
+        temperature: 0.0,
+        response_format: { type: 'json_object' },
+        ...(plugins ? { plugins } : {}),
+      }),
+    })
+
+    const durationMs = Date.now() - startedAt
+    const text = await res.text()
+    const parsed = await safeJsonParse(text)
+    if (!res.ok) {
+      const message = parsed.ok
+        ? parsed.json?.error?.message || parsed.json?.message || `openrouter_http_${res.status}`
+        : `openrouter_http_${res.status}`
+      return buildProviderFailure('openrouter', OPENROUTER_MODEL, durationMs, 'openrouter_transport_error', String(message), res.status)
+    }
+
+    if (!parsed.ok) {
+      return buildProviderFailure('openrouter', OPENROUTER_MODEL, durationMs, 'openrouter_parse_error', 'openrouter_json_parse_failed')
+    }
+    const content = extractChatCompletionText(parsed.json)
+    if (!content) {
+      return buildProviderFailure('openrouter', OPENROUTER_MODEL, durationMs, 'openrouter_empty_output', 'openrouter_no_content')
+    }
+
+    return { ok: true, text: content, model: OPENROUTER_MODEL, provider: 'openrouter', duration_ms: durationMs }
+  } catch (err: any) {
+    return buildProviderFailure('openrouter', OPENROUTER_MODEL, Date.now() - startedAt, 'openrouter_transport_error', String(err?.message ?? err))
+  }
+}
+
 async function callXaiFallback(prompt: string): Promise<ProviderCallResult> {
   if (!XAI_KEY) {
     return buildProviderFailure('xai', XAI_MODEL, 0, 'xai_config_missing', 'no_xai_key')
@@ -626,7 +1429,7 @@ async function callXaiFallback(prompt: string): Promise<ProviderCallResult> {
 
   const startedAt = Date.now()
   try {
-    const res = await fetch("https://api.x.ai/v1/responses", {
+    const res = await fetchWithProviderTimeout("https://api.x.ai/v1/responses", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -717,10 +1520,17 @@ function clientFailureMessage(message: string, canExposeProviderDiagnostics: boo
 }
 
 // --- Audience prompt templates with Ph4.md evidence-backed requirements ---
-function buildPrompt(audience: string, scenario: string, retrievals: any[], computedData?: any) {
+function buildPrompt(
+  audience: string,
+  scenario: string,
+  retrievals: any[],
+  computedData?: any,
+  options: { compactResearcher?: boolean } = {},
+) {
   const retrievalCount = retrievals?.length || 0
-  const retrievalBlock = (retrievals && retrievals.length)
-    ? `Retrievals:\n${retrievals.map((r:any,i:number)=>`retrievals[${i}]: ${r.title || r.url || "source"} — ${r.url || ""}\nSnippet: ${r.snippet || ""}`).join("\n")}`
+  const promptRetrievals = options.compactResearcher ? (retrievals || []).slice(0, 6) : (retrievals || [])
+  const retrievalBlock = (promptRetrievals && promptRetrievals.length)
+    ? `Retrievals:\n${promptRetrievals.map((r:any,i:number)=>`${options.compactResearcher ? `rid_${i + 1}` : `retrievals[${i}]`}: ${r.title || r.url || "source"} — ${r.url || ""}\nSnippet: ${(r.snippet || '').slice(0, options.compactResearcher ? 220 : 1200)}`).join("\n")}`
     : `Retrievals: NONE`
   const doctrinePromptPack = buildDoctrinePromptPack({
     scenarioText: scenario,
@@ -780,6 +1590,40 @@ Computed Data: ${JSON.stringify({ ev_ranking: evData.ranking, sensitivity_sample
 Produce learner JSON with analysis_id, audience, summary, decision_table, expected_value_ranking, sensitivity_advice, exercise, provenance.
 For numeric claims in decision_table, use {"value": <number>, "confidence": <0-1>, "sources": ["url"]} format.`
   } else if (audience === "researcher") {
+    if (options.compactResearcher) {
+      const compactSystem = `You are a JSON-only researcher health probe. Return exactly one valid JSON object and nothing else.
+
+RULES:
+1) Keep the payload minimal and schema-safe.
+2) Cite evidence only with source ids from the provided retrieval list, using the exact form rid_1, rid_2, etc.
+3) Do not emit markdown fences, commentary, explain_brief, entities, timeframe, or URL-style sources.
+4) Do not include payoff_matrix or solver_config unless the scenario is trivially 2x2 and the values are explicitly present in retrievals.
+5) Keep long_summary.text under 90 words.
+6) numeric_claims: maximum 3 entries.
+7) assumptions: maximum 2 entries.
+8) If uncertain, omit optional sections instead of improvising filler.`
+
+      return `${compactSystem}
+
+Audience: Researcher - async probe compact mode.
+
+Scenario: ${scenario}
+${retrievalBlock}
+Retrieval Count: ${retrievalCount}
+
+Produce compact researcher JSON with analysis_id, audience, long_summary, provenance.
+Optional compact extras only when strongly supported:
+- numeric_claims: maximum 3 entries
+- assumptions: maximum 2 entries
+- simulation_results.equilibria: maximum 1 entry
+Do not include payoff_matrix or solver_config unless the scenario is trivially 2x2 and the values are explicit in retrievals.
+Set notebook_snippet to "".
+Set data_exports to {}.
+Keep long_summary.text under 90 words.
+Omit optional filler instead of inventing verbose sections.
+For all numeric claims, use {"name": string, "value": <number>, "confidence": <0-1>, "sources": ["rid_1"]} format.`
+    }
+
     const sensitivityData = computedData?.sensitivity || { param_samples: [], analysis_notes: "Sensitivity analysis pending" }
 
     return `${baseSystem}${doctrineInstructions}
@@ -792,6 +1636,15 @@ Retrieval Count: ${retrievalCount}
 Sensitivity Analysis: ${JSON.stringify(sensitivityData.param_samples.slice(0, 5))}
 
 Produce researcher JSON with analysis_id, audience, long_summary, assumptions, payoff_matrix, solver_config, simulation_results, notebook_snippet, data_exports, provenance.
+When the doctrine pack points to coalition, Bayesian signaling, correlated coordination, evolutionary dynamics, or bounded rationality, include simulation_results.advanced_frameworks with the relevant framework object(s).
+For each advanced framework object, set:
+- status: "heuristic"
+- summary: short explanation of why this framework fits
+- normalized_inputs: the deterministic solver inputs only
+- results: {}
+- diagnostics: {}
+- warnings: []
+Do not hallucinate solver outputs. The deterministic backend will compute them after validation.
 For all numeric claims, use {"value": <number>, "confidence": <0-1>, "sources": ["url"]} format.`
   } else {
     // teacher
@@ -807,6 +1660,182 @@ Produce teacher JSON with analysis_id, audience, lesson_outline, simulation_setu
 For numeric claims, use {"value": <number>, "confidence": <0-1>, "sources": ["url"]} format.`
   }
 }
+
+const ADVANCED_FRAMEWORK_KEYS: AdvancedFrameworkKey[] = [
+  'coalitional',
+  'signaling',
+  'correlated',
+  'evolutionary',
+  'bounded_rationality',
+]
+
+function expectedAdvancedFrameworksForScenario(scenarioText: string, retrievals: any[] = []): AdvancedFrameworkKey[] {
+  const pack = buildDoctrinePromptPack({
+    scenarioText,
+    evidenceIds: (retrievals || []).map((retrieval: any, index: number) => retrieval.id || `retrieval_${index + 1}`),
+  })
+  const expected: AdvancedFrameworkKey[] = []
+  if (pack.classifier.doctrine_ids.includes('coalitional_shapley')) expected.push('coalitional')
+  if (pack.classifier.doctrine_ids.includes('perfect_bayesian_signaling')) expected.push('signaling')
+  if (pack.classifier.doctrine_ids.includes('correlated_equilibrium')) expected.push('correlated')
+  if (pack.classifier.doctrine_ids.includes('evolutionary_replicator')) expected.push('evolutionary')
+  if (pack.classifier.doctrine_ids.includes('bounded_rationality')) expected.push('bounded_rationality')
+  return expected
+}
+
+function ensureAdvancedFrameworkCandidates(llmJson: any, scenarioText: string, retrievals: any[]) {
+  if (!llmJson || typeof llmJson !== 'object') return
+  const simulationResults = isPlainObject(llmJson.simulation_results)
+    ? llmJson.simulation_results
+    : {}
+  const rawFrameworks = isPlainObject(simulationResults.advanced_frameworks)
+    ? simulationResults.advanced_frameworks
+    : {}
+  const normalizedFrameworks: Record<string, AdvancedFrameworkEnvelope> = {}
+
+  for (const key of ADVANCED_FRAMEWORK_KEYS) {
+    if (key in rawFrameworks) {
+      const envelope = coerceAdvancedFrameworkEnvelope(key, rawFrameworks[key])
+      if (envelope) {
+        normalizedFrameworks[key] = envelope
+      }
+    }
+  }
+
+  for (const key of expectedAdvancedFrameworksForScenario(scenarioText, retrievals)) {
+    if (!normalizedFrameworks[key]) {
+      normalizedFrameworks[key] = buildFrameworkEnvelope(key, {
+        status: 'incomplete_inputs',
+        summary: `${key.replace(/_/g, ' ')} doctrine was selected, but the LLM did not provide deterministic inputs.`,
+        results: null,
+        diagnostics: { errors: ['missing_normalized_inputs'] },
+        warnings: ['Framework data is unavailable until normalized inputs are supplied.'],
+      })
+    }
+  }
+
+  if (Object.keys(normalizedFrameworks).length > 0) {
+    simulationResults.advanced_frameworks = normalizedFrameworks
+    llmJson.simulation_results = simulationResults
+  }
+}
+
+function mergeExplicitAdvancedFrameworkCandidates(llmJson: any, explicitInputs?: AdvancedGameInputs) {
+  if (!llmJson || typeof llmJson !== 'object' || !explicitInputs) return
+
+  const simulationResults = isPlainObject(llmJson.simulation_results)
+    ? llmJson.simulation_results
+    : {}
+  const rawFrameworks = isPlainObject(simulationResults.advanced_frameworks)
+    ? simulationResults.advanced_frameworks
+    : {}
+  const mergedFrameworks = { ...rawFrameworks }
+
+  for (const key of ADVANCED_FRAMEWORK_KEYS) {
+    const normalizedInputs = explicitInputs[key]
+    if (!normalizedInputs || typeof normalizedInputs !== 'object') continue
+    mergedFrameworks[key] = buildFrameworkEnvelope(key, {
+      status: 'heuristic',
+      summary: `${key.replace(/_/g, ' ')} normalized inputs were supplied directly in the request.`,
+      normalized_inputs: normalizedInputs as Record<string, unknown>,
+      results: null,
+      diagnostics: { seeded_by_request: true },
+      warnings: ['Using caller-supplied normalized inputs.'],
+    })
+  }
+
+  if (Object.keys(mergedFrameworks).length > 0) {
+    simulationResults.advanced_frameworks = mergedFrameworks
+    llmJson.simulation_results = simulationResults
+  }
+}
+
+function hasNormalizedInputs(candidate: any) {
+  return Boolean(candidate?.normalized_inputs) && isPlainObject(candidate.normalized_inputs) && Object.keys(candidate.normalized_inputs).length > 0
+}
+
+async function upgradeAdvancedFrameworksWithDeterministicSolvers(args: {
+  llmJson: any
+  solverInvocations: any[]
+  solverResults: any
+  requestId: string
+}) {
+  const frameworks = args.llmJson?.simulation_results?.advanced_frameworks
+  if (!frameworks || typeof frameworks !== 'object') return
+
+  for (const key of ADVANCED_FRAMEWORK_KEYS) {
+    const candidate = frameworks[key]
+    if (!candidate || typeof candidate !== 'object') continue
+    if (!hasNormalizedInputs(candidate)) {
+      frameworks[key] = {
+        ...candidate,
+        status: candidate.status === 'rejected' ? 'rejected' : 'incomplete_inputs',
+        results: null,
+        diagnostics: {
+          ...(candidate.diagnostics && typeof candidate.diagnostics === 'object' ? candidate.diagnostics : {}),
+          errors: ['missing_normalized_inputs'],
+        },
+        warnings: Array.from(new Set([...(Array.isArray(candidate.warnings) ? candidate.warnings : []), 'Deterministic solver skipped because normalized inputs were missing.'])),
+      }
+      continue
+    }
+
+    const start = Date.now()
+    try {
+      const result = await maybeCallMlService('/game-theory/solve', {
+        framework: key,
+        payload: candidate.normalized_inputs,
+      })
+
+      if (!result) {
+        frameworks[key] = {
+          ...candidate,
+          status: 'heuristic',
+          warnings: Array.from(new Set([...(Array.isArray(candidate.warnings) ? candidate.warnings : []), 'ML service unavailable; retaining heuristic framework envelope.'])),
+        }
+        continue
+      }
+
+      frameworks[key] = {
+        ...result,
+        framework: key,
+        status: 'deterministic',
+        summary: result.summary || candidate.summary,
+      }
+      args.solverInvocations.push({
+        name: `game_theory_${key}`,
+        endpoint: '/game-theory/solve',
+        framework: key,
+        start: new Date(start).toISOString(),
+        duration_ms: Date.now() - start,
+        result_id: `${key}-${args.requestId}`,
+        ok: true,
+      })
+      args.solverResults[key] = result
+    } catch (error) {
+      frameworks[key] = {
+        ...candidate,
+        status: 'rejected',
+        results: null,
+        diagnostics: {
+          ...(candidate.diagnostics && typeof candidate.diagnostics === 'object' ? candidate.diagnostics : {}),
+          errors: [error instanceof Error ? error.message : String(error)],
+        },
+        warnings: Array.from(new Set([...(Array.isArray(candidate.warnings) ? candidate.warnings : []), 'Deterministic solver rejected the normalized inputs.'])),
+      }
+      args.solverInvocations.push({
+        name: `game_theory_${key}`,
+        endpoint: '/game-theory/solve',
+        framework: key,
+        start: new Date(start).toISOString(),
+        duration_ms: Date.now() - start,
+        result_id: `${key}-${args.requestId}`,
+        ok: false,
+        error: error instanceof Error ? error.message : String(error),
+      })
+    }
+  }
+}
 // --- Numeric Passage Enforcement ---
 async function enforceNumericPassages(llmJson: any, retrievals: any[]): Promise<void> {
   console.log('🔍 Starting numeric passage enforcement scan');
@@ -820,10 +1849,13 @@ async function enforceNumericPassages(llmJson: any, retrievals: any[]): Promise<
     for (const retrieval of retrievals) {
       if (!retrieval.snippet) continue;
       if (pattern.test(retrieval.snippet)) {
+        const retrievalId = retrieval.id || `retrieval-${uuid()}`
         return {
-          id: retrieval.id || `retrieval-${uuid()}`,
+          id: retrievalId,
+          retrieval_id: retrievalId,
           url: retrieval.url || '',
-          passage_excerpt: retrieval.snippet
+          passage_excerpt: retrieval.snippet,
+          anchor_score: Number.isFinite(retrieval.score) ? Number(retrieval.score) : 0.8,
         };
       }
     }
@@ -1097,6 +2129,137 @@ const numericObjectSchema = {
 // Compile the numeric object schema
 ajv.addSchema(numericObjectSchema);
 
+const advancedFrameworkEnvelopeBaseSchema = {
+  type: "object",
+  additionalProperties: true,
+  required: ["framework", "status", "summary", "normalized_inputs", "results", "diagnostics", "warnings"],
+  properties: {
+    framework: { type: "string" },
+    status: { type: "string", enum: ["deterministic", "heuristic", "incomplete_inputs", "rejected"] },
+    summary: { type: "string" },
+    normalized_inputs: { type: "object" },
+    results: { type: ["object", "null"] },
+    diagnostics: { type: "object" },
+    warnings: { type: "array", items: { type: "string" } },
+  },
+}
+
+const coalitionalNormalizedInputsSchema = {
+  type: "object",
+  additionalProperties: false,
+  required: ["players", "coalition_values"],
+  properties: {
+    players: { type: "array", minItems: 3, maxItems: 12, items: { type: "string" } },
+    coalition_values: {
+      type: "object",
+      additionalProperties: { type: "number" },
+    },
+  },
+}
+
+const signalingPayoffTableSchema = {
+  type: "object",
+  additionalProperties: {
+    type: "object",
+    additionalProperties: {
+      type: "object",
+      additionalProperties: { type: "number" },
+    },
+  },
+}
+
+const signalingNormalizedInputsSchema = {
+  type: "object",
+  additionalProperties: false,
+  required: [
+    "sender_types",
+    "prior_probs",
+    "messages",
+    "receiver_actions",
+    "sender_strategies",
+    "sender_payoffs",
+    "receiver_payoffs",
+  ],
+  properties: {
+    sender_types: { type: "array", minItems: 1, maxItems: 6, items: { type: "string" } },
+    prior_probs: { type: "object", additionalProperties: { type: "number" } },
+    messages: { type: "array", minItems: 1, maxItems: 8, items: { type: "string" } },
+    receiver_actions: { type: "array", minItems: 1, maxItems: 8, items: { type: "string" } },
+    sender_strategies: {
+      type: "object",
+      additionalProperties: {
+        type: "object",
+        additionalProperties: { type: "number" },
+      },
+    },
+    observed_message: { type: "string" },
+    sender_payoffs: signalingPayoffTableSchema,
+    receiver_payoffs: signalingPayoffTableSchema,
+  },
+}
+
+const twoPlayerTensorNormalizedInputsSchema = {
+  type: "object",
+  additionalProperties: false,
+  required: ["players", "actions_by_player", "payoff_matrix"],
+  properties: {
+    players: { type: "array", minItems: 2, maxItems: 2, items: { type: "string" } },
+    actions_by_player: {
+      type: "array",
+      minItems: 2,
+      maxItems: 2,
+      items: { type: "array", minItems: 1, items: { type: "string" } },
+    },
+    payoff_matrix: {
+      type: "array",
+      items: { type: "array", items: { type: "array", items: { type: "number" } } },
+    },
+    objective: { type: "string", enum: ["welfare_maximizing", "validation_only"] },
+    lambda: { type: "number", minimum: 0 },
+  },
+}
+
+const evolutionaryNormalizedInputsSchema = {
+  type: "object",
+  additionalProperties: false,
+  required: ["strategies", "payoff_matrix", "initial_shares"],
+  properties: {
+    strategies: { type: "array", minItems: 2, items: { type: "string" } },
+    payoff_matrix: {
+      type: "array",
+      items: { type: "array", items: { type: "number" } },
+    },
+    initial_shares: { type: "array", minItems: 2, items: { type: "number" } },
+    steps: { type: "integer", minimum: 1, maximum: 2000 },
+    dt: { type: "number", exclusiveMinimum: 0 },
+  },
+}
+
+function buildAdvancedFrameworkSchema(framework: AdvancedFrameworkKey, normalizedInputsSchema: Record<string, unknown>) {
+  return {
+    anyOf: [
+      {
+        ...advancedFrameworkEnvelopeBaseSchema,
+        properties: {
+          ...advancedFrameworkEnvelopeBaseSchema.properties,
+          framework: { type: "string", const: framework },
+          status: { type: "string", enum: ["deterministic", "heuristic"] },
+          normalized_inputs: normalizedInputsSchema,
+        },
+      },
+      {
+        ...advancedFrameworkEnvelopeBaseSchema,
+        properties: {
+          ...advancedFrameworkEnvelopeBaseSchema.properties,
+          framework: { type: "string", const: framework },
+          status: { type: "string", enum: ["incomplete_inputs", "rejected"] },
+          normalized_inputs: { type: "object" },
+        },
+      },
+    ],
+  }
+}
+
 const audienceSchemas = {
   student: {
     type: "object",
@@ -1297,7 +2460,7 @@ const audienceSchemas = {
         required: ["seed", "method", "iterations"],
         properties: {
           seed: { type: "integer" },
-          method: { type: "string", enum: ["recursive_nash", "replicator", "best_response"] },
+          method: { type: "string", enum: ["recursive_nash", "replicator", "best_response", "shapley_core", "perfect_bayesian", "correlated_equilibrium", "replicator_dynamics", "logit_qre"] },
           iterations: { type: "integer" }
         }
       },
@@ -1338,6 +2501,23 @@ const audienceSchemas = {
                   }
                 }
               }
+            }
+          },
+          advanced_frameworks: {
+            type: "object",
+            additionalProperties: false,
+            properties: {
+              coalitional: buildAdvancedFrameworkSchema("coalitional", coalitionalNormalizedInputsSchema),
+              signaling: buildAdvancedFrameworkSchema("signaling", signalingNormalizedInputsSchema),
+              correlated: buildAdvancedFrameworkSchema("correlated", {
+                ...twoPlayerTensorNormalizedInputsSchema,
+                required: ["players", "actions_by_player", "payoff_matrix", "objective"],
+              }),
+              evolutionary: buildAdvancedFrameworkSchema("evolutionary", evolutionaryNormalizedInputsSchema),
+              bounded_rationality: buildAdvancedFrameworkSchema("bounded_rationality", {
+                ...twoPlayerTensorNormalizedInputsSchema,
+                required: ["players", "actions_by_player", "payoff_matrix"],
+              }),
             }
           }
         }
@@ -1432,7 +2612,7 @@ const audienceSchemas = {
 const validate = ajv.compile(audienceSchemas.student); // Default to student, will be recompiled per audience
 
 // --- Main handler ---
-Deno.serve(async (req) => {
+const handler = async (req: Request): Promise<Response> => {
   // Handle CORS
   if (req.method === 'OPTIONS') {
     console.log(`[preflight] origin=${req.headers.get('origin') || 'unknown'} allow_headers=Content-Type, Authorization, apikey, X-Client-Info`)
@@ -1456,9 +2636,21 @@ Deno.serve(async (req) => {
   try {
     const requestBody = await req.json().catch(() => ({}))
     const request_id = requestBody.request_id ?? uuid()
+    const precreatedAnalysisRunId = typeof requestBody.__analysis_run_id === 'string' && requestBody.__analysis_run_id.trim().length > 0
+      ? requestBody.__analysis_run_id.trim()
+      : null
+    const persistAnalysisRun = async (row: Record<string, unknown>) => {
+      if (precreatedAnalysisRunId) {
+        await updateAnalysisRunOrThrow(precreatedAnalysisRunId, row)
+        return precreatedAnalysisRunId
+      }
+      return await insertAnalysisRunOrThrow(row)
+    }
     const user_id = requestBody.user_id ?? null
     const audience = requestBody.audience ?? "learner"
     const mode = requestBody.mode ?? "standard"
+    const asyncProbe = requestBody.async_probe === true
+    const asyncProbeDispatch = requestBody.__async_probe_dispatch === true
     const rawScenarioText = String(requestBody.scenario_text ?? "").trim()
     const incomingQuestionContext = requestBody.question_context ?? requestBody.questionContext
     const rawQuestionContext = incomingQuestionContext && typeof incomingQuestionContext === 'object'
@@ -1548,6 +2740,13 @@ Deno.serve(async (req) => {
     }
     const scenario_text = question_context.normalized_prompt
       || appendPublicQuestionContext(stripPublicQuestionContext(rawScenarioText), question_context.answers)
+    const rawAdvancedGameInputs =
+      requestBody.advanced_game_inputs
+      ?? requestBody.advancedGameInputs
+      ?? requestBody.advanced_framework_inputs
+      ?? requestBody.advancedFrameworkInputs
+    const advancedGameInputsProvided = rawAdvancedGameInputs !== undefined
+    const sanitizedAdvancedGameInputs = sanitizeAdvancedGameInputs(rawAdvancedGameInputs)
 
     if (clarificationMode === 'public' && question_context.clarification_status !== 'ready') {
       return new Response(JSON.stringify({
@@ -1563,9 +2762,20 @@ Deno.serve(async (req) => {
       })
     }
 
+    if (advancedGameInputsProvided && Object.keys(sanitizedAdvancedGameInputs.rejections).length > 0) {
+      return new Response(JSON.stringify({
+        ok: false,
+        error: 'invalid_advanced_game_inputs',
+        rejections: sanitizedAdvancedGameInputs.rejections,
+      }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+      })
+    }
+
     console.log(`[${request_id}] stage=start, audience=${audience}, mode=${mode}`)
     console.log(`[${request_id}] entry method=${req.method} origin=${req.headers.get('origin') || 'unknown'} has_apikey=${req.headers.has('apikey')} has_auth=${req.headers.has('authorization')}`)
-    console.log(`[${request_id}] env has_exa=${Boolean(Deno.env.get('EXA_API_KEY'))} has_gemini=${Boolean(Deno.env.get('GEMINI_API_KEY') || Deno.env.get('GOOGLE_AI_API_KEY') || Deno.env.get('VITE_GEMINI_API_KEY'))} gemini_model=${GEMINI_MODEL} gemini_fallback_model=${GEMINI_FALLBACK_MODEL} has_openai=${Boolean(Deno.env.get('OPENAI_KEY') || Deno.env.get('OPENAI_API_KEY'))} openai_model=${OPENAI_MODEL} has_xai=${Boolean(Deno.env.get('XAI_API_KEY') || Deno.env.get('GROK_API_KEY'))} xai_model=${XAI_MODEL}`)
+    console.log(`[${request_id}] env has_exa=${Boolean(Deno.env.get('EXA_API_KEY'))} has_gemini=${Boolean(Deno.env.get('GEMINI_API_KEY') || Deno.env.get('GOOGLE_AI_API_KEY') || Deno.env.get('VITE_GEMINI_API_KEY'))} gemini_model=${GEMINI_MODEL} gemini_fallback_model=${GEMINI_FALLBACK_MODEL} has_openrouter=${Boolean(OPENROUTER_KEY)} openrouter_model=${OPENROUTER_MODEL} has_openai=${Boolean(Deno.env.get('OPENAI_KEY') || Deno.env.get('OPENAI_API_KEY'))} openai_model=${OPENAI_MODEL} has_xai=${Boolean(Deno.env.get('XAI_API_KEY') || Deno.env.get('GROK_API_KEY'))} xai_model=${XAI_MODEL}`)
 
   // Validate audience type
   const validAudiences = ['student', 'learner', 'researcher', 'teacher', 'reviewer']
@@ -1579,6 +2789,125 @@ Deno.serve(async (req) => {
       headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
     })
   }
+
+    if (asyncProbe && !asyncProbeDispatch) {
+      const nowIso = new Date().toISOString()
+      const placeholderAnalysis = {
+        analysis_id: uuid(),
+        audience,
+        scenario_text,
+        question_context,
+        summary: { text: 'Analysis accepted for asynchronous canary processing.' },
+        provenance: {
+          retrieval_count: 0,
+          retrieval_ids: [],
+          evidence_backed: false,
+        },
+      }
+
+      const analysisRunId = await insertAnalysisRunOrThrow({
+        request_id,
+        user_id,
+        audience,
+        status: 'processing',
+        ...(await buildAnalysisRunArtifactColumns(request_id, placeholderAnalysis)),
+        retrieval_ids: [],
+        evidence_backed: false,
+        created_at: nowIso,
+      })
+
+      await createOrReplaceAnalysisJobOrThrow({
+        request_id,
+        scenario_text,
+        status: 'processing',
+        analysis_run_id: analysisRunId,
+        error: null,
+        started_at: nowIso,
+        completed_at: null,
+      })
+
+      const backgroundHeaders = new Headers(req.headers)
+      backgroundHeaders.set('content-type', 'application/json')
+      const backgroundBody = JSON.stringify({
+        ...requestBody,
+        request_id,
+        async_probe: true,
+        __async_probe_dispatch: true,
+        __analysis_run_id: analysisRunId,
+      })
+
+      EdgeRuntime.waitUntil((async () => {
+        try {
+          const backgroundResponse = await handler(new Request(req.url, {
+            method: 'POST',
+            headers: backgroundHeaders,
+            body: backgroundBody,
+          }))
+          const responsePayload = await backgroundResponse.clone().json().catch(() => null)
+          const completedAt = new Date().toISOString()
+          const terminalAnalysisRunId =
+            typeof responsePayload?.analysis_run_id === 'string' && responsePayload.analysis_run_id.trim().length > 0
+              ? responsePayload.analysis_run_id.trim()
+              : analysisRunId
+
+          if (backgroundResponse.ok && responsePayload?.ok) {
+            const runSummary = await getAnalysisRunSummary(terminalAnalysisRunId)
+            const runStatus = runSummary?.status || 'processing'
+            if (!isTerminalAnalysisRunStatus(runStatus) || runStatus === 'failed') {
+              const failureMessage = runStatus === 'failed'
+                ? (runSummary?.review_reason || 'analysis_run_failed_after_async_probe')
+                : `analysis_run_not_finalized_after_async_probe:${runStatus}`
+              await updateAnalysisJobBestEffort(request_id, {
+                status: 'failed',
+                analysis_run_id: terminalAnalysisRunId,
+                error: failureMessage,
+                completed_at: completedAt,
+              })
+              await markAnalysisRunFailedBestEffort(terminalAnalysisRunId, request_id, failureMessage)
+              return
+            }
+            await updateAnalysisJobBestEffort(request_id, {
+              status: 'completed',
+              analysis_run_id: terminalAnalysisRunId,
+              error: null,
+              completed_at: completedAt,
+            })
+            return
+          }
+
+          const failureMessage =
+            responsePayload?.message
+            || responsePayload?.error
+            || `async_probe_background_failed_http_${backgroundResponse.status}`
+          await updateAnalysisJobBestEffort(request_id, {
+            status: 'failed',
+            analysis_run_id: terminalAnalysisRunId,
+            error: failureMessage,
+            completed_at: completedAt,
+          })
+          await markAnalysisRunFailedBestEffort(terminalAnalysisRunId, request_id, failureMessage)
+        } catch (error) {
+          const failureMessage = String((error as any)?.message ?? error)
+          await updateAnalysisJobBestEffort(request_id, {
+            status: 'failed',
+            analysis_run_id: analysisRunId,
+            error: failureMessage,
+            completed_at: new Date().toISOString(),
+          })
+          await markAnalysisRunFailedBestEffort(analysisRunId, request_id, failureMessage)
+        }
+      })())
+
+      return new Response(JSON.stringify({
+        ok: true,
+        request_id,
+        analysis_run_id: analysisRunId,
+        status: 'processing',
+      }), {
+        status: 202,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Access-Control-Expose-Headers': 'Content-Type' }
+      })
+    }
 
   // Enhanced high-stakes analysis detection for automatic review flagging
   const detectHighStakesAnalysis = (scenarioText: string, evidenceBacked: boolean, retrievalCount: number) => {
@@ -1642,18 +2971,23 @@ Deno.serve(async (req) => {
   // Enhanced evidence-backed determination function (Gap Fix #4)
   function determineEvidenceBacked(retrievals: any[], rid?: string | null): boolean {
     if (!Array.isArray(retrievals) || retrievals.length === 0) return false
-    const distinctProviders = new Set(retrievals.map((entry) => entry.source || entry.provider || 'unknown'))
-    const hasHighCredibility = retrievals.some((entry) => {
-      const provider = entry.source || entry.provider || ''
+    const usableRetrievals = retrievals.filter((entry) => {
+      const url = String(entry?.url || '')
+      const text = String(entry?.snippet || entry?.content || entry?.title || '').trim()
+      return /^https?:\/\//i.test(url) && text.length >= 25
+    })
+    const distinctProviders = new Set(usableRetrievals.map((entry) => String(entry.source || entry.provider || 'unknown').toLowerCase()))
+    const hasHighCredibility = usableRetrievals.some((entry) => {
+      const provider = String(entry.source || entry.provider || '').toLowerCase()
       if (provider === 'exa') return true
       if (provider === 'firecrawl') return true
       if (provider === 'imf' || provider === 'worldbank' || provider === 'uncomtrade') return true
       return Number(entry.score || entry.credibility_score || 0) >= 0.7
     })
-    const isEvidenceBacked = retrievals.length >= 3 && distinctProviders.size >= 2 && hasHighCredibility
+    const isEvidenceBacked = usableRetrievals.length >= 3 && distinctProviders.size >= 2 && hasHighCredibility
   
     const _rid = rid ?? 'n/a'
-    console.log(`[${_rid}] Evidence check: total=${retrievals.length}, distinct_providers=${distinctProviders.size}, high_credibility=${hasHighCredibility}, result=${isEvidenceBacked}`)
+    console.log(`[${_rid}] Evidence check: total=${retrievals.length}, usable=${usableRetrievals.length}, distinct_providers=${distinctProviders.size}, high_credibility=${hasHighCredibility}, result=${isEvidenceBacked}`)
   
     return isEvidenceBacked
   }
@@ -1685,9 +3019,20 @@ Deno.serve(async (req) => {
 
     if (rag && ragCount > 0) {
       retrievals = rag.retrievals
-      evidence_backed = Boolean(rag.evidence_backed ?? determineEvidenceBacked(retrievals, request_id))
+      const legacyEvidenceBacked = determineEvidenceBacked(retrievals, request_id)
+      // Reconcile the normalized retrieval gate with the legacy retrieval bundle
+      // used by the rest of this function. A stale upstream false must not force
+      // educational fallback when the actual retrieval bundle is sufficient.
+      evidence_backed = Boolean(rag.evidence_backed || legacyEvidenceBacked)
       cache_hit = Boolean(rag.cache_hit)
       retrievalProviderSummary = rag.retrieval_provider_summary || null
+      if (retrievalProviderSummary && typeof retrievalProviderSummary === 'object') {
+        retrievalProviderSummary.evidenceBackedDecision = {
+          upstreamEvidenceBacked: Boolean(rag.evidence_backed),
+          legacyEvidenceBacked,
+          reconciledEvidenceBacked: evidence_backed,
+        }
+      }
       console.log(`[${request_id}] stage=streaming_rag_success, hits=${retrievals.length}, evidence_backed=${evidence_backed}, sources=${new Set(retrievals.map(r => r.source)).size}, cache_hit=${cache_hit}`)
     } else {
       console.warn(`[${request_id}] stage=streaming_rag_failed, no results returned`)
@@ -1706,7 +3051,7 @@ Deno.serve(async (req) => {
             summary: { text: `Analysis paused: Unable to retrieve external evidence for high-risk geopolitical scenario.` },
             provenance: { retrieval_count: 0, retrieval_ids: [], evidence_backed: false }
           }
-          await insertAnalysisRunOrThrow({
+          await persistAnalysisRun({
             request_id,
             status: 'needs_review',
             review_reason: 'Unable to retrieve external evidence for a high-risk geopolitical scenario.',
@@ -1821,8 +3166,9 @@ Produce educational analysis in JSON format.`
           created_at: new Date().toISOString()
         }
 
+        let analysisRunId: string | null = null
         try {
-          await insertAnalysisRunOrThrow(fallbackAnalysis)
+          analysisRunId = await persistAnalysisRun(fallbackAnalysis)
         } catch (e) {
           console.error("Failed to persist fallback analysis:", e)
         }
@@ -1830,6 +3176,7 @@ Produce educational analysis in JSON format.`
         return new Response(JSON.stringify({
           ok: true,
           analysis_id: fallbackJson.analysis_id || uuid(),
+          ...(analysisRunId ? { analysis_run_id: analysisRunId } : {}),
           analysis: fallbackJson,
           provenance: {
             model: GEMINI_MODEL,
@@ -1894,115 +3241,74 @@ Produce educational analysis in JSON format.`
     }
   }
 
-  // --- SOLVER INTEGRATION: Call game-theory solvers for canonical games ---
+  // --- SOLVER INTEGRATION: deterministic advanced-framework solvers are invoked
+  // after the LLM payload is parsed and normalized. Avoid speculative pre-LLM
+  // calls and do not use legacy internal endpoints.
     let solverInvocations: any[] = []
     let solverResults: any = {}
 
-  // Detect if this is a canonical game scenario
-  const isCanonicalGame = (text: string): boolean => {
-    const canonicalKeywords = [
-      'prisoner', 'dilemma', 'stag hunt', 'matching pennies', 'battle of sexes',
-      'chicken game', 'hawk dove', 'ultimatum', 'dictator', 'public goods',
-      'nash equilibrium', 'game theory', 'payoff matrix'
-    ]
-    const lowerText = text.toLowerCase()
-    return canonicalKeywords.some(keyword => lowerText.includes(keyword))
-  }
-
-  if (isCanonicalGame(scenario_text) && audience === 'researcher') {
-    console.log(`[${request_id}] stage=solver_integration_start`)
-
-    try {
-      // Call Nashpy for equilibrium computation
-      const nashPayload = {
-        game_matrix: [[3, 0], [5, 1]], // Prisoner's Dilemma default
-        players: 2,
-        method: "lemke_howson"
-      }
-
-      const nashStart = Date.now()
-      const nashResponse = await fetch('https://gamesolver.internal/solve-game', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(nashPayload)
-      })
-
-      if (nashResponse.ok) {
-        const nashResult = await nashResponse.json()
-        solverInvocations.push({
-          name: 'nashpy',
-          endpoint: 'https://gamesolver.internal/solve-game',
-          start: new Date(nashStart).toISOString(),
-          duration_ms: Date.now() - nashStart,
-          result_id: `nash-${uuid()}`,
-          ok: true
-        })
-        solverResults.nashpy = nashResult
-        console.log(`[${request_id}] stage=nashpy_success`)
-      } else {
-        // No mock fallback: record failure and proceed without solver results
-        console.warn(`[${request_id}] stage=nashpy_failed: ${nashResponse.status}, skipping fallback`)
-        solverInvocations.push({
-          name: 'nashpy',
-          endpoint: 'https://gamesolver.internal/solve-game',
-          start: new Date(nashStart).toISOString(),
-          duration_ms: Date.now() - nashStart,
-          result_id: `nash-${uuid()}`,
-          ok: false,
-          error: `HTTP ${nashResponse.status}`
-        })
-      }
-
-      // Call Axelrod for tournament simulation
-      const axelrodStart = Date.now()
-      const axelrodPayload = {
-        strategies: ['TitForTat', 'AlwaysCooperate', 'AlwaysDefect'],
-        turns: 100,
-        repetitions: 5
-      }
-
-      const axelrodResponse = await fetch('https://gamesolver.internal/axelrod/tournament', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(axelrodPayload)
-      })
-
-      if (axelrodResponse.ok) {
-        const axelrodResult = await axelrodResponse.json()
-        solverInvocations.push({
-          name: 'axelrod',
-          endpoint: 'https://gamesolver.internal/axelrod/tournament',
-          start: new Date(axelrodStart).toISOString(),
-          duration_ms: Date.now() - axelrodStart,
-          result_id: `axelrod-${uuid()}`,
-          ok: true
-        })
-        solverResults.axelrod = axelrodResult
-        console.log(`[${request_id}] stage=axelrod_success`)
-      } else {
-        // No mock fallback: record failure and proceed without solver results
-        console.warn(`[${request_id}] stage=axelrod_failed: ${axelrodResponse.status}, skipping fallback`)
-        solverInvocations.push({
-          name: 'axelrod',
-          endpoint: 'https://gamesolver.internal/axelrod/tournament',
-          start: new Date(axelrodStart).toISOString(),
-          duration_ms: Date.now() - axelrodStart,
-          result_id: `axelrod-${uuid()}`,
-          ok: false,
-          error: `HTTP ${axelrodResponse.status}`
-        })
-      }
-
-    } catch (solverError: any) {
-      console.warn(`[${request_id}] stage=solver_integration_error: ${solverError?.message ?? solverError}`)
-    }
-  }
-
   // Build LLM prompt with computed data and solver results
-    let prompt = buildPrompt(audience, scenario_text, retrievals, { ...computedData, solverResults })
+    const compactResearcherPrompt = asyncProbe || asyncProbeDispatch
+    let prompt = buildPrompt(
+      audience,
+      scenario_text,
+      retrievals,
+      { ...computedData, solverResults },
+      { compactResearcher: compactResearcherPrompt && audience === 'researcher' },
+    )
 
   // Add micro-prompt for strict JSON output and retrieval injection
-  const microPrompt = `
+  const compactResearcherMicroPrompt = compactResearcherPrompt && audience === 'researcher'
+  const microPrompt = compactResearcherMicroPrompt
+    ? `
+### MICRO-PROMPT: Async Researcher Probe JSON ONLY
+Return exactly one top-level JSON object and nothing else.
+
+1) INPUT CONTEXT:
+- Scenario: """${scenario_text}"""
+- Retrievals (grounding evidence):
+${(retrievals || []).slice(0, 6).map((r, i) => `[rid_${i + 1}] ${r.title || r.source} - "${(r.snippet || '').substring(0, 140)}..." — ${r.url || ''}`).join('\n')}
+
+2) STRICT OUTPUT CONTRACT:
+Return:
+{
+  "ok": true|false,
+  "analysis": {
+    "analysis_id": string,
+    "audience": "researcher",
+    "scenario_text": "${scenario_text}",
+    "long_summary": { "text": string },
+    "numeric_claims": [optional, max 3],
+    "assumptions": [optional, max 2],
+    "simulation_results": { "equilibria": [optional, max 1] },
+    "notebook_snippet": "",
+    "data_exports": {}
+  },
+  "provenance": {
+    "retrieval_count": ${retrievals?.length || 0},
+    "used_retrieval_ids": [ "rid_..." ],
+    "retrieval_sources": ${JSON.stringify((retrievals || []).map(r => r.source).filter(Boolean))},
+    "cache_hit": ${cache_hit},
+    "evidence_backed": ${evidence_backed},
+    "llm_model": string,
+    "llm_duration_ms": integer,
+    "fallback_used": boolean,
+    "solver_invocations": ${JSON.stringify(solverInvocations)}
+  }
+}
+
+3) LIMITS:
+- analysis.long_summary.text: maximum 90 words
+- omit payoff_matrix and solver_config unless explicitly necessary
+- do not emit markdown fences or commentary
+- every numeric claim must cite at least one rid_ source
+
+4) FAIL SAFE:
+If you cannot produce valid JSON, return: { "ok": false, "error": "schema_validation_failed" }
+
+### END MICRO-PROMPT
+`
+    : `
 ### MICRO-PROMPT: Retrieval Injection + JSON-ONLY OUTPUT (strict)
 You are a JSON-output-only Strategic Intelligence assistant. You MUST return exactly one top-level JSON object and nothing else.
 
@@ -2028,6 +3334,12 @@ Return a single JSON object with these top-level keys:
   { "name": string, "value": number, "confidence": number (0-1), "sources": [ "rid_..." ] }
 - For canonical-game solver runs: analysis.simulation_results.equilibria must be an array
 - Always fill analysis.summary or analysis.long_summary depending on audience
+- Keep the payload compact:
+  - analysis.players: maximum 6 entries
+  - analysis.numeric_claims: maximum 6 entries
+  - analysis.long_summary.text: maximum 180 words
+  - analysis.summary.text: maximum 80 words
+  - omit optional sections instead of padding them
 
 4) REQUIRED provenance fields:
 - provenance.retrieval_count: ${retrievals?.length || 0}
@@ -2129,6 +3441,21 @@ Return a single JSON object with these top-level keys:
       disclaimer: 'UNVERIFIED — human review recommended'
     }
 
+    if (audience === 'researcher') {
+      mergeExplicitAdvancedFrameworkCandidates(minimalAnalysis, sanitizedAdvancedGameInputs.value)
+      ensureAdvancedFrameworkCandidates(minimalAnalysis, scenario_text, retrievals)
+      await upgradeAdvancedFrameworksWithDeterministicSolvers({
+        llmJson: minimalAnalysis,
+        solverInvocations,
+        solverResults,
+        requestId: request_id,
+      })
+      minimalAnalysis.provenance = {
+        ...minimalAnalysis.provenance,
+        solver_invocations: solverInvocations,
+      }
+    }
+
     let analysisRunId: string | null = null
     try {
       const { data, error } = await supabaseAdmin
@@ -2170,6 +3497,7 @@ Return a single JSON object with these top-level keys:
         retrieval_count: retrievals.length,
         retrieval_sources: retrievals.map((retrieval: any) => retrieval.source).filter(Boolean),
         evidence_backed: false,
+        solver_invocations: solverInvocations,
         retrieval_provider_summary: retrievalProviderSummary,
         reason,
         error_id: errorId,
@@ -2184,25 +3512,223 @@ Return a single JSON object with these top-level keys:
     })
   }
 
-  try {
-    console.log(`[${request_id}] stage=llm_start`)
+  const buildEvidenceGroundedLocalAnalysisText = (failureMeta: {
+    failureStage?: string | null
+    failureClass?: LlmFailureClass | null
+    detail?: string | null
+  }) => {
+    const retrievalIds = (retrievals || []).map((_retrieval: any, index: number) => `rid_${index + 1}`)
+    const retrievalSources = Array.from(new Set((retrievals || []).map((retrieval: any) => String(retrieval.source || retrieval.provider || 'unknown'))))
+    const inferredPlayers = Array.from(new Set((scenario_text.match(/\b([A-Z]{2,}|[A-Z][a-z]{2,})\b/g) || []))).slice(0, 3)
+    const playersObj = (inferredPlayers.length ? inferredPlayers : ['Primary Actor', 'Counterparty']).slice(0, 3).map((player: string, index: number) => ({
+      id: `P${index + 1}`,
+      name: player,
+      actions: ['wait_and_monitor', 'escalate_commitment', 'deescalate_or_hedge'],
+    }))
+    const profile: Record<string, Record<string, number>> = {}
+    playersObj.forEach((player) => {
+      profile[player.id] = {
+        wait_and_monitor: 0.5,
+        escalate_commitment: 0.25,
+        deescalate_or_hedge: 0.25,
+      }
+    })
+    const topEvidence = (retrievals || []).slice(0, 3).map((retrieval: any, index: number) => ({
+      id: retrievalIds[index] || `rid_${index + 1}`,
+      title: String(retrieval.title || retrieval.url || `Evidence ${index + 1}`),
+      source: String(retrieval.source || retrieval.provider || 'unknown'),
+    }))
+    const evidenceClause = topEvidence.length
+      ? topEvidence.map((entry) => `${entry.id} ${entry.title} (${entry.source})`).join('; ')
+      : 'No individual evidence titles available.'
+    const confidence = Math.min(0.78, 0.48 + Math.min(retrievals.length, 8) * 0.04 + Math.min(retrievalSources.length, 4) * 0.03)
+
+    return JSON.stringify({
+      analysis_id: uuid(),
+      audience,
+      scenario_text,
+      summary: {
+        text: `Evidence-grounded local synthesis completed because hosted LLM providers were unavailable. The analysis uses ${retrievals.length} retrieved sources across ${retrievalSources.length} providers and remains under review for any high-stakes decision.`,
+      },
+      long_summary: {
+        text: `The app completed retrieval and produced a conservative local synthesis from the evidence bundle. Key evidence anchors: ${evidenceClause}. This is suitable for pre-resolution shadow benchmarking and workflow verification, but it is not a resolved accuracy result or top-three benchmark claim.`,
+      },
+      players: playersObj,
+      equilibrium: {
+        profile,
+        stability: Number(confidence.toFixed(3)),
+        method: 'heuristic',
+      },
+      numeric_claims: [
+        {
+          name: 'retrieval_coverage',
+          value: retrievals.length,
+          confidence,
+          sources: retrievalIds.slice(0, Math.max(1, Math.min(3, retrievalIds.length))),
+        },
+        {
+          name: 'distinct_provider_count',
+          value: retrievalSources.length,
+          confidence,
+          sources: retrievalIds.slice(0, Math.max(1, Math.min(3, retrievalIds.length))),
+        },
+      ],
+      assumptions: [
+        {
+          name: 'provider_chain_unavailable',
+          value: 1,
+          justification: `Hosted external LLM providers failed; local synthesis used only retrieved evidence and deterministic app logic. Last failure: ${failureMeta.failureStage || 'unknown'}.`,
+        },
+      ],
+      decision_table: [
+        {
+          actor: 'Primary Actor',
+          action: 'Wait and monitor with explicit trigger thresholds',
+          payoff_estimate: {
+            value: 0.55,
+            confidence,
+            sources: retrievalIds.slice(0, Math.max(1, Math.min(2, retrievalIds.length))),
+          },
+          risk_notes: 'Use while evidence remains mixed or externally validated scoring is unavailable.',
+        },
+        {
+          actor: 'Primary Actor',
+          action: 'Hedge exposure and prepare contingency plan',
+          payoff_estimate: {
+            value: 0.62,
+            confidence: Math.min(0.82, confidence + 0.05),
+            sources: retrievalIds.slice(0, Math.max(1, Math.min(2, retrievalIds.length))),
+          },
+          risk_notes: 'Preferred when downside exposure is material and forecast resolution is still pending.',
+        },
+      ],
+      forecast: [],
+      retrievals,
+      provenance: {
+        retrieval_count: retrievals.length,
+        retrieval_ids: retrievalIds,
+        used_retrieval_ids: retrievalIds,
+        retrieval_sources: retrievalSources,
+        cache_hit,
+        evidence_backed: true,
+        llm_model: 'local-evidence-synthesis-v1',
+        llm_duration_ms: llmDurationMs,
+        fallback_used: true,
+        llm_provider: 'local',
+        failure_stage: canExposeProviderDiagnostics ? failureMeta.failureStage : undefined,
+        failure_class: canExposeProviderDiagnostics ? failureMeta.failureClass : undefined,
+        failure_detail: canExposeProviderDiagnostics ? failureMeta.detail : undefined,
+        retrieval_provider_summary: retrievalProviderSummary,
+        local_synthesis_policy: 'evidence_backed_only_after_retrieval_gate_and_provider_chain_failure',
+      },
+    })
+  }
+
     const geminiModels = GEMINI_MODEL === GEMINI_FALLBACK_MODEL
       ? [GEMINI_MODEL]
       : [GEMINI_MODEL, GEMINI_FALLBACK_MODEL]
-    const providerQueue: Array<() => Promise<ProviderCallResult>> = [
-      ...geminiModels.map((model) => () => callGeminiSingle(prompt, model)),
-      () => callOpenAIFallback(prompt),
-      () => callXaiFallback(prompt),
-    ]
+    const openRouterProviderQueue = OPENROUTER_KEY
+      ? [() => callOpenRouterFallback(prompt)]
+      : []
+    const primaryProvider = OPENROUTER_PRIMARY_ENABLED ? 'openrouter' : 'gemini'
+    const primaryModel = OPENROUTER_PRIMARY_ENABLED ? OPENROUTER_MODEL : GEMINI_MODEL
+    const providerQueue: Array<() => Promise<ProviderCallResult>> = OPENROUTER_PRIMARY_ENABLED
+      ? [
+          ...openRouterProviderQueue,
+          ...geminiModels.map((model) => () => callGeminiSingle(prompt, model)),
+          () => callOpenAIFallback(prompt),
+          () => callXaiFallback(prompt),
+        ]
+      : [
+          ...geminiModels.map((model) => () => callGeminiSingle(prompt, model)),
+          ...openRouterProviderQueue,
+          () => callOpenAIFallback(prompt),
+          () => callXaiFallback(prompt),
+        ]
+    let selectedProviderIndex = -1
 
-    for (const providerCall of providerQueue) {
-      const attempt = await providerCall()
+    const markStructuredProviderFailure = (failureStage: string, error: string) => {
+      const lastAttempt = providerAttempts[providerAttempts.length - 1]
+      if (lastAttempt?.ok && modelProvider && modelUsed && lastAttempt.provider === modelProvider && lastAttempt.model === modelUsed) {
+        providerAttempts[providerAttempts.length - 1] = {
+          ...lastAttempt,
+          ok: false,
+          failure_stage: failureStage,
+          failure_class: 'provider_parse_error',
+          error,
+        }
+      } else if (modelProvider && modelUsed) {
+        providerAttempts.push({
+          provider: modelProvider,
+          model: modelUsed,
+          ok: false,
+          duration_ms: 0,
+          failure_stage: failureStage,
+          failure_class: 'provider_parse_error',
+          error,
+        })
+      }
+      fallbackUsed = true
+      lastLlmFailureStage = failureStage
+      lastLlmFailureClass = 'provider_parse_error'
+      console.warn(`[${request_id}] stage=structured_provider_failure, provider=${modelProvider || 'unknown'}, model=${modelUsed || 'unknown'}, failure_stage=${failureStage}, error=${error}`)
+    }
+
+    const advanceToNextProvider = async (failureStage: string, error: string) => {
+      markStructuredProviderFailure(failureStage, error)
+
+      for (let index = selectedProviderIndex + 1; index < providerQueue.length; index++) {
+        const nextAttempt = await providerQueue[index]()
+        llmDurationMs += nextAttempt.duration_ms
+
+        if (nextAttempt.ok) {
+          llmText = nextAttempt.text
+          modelUsed = nextAttempt.model
+          modelProvider = nextAttempt.provider
+          selectedProviderIndex = index
+          fallbackUsed = fallbackUsed || nextAttempt.provider !== primaryProvider || nextAttempt.model !== primaryModel
+          providerAttempts.push({
+            provider: nextAttempt.provider,
+            model: nextAttempt.model,
+            ok: true,
+            duration_ms: nextAttempt.duration_ms,
+          })
+          console.log(`[${request_id}] stage=llm_success_after_retry, provider=${nextAttempt.provider}, model=${nextAttempt.model}, prior_failure_stage=${failureStage}`)
+          return true
+        }
+
+        providerAttempts.push({
+          provider: nextAttempt.provider,
+          model: nextAttempt.model,
+          ok: false,
+          duration_ms: nextAttempt.duration_ms,
+          failure_stage: nextAttempt.failure_stage,
+          failure_class: nextAttempt.failure_class,
+          http_status: nextAttempt.http_status,
+          error: nextAttempt.error,
+        })
+        fallbackUsed = true
+        lastLlmFailureStage = nextAttempt.failure_stage
+        lastLlmFailureClass = nextAttempt.failure_class
+        console.log(`[${request_id}] stage=llm_attempt_failed, provider=${nextAttempt.provider}, model=${nextAttempt.model}, failure_stage=${nextAttempt.failure_stage}, failure_class=${nextAttempt.failure_class}, error=${nextAttempt.error}`)
+      }
+
+      llmText = null
+      return false
+    }
+
+  try {
+    console.log(`[${request_id}] stage=llm_start`)
+    for (let index = 0; index < providerQueue.length; index++) {
+      const attempt = await providerQueue[index]()
       llmDurationMs += attempt.duration_ms
 
       if (attempt.ok) {
         llmText = attempt.text
         modelUsed = attempt.model
         modelProvider = attempt.provider
+        selectedProviderIndex = index
+        fallbackUsed = fallbackUsed || attempt.provider !== primaryProvider || attempt.model !== primaryModel
         providerAttempts.push({
           provider: attempt.provider,
           model: attempt.model,
@@ -2223,14 +3749,76 @@ Return a single JSON object with these top-level keys:
         http_status: attempt.http_status,
         error: attempt.error,
       })
-      fallbackUsed = fallbackUsed || attempt.provider !== 'gemini' || attempt.model !== GEMINI_MODEL
+      fallbackUsed = fallbackUsed || attempt.provider !== primaryProvider || attempt.model !== primaryModel
       lastLlmFailureStage = attempt.failure_stage
       lastLlmFailureClass = attempt.failure_class
       console.log(`[${request_id}] stage=llm_attempt_failed, provider=${attempt.provider}, model=${attempt.model}, failure_stage=${attempt.failure_stage}, failure_class=${attempt.failure_class}, error=${attempt.error}`)
     }
 
+    if (!llmText && geminiModels.length > 0) {
+      console.log(`[${request_id}] stage=llm_retry_round_start, providers=gemini`)
+      await new Promise((resolve) => setTimeout(resolve, 1500))
+
+      for (const [geminiIndex, model] of geminiModels.entries()) {
+        const retryAttempt = await callGeminiSingle(prompt, model)
+        llmDurationMs += retryAttempt.duration_ms
+
+        if (retryAttempt.ok) {
+          llmText = retryAttempt.text
+          modelUsed = retryAttempt.model
+          modelProvider = retryAttempt.provider
+          selectedProviderIndex = (OPENROUTER_PRIMARY_ENABLED && OPENROUTER_KEY ? 1 : 0) + geminiIndex
+          fallbackUsed = true
+          providerAttempts.push({
+            provider: retryAttempt.provider,
+            model: retryAttempt.model,
+            ok: true,
+            duration_ms: retryAttempt.duration_ms,
+          })
+          console.log(`[${request_id}] stage=llm_success_after_retry_round, provider=${retryAttempt.provider}, model=${retryAttempt.model}`)
+          break
+        }
+
+        providerAttempts.push({
+          provider: retryAttempt.provider,
+          model: retryAttempt.model,
+          ok: false,
+          duration_ms: retryAttempt.duration_ms,
+          failure_stage: retryAttempt.failure_stage,
+          failure_class: retryAttempt.failure_class,
+          http_status: retryAttempt.http_status,
+          error: retryAttempt.error,
+        })
+        fallbackUsed = true
+        lastLlmFailureStage = retryAttempt.failure_stage
+        lastLlmFailureClass = retryAttempt.failure_class
+        console.log(`[${request_id}] stage=llm_retry_round_failed, provider=${retryAttempt.provider}, model=${retryAttempt.model}, failure_stage=${retryAttempt.failure_stage}, failure_class=${retryAttempt.failure_class}, error=${retryAttempt.error}`)
+      }
+    }
+
     if (!llmText) {
       const failureSummary = summarizeProviderFailures(providerAttempts)
+      if (evidence_backed && retrievals.length >= 3) {
+        const localStarted = Date.now()
+        llmText = buildEvidenceGroundedLocalAnalysisText({
+          failureStage: failureSummary.failureStage,
+          failureClass: failureSummary.failureClass,
+          detail: failureSummary.detail,
+        })
+        modelUsed = 'local-evidence-synthesis-v1'
+        modelProvider = 'local' as any
+        fallbackUsed = true
+        selectedProviderIndex = providerQueue.length
+        const localDuration = Date.now() - localStarted
+        llmDurationMs += localDuration
+        providerAttempts.push({
+          provider: 'local' as any,
+          model: modelUsed,
+          ok: true,
+          duration_ms: localDuration,
+        })
+        console.warn(`[${request_id}] stage=llm_chain_unavailable_using_local_evidence_synthesis, failure_stage=${failureSummary.failureStage}, retrievals=${retrievals.length}`)
+      } else {
       const errorId = uuid()
       await logRpcError(
         request_id,
@@ -2249,6 +3837,7 @@ Return a single JSON object with these top-level keys:
         providerAttempts,
         detail: failureSummary.detail,
       })
+      }
     }
   } catch (err: any) {
     const errorId = uuid()
@@ -2262,38 +3851,56 @@ Return a single JSON object with these top-level keys:
   }
 
   // Parse LLM text as JSON-only expected output with enhanced sanitization
-    const parsed = await parseLlmOutput(llmText ?? "", request_id)
-  if (!parsed.ok) {
+    const audienceSchema = audienceSchemas[audience] || audienceSchemas.student
+    const audienceValidate = ajv.compile(audienceSchema)
+    let llmJson: any = null
+    let parsedMeta: { sanitized: boolean; patterns: string[] } = { sanitized: false, patterns: [] }
+    let schemaCoercionApplied = false
+
+    while (true) {
+      const parsed = await parseLlmOutput(llmText ?? "", request_id)
+      if (!parsed.ok) {
+        const recovered = await advanceToNextProvider('llm_output_not_json', parsed.error)
+        if (recovered) {
+          continue
+        }
+
     // Enhanced error handling for different failure types
-    const errorId = uuid()
-    let errorMessage = "LLM output not parseable as JSON"
-    let userMessage = "Analysis generation failed"
-    let suggestions = []
+        const errorId = uuid()
+        let errorMessage = "LLM output not parseable as JSON"
+        let userMessage = "Analysis generation failed"
+        let suggestions = []
+        const detectedExtensionNoise = Array.isArray(parsed.patterns)
+          && parsed.patterns.some((pattern) => pattern.includes('extension_injection'))
 
-    if (parsed.error === "defensive_parsing_failed") {
-      errorMessage = "Server-side sanitization failed - malformed LLM output detected"
-      userMessage = "Third-party extension interference detected. Please disable browser extensions or try again."
-      suggestions = ["Disable browser extensions", "Try a different browser", "Contact support if issue persists"]
-    } else if (parsed.error === "json_extraction_failed") {
-      errorMessage = "JSON extraction failed despite multiple parsing strategies"
-      userMessage = "LLM response format error. Server-side sanitization applied but still failed."
-      suggestions = ["Retry the analysis", "Try a simpler scenario", "Contact support if issue persists"]
-    } else {
-      userMessage = "LLM processing failed"
-      suggestions = ["Try again in a few moments", "Contact support if issue persists"]
-    }
+        if (parsed.error === "defensive_parsing_failed" && detectedExtensionNoise) {
+          errorMessage = "Server-side sanitization failed after extension-like noise was detected"
+          userMessage = "Third-party extension interference detected. Please disable browser extensions or try again."
+          suggestions = ["Disable browser extensions", "Try a different browser", "Contact support if issue persists"]
+        } else if (parsed.error === "defensive_parsing_failed") {
+          errorMessage = "Server-side sanitization failed - malformed LLM output detected"
+          userMessage = "Hosted synthesis returned malformed structured output. Please retry the analysis."
+          suggestions = ["Retry the analysis", "Try a simpler scenario", "Contact support if issue persists"]
+        } else if (parsed.error === "json_extraction_failed") {
+          errorMessage = "JSON extraction failed despite multiple parsing strategies"
+          userMessage = "LLM response format error. Server-side sanitization applied but still failed."
+          suggestions = ["Retry the analysis", "Try a simpler scenario", "Contact support if issue persists"]
+        } else {
+          userMessage = "LLM processing failed"
+          suggestions = ["Try again in a few moments", "Contact support if issue persists"]
+        }
 
-    await logRpcError(request_id, errorId, errorMessage, {
-      raw_response: parsed.raw,
-      error_type: parsed.error,
-      sanitization_attempted: true,
-      provider: modelProvider,
-      model: modelUsed,
-      provider_attempts: providerAttempts,
-    })
+        await logRpcError(request_id, errorId, errorMessage, {
+          raw_response: parsed.raw,
+          error_type: parsed.error,
+          sanitization_attempted: true,
+          provider: modelProvider,
+          model: modelUsed,
+          provider_attempts: providerAttempts,
+        })
 
-    // For education_quick we may synthesize a minimal JSON fallback (schema-compliant)
-    if (mode === "education_quick") {
+        // For education_quick we may synthesize a minimal JSON fallback (schema-compliant)
+        if (mode === "education_quick") {
       const playersObj = [{ id: 'P1', name: 'Player 1', actions: ['learn'] }]
       const profile = { P1: { learn: 0 } }
       const minimal = {
@@ -2311,8 +3918,9 @@ Return a single JSON object with these top-level keys:
         summary: { text: "UNVERIFIED analysis (education_quick) — LLM output not JSON" }
       }
       // Persist
+      let analysisRunId: string | null = null
       try {
-        await insertAnalysisRunOrThrow({
+        analysisRunId = await persistAnalysisRun({
           request_id,
           user_id,
           audience,
@@ -2326,45 +3934,50 @@ Return a single JSON object with these top-level keys:
         console.error("Failed to persist minimal analysis:", e)
       }
 
-      console.warn(`[${request_id}] response_path=education_quick_minimal adding_cors=true status=200`)
-      return new Response(JSON.stringify({
-        ok: true,
-        analysis_id: minimal.analysis_id,
-        analysis: minimal,
-        provenance: { model: modelUsed, fallback_used: fallbackUsed, llm_duration_ms: llmDurationMs }
-      }), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Access-Control-Expose-Headers': 'Content-Type' }
-      })
-    } else {
-      const errorId = uuid()
-      await logRpcError(request_id, errorId, "LLM output not parseable as JSON", { raw: (llmText ?? "").slice(0, 2000) })
-      console.warn(`[${request_id}] response_path=llm_output_not_json adding_cors=true status=502`)
-      return new Response(JSON.stringify({
-        ok: false,
-        error: "llm_output_not_json",
-        message: clientFailureMessage(userMessage, canExposeProviderDiagnostics),
-        suggestions,
-        error_id: errorId,
-        request_id,
-        failure_stage: canExposeProviderDiagnostics ? `${modelProvider || 'llm'}_parse_error` : 'llm_unavailable',
-        failure_class: canExposeProviderDiagnostics ? 'provider_parse_error' : 'provider_failure',
-        provider_attempts: canExposeProviderDiagnostics ? providerAttempts : undefined,
-      }), {
-        status: 502,
-        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Access-Control-Expose-Headers': 'Content-Type' }
-      })
-    }
-  }
+          console.warn(`[${request_id}] response_path=education_quick_minimal adding_cors=true status=200`)
+          return new Response(JSON.stringify({
+            ok: true,
+            analysis_id: minimal.analysis_id,
+            ...(analysisRunId ? { analysis_run_id: analysisRunId } : {}),
+            analysis: minimal,
+            provenance: { model: modelUsed, fallback_used: fallbackUsed, llm_duration_ms: llmDurationMs }
+          }), {
+            status: 200,
+            headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Access-Control-Expose-Headers': 'Content-Type' }
+          })
+        } else {
+          const errorId = uuid()
+          await logRpcError(request_id, errorId, "LLM output not parseable as JSON", { raw: (llmText ?? "").slice(0, 2000) })
+          console.warn(`[${request_id}] response_path=llm_output_not_json adding_cors=true status=502`)
+          return new Response(JSON.stringify({
+            ok: false,
+            error: "llm_output_not_json",
+            message: clientFailureMessage(userMessage, canExposeProviderDiagnostics),
+            suggestions,
+            error_id: errorId,
+            request_id,
+            failure_stage: canExposeProviderDiagnostics ? `${modelProvider || 'llm'}_parse_error` : 'llm_unavailable',
+            failure_class: canExposeProviderDiagnostics ? 'provider_parse_error' : 'provider_failure',
+            provider_attempts: canExposeProviderDiagnostics ? providerAttempts : undefined,
+          }), {
+            status: 502,
+            headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Access-Control-Expose-Headers': 'Content-Type' }
+          })
+        }
+      }
 
-    const llmJson = parsed.json
+      llmJson = parsed.json
+      parsedMeta = {
+        sanitized: Boolean(parsed.sanitized),
+        patterns: Array.isArray(parsed.patterns) ? parsed.patterns : [],
+      }
 
   // Normalize required analysis fields to satisfy client validators (scenario_text, players, equilibrium)
-  try {
+      try {
     // Ensure scenario_text
-    if (typeof llmJson.scenario_text !== 'string' || llmJson.scenario_text.trim().length === 0) {
-      llmJson.scenario_text = scenario_text
-    }
+        if (typeof llmJson.scenario_text !== 'string' || llmJson.scenario_text.trim().length === 0) {
+          llmJson.scenario_text = scenario_text
+        }
 
     // Ensure players (simple heuristic extraction if missing)
     if (!Array.isArray(llmJson.players) || llmJson.players.length === 0) {
@@ -2381,26 +3994,14 @@ Return a single JSON object with these top-level keys:
       }))
     }
 
-    // Ensure equilibrium object with required fields
-    if (!llmJson.equilibrium) {
-      // Create a basic equilibrium structure
-      const playerIds = (llmJson.players || []).map((p: any) => 
-        typeof p === 'string' ? p : p.id || p.name || 'P1'
-      )
-      
-      const profile: Record<string, Record<string, number>> = {}
-      playerIds.forEach((playerId: string) => {
-        profile[playerId] = { 
-          cooperate: 0.5, 
-          defect: 0.5 
-        }
-      })
-      
-      llmJson.equilibrium = {
-        profile: profile,
-        stability: 0.5,
-        method: 'heuristic',
-        note: 'Preliminary equilibrium — requires solver or additional evidence for confirmation'
+    // Normalize equilibrium object to the frontend contract even when the
+    // audience-specific AJV schema does not validate it directly.
+    const normalizedEquilibrium = normalizeEquilibriumShape(llmJson)
+    if (JSON.stringify(normalizedEquilibrium) !== JSON.stringify(llmJson.equilibrium)) {
+      llmJson.equilibrium = normalizedEquilibrium
+      schemaCoercionApplied = true
+      if (llmJson.provenance && typeof llmJson.provenance === 'object') {
+        llmJson.provenance.schema_coercion_applied = true
       }
     }
 
@@ -2436,52 +4037,82 @@ Return a single JSON object with these top-level keys:
       }
     }
 
-    const normalizedRetrievalIds = (retrievals || []).map((_retrieval: any, index: number) => `rid_${index + 1}`)
-    const validUsedRetrievalIds = Array.isArray(llmJson.provenance?.used_retrieval_ids)
-      ? llmJson.provenance.used_retrieval_ids.filter((value: unknown) => typeof value === 'string' && /^rid_/.test(value))
-      : []
-    const normalizedRetrievalSources = Array.from(new Set((retrievals || []).map((retrieval: any) => String(retrieval.source || retrieval.provider || 'unknown'))))
-    llmJson.provenance = {
-      ...(llmJson.provenance && typeof llmJson.provenance === 'object' ? llmJson.provenance : {}),
-      retrieval_count: Number.isFinite(llmJson.provenance?.retrieval_count) ? llmJson.provenance.retrieval_count : retrievals.length,
-      used_retrieval_ids: validUsedRetrievalIds.length ? validUsedRetrievalIds : normalizedRetrievalIds,
-      retrieval_sources: Array.isArray(llmJson.provenance?.retrieval_sources) ? llmJson.provenance.retrieval_sources : normalizedRetrievalSources,
-      cache_hit: typeof llmJson.provenance?.cache_hit === 'boolean' ? llmJson.provenance.cache_hit : cache_hit,
-      evidence_backed: typeof llmJson.provenance?.evidence_backed === 'boolean' ? llmJson.provenance.evidence_backed : evidence_backed,
-      llm_model: typeof llmJson.provenance?.llm_model === 'string' && llmJson.provenance.llm_model.trim().length > 0 ? llmJson.provenance.llm_model : (modelUsed || GEMINI_MODEL),
-      llm_duration_ms: Number.isFinite(llmJson.provenance?.llm_duration_ms) ? llmJson.provenance.llm_duration_ms : llmDurationMs,
-      fallback_used: typeof llmJson.provenance?.fallback_used === 'boolean' ? llmJson.provenance.fallback_used : fallbackUsed,
-      llm_provider: canExposeProviderDiagnostics
-        ? (typeof llmJson.provenance?.llm_provider === 'string' && llmJson.provenance.llm_provider.trim().length > 0 ? llmJson.provenance.llm_provider : (modelProvider || 'unknown'))
-        : undefined,
-      provider_attempts: canExposeProviderDiagnostics
-        ? (Array.isArray(llmJson.provenance?.provider_attempts) ? llmJson.provenance.provider_attempts : providerAttempts)
-        : undefined,
-    }
-  } catch (normErr) {
-    console.warn(`[${request_id}] normalization_warning:`, (normErr as any)?.message ?? normErr)
-  }
+        const normalizedRetrievalIds = (retrievals || []).map((_retrieval: any, index: number) => `rid_${index + 1}`)
+        const validUsedRetrievalIds = Array.isArray(llmJson.provenance?.used_retrieval_ids)
+          ? llmJson.provenance.used_retrieval_ids.filter((value: unknown) => typeof value === 'string' && /^rid_/.test(value))
+          : []
+        const normalizedRetrievalSources = Array.from(new Set((retrievals || []).map((retrieval: any) => String(retrieval.source || retrieval.provider || 'unknown'))))
+        llmJson.provenance = {
+          ...(llmJson.provenance && typeof llmJson.provenance === 'object' ? llmJson.provenance : {}),
+          retrieval_count: Number.isFinite(llmJson.provenance?.retrieval_count) ? llmJson.provenance.retrieval_count : retrievals.length,
+          used_retrieval_ids: validUsedRetrievalIds.length ? validUsedRetrievalIds : normalizedRetrievalIds,
+          retrieval_sources: Array.isArray(llmJson.provenance?.retrieval_sources) ? llmJson.provenance.retrieval_sources : normalizedRetrievalSources,
+          cache_hit: typeof llmJson.provenance?.cache_hit === 'boolean' ? llmJson.provenance.cache_hit : cache_hit,
+          evidence_backed: typeof llmJson.provenance?.evidence_backed === 'boolean' ? llmJson.provenance.evidence_backed : evidence_backed,
+          llm_model: typeof llmJson.provenance?.llm_model === 'string' && llmJson.provenance.llm_model.trim().length > 0 ? llmJson.provenance.llm_model : (modelUsed || GEMINI_MODEL),
+          llm_duration_ms: Number.isFinite(llmJson.provenance?.llm_duration_ms) ? llmJson.provenance.llm_duration_ms : llmDurationMs,
+          fallback_used: typeof llmJson.provenance?.fallback_used === 'boolean' ? llmJson.provenance.fallback_used : fallbackUsed,
+          llm_provider: canExposeProviderDiagnostics
+            ? (typeof llmJson.provenance?.llm_provider === 'string' && llmJson.provenance.llm_provider.trim().length > 0 ? llmJson.provenance.llm_provider : (modelProvider || 'unknown'))
+            : undefined,
+          provider_attempts: canExposeProviderDiagnostics
+            ? (Array.isArray(llmJson.provenance?.provider_attempts) ? llmJson.provenance.provider_attempts : providerAttempts)
+            : undefined,
+          schema_coercion_applied: schemaCoercionApplied || undefined,
+        }
+      } catch (normErr) {
+        console.warn(`[${request_id}] normalization_warning:`, (normErr as any)?.message ?? normErr)
+      }
 
-  // --- PROVENANCE BINDING: Link numeric claims to retrievals ---
-  try {
-    await enforceNumericPassages(llmJson, retrievals)
-    console.log(`[${request_id}] stage=provenance_binding_complete`)
-  } catch (provenanceError: any) {
-    console.warn(`[${request_id}] stage=provenance_binding_failed: ${provenanceError?.message ?? provenanceError}`)
-  }
+      mergeExplicitAdvancedFrameworkCandidates(llmJson, sanitizedAdvancedGameInputs.value)
+      if (audience === 'researcher') {
+        ensureAdvancedFrameworkCandidates(llmJson, scenario_text, retrievals)
+      }
 
-  // Validate against AJV schema (recompile for specific audience)
-    _currentScenarioText = scenario_text
-    _currentAudienceType = audience
-    const audienceSchema = audienceSchemas[audience] || audienceSchemas.student
-    const audienceValidate = ajv.compile(audienceSchema)
-    const valid = audienceValidate(llmJson)
-  if (!valid) {
+      // --- PROVENANCE BINDING: Link numeric claims to retrievals ---
+      try {
+        await enforceNumericPassages(llmJson, retrievals)
+        console.log(`[${request_id}] stage=provenance_binding_complete`)
+      } catch (provenanceError: any) {
+        console.warn(`[${request_id}] stage=provenance_binding_failed: ${provenanceError?.message ?? provenanceError}`)
+      }
+
+      if (audience === 'researcher') {
+        const coerced = coerceResearcherPayloadShape(llmJson, retrievals)
+        if (coerced.modified) {
+          llmJson = coerced.payload
+          schemaCoercionApplied = true
+          if (llmJson.provenance && typeof llmJson.provenance === 'object') {
+            llmJson.provenance.schema_coercion_applied = true
+          }
+        }
+      } else if (audience === 'learner') {
+        const coerced = coerceLearnerPayloadShape(llmJson, retrievals)
+        if (coerced.modified) {
+          llmJson = coerced.payload
+          schemaCoercionApplied = true
+          if (llmJson.provenance && typeof llmJson.provenance === 'object') {
+            llmJson.provenance.schema_coercion_applied = true
+          }
+        }
+      }
+
+      // Validate against AJV schema (recompile for specific audience)
+      _currentScenarioText = scenario_text
+      _currentAudienceType = audience
+      const valid = audienceValidate(llmJson)
+      if (!valid) {
+        const validationDetail = JSON.stringify(audienceValidate.errors).slice(0, 2000)
+        const recovered = await advanceToNextProvider('schema_validation_failed', validationDetail)
+        if (recovered) {
+          continue
+        }
+
     // Log failure and persist for review
-    await logSchemaFailure(request_id, JSON.stringify(llmJson).slice(0,10000), audienceValidate.errors)
+        await logSchemaFailure(request_id, JSON.stringify(llmJson).slice(0,10000), audienceValidate.errors)
 
     // Try a relaxed path: if evidence_backed false allowed, or if audience=student and mode education_quick, proceed with best-effort
-    if (mode === "education_quick") {
+        if (mode === "education_quick") {
       // Persist minimal again (ensure schema-compliant)
       const playersObj = [{ id: 'P1', name: 'Player 1', actions: ['learn'] }]
       const profile = { P1: { learn: 0 } }
@@ -2500,8 +4131,9 @@ Return a single JSON object with these top-level keys:
         summary: { text: llmJson.summary?.text ?? "UNVERIFIED education_quick fallback" }
       }
       // Persist
+      let analysisRunId: string | null = null
       try {
-        await insertAnalysisRunOrThrow({
+        analysisRunId = await persistAnalysisRun({
           request_id,
           user_id,
           audience,
@@ -2515,33 +4147,46 @@ Return a single JSON object with these top-level keys:
         console.error("Failed to persist schema-failed analysis:", e)
       }
 
-      return new Response(JSON.stringify({
-        ok: true,
-        analysis_id: minimal.analysis_id,
-        analysis: minimal,
-        provenance: { model: modelUsed, fallback_used: fallbackUsed, llm_duration_ms: llmDurationMs }
-      }), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Access-Control-Expose-Headers': 'Content-Type' }
-      })
-    } else {
-      const errorId = uuid()
-      await logRpcError(request_id, errorId, "schema_validation_failed: " + JSON.stringify(audienceValidate.errors).slice(0,2000), { llmJson: JSON.stringify(llmJson).slice(0,10000) })
-      console.warn(`[${request_id}] response_path=schema_validation_failed adding_cors=true status=422`)
-      return new Response(JSON.stringify({
-        ok: false,
-        error: "schema_validation_failed",
-        message: "LLM response failed schema validation",
-        error_id: errorId,
-        details: audienceValidate.errors,
-        failure_stage: canExposeProviderDiagnostics ? "schema_validation_failed" : 'llm_unavailable',
-        failure_class: canExposeProviderDiagnostics ? "provider_parse_error" : 'provider_failure',
-        provider_attempts: canExposeProviderDiagnostics ? providerAttempts : undefined,
-      }), {
-        status: 422,
-        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Access-Control-Expose-Headers': 'Content-Type' }
-      })
+          return new Response(JSON.stringify({
+            ok: true,
+            analysis_id: minimal.analysis_id,
+            ...(analysisRunId ? { analysis_run_id: analysisRunId } : {}),
+            analysis: minimal,
+            provenance: { model: modelUsed, fallback_used: fallbackUsed, llm_duration_ms: llmDurationMs }
+          }), {
+            status: 200,
+            headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Access-Control-Expose-Headers': 'Content-Type' }
+          })
+        } else {
+          const errorId = uuid()
+          await logRpcError(request_id, errorId, "schema_validation_failed: " + JSON.stringify(audienceValidate.errors).slice(0,2000), { llmJson: JSON.stringify(llmJson).slice(0,10000) })
+          console.warn(`[${request_id}] response_path=schema_validation_failed adding_cors=true status=422`)
+          return new Response(JSON.stringify({
+            ok: false,
+            error: "schema_validation_failed",
+            message: "LLM response failed schema validation",
+            error_id: errorId,
+            details: audienceValidate.errors,
+            failure_stage: canExposeProviderDiagnostics ? "schema_validation_failed" : 'llm_unavailable',
+            failure_class: canExposeProviderDiagnostics ? "provider_parse_error" : 'provider_failure',
+            provider_attempts: canExposeProviderDiagnostics ? providerAttempts : undefined,
+          }), {
+            status: 422,
+            headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Access-Control-Expose-Headers': 'Content-Type' }
+          })
+        }
+      }
+
+      break
     }
+
+  if (audience === 'researcher') {
+    await upgradeAdvancedFrameworksWithDeterministicSolvers({
+      llmJson,
+      solverInvocations,
+      solverResults,
+      requestId: request_id,
+    })
   }
 
   // --- INTEGRATE EV ENGINE: Compute expected values for decision tables ---
@@ -2745,8 +4390,9 @@ Return a single JSON object with these top-level keys:
     created_at: new Date().toISOString()
   }
 
+    let analysisRunId: string | null = null
     try {
-      await insertAnalysisRunOrThrow(analysisRow)
+      analysisRunId = await persistAnalysisRun(analysisRow)
     } catch (e:any) {
     const errorId = uuid()
     await logRpcError(request_id, errorId, `db_insert_failed: ${String(e?.message ?? e)}`, { analysisRow })
@@ -3144,18 +4790,19 @@ Return a single JSON object with these top-level keys:
     const totalDuration = Date.now() - start
 
   // Include sanitization information in provenance
-    const sanitizationInfo = parsed.sanitized ? {
+    const sanitizationInfo = parsedMeta.sanitized ? {
     server_side_sanitization_applied: true,
-    sanitization_patterns: parsed.patterns.join(", "),
-    third_party_interference_likely: parsed.patterns.some(p => p.includes('extension_injection'))
+    sanitization_patterns: parsedMeta.patterns.join(", "),
+    third_party_interference_likely: parsedMeta.patterns.some(p => p.includes('extension_injection'))
   } : {
     server_side_sanitization_applied: false,
     clean_response: true
   }
 
-    const resp = {
+  const resp = {
     ok: true,
     analysis_id,
+    ...(analysisRunId ? { analysis_run_id: analysisRunId } : {}),
     analysis: {
       ...llmJson,
       retrievals: retrievals || []
@@ -3222,4 +4869,6 @@ Return a single JSON object with these top-level keys:
       headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Access-Control-Expose-Headers': 'Content-Type' }
     })
   }
-})
+}
+
+Deno.serve(handler)
