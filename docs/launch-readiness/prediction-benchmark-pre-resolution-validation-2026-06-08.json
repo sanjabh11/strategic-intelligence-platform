@@ -1,0 +1,164 @@
+{
+  "schema_version": "forecast-pre-resolution-capture-validation-v1",
+  "generated_at": "2026-06-08T10:02:58.201Z",
+  "status": "forecast_pre_resolution_capture_validation_passed_ready_to_freeze",
+  "proof_boundary": "This artifact validates pre-resolution question, forecast snapshot, and baseline snapshot inputs before outcomes resolve. It is not prediction-accuracy proof, benchmark superiority proof, hosted proof, or buyer proof.",
+  "source": {
+    "question_register": "docs/launch-readiness/prediction-benchmark-questions-2026-06-08.csv",
+    "question_register_kind": "csv",
+    "forecast_snapshot": "docs/launch-readiness/prediction-benchmark-app-snapshots-frozen-2026-06-08.csv",
+    "forecast_snapshot_kind": "csv",
+    "baseline_snapshot": "docs/launch-readiness/prediction-benchmark-public-baseline-snapshots-2026-06-08.csv",
+    "baseline_snapshot_kind": "csv",
+    "capture_kit": "docs/launch-readiness/forecast-pre-resolution-capture-kit-2026-06-06.json",
+    "capture_kit_status": "forecast_pre_resolution_capture_kit_ready_not_accuracy_proof",
+    "minimum_planned_questions": 10
+  },
+  "summary": {
+    "schema_ready": true,
+    "owner_rows_present": true,
+    "question_rows_read": 10,
+    "valid_question_count": 10,
+    "source_backed_question_count": 10,
+    "timestamp_ordered_question_count": 10,
+    "forecast_snapshot_rows_read": 10,
+    "valid_forecast_snapshot_count": 10,
+    "abstained_forecast_snapshot_count": 0,
+    "forecast_snapshot_covered_question_count": 10,
+    "timestamp_ordered_forecast_snapshot_count": 10,
+    "baseline_snapshot_rows_read": 10,
+    "valid_baseline_snapshot_count": 10,
+    "source_backed_baseline_snapshot_count": 10,
+    "baseline_snapshot_covered_question_count": 10,
+    "timestamp_ordered_baseline_snapshot_count": 10,
+    "question_missing_column_count": 0,
+    "forecast_snapshot_missing_column_count": 0,
+    "baseline_snapshot_missing_column_count": 0,
+    "row_issue_count": 0,
+    "row_error_count": 0,
+    "row_warning_count": 0,
+    "active_release_hold_count": 0,
+    "ready_for_pre_resolution_freeze": true,
+    "accuracy_claim_allowed": false,
+    "world_class_prediction_claim_allowed": false
+  },
+  "required_columns": {
+    "questions": [
+      "question_id",
+      "title",
+      "question_text",
+      "niche",
+      "source_surface",
+      "created_at",
+      "forecast_opened_at",
+      "forecast_due_at",
+      "scheduled_close_at",
+      "resolution_criteria",
+      "expected_resolution_source_url",
+      "ambiguity_policy",
+      "exclusion_rule",
+      "decision_relevance",
+      "owner",
+      "public_or_private",
+      "notes"
+    ],
+    "forecast_snapshots": [
+      "snapshot_id",
+      "question_id",
+      "prediction_source",
+      "forecaster_type",
+      "model_or_team",
+      "probability",
+      "prediction_timestamp",
+      "evidence_bundle_ref",
+      "prompt_or_policy_version",
+      "retrieval_cutoff",
+      "source_cutoff",
+      "abstained",
+      "abstention_reason",
+      "notes"
+    ],
+    "baseline_snapshots": [
+      "baseline_snapshot_id",
+      "question_id",
+      "baseline_type",
+      "label",
+      "probability",
+      "prediction_timestamp",
+      "source_url",
+      "sample_size",
+      "timestamp_policy",
+      "comparability_notes",
+      "notes"
+    ]
+  },
+  "acceptance_gates": [
+    {
+      "gate": "question_schema_present",
+      "status": "passed",
+      "proof_bucket": "repo_artifact",
+      "evidence": "Question register includes 17 required columns."
+    },
+    {
+      "gate": "forecast_snapshot_schema_present",
+      "status": "passed",
+      "proof_bucket": "repo_artifact",
+      "evidence": "Forecast snapshot register includes 14 required columns."
+    },
+    {
+      "gate": "baseline_snapshot_schema_present",
+      "status": "passed",
+      "proof_bucket": "repo_artifact",
+      "evidence": "Baseline snapshot register includes 11 required columns."
+    },
+    {
+      "gate": "owner_rows_present",
+      "status": "passed",
+      "proof_bucket": "owner_input",
+      "evidence": "10 question rows, 10 forecast snapshot rows, and 10 baseline snapshot rows loaded."
+    },
+    {
+      "gate": "minimum_pre_resolution_question_rows",
+      "status": "passed",
+      "proof_bucket": "owner_input",
+      "evidence": "10 valid pre-resolution question rows; required 10."
+    },
+    {
+      "gate": "question_metadata_quality",
+      "status": "passed",
+      "proof_bucket": "owner_input",
+      "evidence": "10/10 question rows pass metadata, resolution-source, ambiguity, exclusion, owner, and timestamp-order checks."
+    },
+    {
+      "gate": "forecast_snapshot_coverage_and_timestamp_quality",
+      "status": "passed",
+      "proof_bucket": "owner_input",
+      "evidence": "10/10 forecast snapshots pass probability/abstention, evidence bundle, cutoff, and timestamp checks; 10/10 valid questions have a valid forecast snapshot."
+    },
+    {
+      "gate": "baseline_snapshot_present",
+      "status": "passed",
+      "proof_bucket": "owner_input",
+      "evidence": "10/10 baseline snapshots pass probability, source, sample-size, timestamp, and comparability checks."
+    },
+    {
+      "gate": "placeholder_or_sample_rows_absent",
+      "status": "passed",
+      "proof_bucket": "owner_input",
+      "evidence": "0 sample/template/placeholder rows detected."
+    },
+    {
+      "gate": "ready_to_freeze_not_accuracy_proof",
+      "status": "passed",
+      "proof_bucket": "repo_artifact",
+      "evidence": "A passed freeze gate only proves the pre-resolution packet is internally coherent; it does not prove outcomes, calibration, Brier scores, baseline superiority, hosted proof, or buyer-safe claims."
+    }
+  ],
+  "row_issues": [],
+  "release_holds": [],
+  "next_commands_after_freeze": [
+    "Archive the owner-filled question register, forecast snapshot, and baseline snapshot files with immutable timestamps.",
+    "After outcomes resolve, convert eligible frozen question/snapshot rows into the approved resolved forecast export.",
+    "Run audit:accuracy:validate-inputs, audit:forecast:leakage-review, audit:calibration:ledger, audit:forecast:benchmark, audit:forecast:validate-scoring, and audit:commercial:confidence on owner-approved resolved rows."
+  ]
+}

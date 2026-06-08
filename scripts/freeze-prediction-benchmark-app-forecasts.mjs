@@ -37,7 +37,9 @@ function usage() {
     '  [--scorecard-csv-output docs/launch-readiness/prediction-benchmark-scorecard-frozen-<date>.csv]',
     '  [--offline-only]',
     '  [--require-hosted]',
+    '  [--sync-analysis]',
     '  [--hosted-timeout-ms 120000]',
+    '  [--hosted-poll-timeout-ms 330000]',
   ].join('\n'));
 }
 
@@ -135,6 +137,44 @@ async function callHostedFunction({
   }
 }
 
+async function pollHostedAnalysisStatus({
+  supabaseUrl,
+  serviceRoleKey,
+  requestId,
+  pollTimeoutMs,
+}) {
+  const deadline = Date.now() + pollTimeoutMs;
+  while (Date.now() < deadline) {
+    const payload = await callHostedFunction({
+      supabaseUrl,
+      serviceRoleKey,
+      functionName: 'get-analysis-status',
+      method: 'GET',
+      timeoutMs: 30000,
+      body: { request_id: requestId },
+    });
+
+    if (!payload?.ok) {
+      throw new Error(`get_analysis_status_failed:${JSON.stringify(payload)}`);
+    }
+
+    if (payload.status === 'failed') {
+      throw new Error(`async_analysis_failed:${payload.message || 'unknown_failure'}`);
+    }
+
+    if (payload.status === 'completed' && payload.analysis_status !== 'processing') {
+      if (!payload.analysis) {
+        throw new Error('async_analysis_completed_without_analysis');
+      }
+      return payload;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+  }
+
+  throw new Error(`async_analysis_poll_timeout_${pollTimeoutMs}ms`);
+}
+
 function evidenceGateForAnalysis(analysis) {
   const retrievalCount = Number(analysis?.provenance?.retrieval_count || analysis?.retrieval_count || analysis?.retrievals?.length || 0);
   const evidenceBacked = analysis?.provenance?.evidence_backed === true;
@@ -226,7 +266,7 @@ function buildLocalForecast({ question, generatedAt, dateSuffix, hostedFailure =
   };
 }
 
-async function buildHostedForecast({ question, generatedAt, dateSuffix, env, timeoutMs }) {
+async function buildHostedForecast({ question, generatedAt, dateSuffix, env, timeoutMs, pollTimeoutMs, syncAnalysis }) {
   const supabaseUrl = env.SUPABASE_URL || env.VITE_SUPABASE_URL;
   const serviceRoleKey = env.SUPABASE_SERVICE_ROLE_KEY || env.EDGE_SUPABASE_SERVICE_ROLE_KEY;
   if (!supabaseUrl || !serviceRoleKey) {
@@ -235,7 +275,7 @@ async function buildHostedForecast({ question, generatedAt, dateSuffix, env, tim
 
   const description = buildBenchmarkScenarioDescription(question);
   const requestId = `prediction-benchmark-freeze-${dateSuffix}-${question.question_id}-${randomUUID().slice(0, 8)}`;
-  const analyzePayload = await callHostedFunction({
+  const analyzeLaunchPayload = await callHostedFunction({
     supabaseUrl,
     serviceRoleKey,
     functionName: 'analyze-engine',
@@ -246,8 +286,18 @@ async function buildHostedForecast({ question, generatedAt, dateSuffix, env, tim
       scenario_text: description,
       audience: 'researcher',
       mode: 'standard',
+      ...(syncAnalysis ? {} : { async_probe: true }),
     },
   });
+
+  const analyzePayload = syncAnalysis
+    ? analyzeLaunchPayload
+    : await pollHostedAnalysisStatus({
+      supabaseUrl,
+      serviceRoleKey,
+      requestId,
+      pollTimeoutMs,
+    });
 
   if (!analyzePayload?.ok || !analyzePayload?.analysis) {
     throw new Error('hosted_analyze_engine_missing_analysis');
@@ -311,6 +361,7 @@ async function main() {
   const dateSuffix = argValue('--date-suffix', DEFAULT_DATE_SUFFIX);
   const generatedAt = argValue('--generated-at', new Date().toISOString());
   const timeoutMs = Number(argValue('--hosted-timeout-ms', '120000'));
+  const pollTimeoutMs = Number(argValue('--hosted-poll-timeout-ms', '330000'));
   const suitePath = argValue('--suite', `docs/launch-readiness/prediction-benchmark-suite-${dateSuffix}.json`);
   const outputPaths = {
     json: argValue('--json-output', `docs/launch-readiness/prediction-benchmark-app-forecast-freeze-${dateSuffix}.json`),
@@ -329,12 +380,13 @@ async function main() {
   const env = loadBenchmarkEnv();
   const offlineOnly = hasFlag('--offline-only');
   const requireHosted = hasFlag('--require-hosted');
+  const syncAnalysis = hasFlag('--sync-analysis');
   const forecasts = [];
 
   for (const question of questions) {
     if (!offlineOnly) {
       try {
-        const forecast = await buildHostedForecast({ question, generatedAt, dateSuffix, env, timeoutMs });
+        const forecast = await buildHostedForecast({ question, generatedAt, dateSuffix, env, timeoutMs, pollTimeoutMs, syncAnalysis });
         forecasts.push(forecast);
         console.error(`[freeze] ${question.question_id} hosted probability=${forecast.probability.toFixed(6)} gate=${forecast.evidence_gate}`);
         continue;

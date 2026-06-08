@@ -451,12 +451,21 @@ export function buildQuestionQuality(description, retrievals = []) {
 }
 
 export function buildBenchmarkScenarioDescription(question) {
+  const scenario = TOP_10_SCENARIOS.find((entry) => entry.id === question.question_id);
+  const searchHints = Array.isArray(scenario?.baselineQueries) && scenario.baselineQueries.length > 0
+    ? `Evidence search hints: ${scenario.baselineQueries.join('; ')}`
+    : null;
+
   return [
+    question.title ? `Title: ${question.title}` : null,
     question.question_text,
+    question.niche ? `Category: ${question.niche}` : null,
+    question.source_surface ? `Primary source surface: ${question.source_surface}` : null,
     `Resolution criteria: ${question.resolution_criteria}`,
     `Resolution source: ${question.expected_resolution_source_url}`,
     `Ambiguity policy: ${question.ambiguity_policy}`,
     `Exclusion rule: ${question.exclusion_rule}`,
+    searchHints,
   ].filter(Boolean).join('\n\n');
 }
 

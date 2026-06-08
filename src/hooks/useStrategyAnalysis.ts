@@ -747,7 +747,7 @@ export function useStrategyAnalysis(): UseStrategyAnalysisReturn {
       const response = await fetch(ENDPOINTS.ANALYZE, {
         method: 'POST',
         headers: getAuthHeaders(),
-        body: JSON.stringify({ ...request, audience }),
+        body: JSON.stringify({ ...request, audience, async_probe: true }),
         signal: controller.signal
       });
       clearTimeout(timeoutId);
