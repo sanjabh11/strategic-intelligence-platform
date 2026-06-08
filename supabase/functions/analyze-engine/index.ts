@@ -438,6 +438,53 @@ function coerceResearcherPayloadShape(llmJson: any, retrievals: any[] = []) {
     return { payload: llmJson, modified: false }
   }
 
+  const normalizeStringList = (value: any, fallback: string[]) => {
+    const values = Array.isArray(value)
+      ? value
+          .map((item: any) => String(item ?? '').trim())
+          .filter((item: string) => item.length > 0)
+      : []
+    return values.length > 0 ? values.slice(0, 4) : fallback
+  }
+
+  const coercePayoffVector = (value: any, playerCount: number) => {
+    if (Array.isArray(value)) {
+      const numbers = value
+        .map((entry: any) => Number(entry))
+        .filter((entry: number) => Number.isFinite(entry))
+      if (numbers.length > 0) {
+        const padded = [...numbers]
+        while (padded.length < playerCount) padded.push(numbers[numbers.length - 1] ?? 0)
+        return padded.slice(0, playerCount)
+      }
+    }
+    if (value && typeof value === 'object' && !Array.isArray(value)) {
+      const objectNumbers = Object.values(value)
+        .map((entry: any) => Number(entry))
+        .filter((entry: number) => Number.isFinite(entry))
+      if (objectNumbers.length > 0) {
+        const padded = [...objectNumbers]
+        while (padded.length < playerCount) padded.push(objectNumbers[objectNumbers.length - 1] ?? 0)
+        return padded.slice(0, playerCount)
+      }
+    }
+    const numeric = Number(value)
+    const numericValue = Number.isFinite(numeric) ? numeric : 0
+    return Array.from({ length: playerCount }, () => numericValue)
+  }
+
+  const coercePayoffMatrixValues = (source: any, actionsByPlayer: string[][], playerCount: number) => {
+    const rowCount = Math.max(1, actionsByPlayer[0]?.length || 0)
+    const columnCount = Math.max(1, actionsByPlayer[1]?.length || 0)
+    return Array.from({ length: rowCount }, (_, rowIndex) =>
+      Array.from({ length: columnCount }, (__, columnIndex) => {
+        const row = Array.isArray(source) ? source[rowIndex] : undefined
+        const cell = Array.isArray(row) ? row[columnIndex] : undefined
+        return coercePayoffVector(cell, playerCount)
+      })
+    )
+  }
+
   let modified = false
   const payload = structuredClone(llmJson)
   const normalizedRetrievalIds = (retrievals || []).map((_retrieval: any, index: number) => `rid_${index + 1}`)
@@ -533,29 +580,77 @@ function coerceResearcherPayloadShape(llmJson: any, retrievals: any[] = []) {
     })
   }
 
-  if (!payload.payoff_matrix || Array.isArray(payload.payoff_matrix)) {
-    const rows = Array.isArray(payload.payoff_matrix)
-      ? payload.payoff_matrix.filter((row: any) => Array.isArray(row))
+  const rawPayoffMatrix = payload.payoff_matrix
+  const payoffObject = rawPayoffMatrix && typeof rawPayoffMatrix === 'object' && !Array.isArray(rawPayoffMatrix)
+    ? rawPayoffMatrix
+    : null
+  const hasCanonicalPayoffMatrix = payoffObject
+    && Array.isArray(payoffObject.players)
+    && Array.isArray(payoffObject.actions_by_player)
+    && Array.isArray(payoffObject.matrix_values)
+  if (!hasCanonicalPayoffMatrix) {
+    const rows = Array.isArray(rawPayoffMatrix)
+      ? rawPayoffMatrix.filter((row: any) => Array.isArray(row))
+      : []
+    const objectActions = payoffObject?.actions_by_player || payoffObject?.player_actions || payoffObject?.actions
+    const objectPlayers = isPlainObject(objectActions)
+      ? Object.keys(objectActions).map((player) => player.trim()).filter(Boolean)
       : []
     const rowLabels = rows.slice(1).map((row: any) => typeof row?.[0] === 'string' ? row[0].trim() : '').filter(Boolean)
     const columnLabels = rows[0]?.slice(1).map((value: any) => String(value).trim()).filter(Boolean) || []
-    const actionsByPlayer = [
-      rowLabels.length > 0 ? rowLabels.slice(0, 3) : ['base_case', 'downside_case'],
-      columnLabels.length > 0 ? columnLabels.slice(0, 3) : ['support', 'shock'],
-    ]
-    const matrixValues = actionsByPlayer[0].map((_, rowIndex) =>
-      actionsByPlayer[1].map((__, colIndex) => {
-        const numericCandidate = Number(rows[rowIndex + 1]?.[colIndex + 1])
-        const numericValue = Number.isFinite(numericCandidate) ? numericCandidate : 0
-        return [numericValue, numericValue]
-      })
-    )
+    const inferredPlayers = objectPlayers.length >= 2
+      ? objectPlayers.slice(0, 2)
+      : Array.isArray(payoffObject?.players)
+        ? normalizeStringList(payoffObject.players, primaryPlayers).slice(0, 2)
+        : primaryPlayers
+    const actionsByPlayer = Array.isArray(objectActions)
+      ? [
+          normalizeStringList(objectActions[0], rowLabels.length > 0 ? rowLabels.slice(0, 3) : ['base_case', 'downside_case']),
+          normalizeStringList(objectActions[1], columnLabels.length > 0 ? columnLabels.slice(0, 3) : ['support', 'shock']),
+        ]
+      : isPlainObject(objectActions)
+        ? inferredPlayers.map((player, index) =>
+            normalizeStringList(objectActions[player], index === 0 ? ['base_case', 'downside_case'] : ['support', 'shock'])
+          )
+        : [
+            rowLabels.length > 0 ? rowLabels.slice(0, 3) : ['base_case', 'downside_case'],
+            columnLabels.length > 0 ? columnLabels.slice(0, 3) : ['support', 'shock'],
+          ]
+    const matrixSource = payoffObject?.matrix_values
+      ?? payoffObject?.payoffs
+      ?? payoffObject?.payoff_matrix
+      ?? payoffObject?.matrix
+      ?? rows.slice(1).map((row: any) => row.slice(1))
+    const matrixValues = coercePayoffMatrixValues(matrixSource, actionsByPlayer, inferredPlayers.length)
     payload.payoff_matrix = {
-      players: primaryPlayers,
+      players: inferredPlayers,
       actions_by_player: actionsByPlayer,
       matrix_values: matrixValues,
     }
     modified = true
+  }
+
+  if (payload.simulation_results && typeof payload.simulation_results === 'object' && !Array.isArray(payload.simulation_results)) {
+    const rawFrameworks = payload.simulation_results.advanced_frameworks
+    if (rawFrameworks !== undefined && !isPlainObject(rawFrameworks)) {
+      const normalizedFrameworks: Record<string, any> = {}
+      const frameworkKeys = new Set(['coalitional', 'signaling', 'correlated', 'evolutionary', 'bounded_rationality'])
+      if (Array.isArray(rawFrameworks)) {
+        rawFrameworks.forEach((candidate: any) => {
+          if (!candidate || typeof candidate !== 'object' || Array.isArray(candidate)) return
+          const rawKey = String(candidate.framework || candidate.key || candidate.type || '').trim()
+          const normalizedKey = rawKey === 'bounded rationality' ? 'bounded_rationality' : rawKey
+          if (!frameworkKeys.has(normalizedKey)) return
+          const envelope = coerceAdvancedFrameworkEnvelope(normalizedKey as AdvancedFrameworkKey, candidate)
+          if (envelope) normalizedFrameworks[normalizedKey] = envelope
+        })
+      }
+      payload.simulation_results = {
+        ...payload.simulation_results,
+        advanced_frameworks: normalizedFrameworks,
+      }
+      modified = true
+    }
   }
 
   if (Array.isArray(payload.simulation_results?.equilibria)) {
