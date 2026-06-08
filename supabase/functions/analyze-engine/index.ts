@@ -3951,6 +3951,7 @@ Return a single JSON object with these top-level keys:
     let llmJson: any = null
     let parsedMeta: { sanitized: boolean; patterns: string[] } = { sanitized: false, patterns: [] }
     let schemaCoercionApplied = false
+    let localSchemaFallbackApplied = false
 
     while (true) {
       const parsed = await parseLlmOutput(llmText ?? "", request_id)
@@ -4200,6 +4201,32 @@ Return a single JSON object with these top-level keys:
         const validationDetail = JSON.stringify(audienceValidate.errors).slice(0, 2000)
         const recovered = await advanceToNextProvider('schema_validation_failed', validationDetail)
         if (recovered) {
+          continue
+        }
+
+        if (!localSchemaFallbackApplied && evidence_backed && retrievals.length >= 3) {
+          localSchemaFallbackApplied = true
+          const localStarted = Date.now()
+          llmText = buildEvidenceGroundedLocalAnalysisText({
+            failureStage: 'schema_validation_failed',
+            failureClass: 'provider_parse_error',
+            detail: validationDetail,
+          })
+          modelUsed = 'local-evidence-synthesis-v1'
+          modelProvider = 'local' as any
+          fallbackUsed = true
+          selectedProviderIndex = providerQueue.length
+          lastLlmFailureStage = 'schema_validation_failed'
+          lastLlmFailureClass = 'provider_parse_error'
+          const localDuration = Date.now() - localStarted
+          llmDurationMs += localDuration
+          providerAttempts.push({
+            provider: 'local' as any,
+            model: modelUsed,
+            ok: true,
+            duration_ms: localDuration,
+          })
+          console.warn(`[${request_id}] stage=schema_validation_failed_using_local_evidence_synthesis, retrievals=${retrievals.length}`)
           continue
         }
 
