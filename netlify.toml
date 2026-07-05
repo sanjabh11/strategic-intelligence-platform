@@ -8,6 +8,19 @@
   environment = { NODE_VERSION = "18" }
 
 # SPA fallback - redirect all routes to index.html
+# But don't intercept static files
+[[redirects]]
+  from = "/robots.txt"
+  to = "/robots.txt"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/assets/*"
+  to = "/assets/:splat"
+  status = 200
+  force = true
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
