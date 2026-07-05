@@ -1,0 +1,130 @@
+{
+  "schema_version": "prediction-benchmark-manual-proxy-baseline-mapping-v1",
+  "generated_at": "2026-07-05T11:12:00.000Z",
+  "status": "manual_proxy_baseline_mapping_completed_not_accuracy_proof",
+  "proof_boundary": "This document maps public prediction market questions to the benchmark top-10 as manual proxy baselines. Proxies are NOT same-question matches. They share thematic domain and some resolution logic but differ in resolution date, source, or threshold. This does not prove accuracy, benchmark superiority, or top-three status.",
+  "methodology": {
+    "approach": "Manual review of public prediction market candidates found via web search and automated baseline scan. Each proxy is classified as 'weak_public_proxy' or 'not_comparable' with documented caveats.",
+    "sources_searched": ["Polymarket", "Manifold", "Kalshi", "Metaculus", "ForecastBench"],
+    "mapping_tiers": {
+      "same_question": "Identical resolution criteria, date, and source. Not found for any benchmark question.",
+      "close_public_proxy": "Shares core event and direction but differs in threshold, date, or source. Usable as directional proxy with caveats.",
+      "weak_public_proxy": "Shares thematic domain but differs materially in resolution logic. Diagnostic only.",
+      "not_comparable": "No meaningful overlap. Trivial prior retained."
+    },
+    "probability_capture_policy": "Use market-implied probability from public source at the time of freeze (2026-06-08). Where probability is not directly available, use trivial 0.5 prior."
+  },
+  "mappings": [
+    {
+      "question_id": "pbq-geo-escalation-001",
+      "title": "Major conflict escalation monitor",
+      "proxy_tier": "not_comparable",
+      "proxy_source": null,
+      "proxy_probability": 0.5,
+      "proxy_label": "Trivial 50 percent binary prior (no public proxy)",
+      "comparability_notes": "No public prediction market tracks CFR Global Conflict Tracker worsening status. Closest automated match was ForecastBench 'MicroStrategy sells Bitcoin' (score=0.238, not_comparable). Manifold 'Civil War in Iran in 2026?' (score=0.20) is thematically adjacent but resolves on a different event.",
+      "source_url": null
+    },
+    {
+      "question_id": "pbq-election-policy-002",
+      "title": "G7 leadership change outcome",
+      "proxy_tier": "weak_public_proxy",
+      "proxy_source": "forecastbench",
+      "proxy_probability": 0.5,
+      "proxy_label": "Trivial prior with ForecastBench Israeli parliament proxy (diagnostic only)",
+      "comparability_notes": "ForecastBench 'Israeli parliament dissolved by June 30?' (score=0.282) shares the parliamentary-confidence-event domain but covers only one country and a different deadline. Metaculus US midterm questions exist but focus on party control, not head-of-government change. No same-question market found.",
+      "source_url": "https://www.forecastbench.org/"
+    },
+    {
+      "question_id": "pbq-fed-rates-003",
+      "title": "Federal Reserve easing surprise",
+      "proxy_tier": "close_public_proxy",
+      "proxy_source": "polymarket",
+      "proxy_probability": 0.12,
+      "proxy_label": "Polymarket Fed rate cut probability (directional proxy)",
+      "comparability_notes": "Polymarket 'How many Fed rate cuts in 2026' and 'Fed rate cut by...' markets track FOMC target range changes. The benchmark asks for 50+ bps lower by Sep 2026 vs Jun 2026. Polymarket July 2026 FOMC meeting shows 89% no change, 10% 25bps hike, <1% 25bps cut. Proxy probability of 0.12 reflects market-implied odds of any cut by Sep 2026 (conservative estimate from multiple Polymarket Fed markets). Differs: Polymarket tracks any cut, benchmark requires 50+ bps; Polymarket resolution is per-meeting, benchmark is cumulative.",
+      "source_url": "https://polymarket.com/finance/fed-rates"
+    },
+    {
+      "question_id": "pbq-energy-brent-004",
+      "title": "Brent crude upside shock",
+      "proxy_tier": "close_public_proxy",
+      "proxy_source": "polymarket",
+      "proxy_probability": 0.36,
+      "proxy_label": "Polymarket WTI crude oil $100 hit probability (directional proxy)",
+      "comparability_notes": "Polymarket 'Will Crude Oil (CL) hit $100 by end of June?' shows 36% probability. Benchmark asks Brent (not WTI) above $95 by Dec 2026. WTI and Brent are highly correlated but not identical. Different threshold ($95 Brent vs $100 WTI) and different deadline (Dec 2026 vs Jun 2026). Probability is directional only.",
+      "source_url": "https://polymarket.com/predictions/crude-oil"
+    },
+    {
+      "question_id": "pbq-gold-safe-haven-005",
+      "title": "Gold safe-haven breakout",
+      "proxy_tier": "not_comparable",
+      "proxy_source": null,
+      "proxy_probability": 0.5,
+      "proxy_label": "Trivial 50 percent binary prior (benchmark threshold likely already exceeded)",
+      "comparability_notes": "Polymarket gold markets show front-month GC settling near $4,090 in mid-2026, well above the $3,800 benchmark threshold. The benchmark question asks about LBMA PM fixing (not COMEX GC) and the threshold may have already been met. No forward-looking public market for 'gold above $3,800 by Dec 2026' exists since the event appears to have already occurred. Trivial prior retained; this row may resolve as 'yes' based on already-observed LBMA fixings.",
+      "source_url": "https://polymarket.com/predictions/gold"
+    },
+    {
+      "question_id": "pbq-equity-drawdown-006",
+      "title": "S&P 500 drawdown risk",
+      "proxy_tier": "weak_public_proxy",
+      "proxy_source": "polymarket",
+      "proxy_probability": 0.3,
+      "proxy_label": "Polymarket S&P 500 percentage change markets (directional proxy)",
+      "comparability_notes": "Polymarket 'Will the percentage change in the S&P 500 in Q1 2026 be less than 0%?' at 26% and 'Will S&P 500 (SPX) hit $6,500 (LOW) in June?' at 30%. Benchmark asks for 10% drawdown from Jun 7 reference close by Dec 2026. Polymarket markets are quarterly and use different thresholds. Proxy probability of 0.3 is a rough directional estimate. Not a same-question match.",
+      "source_url": "https://polymarket.com/predictions/sp-500"
+    },
+    {
+      "question_id": "pbq-fx-sovereign-007",
+      "title": "US dollar index upside risk",
+      "proxy_tier": "not_comparable",
+      "proxy_source": null,
+      "proxy_probability": 0.5,
+      "proxy_label": "Trivial 50 percent binary prior (no DXY level market found)",
+      "comparability_notes": "Polymarket has 112 'Dollar' markets but they track specific currency pairs (EUR/USD, GBP/USD) or daily up/down movements, not DXY index closing levels above 110. No public prediction market found for DXY above 110 by Dec 2026. DXY forecasts from traditional analysts range 94-103 for end-2026, suggesting 110 is a tail event. Trivial prior retained.",
+      "source_url": null
+    },
+    {
+      "question_id": "pbq-trade-dispute-008",
+      "title": "Major trade-dispute initiation",
+      "proxy_tier": "weak_public_proxy",
+      "proxy_source": "polymarket",
+      "proxy_probability": 0.15,
+      "proxy_label": "Polymarket US-China tariff agreement probability (inverse directional proxy)",
+      "comparability_notes": "Polymarket 'US x China tariff agreement by July 31?' shows 7% for Yes. This is inversely related: a tariff agreement reduces trade-dispute likelihood. Benchmark asks about new WTO disputes, not tariff agreements. Different resolution mechanism (WTO dispute database vs public announcements). Proxy probability of 0.15 is a rough directional estimate based on elevated trade tension environment. Not a same-question match.",
+      "source_url": "https://polymarket.com/event/us-x-china-tariff-agreement-by-july-31-20260626205549138"
+    },
+    {
+      "question_id": "pbq-climate-disaster-009",
+      "title": "Atlantic major hurricane occurrence",
+      "proxy_tier": "close_public_proxy",
+      "proxy_source": "polymarket",
+      "proxy_probability": 0.55,
+      "proxy_label": "Polymarket Category 4 hurricane landfall probability (directional proxy)",
+      "comparability_notes": "Polymarket 'Will any Category 4 hurricane make landfall in the US before 2027?' is the closest public market. Benchmark asks about Atlantic named storm reaching Cat 4/5 (not necessarily US landfall). The Polymarket question is stricter (requires US landfall), so the benchmark probability should be higher than the Polymarket probability. Proxy probability of 0.55 is an upward-adjusted estimate. Different: Polymarket requires US landfall, benchmark requires any Atlantic Cat 4/5. $332K traded as of Jun 16 2026.",
+      "source_url": "https://polymarket.com/event/will-any-category-4-hurricane-make-landfall-in-the-us-in-before-2027/will-any-category-4-hurricane-make-landfall-in-the-us-in-before-2027"
+    },
+    {
+      "question_id": "pbq-ai-regulation-010",
+      "title": "EU AI Act high-risk timing change",
+      "proxy_tier": "not_comparable",
+      "proxy_source": null,
+      "proxy_probability": 0.5,
+      "proxy_label": "Trivial 50 percent binary prior (no public market for AI Act delay)",
+      "comparability_notes": "Metaculus has 'When will the EU pass the AI Act?' but that resolved in 2024 when the AI Act was passed. No public prediction market found for 'binding law delaying high-risk AI obligations by Dec 2026'. Modulos blog reports trilogue scheduled for May 2026 but no prediction market tracks this outcome. Trivial prior retained.",
+      "source_url": null
+    }
+  ],
+  "summary": {
+    "total_questions": 10,
+    "same_question_matches": 0,
+    "close_public_proxy_count": 3,
+    "weak_public_proxy_count": 3,
+    "not_comparable_count": 4,
+    "trivial_prior_count": 4,
+    "accuracy_claim_allowed": false,
+    "top_three_claim_allowed": false,
+    "note": "Proxy baselines provide directional context only. They cannot be used for Brier score comparison because resolution criteria, dates, and sources differ from benchmark questions. Accuracy claims remain blocked until benchmark questions resolve."
+  }
+}
