@@ -385,6 +385,78 @@ export function marketPriceToProbability({ bestBid = null, bestAsk = null, lastT
   };
 }
 
+const MATCH_STOPWORDS = new Set([
+  'a',
+  'an',
+  'and',
+  'any',
+  'as',
+  'at',
+  'be',
+  'by',
+  'for',
+  'from',
+  'if',
+  'in',
+  'is',
+  'it',
+  'new',
+  'no',
+  'of',
+  'on',
+  'or',
+  'that',
+  'the',
+  'through',
+  'to',
+  'will',
+  'with',
+  'yes',
+]);
+
+export function benchmarkMatchTokens(text) {
+  return String(text ?? '')
+    .toLowerCase()
+    .replace(/[^a-z0-9.%$]+/g, ' ')
+    .split(/\s+/)
+    .map((token) => token.trim())
+    .filter((token) => token.length >= 3 && !MATCH_STOPWORDS.has(token));
+}
+
+export function benchmarkTextOverlap(left, right) {
+  const leftTokens = new Set(benchmarkMatchTokens(left));
+  const rightTokens = new Set(benchmarkMatchTokens(right));
+  if (!leftTokens.size || !rightTokens.size) return 0;
+  let intersection = 0;
+  for (const token of leftTokens) {
+    if (rightTokens.has(token)) intersection += 1;
+  }
+  const union = new Set([...leftTokens, ...rightTokens]).size;
+  return union ? Number((intersection / union).toFixed(6)) : 0;
+}
+
+export function scoreBenchmarkCandidate({ benchmarkQuestion = '', resolutionCriteria = '', candidateTitle = '', candidateDescription = '' } = {}) {
+  const benchmarkText = `${benchmarkQuestion} ${resolutionCriteria}`;
+  const candidateText = `${candidateTitle} ${candidateDescription}`;
+  const overlap = benchmarkTextOverlap(benchmarkText, candidateText);
+  const benchmarkLower = benchmarkText.toLowerCase();
+  const candidateLower = candidateText.toLowerCase();
+  const hasSharedYear = /\b2026\b/.test(benchmarkLower) && /\b2026\b/.test(candidateLower);
+  const hasSharedThreshold = (benchmarkText.match(/\b\d+(?:\.\d+)?\b/g) || [])
+    .some((number) => new RegExp(`\\b${number.replace('.', '\\.')}\\b`).test(candidateLower));
+  const score = clamp(overlap + (hasSharedYear ? 0.08 : 0) + (hasSharedThreshold ? 0.08 : 0), 0, 1);
+  return Number(score.toFixed(6));
+}
+
+export function benchmarkMappingTier(score) {
+  const numeric = Number(score);
+  if (!Number.isFinite(numeric)) return 'not_comparable';
+  if (numeric >= 0.65) return 'same_question_candidate';
+  if (numeric >= 0.4) return 'close_public_proxy';
+  if (numeric >= 0.25) return 'weak_public_proxy';
+  return 'not_comparable';
+}
+
 export function clamp(value, min, max) {
   return Math.min(max, Math.max(min, value));
 }
@@ -618,6 +690,8 @@ export function buildAppForecastFreezeArtifacts({
   const capturedRows = snapshotRows.filter((row) => normalizeProbability(row.probability) !== null && row.abstained !== 'true').length;
   const hostedRows = forecasts.filter((forecast) => forecast.source_type === 'hosted').length;
   const localMirrorRows = forecasts.filter((forecast) => forecast.source_type !== 'hosted').length;
+  const hostedFailureRows = forecasts.filter((forecast) => forecast.hosted_failure).length;
+  const hostedFailureDigests = [...new Set(forecasts.map((forecast) => forecast.hosted_failure?.digest).filter(Boolean))];
   const freeze = {
     schema_version: 'prediction-benchmark-app-forecast-freeze-v1',
     generated_at: generatedAt,
@@ -634,6 +708,9 @@ export function buildAppForecastFreezeArtifacts({
       app_probability_rows_captured: capturedRows,
       hosted_rows: hostedRows,
       local_mirror_rows: localMirrorRows,
+      hosted_failure_rows: hostedFailureRows,
+      hosted_flow_reachable: hostedRows > 0,
+      hosted_failure_digests: hostedFailureDigests,
       unresolved_rows: snapshotRows.length,
       accuracy_claim_allowed: false,
       top_three_claim_allowed: false,
@@ -707,6 +784,8 @@ ${freeze.proof_boundary}
 | App probabilities frozen | ${freeze.summary.app_probability_rows_captured} |
 | Hosted rows | ${freeze.summary.hosted_rows} |
 | Local mirror rows | ${freeze.summary.local_mirror_rows} |
+| Hosted failure rows | ${freeze.summary.hosted_failure_rows ?? 0} |
+| Hosted flow reachable | ${freeze.summary.hosted_flow_reachable === true} |
 | Accuracy claim allowed | ${freeze.summary.accuracy_claim_allowed} |
 | Top-three claim allowed | ${freeze.summary.top_three_claim_allowed} |
 

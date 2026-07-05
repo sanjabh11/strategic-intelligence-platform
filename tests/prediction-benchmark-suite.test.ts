@@ -3,6 +3,8 @@ import {
   buildAppForecastFreezeArtifacts,
   buildBenchmarkScenarioDescription,
   buildLocalRoleWeightedForecast,
+  benchmarkMappingTier,
+  benchmarkTextOverlap,
   brierScore,
   buildPredictionBenchmarkSuite,
   calibrationBin,
@@ -37,6 +39,14 @@ describe('prediction benchmark suite helpers', () => {
       method: 'last_trade_due_to_wide_or_missing_spread',
       spread: 0.3,
     })
+  })
+
+  it('scores public baseline candidates conservatively', () => {
+    expect(benchmarkTextOverlap('Federal Reserve rate cuts by September 2026', 'Federal Reserve cuts rates in June 2026')).toBeGreaterThan(0.2)
+    expect(benchmarkMappingTier(0.7)).toBe('same_question_candidate')
+    expect(benchmarkMappingTier(0.45)).toBe('close_public_proxy')
+    expect(benchmarkMappingTier(0.3)).toBe('weak_public_proxy')
+    expect(benchmarkMappingTier(0.1)).toBe('not_comparable')
   })
 
   it('builds a top-10 suite without upgrading accuracy claims', () => {
