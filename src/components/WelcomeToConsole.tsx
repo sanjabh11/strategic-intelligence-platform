@@ -3,10 +3,12 @@
 // Aligned with Whop Technical Design Brief §6
 
 import React, { useState, useEffect } from 'react';
-import { 
-  Brain, Sparkles, Search, Zap, Users, Target,
+import {
+  Brain, Zap, Users, Target,
   ArrowRight, X, CheckCircle2
 } from 'lucide-react';
+import { track, AnalyticsEvents } from '../lib/analytics';
+import { validateClaims } from '../lib/claimRegistry';
 
 interface WelcomeToConsoleProps {
   onDismiss?: () => void;
@@ -18,7 +20,6 @@ const WelcomeToConsole: React.FC<WelcomeToConsoleProps> = ({
   analysisRunCount = 0 
 }) => {
   const [isVisible, setIsVisible] = useState(false);
-  const [currentStep, setCurrentStep] = useState(0);
 
   useEffect(() => {
     // Check if should show welcome
@@ -35,17 +36,26 @@ const WelcomeToConsole: React.FC<WelcomeToConsoleProps> = ({
     if (shouldShow || isFirstVisit) {
       setIsVisible(true);
       localStorage.setItem('strategy-console-visited', 'true');
+
+      // Validate onboarding claims against claim registry
+      const featureText = 'Evidence-Backed Analysis Real citations from verified sources every claim traceable Multiple Analysis Engines Audience-Tailored Views Strategic Clarity';
+      const { valid, violations } = validateClaims(featureText);
+      if (!valid && import.meta.env.DEV) {
+        console.warn('[claimRegistry] Onboarding text violations:', violations);
+      }
     }
   }, [analysisRunCount]);
 
   const handleDismiss = () => {
     localStorage.setItem('strategy-console-welcome-dismissed', Date.now().toString());
     setIsVisible(false);
+    track(AnalyticsEvents.ONBOARDING_DISMISS);
     onDismiss?.();
   };
 
   const handleGetStarted = () => {
     handleDismiss();
+    track(AnalyticsEvents.ONBOARDING_GET_STARTED);
     // Focus on the prompt input if available
     const promptInput = document.querySelector('textarea');
     if (promptInput) {
@@ -59,7 +69,7 @@ const WelcomeToConsole: React.FC<WelcomeToConsoleProps> = ({
     {
       icon: Brain,
       title: 'Evidence-Backed Analysis',
-      description: 'Real citations from verified sources - no hallucinations'
+      description: 'Real citations from verified sources — every claim traceable'
     },
     {
       icon: Zap,
@@ -94,98 +104,85 @@ const WelcomeToConsole: React.FC<WelcomeToConsoleProps> = ({
   ];
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-slate-800 border border-slate-600 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
-        {/* Header */}
-        <div className="relative p-6 pb-4 border-b border-slate-700">
-          <button
-            onClick={handleDismiss}
-            className="absolute top-4 right-4 p-2 text-slate-400 hover:text-white transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
-          
-          <div className="flex items-center gap-3 mb-3">
-            <div className="p-2 bg-gradient-to-r from-cyan-500 to-emerald-500 rounded-xl">
-              <Brain className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h2 className="text-2xl font-bold text-white">Welcome to Strategy Console</h2>
-              <p className="text-slate-400 text-sm">Evidence-backed strategic analysis in seconds</p>
-            </div>
+    <div className="mb-6 rounded-2xl border border-cyan-500/20 bg-cyan-500/5 p-5 shadow-lg shadow-cyan-950/20">
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex items-start gap-3">
+          <div className="rounded-xl bg-gradient-to-r from-cyan-500 to-emerald-500 p-2">
+            <Brain className="w-5 h-5 text-white" />
           </div>
-        </div>
-
-        {/* Content */}
-        <div className="p-6 space-y-6">
-          {/* Hero Message */}
-          <div className="text-center">
-            <p className="text-lg text-slate-300">
-              Turn complex strategic questions into <span className="text-cyan-400 font-semibold">clean, defensible insights</span> with real citations and advanced game theory.
+          <div>
+            <h2 className="text-lg font-semibold text-white">New to Strategy Console?</h2>
+            <p className="mt-1 text-sm text-slate-300">
+              Start with one question, run the analysis, then open deeper evidence or governance only when you need it.
             </p>
           </div>
+        </div>
+        <button
+          onClick={handleDismiss}
+          className="rounded-lg p-2 text-slate-400 transition-colors hover:text-white"
+          aria-label="Dismiss welcome card"
+        >
+          <X className="w-5 h-5" />
+        </button>
+      </div>
 
-          {/* Features Grid */}
-          <div className="grid grid-cols-2 gap-4">
-            {features.map((feature, idx) => {
-              const Icon = feature.icon;
-              return (
-                <div key={idx} className="bg-slate-900/50 rounded-xl p-4 border border-slate-700">
-                  <div className="flex items-start gap-3">
-                    <div className="p-2 bg-slate-700 rounded-lg">
-                      <Icon className="w-4 h-4 text-cyan-400" />
-                    </div>
-                    <div>
-                      <h4 className="font-medium text-white text-sm">{feature.title}</h4>
-                      <p className="text-xs text-slate-400 mt-1">{feature.description}</p>
-                    </div>
-                  </div>
+      <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+        {features.map((feature, idx) => {
+          const Icon = feature.icon;
+          return (
+            <div key={idx} className="rounded-xl border border-slate-700 bg-slate-900/60 p-3">
+              <div className="flex items-start gap-3">
+                <div className="rounded-lg bg-slate-700 p-2">
+                  <Icon className="w-4 h-4 text-cyan-400" />
                 </div>
-              );
-            })}
-          </div>
-
-          {/* How It Works */}
-          <div className="bg-slate-900/30 rounded-xl p-4 border border-slate-700">
-            <h3 className="text-sm font-semibold text-slate-300 mb-3">How It Works</h3>
-            <div className="flex items-center justify-between">
-              {steps.map((step, idx) => (
-                <React.Fragment key={idx}>
-                  <div className="flex-1 text-center">
-                    <div className="w-8 h-8 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center mx-auto mb-2 text-sm font-bold">
-                      {idx + 1}
-                    </div>
-                    <h4 className="text-xs font-medium text-white">{step.title}</h4>
-                    <p className="text-xs text-slate-500 mt-1">{step.description}</p>
-                  </div>
-                  {idx < steps.length - 1 && (
-                    <ArrowRight className="w-4 h-4 text-slate-600 mx-2 flex-shrink-0" />
-                  )}
-                </React.Fragment>
-              ))}
+                <div>
+                  <h4 className="text-sm font-medium text-white">{feature.title}</h4>
+                  <p className="mt-1 text-xs text-slate-400">{feature.description}</p>
+                </div>
+              </div>
             </div>
-          </div>
+          );
+        })}
+      </div>
 
-          {/* Run Count Message */}
-          {analysisRunCount > 0 && analysisRunCount < 3 && (
-            <div className="flex items-center gap-2 text-sm text-slate-400 justify-center">
+      <div className="mt-4 rounded-xl border border-slate-700 bg-slate-900/40 p-4">
+        <h3 className="mb-3 text-sm font-semibold text-slate-300">Fast path</h3>
+        <div className="grid gap-3 md:grid-cols-3">
+          {steps.map((step, idx) => (
+            <div key={idx} className="rounded-lg border border-slate-700 bg-slate-800/80 p-3">
+              <div className="mb-2 flex items-center gap-2">
+                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-cyan-500/20 text-sm font-bold text-cyan-400">
+                  {idx + 1}
+                </div>
+                <h4 className="text-sm font-medium text-white">{step.title}</h4>
+              </div>
+              <p className="text-xs text-slate-400">{step.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+        <div className="text-sm text-slate-400">
+          {analysisRunCount > 0 && analysisRunCount < 3 ? (
+            <span className="inline-flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-              <span>You've run {analysisRunCount} analysis{analysisRunCount !== 1 ? 'es' : ''}. Try a few more to unlock the full power!</span>
-            </div>
+              You&apos;ve run {analysisRunCount} analysis{analysisRunCount !== 1 ? 'es' : ''}. Keep exploring to compare evidence and governance paths.
+            </span>
+          ) : (
+            <span>Need concept explanations later? Learning Mode stays available in the header.</span>
           )}
         </div>
-
-        {/* Footer */}
-        <div className="p-6 pt-4 border-t border-slate-700 flex items-center justify-between">
+        <div className="flex items-center gap-3">
           <button
             onClick={handleDismiss}
-            className="text-sm text-slate-400 hover:text-white transition-colors"
+            className="text-sm text-slate-400 transition-colors hover:text-white"
           >
-            Don't show again
+            Don&apos;t show again
           </button>
           <button
             onClick={handleGetStarted}
-            className="px-6 py-2.5 bg-gradient-to-r from-cyan-500 to-emerald-500 text-white rounded-lg font-semibold hover:opacity-90 transition-opacity flex items-center gap-2"
+            className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-cyan-500 to-emerald-500 px-5 py-2.5 font-semibold text-white transition-opacity hover:opacity-90"
           >
             Get Started
             <ArrowRight className="w-4 h-4" />

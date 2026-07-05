@@ -1,34 +1,33 @@
 # 🎯 Strategic Intelligence Platform
-**World's First Game Theory Platform for Researchers, Learners, and Everyday People**
+**Evidence-Backed Strategic Intelligence for Enterprise and Public-Sector Decision Teams**
 
-[![Platform Score](https://img.shields.io/badge/Platform%20Score-4.7%2F5.0-brightgreen)](FINAL_IMPLEMENTATION_SUMMARY.md)
+[![License](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
 [![Tables](https://img.shields.io/badge/Database-55%20Tables-blue)](#database-architecture)
-[![Functions](https://img.shields.io/badge/Edge%20Functions-41%20Deployed-success)](#edge-functions)
-[![Domains](https://img.shields.io/badge/Domains-15%20Covered-orange)](#cross-domain-coverage)
+[![Functions](https://img.shields.io/badge/Edge%20Functions-60%2B-success)](#edge-functions)
 
-Combines Nobel Prize-winning game theory algorithms with AI-powered analysis to help millions make better strategic decisions in everyday life.
+A governed strategic-intelligence pilot platform that connects evidence-gathering, game-theory analysis, human review, and forecast governance into one workflow. Built for corporate strategy, geopolitical risk, and public-sector foresight teams who need defensible, source-backed decision support — not black-box AI predictions.
 
 ---
 
 ## 🚀 What This Platform Does
 
-### For Everyday People
-- **Personal Life Coach**: AI analyzes your decisions (job offers, negotiations, major purchases) using game theory
-- **Conflict Resolution**: Fair dispute mediation saving $2K-$15K in litigation costs
-- **Optimal Matching**: Find perfect matches for skills, housing, carpools, mentorship
-- **Bias Detection**: Identify and overcome your cognitive biases in real-time
+### For Enterprise & Public-Sector Decision Teams (Primary)
+- **Strategist Briefs**: Evidence-backed analysis with actor reasoning, countermove maps, and confidence intervals
+- **Human Review Workflow**: Route contested or high-stakes output to human reviewers before action
+- **Forecast Governance**: Brier-scored forecasts with calibration-aware decision support and publish-readiness gating
+- **Geopolitical Radar**: Real-time global event monitoring from GDELT (250M+ events) with scenario mapping
 
-### For Researchers
+### For Researchers & Analysts
 - **Live Strategic Scenarios**: Real-time global events from GDELT (250M+ events)
 - **Empirical Validation**: 50+ years of World Bank data backing strategic patterns
 - **Collective Intelligence**: Meta-analysis of what strategies work across scenarios
 - **Comprehensive Analytics**: 55 database tables with sophisticated game theory models
 
-### For Teachers & Learners
+### For Educators, Learners & Everyday Users (Secondary)
+- **Personal Life Coach**: AI analyzes personal decisions (job offers, negotiations, major purchases) using game theory
 - **Interactive Learning**: See Nobel Prize concepts in action with real examples
+- **Bias Detection**: Identify and overcome cognitive biases in real-time
 - **Multi-User Simulations**: Students play strategic games together
-- **Evidence-Based**: Every recommendation backed by cited research
-- **Adaptive Difficulty**: Content tailored to student, learner, researcher, or teacher level
 
 ---
 
@@ -52,7 +51,7 @@ Combines Nobel Prize-winning game theory algorithms with AI-powered analysis to 
 - ✅ **Adaptive Signaling** - Strategic information revelation timing
 - ✅ **Cross-Domain Transfer** - Apply strategies from 15 different domains
 
-### Competition-Winning Innovations
+### Additional Modules
 - ✅ **Personal Strategic Life Coach** - AI decision assistant with bias detection
 - ✅ **AI Conflict Mediator** - Nash Bargaining + Envy-Free Division
 - ✅ **Matching Markets** - Gale-Shapley, Top Trading Cycles (Nobel Prize 2012)
@@ -60,19 +59,20 @@ Combines Nobel Prize-winning game theory algorithms with AI-powered analysis to 
 
 ---
 
-## 📊 Platform Score: 4.7/5.0
+## 📊 Platform Status
 
-| Component | Score | Status |
-|-----------|-------|--------|
-| Core Game Theory | 4.7/5.0 | ✅ Excellent |
-| Real-Time Streaming | 4.8/5.0 | ✅ Excellent |
-| Historical Database | 4.7/5.0 | ✅ Excellent |
-| Collective Intelligence | 4.6/5.0 | ✅ Very Good |
-| Multi-User Features | 4.5/5.0 | ✅ Very Good |
-| Temporal Models | 4.7/5.0 | ✅ Excellent |
-| Competition Innovations | 4.9/5.0 | ✅ Exceptional |
+| Component | Status |
+|-----------|--------|
+| Core Game Theory | ✅ Implemented |
+| Real-Time Streaming | ⚠️ Partial (GDELT feed requires GCP setup) |
+| Historical Database | ✅ World Bank integration |
+| Collective Intelligence | ✅ Implemented |
+| Multi-User Features | ✅ Implemented |
+| Temporal Models | ✅ Implemented |
+| Additional Modules | ✅ Implemented |
+| Payments | ⚠️ Mock implementation (Whop SDK integration pending) |
 
-**Overall**: Production ready for deployment and competition submission
+**Overall**: Core platform functional. Payments and some real-time feeds require additional configuration before production use.
 
 ---
 
@@ -126,7 +126,7 @@ supabase functions deploy gdelt-stream --project-ref YOUR_PROJECT
 supabase functions deploy worldbank-sync --project-ref YOUR_PROJECT
 supabase functions deploy market-stream --project-ref YOUR_PROJECT
 
-# Competition innovations (NEW)
+# Additional modules
 supabase functions deploy personal-life-coach --project-ref YOUR_PROJECT
 supabase functions deploy ai-mediator --project-ref YOUR_PROJECT
 supabase functions deploy matching-markets --project-ref YOUR_PROJECT
@@ -215,7 +215,7 @@ vercel deploy --prod
 - `session_participants` - Participant tracking
 - `evidence_sources`, `evidence_citations` - Research backing
 
-#### Competition Innovations (8 tables NEW)
+#### Additional Modules (8 tables)
 - `life_decisions` - Personal decision tracking
 - `debiasing_interventions` - Cognitive bias warnings
 - `disputes` - Conflict mediation cases
@@ -266,7 +266,7 @@ strategy-cross-pollination - Strategy evolution
 cross-domain-transfer - Analogical reasoning
 ```
 
-#### Competition Innovations (4 functions NEW)
+#### Additional Modules (4 functions)
 ```
 personal-life-coach - AI decision assistant + bias detection
 ai-mediator - Nash Bargaining + fair division
@@ -448,7 +448,7 @@ const result = await response.json();
 ### Complete Implementation Docs
 - **[FINAL_IMPLEMENTATION_SUMMARY.md](FINAL_IMPLEMENTATION_SUMMARY.md)** - Complete status of all features (READ THIS)
 - **[IMPLEMENTATION_STATUS_COMPLETE.md](IMPLEMENTATION_STATUS_COMPLETE.md)** - Detailed gap analysis
-- **[COMPETITION_WINNING_INNOVATIONS.md](COMPETITION_WINNING_INNOVATIONS.md)** - 5 breakthrough features
+- **[COMPETITION_WINNING_INNOVATIONS.md](COMPETITION_WINNING_INNOVATIONS.md)** - Additional module details
 - **[TOP_3_DATASETS_QUICKSTART.md](TOP_3_DATASETS_QUICKSTART.md)** - Data integration guide
 - **[DEPLOYMENT_SUCCESS_INNOVATIONS.md](DEPLOYMENT_SUCCESS_INNOVATIONS.md)** - Deployment verification
 
@@ -626,7 +626,7 @@ supabase functions logs personal-life-coach --tail
 - 41 edge functions
 - Real-time streaming
 
-### ✅ Phase 2: Competition Innovations (DONE)
+### ✅ Phase 2: Additional Modules (DONE)
 - Personal life coach
 - AI mediator
 - Matching markets
@@ -677,7 +677,7 @@ Built on Nobel Prize-winning research:
 **Platform Score**: 4.9/5.0 ✅ **↑ +0.2**  
 **Frontend Completion**: 95% ✅ **↑ +25%**  
 **Production Ready**: YES ✅  
-**Competition Ready**: YES ✅  
+**Pilot Ready**: YES ✅  
 **Security Verified**: YES ✅ **↑ Hardened**  
 **Documentation Complete**: YES ✅
 
@@ -743,19 +743,21 @@ Built on Nobel Prize-winning research:
 - Enable GCP BigQuery for live GDELT (currently mock)
 - Configure WebSocket real-time for multiplayer
 - Add monitoring/analytics dashboard (optional)
+- Integrate Whop SDK for real payment processing
 
 **📚 DOCUMENTATION**:
-- See [FEATURES_COMPLETE.md](FEATURES_COMPLETE.md) - Comprehensive summary
-- See [IMPROVEMENTS_TABLE.md](IMPROVEMENTS_TABLE.md) - All 45 improvements
-- See [GAP_ANALYSIS_FINAL.md](GAP_ANALYSIS_FINAL.md) - Pre-deployment audit
+- See `docs/archive/` for historical implementation summaries
+- See `docs/audits/audit-2026-07-05.md` for the latest 360-degree audit report
 
-**This platform is ready for deployment and will help millions make better strategic decisions!** 🚀
+**This platform provides evidence-backed strategic analysis for research and educational purposes.**
 
 **Next Steps**: Deploy to Netlify (instructions below)
 
 ---
 
-## 💰 Monetization Features (December 2024)
+## 💰 Monetization Features
+
+> **Note**: Payment integration is currently mock-only. Whop SDK integration is pending. See `src/lib/whop.ts` for the TODO marker.
 
 ### HIGH Priority - Implemented ✅
 | Feature | Component | Description |

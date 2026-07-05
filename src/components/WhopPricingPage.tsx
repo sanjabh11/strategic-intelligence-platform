@@ -2,7 +2,7 @@
 // Supports Whop checkout with Stripe fallback for .edu emails
 // Pricing: Free ($0) / Pro ($19) / Elite ($49) / Enterprise ($199)
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Check, X, Zap, Crown, Sparkles, Lock, ArrowRight,
     GraduationCap, CreditCard, Shield, Users, BarChart3
@@ -15,6 +15,7 @@ import {
     type WhopPricingTier
 } from '../lib/whop-config';
 import { useWhopAuth } from '../hooks/useWhopAuth';
+import { track, AnalyticsEvents } from '../lib/analytics';
 
 const TIER_ICONS: Record<string, React.ElementType> = {
     free: Lock,
@@ -30,21 +31,34 @@ const WhopPricingPage: React.FC = () => {
     const [email, setEmail] = useState('');
     const [showAcademicModal, setShowAcademicModal] = useState(false);
 
+    useEffect(() => {
+        track(AnalyticsEvents.PRICING_VIEW);
+    }, []);
+
+    const signupRedirect = (nextPath: string, signupEmail?: string) => {
+        const params = new URLSearchParams({ next: nextPath });
+        if (signupEmail) {
+            params.set('email', signupEmail);
+        }
+        return `/signup?${params.toString()}`;
+    };
+
     const handleSelectTier = (tier: WhopPricingTier) => {
         // If free, just sign up
         if (tier.priceMonthly === 0) {
-            window.location.href = '/signup';
+            window.location.href = signupRedirect('/console', email || session?.email);
             return;
         }
 
-        // If user has .edu email, use Stripe
+        // If user has .edu email, use academic modal
         if (session?.isAcademic || (email && isAcademicEmail(email))) {
             setShowAcademicModal(true);
             return;
         }
 
-        // Otherwise, use Whop checkout
-        window.location.href = getCheckoutUrl(tier.id);
+        // Pilot phase: route paid tier requests to demo page instead of checkout
+        track(AnalyticsEvents.PRICING_PILOT_REQUEST, { tier: tier.id });
+        window.location.href = '/demo';
     };
 
     const handleAcademicCheckout = () => {
@@ -52,7 +66,14 @@ const WhopPricingPage: React.FC = () => {
             alert('Please enter a valid .edu email address');
             return;
         }
-        window.location.href = `/checkout/stripe?tier=academic&email=${encodeURIComponent(email)}`;
+
+        const checkoutPath = `/checkout/stripe?tier=academic&email=${encodeURIComponent(email)}`;
+        if (!isAuthenticated) {
+            window.location.href = signupRedirect(checkoutPath, email);
+            return;
+        }
+
+        window.location.href = checkoutPath;
     };
 
     const getPrice = (tier: WhopPricingTier): number => {
@@ -71,10 +92,18 @@ const WhopPricingPage: React.FC = () => {
     return (
         <div className="min-h-screen bg-slate-900 py-12 px-4">
             <div className="max-w-7xl mx-auto">
+                {/* Pilot Preview Banner */}
+                <div className="mb-8 bg-blue-900/30 border border-blue-500/30 rounded-xl p-4 text-center">
+                    <p className="text-blue-200 text-sm">
+                        <strong>Pilot Preview:</strong> We're in a guided pilot phase. The Free tier is fully active — no payment required.
+                        Paid tiers are available by request. <a href="/demo" className="underline hover:text-blue-100">Request a demo →</a>
+                    </p>
+                </div>
+
                 {/* Header */}
                 <div className="text-center mb-12">
                     <h1 className="text-4xl font-bold text-white mb-4">
-                        Choose Your Strategic Edge
+                        Strategic Intelligence Plans
                     </h1>
                     <p className="text-xl text-slate-400 max-w-2xl mx-auto">
                         From free exploration to enterprise intelligence.
@@ -193,10 +222,10 @@ const WhopPricingPage: React.FC = () => {
                                     {isCurrentTier ? (
                                         'Current Plan'
                                     ) : tier.priceMonthly === 0 ? (
-                                        'Get Started'
+                                        'Get Started Free'
                                     ) : (
                                         <>
-                                            Upgrade to {tier.name}
+                                            Request Pilot Access
                                             <ArrowRight className="w-4 h-4" />
                                         </>
                                     )}
@@ -204,6 +233,37 @@ const WhopPricingPage: React.FC = () => {
                             </div>
                         );
                     })}
+                </div>
+
+                {/* Feature Comparison Table */}
+                <div className="mb-12 overflow-x-auto">
+                    <h2 className="text-2xl font-bold text-white mb-6 text-center">Compare Plans</h2>
+                    <table className="w-full text-sm border-collapse">
+                        <thead>
+                            <tr className="border-b border-slate-700">
+                                <th className="text-left py-3 px-4 text-slate-400 font-medium">Feature</th>
+                                <th className="text-center py-3 px-4 text-slate-300 font-medium">Free</th>
+                                <th className="text-center py-3 px-4 text-slate-300 font-medium">Pro</th>
+                                <th className="text-center py-3 px-4 text-purple-400 font-bold">Elite</th>
+                                <th className="text-center py-3 px-4 text-slate-300 font-medium">Enterprise</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-800">
+                            <tr><td className="py-2.5 px-4 text-slate-300">Analyses per day</td><td className="text-center text-slate-400">5</td><td className="text-center text-slate-400">50</td><td className="text-center text-slate-400">Unlimited</td><td className="text-center text-slate-400">Unlimited</td></tr>
+                            <tr><td className="py-2.5 px-4 text-slate-300">Max matrix size</td><td className="text-center text-slate-400">2×2</td><td className="text-center text-slate-400">5×5</td><td className="text-center text-slate-400">10×10</td><td className="text-center text-slate-400">Unlimited</td></tr>
+                            <tr><td className="py-2.5 px-4 text-slate-300">Evidence sources per analysis</td><td className="text-center text-slate-400">2</td><td className="text-center text-slate-400">5</td><td className="text-center text-slate-400">10</td><td className="text-center text-slate-400">Unlimited</td></tr>
+                            <tr><td className="py-2.5 px-4 text-slate-300">Saved scenarios</td><td className="text-center text-slate-400">3</td><td className="text-center text-slate-400">25</td><td className="text-center text-slate-400">100</td><td className="text-center text-slate-400">Unlimited</td></tr>
+                            <tr><td className="py-2.5 px-4 text-slate-300">Labs (Game Tree, Negotiation)</td><td className="text-center text-red-400">—</td><td className="text-center text-green-400">✓</td><td className="text-center text-green-400">✓</td><td className="text-center text-green-400">✓</td></tr>
+                            <tr><td className="py-2.5 px-4 text-slate-300">Bias Profile Dashboard</td><td className="text-center text-red-400">—</td><td className="text-center text-green-400">✓</td><td className="text-center text-green-400">✓</td><td className="text-center text-green-400">✓</td></tr>
+                            <tr><td className="py-2.5 px-4 text-slate-300">PDF Export</td><td className="text-center text-red-400">—</td><td className="text-center text-green-400">✓</td><td className="text-center text-green-400">✓</td><td className="text-center text-green-400">✓</td></tr>
+                            <tr><td className="py-2.5 px-4 text-slate-300">Live Intel Dashboard</td><td className="text-center text-red-400">—</td><td className="text-center text-red-400">—</td><td className="text-center text-green-400">✓</td><td className="text-center text-green-400">✓</td></tr>
+                            <tr><td className="py-2.5 px-4 text-slate-300">Forecasting Engine</td><td className="text-center text-red-400">—</td><td className="text-center text-red-400">—</td><td className="text-center text-green-400">✓</td><td className="text-center text-green-400">✓</td></tr>
+                            <tr><td className="py-2.5 px-4 text-slate-300">War Room</td><td className="text-center text-red-400">—</td><td className="text-center text-red-400">—</td><td className="text-center text-green-400">✓</td><td className="text-center text-green-400">✓</td></tr>
+                            <tr><td className="py-2.5 px-4 text-slate-300">API Access</td><td className="text-center text-red-400">—</td><td className="text-center text-red-400">—</td><td className="text-center text-green-400">✓</td><td className="text-center text-green-400">✓</td></tr>
+                            <tr><td className="py-2.5 px-4 text-slate-300">Team Collaboration</td><td className="text-center text-red-400">—</td><td className="text-center text-red-400">—</td><td className="text-center text-green-400">✓</td><td className="text-center text-green-400">✓</td></tr>
+                            <tr><td className="py-2.5 px-4 text-slate-300">White-Label</td><td className="text-center text-red-400">—</td><td className="text-center text-red-400">—</td><td className="text-center text-red-400">—</td><td className="text-center text-green-400">✓</td></tr>
+                        </tbody>
+                    </table>
                 </div>
 
                 {/* Academic Section */}
@@ -240,15 +300,46 @@ const WhopPricingPage: React.FC = () => {
                 <div className="flex flex-wrap items-center justify-center gap-8 text-slate-400 text-sm">
                     <div className="flex items-center gap-2">
                         <Shield className="w-5 h-5" />
-                        Secure payments via Whop
+                        Pilot phase — no payment required yet
                     </div>
                     <div className="flex items-center gap-2">
                         <Users className="w-5 h-5" />
-                        10,000+ strategists
+                        Evidence-gated workflows
                     </div>
                     <div className="flex items-center gap-2">
                         <BarChart3 className="w-5 h-5" />
-                        Cancel anytime
+                        Free tier active now
+                    </div>
+                </div>
+
+                {/* FAQ Section */}
+                <div className="max-w-3xl mx-auto mt-16">
+                    <h2 className="text-2xl font-bold text-white mb-6 text-center">Frequently Asked Questions</h2>
+                    <div className="space-y-4">
+                        <div className="bg-slate-800 rounded-lg p-5 border border-slate-700">
+                            <h3 className="font-semibold text-white mb-2">What is the pilot phase?</h3>
+                            <p className="text-slate-400 text-sm">We're currently in a guided pilot phase. The Free tier is fully active with no payment required. Paid tiers (Pro, Elite, Enterprise) are available by request — we'll work with you to set up access based on your needs.</p>
+                        </div>
+                        <div className="bg-slate-800 rounded-lg p-5 border border-slate-700">
+                            <h3 className="font-semibold text-white mb-2">What can I do on the Free tier?</h3>
+                            <p className="text-slate-400 text-sm">The Free tier includes 5 analyses per day, 4x4 matrix size, access to the Strategy Console, geopolitical radar, and evidence-backed analysis with real citations. It's designed to give you a real sense of the platform's value.</p>
+                        </div>
+                        <div className="bg-slate-800 rounded-lg p-5 border border-slate-700">
+                            <h3 className="font-semibold text-white mb-2">How do I get access to paid features?</h3>
+                            <p className="text-slate-400 text-sm">Click "Request Pilot Access" on any paid tier or <a href="/demo" className="text-blue-400 underline">request a demo</a>. We'll schedule a brief call to understand your use case and set up access. No payment is required during the pilot phase.</p>
+                        </div>
+                        <div className="bg-slate-800 rounded-lg p-5 border border-slate-700">
+                            <h3 className="font-semibold text-white mb-2">Is there an academic discount?</h3>
+                            <p className="text-slate-400 text-sm">Yes — students and educators with a .edu email get 30% off the Elite tier. During the pilot phase, academic users can request full access at no cost. Use the academic discount section above to apply.</p>
+                        </div>
+                        <div className="bg-slate-800 rounded-lg p-5 border border-slate-700">
+                            <h3 className="font-semibold text-white mb-2">What happens to my data if I stop using the platform?</h3>
+                            <p className="text-slate-400 text-sm">Your analysis runs and forecasts are stored in your account. You can export your data at any time. If you close your account, your data is deleted per our <a href="/privacy" className="text-blue-400 underline">Privacy Policy</a>.</p>
+                        </div>
+                        <div className="bg-slate-800 rounded-lg p-5 border border-slate-700">
+                            <h3 className="font-semibold text-white mb-2">Can I switch tiers later?</h3>
+                            <p className="text-slate-400 text-sm">Yes — you can upgrade or downgrade at any time. During the pilot phase, tier changes are handled by our team and processed within 1 business day.</p>
+                        </div>
                     </div>
                 </div>
 
