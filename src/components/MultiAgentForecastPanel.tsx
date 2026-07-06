@@ -1,5 +1,5 @@
 import React from 'react'
-import { AlertCircle, Brain, FileText, Shield, Target, TrendingUp, Zap, Lock } from 'lucide-react'
+import { AlertCircle, Brain, FileText, Shield, Target, TrendingUp, Zap, Lock, Scale, Network, Cpu, BarChart3 } from 'lucide-react'
 import { getAnalysisFreshness, type ForecastLinkedAnalysisState, type ForecastReadinessAssessment, type PublishGovernanceAssessment } from '../lib/forecastGovernance'
 import type { MultiAgentForecast } from '../types/strategic-analysis'
 import { labelCalibrationStatus, normalizeCalibrationStatus } from '../../shared/mlAdvisory'
@@ -231,6 +231,361 @@ export default function MultiAgentForecastPanel({
         </div>
       )}
 
+      {(multiAgentForecast.marketPrior || multiAgentForecast.semanticRoute || multiAgentForecast.calibrationWithLearnings) && (
+        <div className="mb-6 flex flex-wrap gap-3">
+          {multiAgentForecast.marketPrior && (
+            <div className="bg-slate-900/60 rounded-lg px-3 py-2 border border-slate-700 flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-cyan-400 flex-shrink-0" />
+              <div>
+                <div className="text-xs text-slate-500">Market Prior</div>
+                <div className="text-sm text-cyan-300">
+                  {(multiAgentForecast.marketPrior.probability * 100).toFixed(0)}% — {multiAgentForecast.marketPrior.source}
+                </div>
+                <div className="text-xs text-slate-500 truncate max-w-[200px]">
+                  {multiAgentForecast.marketPrior.marketQuestion}
+                </div>
+              </div>
+            </div>
+          )}
+          {multiAgentForecast.semanticRoute && (
+            <div className="bg-slate-900/60 rounded-lg px-3 py-2 border border-slate-700 flex items-center gap-2">
+              <FileText className="w-4 h-4 text-violet-400 flex-shrink-0" />
+              <div>
+                <div className="text-xs text-slate-500">Skill File</div>
+                <div className="text-sm text-violet-300">{multiAgentForecast.semanticRoute.label}</div>
+                <div className="text-xs text-slate-500">
+                  {multiAgentForecast.semanticRoute.category} · {(multiAgentForecast.semanticRoute.routingConfidence * 100).toFixed(0)}% confidence
+                </div>
+              </div>
+            </div>
+          )}
+          {multiAgentForecast.calibrationWithLearnings && (
+            <div className="bg-slate-900/60 rounded-lg px-3 py-2 border border-slate-700 flex items-center gap-2">
+              <Shield className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+              <div>
+                <div className="text-xs text-slate-500">Calibration</div>
+                <div className="text-sm text-emerald-300">
+                  {multiAgentForecast.calibrationWithLearnings.method}
+                </div>
+                <div className="text-xs text-slate-500">
+                  n={multiAgentForecast.calibrationWithLearnings.sampleSize}
+                  {multiAgentForecast.calibrationWithLearnings.brierScore !== null && (
+                    <> · Brier={multiAgentForecast.calibrationWithLearnings.brierScore.toFixed(3)}</>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+          {multiAgentForecast.orchestrator && (
+            <div className="bg-slate-900/60 rounded-lg px-3 py-2 border border-slate-700 flex items-center gap-2">
+              <Cpu className="w-4 h-4 text-amber-400 flex-shrink-0" />
+              <div>
+                <div className="text-xs text-slate-500">Orchestrator</div>
+                <div className="text-sm text-amber-300">
+                  {multiAgentForecast.orchestrator.activeAgentCount} agents · {multiAgentForecast.orchestrator.estimatedComplexity}
+                </div>
+                <div className="text-xs text-slate-500">
+                  {multiAgentForecast.orchestrator.skippedAgents.length > 0
+                    ? `Skipped: ${multiAgentForecast.orchestrator.skippedAgents.join(', ')}`
+                    : 'All agents active'}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {multiAgentForecast.benchmark && multiAgentForecast.benchmark.displayMetrics && (
+        <div className="mb-6 rounded-lg border border-slate-700 bg-slate-900/60 px-4 py-3">
+          <div className="flex items-center gap-2 mb-2">
+            <BarChart3 className="w-4 h-4 text-indigo-400" />
+            <span className="text-sm font-medium text-white">Benchmark Registry</span>
+            <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+              multiAgentForecast.benchmark.trend === 'improving'
+                ? 'bg-emerald-500/15 text-emerald-300'
+                : multiAgentForecast.benchmark.trend === 'degrading'
+                  ? 'bg-rose-500/15 text-rose-300'
+                  : 'bg-slate-500/15 text-slate-300'
+            }`}>
+              {multiAgentForecast.benchmark.trend.replace(/_/g, ' ')}
+            </span>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
+            {multiAgentForecast.benchmark.displayMetrics.map((metric, i) => (
+              <div key={i} title={metric.tooltip}>
+                <div className="text-xs text-slate-500">{metric.label}</div>
+                <div className={`text-sm font-semibold ${
+                  metric.status === 'good' ? 'text-emerald-400'
+                    : metric.status === 'warning' ? 'text-amber-400'
+                    : metric.status === 'bad' ? 'text-rose-400'
+                    : 'text-slate-300'
+                }`}>
+                  {metric.value}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {multiAgentForecast.judgeVerification && (
+        <div className={`mb-6 rounded-lg border px-4 py-3 ${
+          multiAgentForecast.judgeVerification.severity === 'critical'
+            ? 'border-rose-500/30 bg-rose-500/5'
+            : multiAgentForecast.judgeVerification.severity === 'major'
+              ? 'border-amber-500/20 bg-amber-500/5'
+              : multiAgentForecast.judgeVerification.severity === 'minor'
+                ? 'border-cyan-500/20 bg-cyan-500/5'
+                : 'border-emerald-500/20 bg-emerald-500/5'
+        }`}>
+          <div className="flex items-start gap-3">
+            <Scale className={`w-4 h-4 mt-0.5 flex-shrink-0 ${
+              multiAgentForecast.judgeVerification.severity === 'critical'
+                ? 'text-rose-400'
+                : multiAgentForecast.judgeVerification.severity === 'major'
+                  ? 'text-amber-400'
+                  : multiAgentForecast.judgeVerification.severity === 'minor'
+                    ? 'text-cyan-400'
+                    : 'text-emerald-400'
+            }`} />
+            <div className="flex-1">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-sm font-medium text-white">
+                  LLM Judge: {multiAgentForecast.judgeVerification.family}
+                </span>
+                <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                  multiAgentForecast.judgeVerification.verdict === 'confirmed'
+                    ? 'bg-emerald-500/15 text-emerald-300'
+                    : multiAgentForecast.judgeVerification.verdict === 'rejected'
+                      ? 'bg-rose-500/15 text-rose-300'
+                      : 'bg-cyan-500/15 text-cyan-300'
+                }`}>
+                  {multiAgentForecast.judgeVerification.verdict.replace('_', ' ')}
+                </span>
+                {multiAgentForecast.judgeVerification.severity !== 'none' && (
+                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                    multiAgentForecast.judgeVerification.severity === 'critical'
+                      ? 'bg-rose-500/15 text-rose-300'
+                      : multiAgentForecast.judgeVerification.severity === 'major'
+                        ? 'bg-amber-500/15 text-amber-300'
+                        : 'bg-cyan-500/15 text-cyan-300'
+                  }`}>
+                    {multiAgentForecast.judgeVerification.severity}
+                  </span>
+                )}
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-2">
+                <div>
+                  <div className="text-xs text-slate-500">Verified Prob</div>
+                  <div className="text-sm text-white font-semibold">
+                    {(multiAgentForecast.judgeVerification.verifiedProbability * 100).toFixed(1)}%
+                  </div>
+                </div>
+                <div>
+                  <div className="text-xs text-slate-500">Judge Confidence</div>
+                  <div className="text-sm text-white font-semibold">
+                    {(multiAgentForecast.judgeVerification.judgeConfidence * 100).toFixed(0)}%
+                  </div>
+                </div>
+                <div>
+                  <div className="text-xs text-slate-500">Disagreement</div>
+                  <div className={`text-sm font-semibold ${
+                    multiAgentForecast.judgeVerification.disagreementWithChampion > 0.15
+                      ? 'text-rose-400'
+                      : multiAgentForecast.judgeVerification.disagreementWithChampion > 0.05
+                        ? 'text-amber-400'
+                        : 'text-emerald-400'
+                  }`}>
+                    ±{(multiAgentForecast.judgeVerification.disagreementWithChampion * 100).toFixed(1)}pp
+                  </div>
+                </div>
+                {multiAgentForecast.judgeVerification.adjustedProbability !== null && (
+                  <div>
+                    <div className="text-xs text-slate-500">Adjustment</div>
+                    <div className={`text-sm font-semibold ${
+                      multiAgentForecast.judgeVerification.judgeDelta > 0
+                        ? 'text-emerald-400'
+                        : 'text-rose-400'
+                    }`}>
+                      {multiAgentForecast.judgeVerification.judgeDelta > 0 ? '+' : ''}
+                      {(multiAgentForecast.judgeVerification.judgeDelta * 100).toFixed(1)}pp
+                    </div>
+                  </div>
+                )}
+              </div>
+              {multiAgentForecast.judgeVerification.judgeReasoning && (
+                <div className="text-xs text-slate-400 mt-1">
+                  {multiAgentForecast.judgeVerification.judgeReasoning}
+                </div>
+              )}
+              {multiAgentForecast.judgeVerification.concerns.length > 0 && (
+                <div className="mt-2">
+                  <div className="text-xs text-slate-500 mb-1">Judge Concerns</div>
+                  <div className="space-y-1">
+                    {multiAgentForecast.judgeVerification.concerns.map((concern, i) => (
+                      <div key={i} className="text-xs text-slate-300 bg-slate-800 rounded px-2 py-1 border border-slate-700">
+                        {concern}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {multiAgentForecast.evidenceGraph && (
+        <div className="mb-6 rounded-lg border border-slate-700 bg-slate-900/60 px-4 py-3">
+          <div className="flex items-start gap-3 mb-3">
+            <Network className="w-4 h-4 text-violet-400 mt-0.5 flex-shrink-0" />
+            <div className="flex-1">
+              <div className="text-sm font-medium text-white mb-2">Evidence Graph</div>
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+                <div>
+                  <div className="text-xs text-slate-500">Nodes</div>
+                  <div className="text-sm text-white font-semibold">{multiAgentForecast.evidenceGraph.summary.totalNodes}</div>
+                </div>
+                <div>
+                  <div className="text-xs text-slate-500">Edges</div>
+                  <div className="text-sm text-white font-semibold">{multiAgentForecast.evidenceGraph.edgeCount}</div>
+                </div>
+                <div>
+                  <div className="text-xs text-slate-500">Verified</div>
+                  <div className="text-sm text-emerald-400 font-semibold">
+                    {multiAgentForecast.evidenceGraph.summary.verifiedCount}/{multiAgentForecast.evidenceGraph.summary.totalNodes}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-xs text-slate-500">Avg Credibility</div>
+                  <div className="text-sm text-white font-semibold">
+                    {(multiAgentForecast.evidenceGraph.summary.averageCredibility * 100).toFixed(0)}%
+                  </div>
+                </div>
+                <div>
+                  <div className="text-xs text-slate-500">Strength</div>
+                  <div className={`text-sm font-semibold ${
+                    multiAgentForecast.evidenceGraph.summary.evidenceStrength >= 0.7
+                      ? 'text-emerald-400'
+                      : multiAgentForecast.evidenceGraph.summary.evidenceStrength >= 0.5
+                        ? 'text-amber-400'
+                        : 'text-rose-400'
+                  }`}>
+                    {(multiAgentForecast.evidenceGraph.summary.evidenceStrength * 100).toFixed(0)}%
+                  </div>
+                </div>
+              </div>
+              {multiAgentForecast.evidenceGraph.topNodes.length > 0 && (
+                <div className="mt-3">
+                  <div className="text-xs text-slate-500 mb-1">Top Evidence Pieces</div>
+                  <div className="space-y-1">
+                    {multiAgentForecast.evidenceGraph.topNodes.map((node, i) => (
+                      <div key={i} className="text-xs text-slate-300 bg-slate-800 rounded px-2 py-1 border border-slate-700">
+                        <span className={`inline-block w-2 h-2 rounded-full mr-2 ${
+                          node.verificationStatus === 'verified'
+                            ? 'bg-emerald-400'
+                            : node.verificationStatus === 'partially_verified'
+                              ? 'bg-amber-400'
+                              : 'bg-slate-500'
+                        }`} />
+                        {node.claim}
+                        <span className="text-slate-500 ml-2">— {node.source} ({node.nodeType})</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {multiAgentForecast.globalVerifier && (
+        <div className={`mb-6 rounded-lg border px-4 py-3 ${
+          multiAgentForecast.globalVerifier.recommendation === 'high_confidence'
+            ? 'border-emerald-500/20 bg-emerald-500/5'
+            : multiAgentForecast.globalVerifier.recommendation === 'moderate_confidence'
+              ? 'border-cyan-500/20 bg-cyan-500/5'
+              : multiAgentForecast.globalVerifier.recommendation === 'low_confidence'
+                ? 'border-amber-500/20 bg-amber-500/5'
+                : 'border-rose-500/20 bg-rose-500/5'
+        }`}>
+          <div className="flex items-start gap-3">
+            <Shield className={`w-4 h-4 mt-0.5 flex-shrink-0 ${
+              multiAgentForecast.globalVerifier.recommendation === 'high_confidence'
+                ? 'text-emerald-400'
+                : multiAgentForecast.globalVerifier.recommendation === 'moderate_confidence'
+                  ? 'text-cyan-400'
+                  : multiAgentForecast.globalVerifier.recommendation === 'low_confidence'
+                    ? 'text-amber-400'
+                    : 'text-rose-400'
+            }`} />
+            <div className="flex-1">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-sm font-medium text-white">Global Verifier</span>
+                <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                  multiAgentForecast.globalVerifier.recommendation === 'high_confidence'
+                    ? 'bg-emerald-500/15 text-emerald-300'
+                    : multiAgentForecast.globalVerifier.recommendation === 'moderate_confidence'
+                      ? 'bg-cyan-500/15 text-cyan-300'
+                      : multiAgentForecast.globalVerifier.recommendation === 'low_confidence'
+                        ? 'bg-amber-500/15 text-amber-300'
+                        : 'bg-rose-500/15 text-rose-300'
+                }`}>
+                  {multiAgentForecast.globalVerifier.recommendation.replace(/_/g, ' ')}
+                </span>
+                <span className="text-xs text-slate-500">
+                  ({multiAgentForecast.globalVerifier.source})
+                </span>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-2">
+                <div>
+                  <div className="text-xs text-slate-500">Verification Score</div>
+                  <div className="text-sm text-white font-semibold">
+                    {(multiAgentForecast.globalVerifier.verificationScore * 100).toFixed(0)}%
+                  </div>
+                </div>
+                <div>
+                  <div className="text-xs text-slate-500">Evidence Strength</div>
+                  <div className="text-sm text-white font-semibold">
+                    {(multiAgentForecast.globalVerifier.evidenceStrength * 100).toFixed(0)}%
+                  </div>
+                </div>
+              </div>
+              {multiAgentForecast.globalVerifier.coverageAssessment && (
+                <div className="text-xs text-slate-400 mt-1">
+                  {multiAgentForecast.globalVerifier.coverageAssessment}
+                </div>
+              )}
+              {multiAgentForecast.globalVerifier.strongestEvidence && (
+                <div className="text-xs text-emerald-300 mt-1">
+                  <span className="text-slate-500">Strongest: </span>
+                  {multiAgentForecast.globalVerifier.strongestEvidence}
+                </div>
+              )}
+              {multiAgentForecast.globalVerifier.weakestLink && (
+                <div className="text-xs text-amber-300 mt-1">
+                  <span className="text-slate-500">Weakest: </span>
+                  {multiAgentForecast.globalVerifier.weakestLink}
+                </div>
+              )}
+              {multiAgentForecast.globalVerifier.keyConcerns.length > 0 && (
+                <div className="mt-2">
+                  <div className="text-xs text-slate-500 mb-1">Verifier Concerns</div>
+                  <div className="space-y-1">
+                    {multiAgentForecast.globalVerifier.keyConcerns.map((concern, i) => (
+                      <div key={i} className="text-xs text-slate-300 bg-slate-800 rounded px-2 py-1 border border-slate-700">
+                        {concern}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
         <div className="bg-slate-900/60 rounded-lg p-4 border border-slate-700">
           <div className="flex items-center gap-2 text-white font-medium mb-3">
@@ -419,6 +774,41 @@ export default function MultiAgentForecastPanel({
           </div>
         </div>
       </div>
+
+      {multiAgentForecast.progressTracking && (
+        <div className="mt-6 rounded-lg border border-slate-700 bg-slate-900/40 px-4 py-3">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs font-medium text-slate-400">
+              Verification Pipeline v{multiAgentForecast.progressTracking.pipelineVersion}
+            </span>
+            <span className="text-xs text-slate-500">
+              {multiAgentForecast.progressTracking.completedPhases}/{multiAgentForecast.progressTracking.totalPhases} phases
+            </span>
+          </div>
+          <div className="flex flex-wrap gap-1.5">
+            {multiAgentForecast.progressTracking.phases.map((phase, i) => (
+              <div
+                key={i}
+                title={phase.detail || phase.status}
+                className={`text-xs px-2 py-1 rounded border ${
+                  phase.status === 'completed' || phase.status === 'passed'
+                    ? 'border-emerald-500/20 bg-emerald-500/5 text-emerald-300'
+                    : phase.status === 'skipped' || phase.status === 'no_data' || phase.status === 'empty'
+                      ? 'border-slate-600 bg-slate-800/50 text-slate-500'
+                      : phase.status === 'heuristic' || phase.status === 'fallback'
+                        ? 'border-amber-500/20 bg-amber-500/5 text-amber-300'
+                        : phase.status === 'major' || phase.status === 'critical' || phase.status === 'rejected'
+                          ? 'border-rose-500/20 bg-rose-500/5 text-rose-300'
+                          : 'border-cyan-500/20 bg-cyan-500/5 text-cyan-300'
+                }`}
+              >
+                {phase.name.replace(/_/g, ' ')}
+                <span className="text-slate-500 ml-1">· {phase.status}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

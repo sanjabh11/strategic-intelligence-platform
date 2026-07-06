@@ -168,6 +168,109 @@ export interface MultiAgentForecast {
   evidenceGate?: EvidenceGateResult;
   /** When the evidence gate blocks adjustment, this explains why the prior was preserved. */
   noMoveReason?: string | null;
+  /** Market-implied probability from Polymarket/Kalshi used as a prior anchor. */
+  marketPrior?: {
+    source: string;
+    probability: number;
+    marketQuestion: string;
+    url?: string;
+  } | null;
+  /** Semantic routing result — which forecast skill file was used. */
+  semanticRoute?: {
+    category: string;
+    label: string;
+    routingConfidence: number;
+  } | null;
+  /** Learnings-based calibration result. */
+  calibrationWithLearnings?: {
+    sampleSize: number;
+    brierScore: number | null;
+    method: string;
+    calibrationStatus: string;
+  } | null;
+  /** AgentHarness-inspired LLM-as-judge verification result. */
+  judgeVerification?: {
+    family: string;
+    verifiedProbability: number;
+    judgeConfidence: number;
+    disagreementWithChampion: number;
+    judgeReasoning: string;
+    verdict: 'confirmed' | 'adjusted_up' | 'adjusted_down' | 'rejected';
+    concerns: string[];
+    adjustedProbability: number | null;
+    judgeDelta: number;
+    severity: 'none' | 'minor' | 'major' | 'critical';
+  } | null;
+  /** AgentHarness-inspired orchestrator pre-dispatch decision. */
+  orchestrator?: {
+    activeAgentCount: number;
+    skippedAgents: string[];
+    reasoning: string;
+    estimatedComplexity: 'low' | 'medium' | 'high';
+    recommendedRounds: number;
+  } | null;
+  /** AgentHarness-inspired benchmark registry summary. */
+  benchmark?: {
+    totalForecasts: number;
+    resolvedForecasts: number;
+    averageBrierScore: number | null;
+    calibrationError: number | null;
+    judgeAccuracy: number | null;
+    trend: 'improving' | 'stable' | 'degrading' | 'insufficient_data';
+    displayMetrics: Array<{
+      label: string;
+      value: string;
+      status: string;
+      tooltip: string;
+    }> | null;
+  } | null;
+  /** AgentHarness-inspired evidence graph summary. */
+  evidenceGraph?: {
+    summary: {
+      totalNodes: number;
+      totalEdges: number;
+      verifiedCount: number;
+      contradictedCount: number;
+      unverifiedCount: number;
+      averageCredibility: number;
+      averageRelevance: number;
+      supportRatio: number;
+      contradictionRatio: number;
+      evidenceStrength: number;
+      coverageScore: number;
+    };
+    topNodes: Array<{
+      claim: string;
+      source: string;
+      nodeType: string;
+      credibilityScore: number;
+      verificationStatus: string;
+    }>;
+    edgeCount: number;
+  } | null;
+  /** Global verifier result — LLM or heuristic fallback. */
+  globalVerifier?: {
+    verificationScore: number;
+    evidenceStrength: number;
+    coverageAssessment: string;
+    keyConcerns: string[];
+    strongestEvidence: string | null;
+    weakestLink: string | null;
+    recommendation: 'high_confidence' | 'moderate_confidence' | 'low_confidence' | 'insufficient_evidence';
+    source: 'llm' | 'heuristic';
+  } | null;
+  /** Verification pipeline progress tracking. */
+  progressTracking?: {
+    phases: Array<{
+      name: string;
+      status: string;
+      detail?: string;
+      duration?: number;
+    }>;
+    completedPhases: number;
+    totalPhases: number;
+    pipelineVersion: string;
+  } | null;
 }
 
 export interface AnalysisResult {
