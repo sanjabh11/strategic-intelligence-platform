@@ -13,6 +13,7 @@ import type {
   QuestionContextPayload,
   PublicAnswer,
 } from '../../shared/publicForecasting'
+import type { EvidenceGateResult } from '../../shared/evidenceGate'
 
 export interface Player {
   id: string;
@@ -138,6 +139,11 @@ export interface MultiAgentForecastAdversarialReview {
   missingEvidence: string[];
   overconfidenceRisk: number;
   recommendation: string;
+  worstCaseCounterfactual?: {
+    scenario: string;
+    probability: number;
+    guardingTriggers: string[];
+  };
 }
 
 export interface MultiAgentForecastMetadata {
@@ -158,6 +164,10 @@ export interface MultiAgentForecast {
   consensus: MultiAgentForecastConsensus;
   metadata: MultiAgentForecastMetadata;
   publicAnswer?: PublicAnswer;
+  /** ProphetHacks evidence gate result — "no_move" is a valid outcome, not a failure. */
+  evidenceGate?: EvidenceGateResult;
+  /** When the evidence gate blocks adjustment, this explains why the prior was preserved. */
+  noMoveReason?: string | null;
 }
 
 export interface AnalysisResult {
