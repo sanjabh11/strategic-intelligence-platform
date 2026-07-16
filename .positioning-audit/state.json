@@ -1,0 +1,57 @@
+{
+  "audit_id": "sip-deep-2026-07-13",
+  "product_context": "c:/Users/Sanjay/strategic-intelligence-platform",
+  "product_name": "Strategic Intelligence Platform",
+  "company": "Ignite IT Serve",
+  "scope": "deep",
+  "started_at": "2026-07-13T16:23:00+05:30",
+  "completed_at": "2026-07-13T22:30:00+05:30",
+  "current_phase": 7,
+  "current_gate": "gate-7-conditional-recycle",
+  "evidence_limited_mode": true,
+  "decision_confidence": {
+    "composite": 72,
+    "quality": 24,
+    "coverage": 20,
+    "consistency": 18,
+    "counter": 7,
+    "validation": 3
+  },
+  "hypotheses": ["PH-1", "PH-2", "PH-3", "PH-4", "PH-5", "PH-6", "PH-7", "PH-8"],
+  "recommended_hypothesis": "PH-1",
+  "secondary_hypotheses": ["PH-4", "PH-6", "PH-8"],
+  "beachhead_segment": "S3-university-educators",
+  "evidence_types_present": [
+    "product_promise",
+    "codebase_evidence",
+    "stakeholder_input",
+    "competitor_intel",
+    "market_data",
+    "pricing_signal",
+    "alignment_analysis",
+    "implementation_detail"
+  ],
+  "evidence_limitations": [
+    "No customer evidence (0 customers, pilot phase)",
+    "No user quotes, behavioral observations, or support tickets",
+    "No sales data, conversion rates, or win/loss analysis",
+    "No pricing signals from real buyers",
+    "No usage analytics or telemetry data",
+    "LTI integration fixed but E2E untested",
+    "GDELT not configured",
+    "Build not verified on Windows (scripts fixed but not run)"
+  ],
+  "phases_completed": [0, 1, 2, 3, 4, 5, 6, 7],
+  "gates_passed": ["gate-0", "gate-1", "gate-2", "gate-3", "gate-4", "gate-5", "gate-6", "gate-7"],
+  "all_gates_conditional": true,
+  "audit_verdict": "CONDITIONAL GO / RECYCLE",
+  "recycle_conditions": [
+    "Validate PH-1 with 5+ professor interviews",
+    "Test per-student pricing model (align with MobLab $12-$25)",
+    "End-to-end test LTI integration with Canvas",
+    "Run Windows build to verify compilation",
+    "Add gradebook or grade export feature",
+    "Validate AI-resistant assessment hypothesis (PH-6)"
+  ],
+  "last_updated": "2026-07-13T22:30:00+05:30"
+}

@@ -68,6 +68,14 @@ const ClassroomManager: React.FC<ClassroomManagerProps> = ({ userId }) => {
   const [joinCode, setJoinCode] = useState('');
   const [copiedCode, setCopiedCode] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showAssignmentForm, setShowAssignmentForm] = useState(false);
+  const [newAssignment, setNewAssignment] = useState({
+    title: '',
+    description: '',
+    template_id: '',
+    due_date: '',
+    points_possible: 100,
+  });
 
   // New classroom form state
   const [newClassroom, setNewClassroom] = useState({
@@ -143,6 +151,41 @@ const ClassroomManager: React.FC<ClassroomManagerProps> = ({ userId }) => {
       console.error('Error fetching classroom details:', err);
     }
   }, []);
+
+  // Create assignment
+  const handleCreateAssignment = async () => {
+    if (!selectedClassroom) return;
+    if (!newAssignment.title.trim()) {
+      setError('Assignment title is required');
+      return;
+    }
+
+    try {
+      const { data, error: createError } = await supabase
+        .from('classroom_assignments')
+        .insert({
+          classroom_id: selectedClassroom.id,
+          title: newAssignment.title,
+          description: newAssignment.description,
+          template_id: newAssignment.template_id || null,
+          due_date: newAssignment.due_date || null,
+          points_possible: newAssignment.points_possible,
+          is_published: false,
+        })
+        .select()
+        .single();
+
+      if (createError) throw createError;
+
+      if (data) setAssignments([data, ...assignments]);
+      setNewAssignment({ title: '', description: '', template_id: '', due_date: '', points_possible: 100 });
+      setShowAssignmentForm(false);
+      setError(null);
+    } catch (err) {
+      console.error('Error creating assignment:', err);
+      setError('Failed to create assignment');
+    }
+  };
 
   useEffect(() => {
     fetchClassrooms();
@@ -611,12 +654,60 @@ const ClassroomManager: React.FC<ClassroomManagerProps> = ({ userId }) => {
               Assignments ({assignments.length})
             </h3>
             {isOwner && (
-              <button className="px-3 py-1 bg-indigo-500 hover:bg-indigo-600 rounded-lg text-sm text-white flex items-center gap-1">
+              <button
+                onClick={() => setShowAssignmentForm(!showAssignmentForm)}
+                className="px-3 py-1 bg-indigo-500 hover:bg-indigo-600 rounded-lg text-sm text-white flex items-center gap-1"
+              >
                 <Plus className="w-4 h-4" />
                 New Assignment
               </button>
             )}
           </div>
+          {showAssignmentForm && isOwner && (
+            <div className="p-4 border-b border-slate-700 space-y-3">
+              <input
+                type="text"
+                placeholder="Assignment title"
+                value={newAssignment.title}
+                onChange={(e) => setNewAssignment({ ...newAssignment, title: e.target.value })}
+                className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm"
+              />
+              <textarea
+                placeholder="Description (optional)"
+                value={newAssignment.description}
+                onChange={(e) => setNewAssignment({ ...newAssignment, description: e.target.value })}
+                className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm"
+                rows={2}
+              />
+              <div className="flex gap-3">
+                <input
+                  type="number"
+                  placeholder="Points"
+                  value={newAssignment.points_possible}
+                  onChange={(e) => setNewAssignment({ ...newAssignment, points_possible: parseInt(e.target.value) || 0 })}
+                  className="w-24 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm"
+                />
+                <input
+                  type="date"
+                  value={newAssignment.due_date}
+                  onChange={(e) => setNewAssignment({ ...newAssignment, due_date: e.target.value })}
+                  className="bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm"
+                />
+                <button
+                  onClick={handleCreateAssignment}
+                  className="px-4 py-2 bg-green-500 hover:bg-green-600 rounded-lg text-sm text-white"
+                >
+                  Create
+                </button>
+                <button
+                  onClick={() => setShowAssignmentForm(false)}
+                  className="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm text-white"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
           {assignments.length === 0 ? (
             <div className="p-8 text-center text-slate-500">
               No assignments yet

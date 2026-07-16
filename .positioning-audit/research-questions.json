@@ -1,0 +1,209 @@
+{
+  "root_question": "Is the current enterprise-first positioning correct, or should we pivot to a different beachhead segment?",
+  "tree": {
+    "level_0": "Should the Strategic Intelligence Platform maintain its enterprise-first positioning or pivot?",
+    "level_1": [
+      {
+        "id": "L1-1",
+        "question": "Which market segments have the highest unmet need that this product can address?",
+        "source_type": "primary + secondary",
+        "coverage": "partially_covered",
+        "counter_evidence": "searched — no evidence of enterprise WTP; education segment has MobLab as established competitor",
+        "sources": ["E27-E33", "E34-E37", "E45", "E52", "E54", "E58"],
+        "level_2": [
+          {
+            "id": "L2-1.1",
+            "question": "What segments exist in the strategic intelligence / decision-support market?",
+            "coverage": "covered",
+            "counter_evidence": "searched — enterprise (Recorded Future, Palantir), education (MobLab, Gambit, Wolfram), public/citizen (Coursera, MOOCs)",
+            "sources": ["E4", "E27-E33", "E45", "E53"],
+            "level_3": [
+              { "id": "L3-1.1.1", "question": "What are the firmographic profiles of buyers in this market?", "coverage": "partially_covered", "counter_evidence": "enterprise buyers need SOC2/procurement (E17); education buyers are individual professors (E27-E30)", "sources": ["E17", "E27-E30", "E44"] },
+              { "id": "L3-1.1.2", "question": "What are the behavioral patterns of these buyers?", "coverage": "partially_covered", "counter_evidence": "education buyers adopt via textbook bundling and LMS integration (E30, E47)", "sources": ["E30", "E47", "E48", "E57"] },
+              { "id": "L3-1.1.3", "question": "What intent signals indicate active need?", "coverage": "uncovered", "counter_evidence": "not searched — need professor search intent data", "sources": [] }
+            ]
+          },
+          {
+            "id": "L2-1.2",
+            "question": "Which segments are underserved by existing alternatives?",
+            "coverage": "covered",
+            "counter_evidence": "searched — MobLab serves classroom experiments well; Gambit/Wolfram serve computation; enterprise served by Palantir/Recorded Future. Gap: evidence-backed strategic analysis for education",
+            "sources": ["E27-E33", "E45", "E53"],
+            "level_3": [
+              { "id": "L3-1.2.1", "question": "Where do competitors have the largest feature gaps?", "coverage": "covered", "counter_evidence": "MobLab lacks evidence retrieval, forecast governance, real-world scenario analysis. Gambit/Wolfram lack classroom management, LMS, evidence.", "sources": ["E27-E33", "E45", "E53"] },
+              { "id": "L3-1.2.2", "question": "Which segments find competitors too expensive or complex?", "coverage": "partially_covered", "counter_evidence": "MobLab $12-$25/student is affordable; Wolfram $184/student/yr is expensive; Gambit is free but limited", "sources": ["E28", "E31", "E32"] },
+              { "id": "L3-1.2.3", "question": "Which segments are not targeted by any competitor?", "coverage": "partially_covered", "counter_evidence": "No competitor offers evidence-backed game theory + forecast governance for education. But unvalidated need.", "sources": ["E45", "E53"] }
+            ]
+          },
+          {
+            "id": "L2-1.3",
+            "question": "What JTBD (Jobs To Be Done) does this product actually serve?",
+            "coverage": "covered",
+            "counter_evidence": "searched — product does analysis + evidence + forecasting, not classroom experiments",
+            "sources": ["E5-E12", "E39-E42", "E50-E51"],
+            "level_3": [
+              { "id": "L3-1.3.1", "question": "What job steps does the product support end-to-end?", "coverage": "covered", "counter_evidence": "intake → evidence retrieval → game theory analysis → forecast → governance. NOT: classroom experiments, gradebook, LMS sync.", "sources": ["E6", "E8", "E11", "E39-E42"] },
+              { "id": "L3-1.3.2", "question": "Which of these jobs are most urgent for which segments?", "coverage": "partially_covered", "counter_evidence": "education needs experiments + grading (MobLab serves); enterprise needs evidence + governance (SIP serves but unvalidated)", "sources": ["E27", "E39", "E44"] },
+              { "id": "L3-1.3.3", "question": "What outcomes do users expect from these jobs?", "coverage": "uncovered", "counter_evidence": "not searched — no user interviews", "sources": [] }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "L1-2",
+        "question": "Does the product's actual capability support the enterprise positioning, or is it better suited for a different segment?",
+        "source_type": "primary (codebase) + secondary",
+        "coverage": "covered",
+        "counter_evidence": "searched — product has classroom management, education mode, teacher views, LTI integration, academic tier. Enterprise features (SSO, SLA, white-label) exist but unverified.",
+        "sources": ["E5-E16", "E22-E26", "E39-E44", "E49-E51", "E59-E64"],
+        "level_2": [
+          {
+            "id": "L2-2.1",
+            "question": "What can the product actually do today (vs what it claims)?",
+            "coverage": "covered",
+            "counter_evidence": "searched — 56 components, 41+ edge functions, 55 DB tables. Missing modules now created. ClassroomManager, NegotiationDojo, TeacherView, LTI all exist. Payments mock.",
+            "sources": ["E5-E12", "E22-E26", "E39-E42", "E49-E51"],
+            "level_3": [
+              { "id": "L3-2.1.1", "question": "Which features are fully implemented vs partial vs stub?", "coverage": "covered", "counter_evidence": "core game theory ✅, classroom management ✅ (assignment creation now works), LTI ✅ (JWT verified), payments ⚠️ mock, real-time feeds ⚠️ need config", "sources": ["E20", "E24", "E25", "E26"] },
+              { "id": "L3-2.1.2", "question": "What is the production readiness of each module?", "coverage": "partially_covered", "counter_evidence": "no hosted proof, 0 customers, public beta mode restricts features", "sources": ["E15", "E20", "E21"] },
+              { "id": "L3-2.1.3", "question": "What integrations are live vs configured vs missing?", "coverage": "covered", "counter_evidence": "Supabase ✅, Gemini ✅, Firecrawl ✅, GDELT ⚠️, Stripe ⚠️ mock, Whop ⚠️ pending, LTI ✅ fixed but untested E2E", "sources": ["E14", "E25", "E43"] }
+            ]
+          },
+          {
+            "id": "L2-2.2",
+            "question": "Is the pricing model aligned with enterprise buying processes?",
+            "coverage": "covered",
+            "counter_evidence": "searched — $19-$199/mo self-serve does NOT match enterprise procurement. Academic $34/mo does NOT match MobLab's per-student model.",
+            "sources": ["E12", "E28", "E44", "E56"],
+            "level_3": [
+              { "id": "L3-2.2.1", "question": "How does $19-$199/mo compare to enterprise budgets?", "coverage": "covered", "counter_evidence": "enterprise tools cost $50K-$150K+/yr. $199/mo = $2,388/yr — too low for enterprise, too high for individual professors.", "sources": ["E4", "E12"] },
+              { "id": "L3-2.2.2", "question": "Does self-serve pricing match enterprise procurement?", "coverage": "covered", "counter_evidence": "no — enterprise needs SSO, SOC2, contracts. Self-serve bypasses procurement. Academic tier uses .edu email only.", "sources": ["E12", "E17", "E44"] },
+              { "id": "L3-2.2.3", "question": "What pricing model would each segment accept?", "coverage": "partially_covered", "counter_evidence": "education: per-student ($12-$25 like MobLab); enterprise: annual contract ($50K+); prosumer: monthly subscription ($19-$49)", "sources": ["E28", "E44", "E47"] }
+            ]
+          },
+          {
+            "id": "L2-2.3",
+            "question": "Is the product's game-theory approach a differentiator that segments value?",
+            "coverage": "partially_covered",
+            "counter_evidence": "searched — MobLab has 60+ game theory games; Wolfram 14.2 has built-in game theory; Gambit is free. Game theory alone is NOT a differentiator. Evidence + governance IS.",
+            "sources": ["E27-E33", "E45", "E53"],
+            "level_3": [
+              { "id": "L3-2.3.1", "question": "Do enterprise buyers care about game theory specifically?", "coverage": "uncovered", "counter_evidence": "not searched — no enterprise buyer interviews", "sources": [] },
+              { "id": "L3-2.3.2", "question": "Is game theory a wedge or a feature?", "coverage": "partially_covered", "counter_evidence": "MobLab proves game theory is a wedge in education. In enterprise, game theory is a feature, not a wedge.", "sources": ["E27", "E29", "E34"] },
+              { "id": "L3-2.3.3", "question": "What segments would value game-theory analysis most?", "coverage": "covered", "counter_evidence": "education (game theory courses growing — Dartmouth 248 students), policy/think tanks, consulting firms", "sources": ["E34", "E46", "E58"] }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "L1-3",
+        "question": "What is the competitive whitespace, and where can this product win?",
+        "source_type": "secondary",
+        "coverage": "covered",
+        "counter_evidence": "searched — MobLab is established in education experiments; Gambit/Wolfram in computation; no one does evidence + game theory + governance",
+        "sources": ["E27-E33", "E45", "E52-E53"],
+        "level_2": [
+          {
+            "id": "L2-3.1",
+            "question": "Who are the direct and indirect competitors, and where are their gaps?",
+            "coverage": "covered",
+            "counter_evidence": "searched — MobLab: 60+ games, gradebook, LMS, no evidence/governance. Gambit: free, no classroom. Wolfram: expensive, no classroom. Coursera: content only.",
+            "sources": ["E27-E33", "E45", "E53"],
+            "level_3": [
+              { "id": "L3-3.1.1", "question": "What segments do competitors explicitly target?", "coverage": "covered", "counter_evidence": "MobLab: economics professors (higher ed + high school). Gambit: researchers. Wolfram: STEM students/researchers. Coursera: self-learners.", "sources": ["E27", "E28", "E31", "E32", "E33"] },
+              { "id": "L3-3.1.2", "question": "What use cases do competitors not support?", "coverage": "covered", "counter_evidence": "none offer: evidence retrieval + game theory + forecast governance + real-world scenario analysis in one workflow", "sources": ["E45", "E53"] },
+              { "id": "L3-3.1.3", "question": "What pricing gaps exist in the competitive landscape?", "coverage": "covered", "counter_evidence": "MobLab $12-$25/student. Wolfram $184/student/yr. Gambit free. SIP $34/mo academic. Gap: no per-student evidence+analysis tool.", "sources": ["E28", "E31", "E32", "E44"] }
+            ]
+          },
+          {
+            "id": "L2-3.2",
+            "question": "What alternatives do target segments use today?",
+            "coverage": "partially_covered",
+            "counter_evidence": "searched — professors use MobLab, textbooks, case studies, Excel. No evidence of professors using evidence-backed analysis tools.",
+            "sources": ["E27-E30", "E33", "E48"],
+            "level_3": [
+              { "id": "L3-3.2.1", "question": "What is the status quo for each segment?", "coverage": "partially_covered", "counter_evidence": "education: MobLab + textbooks + lectures. Enterprise: Palantir + analysts + consultants. Prosumer: ChatGPT + spreadsheets.", "sources": ["E4", "E27", "E33", "E54"] },
+              { "id": "L3-3.2.2", "question": "What switching costs exist for each alternative?", "coverage": "partially_covered", "counter_evidence": "MobLab: low (per-class subscription). Wolfram: medium (annual license). Textbook bundling: high (institutional contracts).", "sources": ["E28", "E30", "E47"] },
+              { "id": "L3-3.2.3", "question": "What would make users switch from their current approach?", "coverage": "uncovered", "counter_evidence": "not searched — no user interviews", "sources": [] }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "L1-4",
+        "question": "What are the pivot risks, and what would make us stop?",
+        "source_type": "primary + secondary",
+        "coverage": "partially_covered",
+        "counter_evidence": "searched — MobLab is entrenched; AI substitution threatens analysis tools; no customer validation",
+        "sources": ["E17", "E38", "E45", "E54-E55"],
+        "level_2": [
+          {
+            "id": "L2-4.1",
+            "question": "What evidence would disconfirm the current positioning?",
+            "coverage": "covered",
+            "counter_evidence": "searched — 0 enterprise customers, no SOC2, no procurement docs, no buyer-validated WTP. Education has MobLab as entrenched competitor.",
+            "sources": ["E4", "E17", "E27-E30", "E45"],
+            "level_3": [
+              { "id": "L3-4.1.1", "question": "Is there evidence that enterprise buyers don't value game theory?", "coverage": "partially_covered", "counter_evidence": "enterprise tools (Palantir, Recorded Future) don't emphasize game theory — they focus on data/intelligence", "sources": ["E4"] },
+              { "id": "L3-4.1.2", "question": "Is there evidence that the market is too small?", "coverage": "partially_covered", "counter_evidence": "education gamification $10.37B (2025); game theory courses growing (Dartmouth 248 students). Market exists but SIP's specific niche may be too narrow.", "sources": ["E34", "E35", "E37"] },
+              { "id": "L3-4.1.3", "question": "Is there evidence that a different segment is a better fit?", "coverage": "covered", "counter_evidence": "product has classroom management, education mode, teacher views, LTI, academic tier — all education-specific features. Enterprise features (SSO, SLA) are stubs.", "sources": ["E6", "E12", "E39-E44"] }
+            ]
+          },
+          {
+            "id": "L2-4.2",
+            "question": "What would make us abort the audit or reframe?",
+            "coverage": "partially_covered",
+            "counter_evidence": "searched — if no segment shows WTP, if MobLab partnership is possible, if AI substitution eliminates analysis tool need",
+            "sources": ["E38", "E45", "E54"],
+            "level_3": [
+              { "id": "L3-4.2.1", "question": "What if no segment shows sufficient WTP?", "coverage": "uncovered", "counter_evidence": "not searched — no pricing experiments run yet", "sources": [] },
+              { "id": "L3-4.2.2", "question": "What if the product can't support any validated segment?", "coverage": "partially_covered", "counter_evidence": "product can support education (classroom, LTI, teacher views) but lacks gradebook, LMS sync, 60+ games. Gap is significant.", "sources": ["E39", "E43", "E45"] },
+              { "id": "L3-4.2.3", "question": "What if the market is already saturated?", "coverage": "partially_covered", "counter_evidence": "MobLab is dominant but narrow (experiments only). No one offers evidence + game theory + governance. Whitespace exists but unvalidated.", "sources": ["E45", "E53"] }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "L1-5",
+        "question": "What non-obvious segments could this product serve that the current positioning doesn't consider?",
+        "source_type": "secondary",
+        "coverage": "covered",
+        "counter_evidence": "searched — education is strong candidate based on product capabilities. Consulting and think tanks are secondary.",
+        "sources": ["E34-E37", "E45", "E52-E54"],
+        "level_2": [
+          {
+            "id": "L2-5.1",
+            "question": "What adjacent markets have similar JTBD?",
+            "coverage": "covered",
+            "counter_evidence": "searched — education (game theory courses), consulting (strategy firms), think tanks (policy analysis), prosumer (strategic thinking enthusiasts)",
+            "sources": ["E34", "E46", "E58"],
+            "level_3": [
+              { "id": "L3-5.1.1", "question": "Could this serve consulting firms as a tool?", "coverage": "partially_covered", "counter_evidence": "consulting firms use proprietary models. SIP's evidence + game theory could complement but not replace. No evidence of demand.", "sources": ["E4"] },
+              { "id": "L3-5.1.2", "question": "Could this serve academic researchers?", "coverage": "partially_covered", "counter_evidence": "Gambit already serves researchers for computation. SIP offers evidence retrieval + governance which Gambit lacks. Niche but possible.", "sources": ["E32", "E53"] },
+              { "id": "L3-5.1.3", "question": "Could this serve individual analysts/professionals?", "coverage": "partially_covered", "counter_evidence": "prosumer tier ($19-$49) exists. ChatGPT is free substitute for basic analysis. SIP's governance is differentiator for serious analysts.", "sources": ["E12", "E54"] }
+            ]
+          },
+          {
+            "id": "L2-5.2",
+            "question": "What segments would value the consumer-facing features (life coach, mediator, bias detection)?",
+            "coverage": "partially_covered",
+            "counter_evidence": "searched — NegotiationDojo and bias profile are education/professional features, not B2C",
+            "sources": ["E19", "E40"],
+            "level_3": [
+              { "id": "L3-5.2.1", "question": "Is there a B2C or prosumer play?", "coverage": "partially_covered", "counter_evidence": "ChatGPT is free B2C substitute. SIP's game theory is too specialized for general B2C. Prosumer ($19-$49) is viable for strategy professionals.", "sources": ["E12", "E54"] },
+              { "id": "L3-5.2.2", "question": "Could education be the primary market instead of enterprise?", "coverage": "covered", "counter_evidence": "YES — product has classroom management, education mode, teacher views, LTI, academic tier, NegotiationDojo. BUT: MobLab is entrenched, SIP lacks gradebook/LMS sync/60+ games.", "sources": ["E6", "E12", "E27-E30", "E39-E44", "E45"] },
+              { "id": "L3-5.2.3", "question": "Could negotiation training be a standalone wedge?", "coverage": "partially_covered", "counter_evidence": "NegotiationDojo exists (25KB). No evidence of standalone demand. MobLab doesn't offer negotiation specifically. Possible niche.", "sources": ["E40", "E45"] }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "saturation_status": {
+    "sources_found": 64,
+    "unique_sources": 38,
+    "repetition_count": 3,
+    "counter_evidence_queries": 15,
+    "saturated": true
+  }
+}

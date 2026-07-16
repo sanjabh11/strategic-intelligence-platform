@@ -179,8 +179,19 @@ async function handleLaunch(req: Request, supabase: any): Promise<Response> {
     )
   }
 
-  // Decode JWT (in production, verify signature with platform's JWKS)
-  const payload = decodeJWT(idToken) as LTI13Message
+  // Verify JWT signature using platform's JWKS
+  const platform = session.lti_platforms
+  let payload: LTI13Message | null = null
+
+  try {
+    payload = await verifyJWT(idToken, platform)
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : 'JWT verification failed'
+    return new Response(
+      JSON.stringify({ error: msg }),
+      { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    )
+  }
 
   if (!payload) {
     return new Response(
@@ -395,14 +406,61 @@ async function handlePlatformRegistration(req: Request, supabase: any): Promise<
   )
 }
 
-// Simple JWT decoder (no verification - use proper library in production)
-function decodeJWT(token: string): any {
-  try {
-    const parts = token.split('.')
-    if (parts.length !== 3) return null
-    const payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')))
-    return payload
-  } catch {
-    return null
+// JWT verification with JWKS-based signature validation
+async function verifyJWT(token: string, platform: any): Promise<LTI13Message | null> {
+  const parts = token.split('.')
+  if (parts.length !== 3) return null
+
+  const header = JSON.parse(atob(parts[0].replace(/-/g, '+').replace(/_/g, '/')))
+  const payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')))
+
+  // Validate issuer and audience
+  if (platform?.issuer && payload.iss !== platform.issuer) {
+    throw new Error('JWT issuer mismatch')
   }
+  if (platform?.client_id && payload.aud !== platform.client_id) {
+    throw new Error('JWT audience mismatch')
+  }
+
+  // Check expiration
+  const now = Math.floor(Date.now() / 1000)
+  if (payload.exp && payload.exp < now) {
+    throw new Error('JWT expired')
+  }
+
+  // Fetch JWKS from platform's jwks_url
+  const jwksUrl = platform?.jwks_url
+  if (!jwksUrl) {
+    throw new Error('Platform JWKS URL not configured — cannot verify signature')
+  }
+
+  const jwksResponse = await fetch(jwksUrl)
+  if (!jwksResponse.ok) {
+    throw new Error(`Failed to fetch JWKS: ${jwksResponse.status}`)
+  }
+  const jwks = await jwksResponse.json()
+  const key = jwks.keys?.find((k: any) => k.kid === header.kid)
+  if (!key) {
+    throw new Error('JWT signing key not found in JWKS')
+  }
+
+  // Import the public key for verification
+  const cryptoKey = await crypto.subtle.importKey(
+    'jwk',
+    key,
+    { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' },
+    false,
+    ['verify']
+  )
+
+  // Verify signature
+  const data = new TextEncoder().encode(`${parts[0]}.${parts[1]}`)
+  const signature = Uint8Array.from(atob(parts[2].replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0))
+  const valid = await crypto.subtle.verify('RSASSA-PKCS1-v1_5', cryptoKey, signature, data)
+
+  if (!valid) {
+    throw new Error('JWT signature verification failed')
+  }
+
+  return payload as LTI13Message
 }

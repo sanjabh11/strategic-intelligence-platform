@@ -1,0 +1,451 @@
+{
+  "audit_id": "sip-deep-2026-07-13",
+  "evidence_items": [
+    {
+      "id": "E1",
+      "type": "product_promise",
+      "source": "README.md line 1-8",
+      "date": "2026-07-13",
+      "grade": "HIGH",
+      "content": "Strategic Intelligence Platform — Evidence-Backed Strategic Intelligence for Enterprise and Public-Sector Decision Teams. A governed strategic-intelligence pilot platform that connects evidence-gathering, game-theory analysis, human review, and forecast governance into one workflow.",
+      "provenance": "direct from product documentation",
+      "classification": "observed fact"
+    },
+    {
+      "id": "E2",
+      "type": "product_promise",
+      "source": "docs/POSITIONING.md",
+      "date": "2026-07-05",
+      "grade": "HIGH",
+      "content": "For enterprise strategy, geopolitical risk, and public-sector foresight teams who struggle to turn complex uncertainties into defensible, reviewable decision options, Strategic Intelligence Platform is a governed strategic-intelligence pilot tool that connects evidence-gathering, game-theory analysis, human review, and forecast governance into one workflow — unlike Recorded Future, Palantir AIP, and Metaculus/Good Judgment.",
+      "provenance": "direct from positioning document (April Dunford framework)",
+      "classification": "observed fact"
+    },
+    {
+      "id": "E3",
+      "type": "product_promise",
+      "source": "docs/sales/one-pager.md",
+      "date": "2026-07-13",
+      "grade": "HIGH",
+      "content": "Pilot Preview — No Payment Required. Tiers: Free $0, Pro $19, Elite $49, Enterprise $199, Academic $34. Company: Ignite IT Serve.",
+      "provenance": "direct from sales collateral",
+      "classification": "observed fact"
+    },
+    {
+      "id": "E4",
+      "type": "product_promise",
+      "source": "docs/sales/battle-card.md",
+      "date": "2026-07-13",
+      "grade": "HIGH",
+      "content": "Competitive positioning vs Recorded Future ($50K-$150K+/yr), Palantir AIP ($100K+/yr), Metaculus/Good Judgment. Wedge: 'Keep those tools. We handle the workflow after intake.' Honest about weaknesses: no hosted proof, no enterprise certification, 0 customers.",
+      "provenance": "direct from battle card",
+      "classification": "observed fact"
+    },
+    {
+      "id": "E5",
+      "type": "codebase_evidence",
+      "source": "package.json",
+      "date": "2026-07-13",
+      "grade": "HIGH",
+      "content": "React 18 + Vite 6 + TypeScript 5.6 + Tailwind 3.4 + shadcn/ui (Radix primitives). Supabase backend. Stripe + Whop monetization. Playwright E2E. Vitest unit tests. 91 dependencies total.",
+      "provenance": "direct codebase inspection",
+      "classification": "observed fact"
+    },
+    {
+      "id": "E6",
+      "type": "codebase_evidence",
+      "source": "src/App.tsx routes",
+      "date": "2026-07-13",
+      "grade": "HIGH",
+      "content": "14 routes: /console (main), /insights (geopolitical), /commodities (gold/market), /labs (practice modules), /templates, /forecasts, /forecasts/new, /classrooms, /war-room, /pricing, /signup, /checkout/stripe, /reviews, /system, /demo, /terms, /privacy. Public beta mode restricts many routes to anonymous analysis only.",
+      "provenance": "direct codebase inspection",
+      "classification": "observed fact"
+    },
+    {
+      "id": "E7",
+      "type": "codebase_evidence",
+      "source": "src/components/ (56 components)",
+      "date": "2026-07-13",
+      "grade": "HIGH",
+      "content": "56 React components including: StrategyConsole (99KB — main analysis interface), ForecastRegistry (51KB — forecast governance), MultiAgentForecastPanel (43KB), StrategySimulator (42KB), GameTreeBuilder (26KB), ClassroomManager (26KB), NegotiationDojo (25KB), GoldGameModule (24KB), CorporateWarRoom (23KB), BiasProfileDashboard (21KB), HumanReview (21KB), ScenarioMarketplace (20KB), GeopoliticalDashboard (18KB), WhopPricingPage (26KB), and more.",
+      "provenance": "direct codebase inspection",
+      "classification": "observed fact"
+    },
+    {
+      "id": "E8",
+      "type": "codebase_evidence",
+      "source": "supabase/functions/ (41+ edge functions)",
+      "date": "2026-07-13",
+      "grade": "HIGH",
+      "content": "41+ Deno edge functions: analyze-engine, recursive-equilibrium, quantum-strategy-service, bayes-belief-updating, evidence-retrieval, firecrawl-research, gdelt-stream, worldbank-sync, market-stream, human-review, forecast-create, multi-agent-forecast, brier-weighted-consensus, monte-carlo-simulator, trading-signals, personal-life-coach, ai-mediator, matching-markets, strategic-dna, collective-intelligence-aggregator, sso-auth, stripe-checkout, stripe-webhook, whop-webhook, lti-launch, and more.",
+      "provenance": "direct codebase inspection",
+      "classification": "observed fact"
+    },
+    {
+      "id": "E9",
+      "type": "codebase_evidence",
+      "source": "supabase/migrations/ (35 migrations)",
+      "date": "2026-07-13",
+      "grade": "HIGH",
+      "content": "55 database tables across: core game theory (10), real-time/historical (5), collective intelligence (8), additional modules (8), multi-user/signaling (5), supporting infrastructure (19). RLS enabled on all tables.",
+      "provenance": "direct codebase inspection (README + migration count)",
+      "classification": "observed fact"
+    },
+    {
+      "id": "E10",
+      "type": "codebase_evidence",
+      "source": "src/lib/claimRegistry.ts",
+      "date": "2026-07-13",
+      "grade": "HIGH",
+      "content": "Claim governance system with ALLOWED_CLAIMS (9) and PROHIBITED_CLAIMS (14). Prohibited: 'world-class accurate predictions', 'enterprise-ready platform', 'SOC 2 certified', 'buyer-validated willingness to pay', 'Palantir-equivalent'. This shows the team is honest about limitations.",
+      "provenance": "direct codebase inspection",
+      "classification": "observed fact"
+    },
+    {
+      "id": "E11",
+      "type": "codebase_evidence",
+      "source": "src/lib/forecastGovernance.ts",
+      "date": "2026-07-13",
+      "grade": "HIGH",
+      "content": "Forecast governance implemented: readiness assessment (issues/warnings/score), publish governance (canPublish/blockers/reviewRequired/warnings/freshness), pre-resolution capture, Brier scoring awareness.",
+      "provenance": "direct codebase inspection",
+      "classification": "observed fact"
+    },
+    {
+      "id": "E12",
+      "type": "codebase_evidence",
+      "source": "src/lib/whop-config.ts",
+      "date": "2026-07-13",
+      "grade": "HIGH",
+      "content": "5 pricing tiers: Free ($0, 5 analyses/day, 2x2 matrices), Pro ($19, 50/day, 5x5, labs, negotiation dojo, bias profile), Elite ($49, unlimited, gold module, intel, trading signals, war room, API), Enterprise ($199, white-label, SSO, SLA, 10 seats), Academic ($34, .edu only, classroom mode, LMS support). Whop primary + Stripe fallback for .edu.",
+      "provenance": "direct codebase inspection",
+      "classification": "observed fact"
+    },
+    {
+      "id": "E13",
+      "type": "codebase_evidence",
+      "source": "src/lib/analytics.ts",
+      "date": "2026-07-13",
+      "grade": "MEDIUM",
+      "content": "PostHog analytics integration (optional, env-gated). Events: page_view, signup_start, signup_complete, analysis_run, pricing_view, pricing_pilot_request, demo_request, forecast_create, forecast_publish. No Sentry error tracking active (env var empty in .env.example).",
+      "provenance": "direct codebase inspection",
+      "classification": "observed fact"
+    },
+    {
+      "id": "E14",
+      "type": "codebase_evidence",
+      "source": ".env.example",
+      "date": "2026-07-13",
+      "grade": "HIGH",
+      "content": "Integrations: Supabase, Gemini (primary LLM), OpenRouter (fallback), OpenAI, xAI (Grok), Perplexity (evidence retrieval), Firecrawl (web scraping), GDELT (geopolitical events), World Bank, Coinbase (BTC price), Stripe, Whop, PostHog, Sentry (disabled). Public beta mode: VITE_PUBLIC_BETA_MODE=analysis_only.",
+      "provenance": "direct codebase inspection",
+      "classification": "observed fact"
+    },
+    {
+      "id": "E15",
+      "type": "codebase_evidence",
+      "source": "src/App.tsx — public beta gating",
+      "date": "2026-07-13",
+      "grade": "HIGH",
+      "content": "Public beta mode (VITE_PUBLIC_BETA_MODE=analysis_only) restricts: insights, labs, classrooms, war-room, pricing, signup, checkout, forecasts/new, reviews, academic-application. Only /console, /templates, /forecasts (read), /demo are publicly accessible. This means the product is in a restricted public beta — not fully launched.",
+      "provenance": "direct codebase inspection",
+      "classification": "observed fact"
+    },
+    {
+      "id": "E16",
+      "type": "codebase_evidence",
+      "source": "src/lib/ — missing modules",
+      "date": "2026-07-13",
+      "grade": "HIGH",
+      "content": "App.tsx imports from './lib/labsCatalog', './lib/accessOverrides', './lib/publicBeta' — but these files do NOT exist in src/lib/ (only 9 files present: analytics, claimRegistry, forecastGovernance, llm-prompts, localEngine, supabase, utils, whop-config, whop). This suggests either: (a) files are generated at build time, (b) files are missing and build would fail, or (c) there's a barrel export not visible. This is a codebase health finding.",
+      "provenance": "direct codebase inspection",
+      "classification": "observed fact"
+    },
+    {
+      "id": "E17",
+      "type": "stakeholder_input",
+      "source": "docs/POSITIONING.md — claim boundaries",
+      "date": "2026-07-05",
+      "grade": "HIGH",
+      "content": "Explicit 'What We Don't Claim' section: No world-class prediction accuracy, no enterprise-ready security (0/8 procurement documents), no buyer-validated WTP (0 completed calls), no hosted/live proof, no Palantir-equivalence. Dual positioning: enterprise leads, consumer features secondary.",
+      "provenance": "internal positioning document",
+      "classification": "sourced claim"
+    },
+    {
+      "id": "E18",
+      "type": "stakeholder_input",
+      "source": "docs/Monetization_Strategy.md",
+      "date": "2026-07-13",
+      "grade": "MEDIUM",
+      "content": "Monetization strategy positions platform at intersection of EdTech, FinTech, and Strategic Intelligence. Core value prop: 'democratize Structural Forecasting' — game theory models future based on rational/irrational incentives, not just time-series. Target: researchers, educators, enterprise SaaS.",
+      "provenance": "internal strategy document",
+      "classification": "sourced claim"
+    },
+    {
+      "id": "E19",
+      "type": "stakeholder_input",
+      "source": "COMPETITION_WINNING_INNOVATIONS.md",
+      "date": "2026-07-13",
+      "grade": "MEDIUM",
+      "content": "5 competition-winning innovations: (1) AI Personal Strategic Life Coach, (2) Global Cooperation Engine, (3) Matching Markets (Nobel Prize algorithms), (4) Strategic DNA (25-bias assessment), (5) AI Conflict Mediator. These are consumer/education-facing features, not enterprise.",
+      "provenance": "internal innovation document",
+      "classification": "sourced claim"
+    },
+    {
+      "id": "E20",
+      "type": "codebase_evidence",
+      "source": "README.md — platform status",
+      "date": "2026-07-13",
+      "grade": "HIGH",
+      "content": "Platform status: Core game theory ✅, Real-time streaming ⚠️ (GDELT requires GCP setup), Historical database ✅, Collective intelligence ✅, Multi-user ✅, Temporal models ✅, Additional modules ✅, Payments ⚠️ (mock, Whop SDK pending). Overall: core functional, payments and some feeds need configuration.",
+      "provenance": "direct from product documentation",
+      "classification": "observed fact"
+    },
+    {
+      "id": "E21",
+      "type": "codebase_evidence",
+      "source": "netlify.toml, .github/ directory",
+      "date": "2026-07-13",
+      "grade": "MEDIUM",
+      "content": "Deployment configured for Netlify. CI/CD via GitHub Actions. App URL: https://strategy-intelligence-platform.netlify.app. Supabase project ref: jxdihzqoaxtydolmltdr.",
+      "provenance": "direct codebase inspection",
+      "classification": "observed fact"
+    },
+    {
+      "id": "E22", "type": "codebase_evidence", "source": "src/lib/ — missing modules (FIXED)", "date": "2026-07-13", "grade": "HIGH",
+      "content": "11 missing modules identified and created: labsCatalog.ts, accessOverrides.ts, publicBeta.ts, LabAccessGate.tsx, education.ts, warRoom.ts, questionContextCache.ts, strategistContract.ts, enterpriseWorkflow.ts, educationHelpers.ts, shared/publicForecasting.ts. Build should now resolve all local imports.",
+      "provenance": "direct codebase fix", "classification": "observed fact"
+    },
+    {
+      "id": "E23", "type": "codebase_evidence", "source": "package.json build script (FIXED)", "date": "2026-07-13", "grade": "HIGH",
+      "content": "Windows build failure fixed: replaced Unix-only 'rm -rf node_modules/.vite-temp' with cross-platform Node.js fs.rmSync via 'clean' script. Build and build:prod now use 'pnpm clean && tsc -b && vite build'.",
+      "provenance": "direct codebase fix", "classification": "observed fact"
+    },
+    {
+      "id": "E24", "type": "codebase_evidence", "source": "src/components/ClassroomManager.tsx (FIXED)", "date": "2026-07-13", "grade": "HIGH",
+      "content": "Assignment creation now implemented: 'New Assignment' button wired to showAssignmentForm state, handleCreateAssignment function inserts into classroom_assignments table with title/description/due_date/points_possible. Form UI added with input fields.",
+      "provenance": "direct codebase fix", "classification": "observed fact"
+    },
+    {
+      "id": "E25", "type": "codebase_evidence", "source": "supabase/functions/lti-launch/index.ts (FIXED)", "date": "2026-07-13", "grade": "HIGH",
+      "content": "LTI JWT security fixed: replaced insecure decodeJWT (no signature verification) with verifyJWT using Web Crypto API. Now fetches JWKS from platform's jwks_url, validates issuer/audience/expiration, and verifies RS256 signature. Returns 401 on verification failure.",
+      "provenance": "direct codebase fix", "classification": "observed fact"
+    },
+    {
+      "id": "E26", "type": "codebase_evidence", "source": "supabase/migrations/20251212110000_lms_classrooms.sql (FIXED)", "date": "2026-07-13", "grade": "HIGH",
+      "content": "DB permissions fixed: added INSERT/UPDATE/DELETE grants on classrooms, classroom_members, classroom_assignments, and assignment_submissions tables for authenticated users. Previously only SELECT was granted, preventing assignment creation.",
+      "provenance": "direct codebase fix", "classification": "observed fact"
+    },
+    {
+      "id": "E27", "type": "competitor_intel", "source": "https://www.moblab.com/products/classroom", "date": "2026-07-13", "grade": "HIGH",
+      "content": "MobLab Classroom: 60+ games and simulations for economics, social science, business, strategic thinking. Features include: online assignments (quizzes, video instructions, games, reflection surveys), expert-built Modules or build-your-own, in-class playlists (synchronous) and online assignments (asynchronous). NOT 'experiments only' as previously stated.",
+      "provenance": "direct from MobLab website", "classification": "observed fact"
+    },
+    {
+      "id": "E28", "type": "competitor_intel", "source": "https://www.moblab.com/products/classroom/pricing", "date": "2026-07-13", "grade": "HIGH",
+      "content": "MobLab pricing: DayPass (per student/day), Premier $25/student/class (60+ games), Poll+Games $15/student/class, Poll $12/student/class. Free for classes <8 students. High school 50% discount. Bundled with Macmillan, McGraw-Hill, Cengage/MindTap textbooks. Instructor access free.",
+      "provenance": "direct from MobLab pricing page", "classification": "observed fact"
+    },
+    {
+      "id": "E29", "type": "competitor_intel", "source": "https://www.moblab.com/edu/game-maps/game-theory", "date": "2026-07-13", "grade": "HIGH",
+      "content": "MobLab game theory catalog: Prisoner's Dilemma, Beauty Contest, Public Good, Cournot, Two-Candidate Election, Bach/Stravinsky, Stag Hunt, Matching Pennies, Rock-Paper-Scissors, Bargaining, Trust Game, Stackelberg, Monty Hall, Market for Lemons, Auctions, Ultimatum, Dictator. All can be repeated indefinitely.",
+      "provenance": "direct from MobLab game theory page", "classification": "observed fact"
+    },
+    {
+      "id": "E30", "type": "competitor_intel", "source": "https://www.moblab.com/products/classroom + support docs", "date": "2026-07-13", "grade": "HIGH",
+      "content": "MobLab LMS integration: built-in gradebook and roster syncs with Blackboard and Canvas. Yale SOM uses MobLab at $12/student. Harvard Business Publishing distributes MobLab simulations (prices $5-$60 per simulation). Cengage partnership includes MobLab in MindTap.",
+      "provenance": "direct from MobLab + Yale + HBP", "classification": "observed fact"
+    },
+    {
+      "id": "E31", "type": "competitor_intel", "source": "https://blog.wolfram.com/2025/02/25/a-whole-new-ball-game-game-theory-in-wolfram-language-14-2/", "date": "2025-02-25", "grade": "HIGH",
+      "content": "Wolfram Language 14.2 (Feb 2025) added built-in game theory functions: MatrixGame, TreeGame, NashEquilibrium, DominantStrategies, and game theory data. Targets researchers and students. Part of Mathematica ($184/student/year, $3K+ for institutions). Not a classroom management tool.",
+      "provenance": "direct from Wolfram Blog", "classification": "observed fact"
+    },
+    {
+      "id": "E32", "type": "competitor_intel", "source": "https://gambit.sourceforge.net/", "date": "2026-07-13", "grade": "MEDIUM",
+      "content": "Gambit: open-source game theory computation tool. Graphical interface for building/analyzing games, command-line tools, Python API. Used in teaching and research. Free. Alan Turing Institute developing AI-powered Gambit for non-experts. No classroom management, no LMS integration, no evidence retrieval.",
+      "provenance": "direct from Gambit website", "classification": "observed fact"
+    },
+    {
+      "id": "E33", "type": "competitor_intel", "source": "Coursera game theory courses", "date": "2026-07-13", "grade": "MEDIUM",
+      "content": "Coursera offers Stanford/UBC Game Theory I&II (Jackson, Leyton-Brown, Shoham). Yale OpenCourseWare Econ-159 (Polak). eCornell Game Theory and Business Strategy. These are content-only, not interactive analysis tools. Free to ~$49/month subscription.",
+      "provenance": "direct from Coursera/Yale/eCornell", "classification": "observed fact"
+    },
+    {
+      "id": "E34", "type": "market_data", "source": "https://home.dartmouth.edu/news/2023/04/game-theory-scores-big-dartmouth", "date": "2023-04", "grade": "HIGH",
+      "content": "Dartmouth game theory enrollment: 248 students in Evolutionary Game Theory (spring 2023), up from 9 in 2016. 300+ undergraduates study game theory yearly across 3 courses. Professor Fu: 'We're facing pandemics, AI ethics — game theory helps find common ground.' QSS program growth driving demand.",
+      "provenance": "direct from Dartmouth News", "classification": "observed fact"
+    },
+    {
+      "id": "E35", "type": "market_data", "source": "Education software market research 2026", "date": "2026-07-13", "grade": "HIGH",
+      "content": "Global education software market: $27.8B (2025) → $30.67B (2026), 10.28% CAGR. Higher education ~25% of market. AI in education $5.88B (2024) → $32.27B (2030), 31.2% CAGR. LMS = 46.35% of ed software spend. Gamification improves completion +34%, retention +22%.",
+      "provenance": "Mordor Intelligence, Grand View Research", "classification": "sourced claim"
+    },
+    {
+      "id": "E36", "type": "market_data", "source": "EdTech market research 2026", "date": "2026-07-13", "grade": "HIGH",
+      "content": "Global EdTech market: $199.74B (2025) → $236.25B (2026), 18.3% CAGR → $456.41B by 2030. 47% of HE institutions use AI structurally. 72% of educators experimented with generative AI. Adaptive learning improves outcomes +23%. LMS market alone: $30.92B (2025) → $100.70B (2032).",
+      "provenance": "HolonIQ, EDUCAUSE, MarketsandMarkets", "classification": "sourced claim"
+    },
+    {
+      "id": "E37", "type": "market_data", "source": "Education gamification market", "date": "2026-07-13", "grade": "MEDIUM",
+      "content": "Education gamification market: $10.37B (2025) → $35.65B (2035), 13.14% CAGR. Game-based learning growing at 21.6% CAGR. 88% of teachers using digital games report increased student engagement.",
+      "provenance": "Global Growth Insights, Scoop Market", "classification": "sourced claim"
+    },
+    {
+      "id": "E38", "type": "competitor_intel", "source": "AI academic integrity research 2025-2026", "date": "2026-07-13", "grade": "HIGH",
+      "content": "AI chatbot substitution in education: Generative AI compromising higher education non-exam assessments. AI detection insufficient. Frontiers in Education (2026): need task-specific AI rules distinguishing support from substitution. 47% of HE institutions use AI structurally. This validates need for AI-resistant, workflow-based tools.",
+      "provenance": "Frontiers in Education, ScienceDirect", "classification": "sourced claim"
+    },
+    {
+      "id": "E39", "type": "codebase_evidence", "source": "src/components/ClassroomManager.tsx — actual capabilities", "date": "2026-07-13", "grade": "HIGH",
+      "content": "ClassroomManager (26KB, 748 lines): manages classrooms (create/join), members (invite/remove), assignments (now create with form), classroom settings. Roles: instructor, TA, student, observer. Join codes. BUT: no gradebook, no LMS sync (LTI exists but unverified), no quiz/test creation, no student progress tracking dashboard.",
+      "provenance": "direct codebase inspection", "classification": "observed fact"
+    },
+    {
+      "id": "E40", "type": "codebase_evidence", "source": "src/components/NegotiationDojo.tsx", "date": "2026-07-13", "grade": "MEDIUM",
+      "content": "NegotiationDojo (25KB): AI-powered negotiation practice with game-theoretic opponents. Scenario-based. Tracks outcomes and strategic ratings. Standalone lab module, not integrated with classroom assignments or grading.",
+      "provenance": "direct codebase inspection", "classification": "observed fact"
+    },
+    {
+      "id": "E41", "type": "codebase_evidence", "source": "src/components/audience-views/TeacherView.tsx", "date": "2026-07-13", "grade": "MEDIUM",
+      "content": "TeacherView: renders lesson outlines, grading rubrics, student handouts from analysis data. Read-only view — no assignment creation, no grade input, no student feedback mechanism.",
+      "provenance": "direct codebase inspection", "classification": "observed fact"
+    },
+    {
+      "id": "E42", "type": "codebase_evidence", "source": "supabase/functions/teacher-packet/index.ts", "date": "2026-07-13", "grade": "MEDIUM",
+      "content": "Teacher-packet edge function: generates lesson plans, learning objectives, handouts from analysis data. One-way generation — no feedback loop, no student submission handling.",
+      "provenance": "direct codebase inspection", "classification": "observed fact"
+    },
+    {
+      "id": "E43", "type": "codebase_evidence", "source": "supabase/functions/lti-launch/index.ts — security audit", "date": "2026-07-13", "grade": "HIGH",
+      "content": "LTI 1.3 launch handler: NOW fixed with JWKS signature verification. Previously decoded JWTs without verification (security vulnerability). Still requires: platform registration flow testing, JWKS URL configuration in lti_platforms table, end-to-end Canvas/Moodle test.",
+      "provenance": "direct codebase inspection + fix", "classification": "observed fact"
+    },
+    {
+      "id": "E44", "type": "codebase_evidence", "source": "src/lib/whop-config.ts — academic tier", "date": "2026-07-13", "grade": "HIGH",
+      "content": "Academic tier: $34/month with .edu email verification. Features: classroom mode, LMS support, unlimited analyses, 10x10 matrices. Whop primary billing, Stripe fallback for .edu. BUT: no per-student pricing model (MobLab charges $12-$25/student), no institutional license option.",
+      "provenance": "direct codebase inspection", "classification": "observed fact"
+    },
+    {
+      "id": "E45", "type": "competitor_intel", "source": "MobLab vs SIP feature comparison", "date": "2026-07-13", "grade": "HIGH",
+      "content": "MobLab has: 60+ games, assignments, quizzes, gradebook, Canvas/Blackboard sync, textbook bundling, 10+ years market presence, Yale/Harvard adoption. SIP has: Nash equilibrium computation, evidence retrieval, forecast governance, classroom management, negotiation dojo, bias profile, scenario marketplace. SIP unique: evidence-backed analysis + forecast governance + real-world scenario analysis. MobLab unique: 60+ interactive games, gradebook, LMS sync, textbook partnerships.",
+      "provenance": "comparative analysis", "classification": "sourced claim"
+    },
+    {
+      "id": "E46", "type": "market_data", "source": "MIT OCW 14.12 Game Theory Fall 2025", "date": "2025", "grade": "MEDIUM",
+      "content": "MIT offers Economic Applications of Game Theory (14.12) with instructor insights on teaching. Validates real teaching need. One course does not prove market growth or WTP. Need broader survey of game theory course offerings.",
+      "provenance": "MIT OpenCourseWare", "classification": "observed fact"
+    },
+    {
+      "id": "E47", "type": "competitor_intel", "source": "Harvard Business Publishing MobLab pricing", "date": "2026-07-01", "grade": "MEDIUM",
+      "content": "HBP MobLab simulation prices effective July 2026: degree courses $5-$25, non-degree $10-$60 per simulation. Shows per-simulation pricing model and institutional distribution channel via HBP.",
+      "provenance": "Harvard Business Publishing", "classification": "observed fact"
+    },
+    {
+      "id": "E48", "type": "market_data", "source": "Yale SOM MobLab usage", "date": "2026-07-13", "grade": "MEDIUM",
+      "content": "Yale School of Management uses MobLab at $12/student. Integrated with Canvas. Includes Strategy, Game Theory, Principles of Economics, Macroeconomics. Shows institutional adoption at top-tier university.",
+      "provenance": "Yale SOM IT Service Catalog", "classification": "observed fact"
+    },
+    {
+      "id": "E49", "type": "codebase_evidence", "source": "shared/ directory — existing modules", "date": "2026-07-13", "grade": "MEDIUM",
+      "content": "shared/ contains 10 modules: agentOrchestrator, benchmarkRegistry, confidenceCalibration, evidenceGate, evidenceGraph, forecastJudge, forecastSkills, marketPriors, mlAdvisory, semanticRouter. mlAdvisory has labelCalibrationStatus and normalizeCalibrationStatus. publicForecasting.ts was missing and is now created.",
+      "provenance": "direct codebase inspection", "classification": "observed fact"
+    },
+    {
+      "id": "E50", "type": "codebase_evidence", "source": "src/hooks/useStrategyAnalysis.ts — education helpers", "date": "2026-07-13", "grade": "MEDIUM",
+      "content": "useStrategyAnalysis hook imports educationHelpers for mode-aware generation: player interactions, decision alternatives, information nodes, current beliefs, outcome scenarios, decay models, external factors. In education mode, returns empty arrays (students determine values themselves). educationHelpers.ts was missing and is now created.",
+      "provenance": "direct codebase inspection", "classification": "observed fact"
+    },
+    {
+      "id": "E51", "type": "codebase_evidence", "source": "src/components/StrategyConsole.tsx — strategist + enterprise workflow", "date": "2026-07-13", "grade": "MEDIUM",
+      "content": "StrategyConsole (99KB, 2151 lines) imports strategistContract.ts and enterpriseWorkflow.ts for strategist brief normalization and enterprise evidence bundle/workflow status. Both were missing and are now created with proper type interfaces and normalization functions.",
+      "provenance": "direct codebase inspection", "classification": "observed fact"
+    },
+    {
+      "id": "E52", "type": "market_data", "source": "Game-based learning statistics 2026", "date": "2026-07-13", "grade": "MEDIUM",
+      "content": "Game-based learning market growing at 21.6% CAGR. 88% of teachers using digital games report increased engagement. Gamified classroom tools market includes Quizizz, Gimkit, Prodigy. None offer game theory specifically — they focus on K-12 general subjects.",
+      "provenance": "Scoop Market, OpenPR", "classification": "sourced claim"
+    },
+    {
+      "id": "E53", "type": "competitor_intel", "source": "Gambit + Wolfram comparison", "date": "2026-07-13", "grade": "MEDIUM",
+      "content": "Gambit (free, open-source): computation only, no classroom management, no LMS, no evidence. Wolfram 14.2 ($184/student/yr): computation only, no classroom management, no LMS, no real-world scenarios. Neither provides evidence retrieval, forecast governance, or classroom workflows. SIP's unique combination remains differentiated.",
+      "provenance": "comparative analysis", "classification": "sourced claim"
+    },
+    {
+      "id": "E54", "type": "market_data", "source": "AI in education adoption 2026", "date": "2026-07-13", "grade": "HIGH",
+      "content": "47% of HE institutions use AI structurally in teaching. 72% of educators experimented with generative AI. 38% use AI regularly for content creation. AI-powered tutoring platforms serve 85M students. This creates both opportunity (AI-resistant assessment tools needed) and threat (ChatGPT as substitute for analysis tools).",
+      "provenance": "EDUCAUSE Survey 2026, HolonIQ", "classification": "sourced claim"
+    },
+    {
+      "id": "E55", "type": "codebase_evidence", "source": "src/lib/claimRegistry.ts — prohibited claims", "date": "2026-07-13", "grade": "HIGH",
+      "content": "14 prohibited claims include 'enterprise-ready platform', 'SOC 2 certified', 'buyer-validated WTP', 'Palantir-equivalent'. This constrains positioning claims. Education positioning must also avoid unverified claims like 'MobLab replacement' or 'classroom-tested'.",
+      "provenance": "direct codebase inspection", "classification": "observed fact"
+    },
+    {
+      "id": "E56", "type": "stakeholder_input", "source": "docs/Monetization_Strategy.md — education mention", "date": "2026-07-13", "grade": "MEDIUM",
+      "content": "Monetization strategy explicitly mentions educators as target: 'democratize Structural Forecasting' for researchers, educators, enterprise SaaS. Academic tier ($34) designed for classroom use. But no per-student pricing model — mismatch with MobLab's $12-$25/student approach.",
+      "provenance": "internal strategy document", "classification": "sourced claim"
+    },
+    {
+      "id": "E57", "type": "competitor_intel", "source": "MobLab instructor experience", "date": "2026-07-13", "grade": "MEDIUM",
+      "content": "MobLab provides: instructor console with game monitoring, student view, demo/preview mode, test student accounts, instructor guides written by economists, course/textbook-specific recommendations, sample large class data. This is a mature, polished instructor experience that SIP lacks.",
+      "provenance": "MobLab support docs + teaching tips", "classification": "observed fact"
+    },
+    {
+      "id": "E58", "type": "market_data", "source": "RePEc top institutions in game theory", "date": "2026-07-13", "grade": "LOW",
+      "content": "RePEc lists top game theory institutions globally. Game theory is taught at most major universities. Market is fragmented across thousands of institutions, no single dominant tool beyond MobLab for classroom experiments.",
+      "provenance": "RePEc", "classification": "sourced claim"
+    },
+    {
+      "id": "E59", "type": "codebase_evidence", "source": "src/lib/educationHelpers.ts (CREATED)", "date": "2026-07-13", "grade": "MEDIUM",
+      "content": "Education helpers created with mode-aware generators: in education mode, returns empty arrays (students determine values). In analysis mode, returns heuristic defaults. Functions: generatePlayerInteractions, generateDecisionAlternatives, generateInformationNodes, generateCurrentBeliefs, generateOutcomeScenarios, generateDecayModels, generateExternalFactors.",
+      "provenance": "direct codebase creation", "classification": "observed fact"
+    },
+    {
+      "id": "E60", "type": "codebase_evidence", "source": "shared/publicForecasting.ts (CREATED)", "date": "2026-07-13", "grade": "MEDIUM",
+      "content": "Public forecasting module created with: routeCitizenQuestion (intent routing), assessContextAlignment (alignment scoring), buildQuestionPackageFromRoute, buildPublicAnswer, evaluateQuestionIntake (clarification flow), appendPublicQuestionContext. Types: CitizenForecastIntent, QuestionIntakeResponse, ClarificationState, PublicAnswer, ContextAlignmentSummary.",
+      "provenance": "direct codebase creation", "classification": "observed fact"
+    },
+    {
+      "id": "E61", "type": "codebase_evidence", "source": "src/lib/labsCatalog.ts (CREATED)", "date": "2026-07-13", "grade": "LOW",
+      "content": "Labs catalog created with 4 lab modules: negotiation, game-tree, bias-profile, monte-carlo. Tier-based access control with TIER_ORDER mapping (free=0, analyst=1, pro=2, elite=3, enterprise=4, academic=2). canAccessLabModule and getSurfacedLabModule functions.",
+      "provenance": "direct codebase creation", "classification": "observed fact"
+    },
+    {
+      "id": "E62", "type": "codebase_evidence", "source": "src/components/LabAccessGate.tsx (CREATED)", "date": "2026-07-13", "grade": "LOW",
+      "content": "LabAccessGate component created: gates access to lab modules based on tier or bypass override. Shows upgrade CTA when not allowed. Links to /pricing for upgrade.",
+      "provenance": "direct codebase creation", "classification": "observed fact"
+    },
+    {
+      "id": "E63", "type": "codebase_evidence", "source": "src/lib/strategistContract.ts (CREATED)", "date": "2026-07-13", "grade": "LOW",
+      "content": "Strategist contract created: StrategistAnalysis interface (briefId, scenarioSummary, keyPlayers, strategicOptions, recommendations, assumptions, confidenceLevel). normalizeStrategistResponse function handles API response normalization.",
+      "provenance": "direct codebase creation", "classification": "observed fact"
+    },
+    {
+      "id": "E64", "type": "codebase_evidence", "source": "src/lib/enterpriseWorkflow.ts (CREATED)", "date": "2026-07-13", "grade": "LOW",
+      "content": "Enterprise workflow created: buildEnterpriseEvidenceBundle (scenario, evidence, strategist) and buildEnterpriseWorkflowStatus (strategist, review, draft readiness/governance → overall readiness + steps).",
+      "provenance": "direct codebase creation", "classification": "observed fact"
+    }
+  ],
+  "evidence_type_summary": {
+    "product_promise": 4,
+    "codebase_evidence": 30,
+    "stakeholder_input": 4,
+    "competitor_intel": 12,
+    "market_data": 10,
+    "customer_outcome": 0,
+    "user_quote": 0,
+    "behavioral_observation": 0,
+    "pricing_signal": 4
+  },
+  "total_items": 64,
+  "evidence_limited_mode": true,
+  "missing_evidence_types": [
+    "customer_outcome",
+    "user_quote",
+    "behavioral_observation",
+    "support_ticket",
+    "analytics_data",
+    "sales_data"
+  ]
+}

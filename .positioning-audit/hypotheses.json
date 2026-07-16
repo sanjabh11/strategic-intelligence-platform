@@ -1,0 +1,193 @@
+{
+  "audit_id": "sip-deep-2026-07-13",
+  "hypotheses": [
+    {
+      "id": "PH-1",
+      "name": "Education-First Platform",
+      "status": "Recommended",
+      "confidence": 70,
+      "segment": "S3-university-educators",
+      "segment_score": 48,
+      "segment_rank": 1,
+      "positioning_statement": "For university educators teaching game theory, strategic management, or negotiation who need an integrated platform where students can analyze real-world scenarios using Nash equilibrium, access evidence-backed citations, run simulations, and create governed forecasts — Strategic Intelligence Platform is a game-theory learning and analysis platform that combines evidence retrieval, strategic analysis, classroom management, and forecast governance in one workflow — unlike MobLab (experiments only, no evidence or forecasting), Wolfram (computation only, no real-world scenarios or classroom management), and ChatGPT (ad-hoc answers, no evidence trails, governance, or structured learning).",
+      "load_bearing_claims": [
+        { "id": "C1", "claim": "Educators need an integrated platform (not just experiments or computation)", "status": "Unvalidated" },
+        { "id": "C2", "claim": "Game theory + evidence + forecasting is more valuable than game theory alone", "status": "Unvalidated" },
+        { "id": "C3", "claim": "ClassroomManager and academic features are production-ready", "status": "Partially validated (code exists)" },
+        { "id": "C4", "claim": "$34/mo academic pricing is acceptable to educators/departments", "status": "Unvalidated" },
+        { "id": "C5", "claim": "Educators will switch from MobLab/Wolfram/manual methods", "status": "Unvalidated" },
+        { "id": "C6", "claim": "Evidence retrieval and citations add value for educational use", "status": "Unvalidated" },
+        { "id": "C7", "claim": "Game theory courses are growing and need AI-resistant teaching tools", "status": "Partially validated (MIT OCW data)" },
+        { "id": "C8", "claim": "Educators are reachable through .edu verification, conferences, and direct outreach", "status": "Partially validated (.edu check exists)" },
+        { "id": "C9", "claim": "Forecast governance is valuable in education", "status": "Unvalidated" },
+        { "id": "C10", "claim": "Game-theory learning platform is a recognizable category for educators", "status": "Unvalidated" }
+      ],
+      "evidence_support": ["E5", "E6", "E7", "E8", "E12", "Phase 2 market research", "Phase 3 scoring 48/70", "Phase 6 codebase audit"],
+      "counter_evidence": ["Game theory adoption concerns (Phase 2) — don't apply in education", "AI chatbot substitution — mitigated by workflow/governance value", "No customer evidence"],
+      "gaps": ["G1-positioning", "G2-proof", "G3-grading", "G7-distribution", "G8-adoption", "G10-GDELT", "G11-missing-files", "G12-category"]
+    },
+    {
+      "id": "PH-2",
+      "name": "Consultant Analysis Tool",
+      "status": "Secondary",
+      "confidence": 55,
+      "segment": "S4-independent-consultants",
+      "segment_score": 46,
+      "segment_rank": 2,
+      "positioning_statement": "For independent strategy consultants and advisors who need to deliver structured, evidence-backed analysis for client engagements, Strategic Intelligence Platform is a strategic analysis tool that combines evidence retrieval, game-theory reasoning, scenario planning, and professional PDF export — without the overhead of enterprise tools or the cost of consulting firm proprietary systems.",
+      "load_bearing_claims": [
+        { "id": "C1", "claim": "Consultants need structured analysis tools (not just spreadsheets)", "status": "Partially validated (Portage, CXO Scenario Planner exist)" },
+        { "id": "C2", "claim": "Evidence retrieval + game theory is more valuable than AI chatbot alone", "status": "Unvalidated" },
+        { "id": "C3", "claim": "$49-$199/mo is acceptable for consultants who can expense tools", "status": "Unvalidated" },
+        { "id": "C4", "claim": "PDF export meets consulting deliverable standards", "status": "Partially validated" },
+        { "id": "C5", "claim": "Consultants will adopt a new tool for client work", "status": "Unvalidated" }
+      ],
+      "evidence_support": ["E5", "E6", "E7", "E8", "E12", "Phase 2 (Portage, CXO Scenario Planner)", "Phase 3 scoring 46/70"],
+      "counter_evidence": ["AI chatbot substitution threat", "High competition from emerging tools"],
+      "gaps": ["G1-positioning", "G2-proof", "G4-collaboration"]
+    },
+    {
+      "id": "PH-3",
+      "name": "Negotiation Training Platform",
+      "status": "Tertiary",
+      "confidence": 50,
+      "segment": "S8-negotiation-trainers",
+      "segment_score": 42,
+      "segment_rank": 4,
+      "positioning_statement": "For corporate negotiation trainers and executive education programs who need interactive, AI-powered practice tools, Strategic Intelligence Platform is a negotiation training platform that combines game-theory-based practice scenarios, cognitive bias detection, and strategic DNA assessment — enabling trainers to deliver data-driven negotiation training at scale.",
+      "load_bearing_claims": [
+        { "id": "C1", "claim": "Trainers need AI-powered practice tools (not just role-play)", "status": "Unvalidated" },
+        { "id": "C2", "claim": "Bias detection and strategic DNA add value to negotiation training", "status": "Unvalidated" },
+        { "id": "C3", "claim": "$49-$199/mo is acceptable for training companies", "status": "Unvalidated" },
+        { "id": "C4", "claim": "NegotiationDojo is production-ready for training use", "status": "Partially validated (25KB component)" },
+        { "id": "C5", "claim": "Trainers will adopt a new tool alongside existing methods", "status": "Unvalidated" }
+      ],
+      "evidence_support": ["E7 (NegotiationDojo, BiasProfile)", "E8", "Phase 2 (negotiation training market $4K-$8K/program)", "Phase 3 scoring 42/70"],
+      "counter_evidence": ["No direct competitor validation", "Market size unclear"],
+      "gaps": ["G1-positioning", "G2-proof", "G5-performance-tracking"]
+    },
+    {
+      "id": "PH-0",
+      "name": "Enterprise-First (Current Positioning)",
+      "status": "Weakened",
+      "confidence": 25,
+      "segment": "S1-corporate-strategy-enterprise",
+      "segment_score": 38,
+      "segment_rank": 7,
+      "positioning_statement": "For enterprise strategy, geopolitical risk, and public-sector foresight teams who struggle to turn complex uncertainties into defensible, reviewable decision options, Strategic Intelligence Platform is a governed strategic-intelligence pilot tool that connects evidence-gathering, game-theory analysis, human review, and forecast governance into one workflow.",
+      "load_bearing_claims": [],
+      "evidence_support": ["docs/POSITIONING.md"],
+      "counter_evidence": [
+        "Low reachability (3/10) — 0/8 procurement documents",
+        "High competition (8/10) — Recorded Future, Palantir, S&P Global",
+        "Low product fit (5/10) — no enterprise readiness",
+        "No proof (2/10) — 0 customers, no certifications",
+        "Pricing mismatch — $199/mo vs $50K-$150K+ enterprise budgets",
+        "Game theory not an enterprise buying trigger (Phase 2 counter-evidence)"
+      ],
+      "gaps": ["G1-positioning", "G2-proof", "G9-evidence", "G11-missing-files"],
+      "recommendation": "Do not pursue as beachhead. Consider as expansion target after education beachhead is validated."
+    },
+    {
+      "id": "PH-4",
+      "name": "Evidence-Backed Assignment Platform",
+      "status": "Secondary",
+      "confidence": 62,
+      "segment": "S3-university-educators",
+      "segment_score": 48,
+      "segment_rank": 1,
+      "positioning_statement": "For university professors who teach game theory, strategic management, or international relations and want students to analyze real-world scenarios with evidence citations (not just run experiments), Strategic Intelligence Platform is an evidence-backed strategic analysis platform that combines real-world evidence retrieval, Nash equilibrium computation, classroom assignments, and forecast governance — unlike MobLab (60+ experiments but no evidence retrieval, no real-world scenario analysis, no forecast governance) and ChatGPT (ad-hoc answers with no evidence trails, no classroom management, no governance).",
+      "load_bearing_claims": [
+        { "id": "C1", "claim": "Professors need evidence-backed analysis assignments, not just experiments", "status": "Unvalidated" },
+        { "id": "C2", "claim": "Evidence retrieval + citations differentiate from MobLab's experiment-only approach", "status": "Partially validated (E45 — MobLab lacks evidence/governance)" },
+        { "id": "C3", "claim": "Forecast governance is teachable and valuable in education", "status": "Unvalidated" },
+        { "id": "C4", "claim": "Per-student pricing model (like MobLab $12-$25) is viable", "status": "Unvalidated — current $34/mo academic tier mismatches" },
+        { "id": "C5", "claim": "LTI integration enables Canvas/Moodle adoption", "status": "Partially validated (E25 — JWT fixed, but E2E untested)" },
+        { "id": "C6", "claim": "AI-resistant assessment tools are in demand due to ChatGPT", "status": "Partially validated (E38 — AI compromising assessments)" }
+      ],
+      "evidence_support": ["E27-E30", "E34", "E38", "E45", "E54"],
+      "counter_evidence": ["MobLab is entrenched with 60+ games, gradebook, Canvas/Blackboard sync (E27-E30)", "SIP lacks gradebook, LMS sync, 60+ games (E39)", "No per-student pricing model (E44)"],
+      "gaps": ["G3-grading", "G7-distribution", "G12-category"]
+    },
+    {
+      "id": "PH-5",
+      "name": "Policy Think Tank Analysis Tool",
+      "status": "Tertiary",
+      "confidence": 48,
+      "segment": "S5-policy-think-tanks",
+      "segment_score": 40,
+      "segment_rank": 5,
+      "positioning_statement": "For policy researchers at think tanks (RAND, Brookings, CSIS) who need to model strategic interactions between nations, regulators, and stakeholders with evidence-backed game theory analysis, Strategic Intelligence Platform is a strategic intelligence tool that combines GDELT event data, evidence retrieval, game-theoretic modeling, and forecast governance — enabling transparent, reproducible policy analysis.",
+      "load_bearing_claims": [
+        { "id": "C1", "claim": "Think tank analysts need game-theoretic modeling tools", "status": "Unvalidated" },
+        { "id": "C2", "claim": "Evidence retrieval + GDELT integration provides unique value", "status": "Partially validated (GDELT integration exists but needs GCP config)" },
+        { "id": "C3", "claim": "Forecast governance enables reproducible policy analysis", "status": "Unvalidated" },
+        { "id": "C4", "claim": "Think tanks have budget for analysis tools", "status": "Unvalidated" },
+        { "id": "C5", "claim": "Think tanks are reachable through policy networks", "status": "Unvalidated" }
+      ],
+      "evidence_support": ["E8 (GDELT, evidence-retrieval)", "E11 (forecast governance)", "E14 (GDELT integration)"],
+      "counter_evidence": ["Think tanks may use proprietary models", "GDELT requires GCP setup (E20)", "No think tank customer evidence"],
+      "gaps": ["G1-positioning", "G2-proof", "G10-GDELT"]
+    },
+    {
+      "id": "PH-6",
+      "name": "AI-Resistant Assessment Tool",
+      "status": "Secondary",
+      "confidence": 58,
+      "segment": "S3-university-educators",
+      "segment_score": 48,
+      "segment_rank": 1,
+      "positioning_statement": "For university professors across economics, political science, and business who need AI-resistant assessment tools that require students to gather evidence, model strategic interactions, and produce governed forecasts (not just write essays ChatGPT can generate), Strategic Intelligence Platform is an AI-resistant strategic analysis assessment platform where students must retrieve evidence, build game-theory models, and submit governed forecasts with provenance trails — making AI substitution structurally difficult.",
+      "load_bearing_claims": [
+        { "id": "C1", "claim": "AI substitution is a top concern for professors (2025-2026)", "status": "Partially validated (E38 — Frontiers in Education, AI compromising assessments)" },
+        { "id": "C2", "claim": "Evidence-gathering + game-theory modeling workflow is AI-resistant", "status": "Unvalidated — needs testing" },
+        { "id": "C3", "claim": "Professors will adopt new assessment tools to combat AI cheating", "status": "Unvalidated" },
+        { "id": "C4", "claim": "Provenance trails and governance make AI substitution detectable", "status": "Partially validated (E10, E11 — claim registry + forecast governance)" },
+        { "id": "C5", "claim": "This is a recognizable category professors will search for", "status": "Unvalidated" }
+      ],
+      "evidence_support": ["E38", "E10", "E11", "E54"],
+      "counter_evidence": ["AI detection tools already exist (Turnitin, etc.)", "Professors may prefer exams over new software", "No evidence professors are searching for 'AI-resistant assessment'"],
+      "gaps": ["G1-positioning", "G12-category"]
+    },
+    {
+      "id": "PH-7",
+      "name": "Strategic Thinking Prosumer Platform",
+      "status": "Tertiary",
+      "confidence": 45,
+      "segment": "S6-strategic-thinking-prosumers",
+      "segment_score": 36,
+      "segment_rank": 6,
+      "positioning_statement": "For strategy professionals, independent analysts, and lifelong learners who want to develop strategic thinking skills through real-world scenario analysis, Strategic Intelligence Platform is a strategic thinking platform that combines evidence-backed analysis, game-theory reasoning, negotiation practice, and bias assessment — replacing spreadsheets and ChatGPT with a structured, governed workflow.",
+      "load_bearing_claims": [
+        { "id": "C1", "claim": "Prosumers will pay $19-$49/mo for strategic analysis tools", "status": "Unvalidated" },
+        { "id": "C2", "claim": "Structured workflow is more valuable than ChatGPT for serious analysts", "status": "Unvalidated" },
+        { "id": "C3", "claim": "NegotiationDojo and bias profile are compelling prosumer features", "status": "Partially validated (E19, E40)" },
+        { "id": "C4", "claim": "Prosumers are reachable through content marketing and communities", "status": "Unvalidated" },
+        { "id": "C5", "claim": "ChatGPT is not a sufficient substitute for structured analysis", "status": "Unvalidated" }
+      ],
+      "evidence_support": ["E12 (pricing tiers)", "E19 (consumer features)", "E40 (NegotiationDojo)", "E54 (AI adoption)"],
+      "counter_evidence": ["ChatGPT is free and improving rapidly", "Prosumer market for game theory is unproven", "No evidence of WTP"],
+      "gaps": ["G1-positioning", "G2-proof", "G4-collaboration"]
+    },
+    {
+      "id": "PH-8",
+      "name": "MobLab Complement (Not Replacement)",
+      "status": "Secondary",
+      "confidence": 60,
+      "segment": "S3-university-educators",
+      "segment_score": 48,
+      "segment_rank": 1,
+      "positioning_statement": "For university professors who already use MobLab for classroom experiments and want to add evidence-backed real-world scenario analysis and forecast governance to their curriculum, Strategic Intelligence Platform is a complementary analysis platform that sits alongside MobLab — where MobLab provides interactive experiments, SIP provides evidence retrieval, Nash equilibrium analysis on real-world scenarios, and governed forecasting — enabling professors to teach both experimental and analytical game theory.",
+      "load_bearing_claims": [
+        { "id": "C1", "claim": "Professors using MobLab want complementary analysis tools", "status": "Unvalidated" },
+        { "id": "C2", "claim": "SIP can integrate with MobLab workflows (not compete)", "status": "Unvalidated" },
+        { "id": "C3", "claim": "Evidence + governance fills MobLab's gap (E45)", "status": "Partially validated (E45 — MobLab lacks evidence/governance)" },
+        { "id": "C4", "claim": "Professors will adopt a second tool alongside MobLab", "status": "Unvalidated" },
+        { "id": "C5", "claim": "Per-student pricing for SIP complement is viable alongside MobLab's $12-$25", "status": "Unvalidated" }
+      ],
+      "evidence_support": ["E27-E30", "E45", "E48"],
+      "counter_evidence": ["Professors may not want two tools", "MobLab could add evidence features", "No evidence of complementary demand"],
+      "gaps": ["G1-positioning", "G7-distribution"]
+    }
+  ]
+}

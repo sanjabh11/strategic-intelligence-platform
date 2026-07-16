@@ -273,3 +273,19 @@ GRANT SELECT ON public.classrooms TO authenticated;
 GRANT SELECT ON public.classroom_members TO authenticated;
 GRANT SELECT ON public.classroom_assignments TO authenticated;
 GRANT SELECT ON public.assignment_submissions TO authenticated;
+
+-- Write permissions for classroom management (instructors/TAs create assignments, manage classrooms)
+GRANT INSERT ON public.classrooms TO authenticated;
+GRANT UPDATE ON public.classrooms TO authenticated;
+GRANT DELETE ON public.classrooms TO authenticated;
+
+GRANT INSERT ON public.classroom_members TO authenticated;
+GRANT UPDATE ON public.classroom_members TO authenticated;
+GRANT DELETE ON public.classroom_members TO authenticated;
+
+GRANT INSERT ON public.classroom_assignments TO authenticated;
+GRANT UPDATE ON public.classroom_assignments TO authenticated;
+GRANT DELETE ON public.classroom_assignments TO authenticated;
+
+GRANT INSERT ON public.assignment_submissions TO authenticated;
+GRANT UPDATE ON public.assignment_submissions TO authenticated;
