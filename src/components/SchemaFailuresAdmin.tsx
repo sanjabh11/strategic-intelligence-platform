@@ -63,7 +63,7 @@ export function SchemaFailuresAdmin() {
 
       if (error) throw error;
 
-      const statsData = data?.reduce((acc, item) => {
+      const statsData = data?.reduce((acc: any, item: any) => {
         acc.total++;
         acc[item.status as keyof SchemaFailureStats]++;
         return acc;

@@ -1,0 +1,176 @@
+{
+  "schema_version": "owner-unblock-execution-packet-v1",
+  "generated_at": "2026-06-07T03:19:01.993Z",
+  "status": "owner_unblock_execution_packet_ready_not_proof",
+  "proof_boundary": "This packet consolidates owner/external actions needed to move the commercial readiness gates. It is not buyer validation, hosted proof, enterprise approval, RLS proof, prediction-accuracy proof, or commercial-ready evidence.",
+  "source": {
+    "confidence_gate": "docs/launch-readiness/commercial-confidence-gate-2026-06-06.json",
+    "completion_audit": "docs/launch-readiness/commercial-goal-completion-audit-2026-06-06.json",
+    "loophole_audit": "docs/launch-readiness/commercial-loophole-remediation-2026-06-06.json",
+    "buyer_execution": "docs/launch-readiness/buyer-validation-execution-readiness-2026-06-06.json",
+    "buyer_substitution": "docs/launch-readiness/buyer-substitution-evidence-validation-2026-06-06.json",
+    "forecast_execution": "docs/launch-readiness/forecast-evaluation-execution-readiness-2026-06-06.json",
+    "enterprise_execution": "docs/launch-readiness/enterprise-trust-execution-readiness-2026-06-06.json",
+    "hosted_execution": "docs/launch-readiness/hosted-smoke-execution-readiness-2026-06-06.json",
+    "owner_approval_validation": "docs/launch-readiness/owner-approval-register-validation-2026-06-06.json"
+  },
+  "summary": {
+    "launch_decision": "pilot-only",
+    "pilot_strategy_confidence_percent": 77.7,
+    "commercial_world_class_confidence_percent": 53.7,
+    "target_confidence_percent": 95,
+    "confidence_gap_percent": 41.3,
+    "completion_ready": false,
+    "open_loophole_count": 8,
+    "p0_open_count": 5,
+    "owner_gated_open_count": 8,
+    "repo_actionable_open_count": 0,
+    "lane_count": 4,
+    "hosted_proof_count": 0,
+    "owner_approval_validation_status": "owner_approval_register_ready_no_owner_approvals",
+    "owner_approval_required_count": 14,
+    "owner_approval_approved_count": 0,
+    "owner_approval_ready_for_downstream_evidence": false,
+    "current_allowed_market_language": "governed strategic-intelligence pilot with calibration-aware decision support",
+    "prohibited_market_language": "world-class accurate predictions"
+  },
+  "owner_approval_gate": {
+    "status": "owner_approval_register_ready_no_owner_approvals",
+    "required_approval_count": 14,
+    "owner_approved_count": 0,
+    "reviewed_count": 0,
+    "row_error_count": 0,
+    "row_warning_count": 0,
+    "claim_boundary_acknowledged_count": 0,
+    "ready_for_downstream_evidence": false,
+    "commercial_ready_claim_allowed": false,
+    "world_class_prediction_claim_allowed": false,
+    "hosted_live_claim_allowed": false,
+    "buyer_validated_claim_allowed": false,
+    "enterprise_ready_claim_allowed": false
+  },
+  "execution_order": [
+    "prediction_accuracy",
+    "buyer_validation",
+    "enterprise_security_trust",
+    "hosted_operational_proof"
+  ],
+  "unblock_lanes": [
+    {
+      "rank": 1,
+      "lane": "prediction_accuracy",
+      "blocker_id": "prediction_accuracy_proof",
+      "proof_bucket": "owner_input",
+      "current_status": "forecast_evaluation_execution_ready_for_owner_export_no_real_outcomes",
+      "current_score_percent": 35,
+      "target_unlock": "Validated resolved forecasts, comparable baselines, leakage review, scoring, and claim wording before any accuracy or world-class prediction claim.",
+      "owner_inputs_required": [
+        "Fill docs/launch-readiness/approved-resolved-forecast-export-template-2026-06-06.csv with owner-approved resolved forecasts.",
+        "Fill docs/launch-readiness/forecast-baseline-template-2026-06-06.csv with comparable human/community/pro/external baselines.",
+        "Complete forecast leakage register fields for timestamps, source cutoffs, training/evaluation overlap, and ambiguous outcomes.",
+        "Approve claim tier and external wording after scoring output is reviewed."
+      ],
+      "minimum_threshold": "At least one valid resolved forecast and one valid comparable baseline are needed to move from no-real-outcomes; stronger commercial claims need enough rows for calibration reliability.",
+      "current_evidence": "valid_resolved_forecasts=0; valid_baselines=0; scoring_chain_ready=false.",
+      "after_owner_input_commands": [
+        "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:accuracy:validate-inputs -- --update-evidence",
+        "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:forecast:leakage-review -- --update-evidence",
+        "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:calibration:ledger",
+        "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:forecast:benchmark",
+        "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:forecast:validate-scoring -- --update-evidence",
+        "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:forecast:validate-science -- --update-evidence",
+        "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:forecast:execution-readiness -- --update-evidence"
+      ],
+      "claim_boundary": "Until these commands pass on real owner-approved rows, only calibration-aware mechanics and evaluation-readiness claims are allowed."
+    },
+    {
+      "rank": 2,
+      "lane": "buyer_validation",
+      "blocker_id": "buyer_validation",
+      "proof_bucket": "owner_input",
+      "current_status": "buyer_validation_execution_ready_no_real_calls",
+      "current_score_percent": 25,
+      "target_unlock": "Real buyer demand, willingness-to-pay, substitution pressure, and procurement path evidence.",
+      "owner_inputs_required": [
+        "Run the 10-call discovery slate from docs/launch-readiness/buyer-discovery-kit-2026-06-06.json.",
+        "Approve the buyer outcome-capture protocol from docs/launch-readiness/pilot-outcome-measurement-kit-2026-06-06.json before counting any call as sellability evidence.",
+        "Record every interaction in docs/launch-readiness/buyer-discovery-call-sheet-2026-06-06.csv and docs/launch-readiness/buyer-validation-crm-template-2026-06-06.csv.",
+        "Fill baseline/current workflow, pilot outcome or expected delta, quality signal, buyer decision event, and outcome evidence notes for completed calls.",
+        "Fill docs/launch-readiness/buyer-substitution-test-sheet-2026-06-06.csv with current-tool, switching-barrier, must-have-proof, and commitment outcome fields.",
+        "Mark any paid-pilot, LOI, or procurement-path signal explicitly and keep external-share wording pilot-only until proof gates pass."
+      ],
+      "minimum_threshold": "10 completed calls with outcome-capture rows, at least three qualified follow-ups, and at least one paid-pilot, LOI, or procurement-path signal.",
+      "current_evidence": "completed_calls=0; valid_outcome_capture_rows=0; qualified_followups=0; commitment_signals=0; substitution_calls=0.",
+      "after_owner_input_commands": [
+        "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:buyer:validate-inputs -- --update-evidence",
+        "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:buyer:validate-substitution-evidence -- --update-evidence",
+        "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:buyer:proof-gate",
+        "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:buyer:execution-readiness -- --update-evidence"
+      ],
+      "claim_boundary": "Target lists and call templates remain non-proof; buyer-validated and replacement/parity claims stay blocked until real rows pass."
+    },
+    {
+      "rank": 3,
+      "lane": "enterprise_security_trust",
+      "blocker_id": "enterprise_security_trust",
+      "proof_bucket": "owner_input_and_hosted_live",
+      "current_status": "enterprise_trust_execution_ready_for_owner_review_no_approved_docs",
+      "current_score_percent": 45,
+      "target_unlock": "Owner-approved procurement documents, RLS proof, hosted LLM/security proof, and approved AI action boundaries.",
+      "owner_inputs_required": [
+        "Fill and owner-approve all rows in docs/launch-readiness/enterprise-procurement-evidence-register-2026-06-06.csv.",
+        "Approve RLS classifications and docs/launch-readiness/rls-identity-and-review-policy-draft-2026-06-06.sql before any migration work.",
+        "Execute local and linked RLS proof rows in docs/launch-readiness/rls-proof-evidence-register-2026-06-06.csv with redacted logs.",
+        "Approve docs/launch-readiness/ai-high-impact-action-policy-2026-06-06.json and run hosted no-autonomous-action boundary tests.",
+        "Run hosted LLM red-team smoke only after hosted access and deploy binding are approved."
+      ],
+      "minimum_threshold": "8/8 procurement documents ready, 54/54 RLS proof rows executed and passed across local/linked environments, owner-approved AI action policy, and hosted runtime proof.",
+      "current_evidence": "procurement_docs=0/8; rls_rows=0/54; local_llm_red_team=true; hosted_access=false.",
+      "after_owner_input_commands": [
+        "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:enterprise:validate-evidence -- --update-evidence",
+        "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:rls:validate-proof -- --update-evidence",
+        "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:llm:security",
+        "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:enterprise:procurement-gate",
+        "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:enterprise:execution-readiness -- --update-evidence"
+      ],
+      "claim_boundary": "Enterprise-ready, tenant-isolation, certified, and public-sector security claims remain blocked until proof validators pass."
+    },
+    {
+      "rank": 4,
+      "lane": "hosted_operational_proof",
+      "blocker_id": "hosted_operational_proof",
+      "proof_bucket": "hosted_live",
+      "current_status": "hosted_smoke_execution_blocked_project_privileges_owner_unblock_ready",
+      "current_score_percent": 25,
+      "target_unlock": "Hosted deploy binding, management access, payment proof values, executed smoke rows, redacted logs, and screenshots where relevant.",
+      "owner_inputs_required": [
+        "Grant or switch to an account where the intended Supabase project ref is visible.",
+        "Make project-scoped functions and secrets list commands succeed without printing secret values.",
+        "Provide owner-approved hosted URL plus deploy id, release id, or commit SHA.",
+        "Provide Stripe proof key names/values for test-mode proof without exposing secrets in artifacts.",
+        "Run the 12 hosted smoke commands from docs/launch-readiness/hosted-operational-proof-kit-2026-06-06.json and fill docs/launch-readiness/hosted-operational-proof-evidence-template-2026-06-06.csv."
+      ],
+      "minimum_threshold": "12/12 expected hosted smoke rows executed, core coverage 7/7, redaction verified, logs/screenshots attached where relevant, and hosted validator passes.",
+      "current_evidence": "owner_unblock_ready=true; target_project_visible=false; management_access_ready=false; executed_smokes=0/12; core_coverage=0/7.",
+      "after_owner_input_commands": [
+        "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:hosted:access-preflight -- --update-evidence",
+        "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:hosted:validate-evidence -- --update-evidence",
+        "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:hosted:smoke-execution-readiness -- --update-evidence"
+      ],
+      "claim_boundary": "Local route proof and smoke scripts cannot be upgraded to hosted-live proof without executed hosted evidence rows."
+    }
+  ],
+  "cross_lane_commands_after_any_owner_update": [
+    "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:owner:approval-register -- --update-evidence",
+    "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:commercial:confidence",
+    "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:commercial:goal-completion -- --update-evidence",
+    "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:commercial:loopholes",
+    "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:claims:consistency",
+    "python3 /Users/sanjayb/.codex/skills/commercial-launch-readiness-orchestrator/scripts/validate_launch_evidence.py docs/launch-readiness/launch-evidence-2026-06-06.json"
+  ],
+  "stop_rules": [
+    "Do not run production deploys, credential rotation, payment changes, outreach, destructive migrations, or secret-dependent tests without explicit owner approval.",
+    "Do not upgrade beyond pilot-only until the relevant validator artifacts pass on real owner/buyer/hosted evidence.",
+    "Do not use world-class, commercial-ready, buyer-validated, enterprise-ready, hosted-live, or proven-accuracy language unless the commercial completion audit proves it."
+  ]
+}

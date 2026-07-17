@@ -1,0 +1,1015 @@
+{
+  "schema_version": "claim-consistency-validation-v1",
+  "generated_at": "2026-07-17T11:43:04.524Z",
+  "status": "claim_consistency_validation_passed_pilot_only_boundaries",
+  "source": {
+    "artifact_dir": "docs/launch-readiness",
+    "launch_evidence": "docs/launch-readiness/launch-evidence-2026-06-06.json",
+    "commercial_confidence_gate": "docs/launch-readiness/commercial-confidence-gate-2026-06-06.json",
+    "market_niche_validation": "docs/launch-readiness/market-niche-evidence-validation-2026-06-06.json",
+    "competitive_positioning_validation": "docs/launch-readiness/competitive-positioning-evidence-validation-2026-06-06.json",
+    "prediction_science_validation": "docs/launch-readiness/prediction-science-evidence-validation-2026-06-06.json",
+    "buyer_proof_gate": "docs/launch-readiness/buyer-proof-gate-2026-06-06.json",
+    "hosted_proof_validation": "docs/launch-readiness/hosted-operational-proof-evidence-validation-2026-06-06.json",
+    "enterprise_procurement_gate": "docs/launch-readiness/enterprise-procurement-readiness-gate-2026-06-06.json"
+  },
+  "summary": {
+    "scanned_file_count": 246,
+    "scanned_line_count": 126030,
+    "detected_claim_mention_count": 651,
+    "boundary_context_claim_mention_count": 651,
+    "unsupported_claim_mention_count": 0,
+    "unsupported_p1_claim_mention_count": 0,
+    "unsupported_p2_claim_mention_count": 0,
+    "claim_consistency_ready": true,
+    "world_class_prediction_claim_blocked": true,
+    "accuracy_claim_blocked": true,
+    "buyer_validated_claim_blocked": true,
+    "hosted_live_claim_blocked": true,
+    "enterprise_ready_claim_blocked": true,
+    "competitive_replacement_or_parity_claim_blocked": true,
+    "commercial_ready_claim_blocked": true,
+    "launch_decision": "pilot-only",
+    "commercial_world_class_confidence_percent": 53.7
+  },
+  "unsupported_claim_mentions": [],
+  "boundary_context_claim_mentions": [
+    {
+      "file": "docs/launch-readiness/accuracy-evidence-input-validation-2026-06-06.json",
+      "line": 5,
+      "claim": "accurate_predictions",
+      "severity": "P1",
+      "allowed_gate": "accuracy_claim_blocked",
+      "boundary_context": true,
+      "text": "\"proof_boundary\": \"This artifact validates owner-supplied resolved-forecast and baseline inputs before scoring. It is not prediction-accuracy proof, benchmark superiority proof, hosted proof, or buyer proof.\","
+    },
+    {
+      "file": "docs/launch-readiness/accuracy-evidence-input-validation-2026-06-06.md",
+      "line": 7,
+      "claim": "accurate_predictions",
+      "severity": "P1",
+      "allowed_gate": "accuracy_claim_blocked",
+      "boundary_context": true,
+      "text": "This artifact validates owner-supplied resolved-forecast and baseline inputs before scoring. It is not prediction-accuracy proof, benchmark superiority proof, hosted proof, or buyer proof."
+    },
+    {
+      "file": "docs/launch-readiness/ai-action-inventory-2026-06-06.json",
+      "line": 22,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "\"world-class prediction accuracy\""
+    },
+    {
+      "file": "docs/launch-readiness/ai-action-inventory-2026-06-06.md",
+      "line": 150,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "- world-class prediction accuracy"
+    },
+    {
+      "file": "docs/launch-readiness/ai-high-impact-action-policy-2026-06-06.json",
+      "line": 22,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "\"world-class prediction accuracy\""
+    },
+    {
+      "file": "docs/launch-readiness/ai-high-impact-action-policy-2026-06-06.md",
+      "line": 95,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "- world-class prediction accuracy"
+    },
+    {
+      "file": "docs/launch-readiness/buyer-discovery-call-sheet-2026-06-06.csv",
+      "line": 6,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "The current proof asset is Console to strategist brief to human-review and forecast-draft handoff. It is explicitly pilot-only: no world-class prediction claim, no buyer-proof claim, and accuracy remains gated on resolved outcomes."
+    },
+    {
+      "file": "docs/launch-readiness/buyer-discovery-call-sheet-2026-06-06.csv",
+      "line": 15,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "The current proof asset is Actor/countermove brief plus review state and forecast-governance caveats. It is explicitly pilot-only: no world-class prediction claim, no buyer-proof claim, and accuracy remains gated on resolved outcomes."
+    },
+    {
+      "file": "docs/launch-readiness/buyer-discovery-call-sheet-2026-06-06.csv",
+      "line": 24,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "The current proof asset is Public-sector scenario brief with transparent uncertainty and policy trade-off questions. It is explicitly pilot-only: no world-class prediction claim, no buyer-proof claim, and accuracy remains gated on resolved outcomes."
+    },
+    {
+      "file": "docs/launch-readiness/buyer-discovery-call-sheet-2026-06-06.csv",
+      "line": 33,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "The current proof asset is Evidence bundle and audience-specific briefing for a policy uncertainty. It is explicitly pilot-only: no world-class prediction claim, no buyer-proof claim, and accuracy remains gated on resolved outcomes."
+    },
+    {
+      "file": "docs/launch-readiness/buyer-discovery-call-sheet-2026-06-06.csv",
+      "line": 42,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "The current proof asset is Analyst briefing layer plus forecast-draft governance for a Global Foresight scenario. It is explicitly pilot-only: no world-class prediction claim, no buyer-proof claim, and accuracy remains gated on resolved outcomes."
+    },
+    {
+      "file": "docs/launch-readiness/buyer-discovery-call-sheet-2026-06-06.csv",
+      "line": 51,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "The current proof asset is Game-tree or countermove reasoning path with analyst review and forecast handoff. It is explicitly pilot-only: no world-class prediction claim, no buyer-proof claim, and accuracy remains gated on resolved outcomes."
+    },
+    {
+      "file": "docs/launch-readiness/buyer-discovery-call-sheet-2026-06-06.csv",
+      "line": 60,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "The current proof asset is Differentiated layer: evidence-to-actor-reasoning-to-forecast draft, not trend-map replacement. It is explicitly pilot-only: no world-class prediction claim, no buyer-proof claim, and accuracy remains gated on resolved outcomes."
+    },
+    {
+      "file": "docs/launch-readiness/buyer-discovery-call-sheet-2026-06-06.csv",
+      "line": 69,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "The current proof asset is Global-risk issue brief with source provenance, actor map, and forecast-draft scoring plan. It is explicitly pilot-only: no world-class prediction claim, no buyer-proof claim, and accuracy remains gated on resolved outcomes."
+    },
+    {
+      "file": "docs/launch-readiness/buyer-discovery-call-sheet-2026-06-06.csv",
+      "line": 78,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "The current proof asset is Calibration ledger plus benchmark-comparison artifact, clearly marked sample-only until real data exists. It is explicitly pilot-only: no world-class prediction claim, no buyer-proof claim, and accuracy remains gated on resolved outc"
+    },
+    {
+      "file": "docs/launch-readiness/buyer-discovery-call-sheet-2026-06-06.csv",
+      "line": 87,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "The current proof asset is Negotiation Dojo and game-tree module with manager-ready debriefs. It is explicitly pilot-only: no world-class prediction claim, no buyer-proof claim, and accuracy remains gated on resolved outcomes."
+    },
+    {
+      "file": "docs/launch-readiness/buyer-discovery-kit-2026-06-06.json",
+      "line": 5,
+      "claim": "buyer_validated",
+      "severity": "P1",
+      "allowed_gate": "buyer_validated_claim_blocked",
+      "boundary_context": true,
+      "text": "\"proof_boundary\": \"This kit prepares approved discovery calls. It is not buyer feedback, willingness-to-pay proof, LOI evidence, paid-pilot evidence, or procurement proof.\","
+    },
+    {
+      "file": "docs/launch-readiness/buyer-discovery-kit-2026-06-06.json",
+      "line": 172,
+      "claim": "accurate_predictions",
+      "severity": "P1",
+      "allowed_gate": "accuracy_claim_blocked",
+      "boundary_context": true,
+      "text": "\"response\": \"State that prediction superiority is not claimed. Show calibration and benchmark mechanics, then ask what resolved-outcome and baseline protocol they would accept.\""
+    },
+    {
+      "file": "docs/launch-readiness/buyer-discovery-kit-2026-06-06.json",
+      "line": 221,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "\"Needs proven world-class prediction accuracy before any pilot discussion.\""
+    },
+    {
+      "file": "docs/launch-readiness/buyer-discovery-kit-2026-06-06.json",
+      "line": 224,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "\"email_body\": \"Hi - I am validating a narrow guided pilot for Strategic foresight director or federal program-analysis lead.\\n\\nThe pain we are testing: Would a governed evidence-to-forecast workflow improve federal trend-analysis or audit-planning exercises?\\"
+    },
+    {
+      "file": "docs/launch-readiness/buyer-discovery-kit-2026-06-06.json",
+      "line": 288,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "\"Needs proven world-class prediction accuracy before any pilot discussion.\""
+    },
+    {
+      "file": "docs/launch-readiness/buyer-discovery-kit-2026-06-06.json",
+      "line": 291,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "\"email_body\": \"Hi - I am validating a narrow guided pilot for Futures, foresight, or horizon-scanning team lead.\\n\\nThe pain we are testing: Could this pilot accelerate a cross-cutting futures workshop without weakening evidence quality?\\n\\nThe current proof a"
+    },
+    {
+      "file": "docs/launch-readiness/buyer-discovery-kit-2026-06-06.json",
+      "line": 355,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "\"Needs proven world-class prediction accuracy before any pilot discussion.\""
+    },
+    {
+      "file": "docs/launch-readiness/buyer-discovery-kit-2026-06-06.json",
+      "line": 358,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "\"email_body\": \"Hi - I am validating a narrow guided pilot for Strategic foresight unit lead or GFC program contact.\\n\\nThe pain we are testing: Which evidence, capability, and feedback-loop requirements would make this credible for government foresight practit"
+    },
+    {
+      "file": "docs/launch-readiness/buyer-discovery-kit-2026-06-06.json",
+      "line": 422,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "\"Needs proven world-class prediction accuracy before any pilot discussion.\""
+    },
+    {
+      "file": "docs/launch-readiness/buyer-discovery-kit-2026-06-06.json",
+      "line": 425,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "\"email_body\": \"Hi - I am validating a narrow guided pilot for Foresight analyst or policy innovation lead.\\n\\nThe pain we are testing: Would the workflow help structure a foresight brief from sources into scoreable assumptions?\\n\\nThe current proof asset is Ev"
+    },
+    {
+      "file": "docs/launch-readiness/buyer-discovery-kit-2026-06-06.json",
+      "line": 489,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "\"Needs proven world-class prediction accuracy before any pilot discussion.\""
+    },
+    {
+      "file": "docs/launch-readiness/buyer-discovery-kit-2026-06-06.json",
+      "line": 492,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "\"email_body\": \"Hi - I am validating a narrow guided pilot for Foresight, strategy, or program lead.\\n\\nThe pain we are testing: Would the product reduce time from source pack to scenario memo while preserving analyst review?\\n\\nThe current proof asset is Analy"
+    },
+    {
+      "file": "docs/launch-readiness/buyer-discovery-kit-2026-06-06.json",
+      "line": 556,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "\"Needs proven world-class prediction accuracy before any pilot discussion.\""
+    },
+    {
+      "file": "docs/launch-readiness/buyer-discovery-kit-2026-06-06.json",
+      "line": 559,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "\"email_body\": \"Hi - I am validating a narrow guided pilot for Futures Lab or computational social science lead.\\n\\nThe pain we are testing: Where would the workflow need stronger empirical rigor before it could support policy analysis?\\n\\nThe current proof ass"
+    },
+    {
+      "file": "docs/launch-readiness/buyer-discovery-kit-2026-06-06.json",
+      "line": 623,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "\"Needs proven world-class prediction accuracy before any pilot discussion.\""
+    },
+    {
+      "file": "docs/launch-readiness/buyer-discovery-kit-2026-06-06.json",
+      "line": 626,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "\"email_body\": \"Hi - I am validating a narrow guided pilot for Strategic Intelligence partnerships or content lead.\\n\\nThe pain we are testing: Is the governed forecast handoff a complementary layer to strategic-intelligence maps?\\n\\nThe current proof asset is "
+    },
+    {
+      "file": "docs/launch-readiness/buyer-discovery-kit-2026-06-06.json",
+      "line": 689,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "\"Needs proven world-class prediction accuracy before any pilot discussion.\","
+    },
+    {
+      "file": "docs/launch-readiness/buyer-discovery-kit-2026-06-06.json",
+      "line": 693,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "\"email_body\": \"Hi - I am validating a narrow guided pilot for Global risks program, community, or report team.\\n\\nThe pain we are testing: What proof would make this useful for risk survey follow-up or scenario workshop prep?\\n\\nThe current proof asset is Glob"
+    },
+    {
+      "file": "docs/launch-readiness/buyer-discovery-kit-2026-06-06.json",
+      "line": 757,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "\"Needs proven world-class prediction accuracy before any pilot discussion.\","
+    },
+    {
+      "file": "docs/launch-readiness/buyer-discovery-kit-2026-06-06.json",
+      "line": 761,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "\"email_body\": \"Hi - I am validating a narrow guided pilot for Forecasting evaluation or services lead.\\n\\nThe pain we are testing: What comparable baseline protocol would be acceptable before accuracy claims?\\n\\nThe current proof asset is Calibration ledger pl"
+    },
+    {
+      "file": "docs/launch-readiness/buyer-discovery-kit-2026-06-06.json",
+      "line": 824,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "\"Needs proven world-class prediction accuracy before any pilot discussion.\""
+    },
+    {
+      "file": "docs/launch-readiness/buyer-discovery-kit-2026-06-06.json",
+      "line": 827,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "\"email_body\": \"Hi - I am validating a narrow guided pilot for Executive education program director or corporate learning lead.\\n\\nThe pain we are testing: Would an applied AI decision-workshop module be valuable if claims stay training-focused rather than pred"
+    },
+    {
+      "file": "docs/launch-readiness/buyer-discovery-kit-2026-06-06.md",
+      "line": 7,
+      "claim": "buyer_validated",
+      "severity": "P1",
+      "allowed_gate": "buyer_validated_claim_blocked",
+      "boundary_context": true,
+      "text": "This kit prepares approved discovery calls. It is not buyer feedback, willingness-to-pay proof, LOI evidence, paid-pilot evidence, or procurement proof."
+    },
+    {
+      "file": "docs/launch-readiness/buyer-discovery-kit-2026-06-06.md",
+      "line": 64,
+      "claim": "accurate_predictions",
+      "severity": "P1",
+      "allowed_gate": "accuracy_claim_blocked",
+      "boundary_context": true,
+      "text": "| What proof do you have that predictions are accurate? | State that prediction superiority is not claimed. Show calibration and benchmark mechanics, then ask what resolved-outcome and baseline protocol they would accept. |"
+    },
+    {
+      "file": "docs/launch-readiness/buyer-discovery-kit-2026-06-06.md",
+      "line": 79,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "The current proof asset is Console to strategist brief to human-review and forecast-draft handoff. It is explicitly pilot-only: no world-class prediction claim, no buyer-proof claim, and accuracy remains gated on resolved outcomes."
+    },
+    {
+      "file": "docs/launch-readiness/buyer-discovery-kit-2026-06-06.md",
+      "line": 99,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "The current proof asset is Actor/countermove brief plus review state and forecast-governance caveats. It is explicitly pilot-only: no world-class prediction claim, no buyer-proof claim, and accuracy remains gated on resolved outcomes."
+    },
+    {
+      "file": "docs/launch-readiness/buyer-discovery-kit-2026-06-06.md",
+      "line": 119,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "The current proof asset is Public-sector scenario brief with transparent uncertainty and policy trade-off questions. It is explicitly pilot-only: no world-class prediction claim, no buyer-proof claim, and accuracy remains gated on resolved outcomes."
+    },
+    {
+      "file": "docs/launch-readiness/buyer-discovery-kit-2026-06-06.md",
+      "line": 139,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "The current proof asset is Evidence bundle and audience-specific briefing for a policy uncertainty. It is explicitly pilot-only: no world-class prediction claim, no buyer-proof claim, and accuracy remains gated on resolved outcomes."
+    },
+    {
+      "file": "docs/launch-readiness/buyer-discovery-kit-2026-06-06.md",
+      "line": 159,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "The current proof asset is Analyst briefing layer plus forecast-draft governance for a Global Foresight scenario. It is explicitly pilot-only: no world-class prediction claim, no buyer-proof claim, and accuracy remains gated on resolved outcomes."
+    },
+    {
+      "file": "docs/launch-readiness/buyer-discovery-kit-2026-06-06.md",
+      "line": 179,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "The current proof asset is Game-tree or countermove reasoning path with analyst review and forecast handoff. It is explicitly pilot-only: no world-class prediction claim, no buyer-proof claim, and accuracy remains gated on resolved outcomes."
+    },
+    {
+      "file": "docs/launch-readiness/buyer-discovery-kit-2026-06-06.md",
+      "line": 199,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "The current proof asset is Differentiated layer: evidence-to-actor-reasoning-to-forecast draft, not trend-map replacement. It is explicitly pilot-only: no world-class prediction claim, no buyer-proof claim, and accuracy remains gated on resolved outcomes."
+    },
+    {
+      "file": "docs/launch-readiness/buyer-discovery-kit-2026-06-06.md",
+      "line": 219,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "The current proof asset is Global-risk issue brief with source provenance, actor map, and forecast-draft scoring plan. It is explicitly pilot-only: no world-class prediction claim, no buyer-proof claim, and accuracy remains gated on resolved outcomes."
+    },
+    {
+      "file": "docs/launch-readiness/buyer-discovery-kit-2026-06-06.md",
+      "line": 239,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "The current proof asset is Calibration ledger plus benchmark-comparison artifact, clearly marked sample-only until real data exists. It is explicitly pilot-only: no world-class prediction claim, no buyer-proof claim, and accuracy remains gated on resolved outc"
+    },
+    {
+      "file": "docs/launch-readiness/buyer-discovery-kit-2026-06-06.md",
+      "line": 259,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "The current proof asset is Negotiation Dojo and game-tree module with manager-ready debriefs. It is explicitly pilot-only: no world-class prediction claim, no buyer-proof claim, and accuracy remains gated on resolved outcomes."
+    },
+    {
+      "file": "docs/launch-readiness/buyer-evidence-input-validation-2026-06-06.json",
+      "line": 5,
+      "claim": "buyer_validated",
+      "severity": "P1",
+      "allowed_gate": "buyer_validated_claim_blocked",
+      "boundary_context": true,
+      "text": "\"proof_boundary\": \"This artifact validates buyer discovery CRM/call-sheet inputs before buyer proof can be upgraded. It is not buyer validation, willingness-to-pay proof, hosted proof, enterprise-security proof, or prediction-accuracy proof.\","
+    },
+    {
+      "file": "docs/launch-readiness/buyer-evidence-input-validation-2026-06-06.json",
+      "line": 160,
+      "claim": "commercial_ready",
+      "severity": "P1",
+      "allowed_gate": "commercial_ready_claim_blocked",
+      "boundary_context": true,
+      "text": "\"evidence\": \"Rows are checked for prohibited claims such as world-class, commercial-ready, proven accuracy, buyer-validated, or enterprise-ready.\","
+    },
+    {
+      "file": "docs/launch-readiness/buyer-evidence-input-validation-2026-06-06.json",
+      "line": 160,
+      "claim": "buyer_validated",
+      "severity": "P1",
+      "allowed_gate": "buyer_validated_claim_blocked",
+      "boundary_context": true,
+      "text": "\"evidence\": \"Rows are checked for prohibited claims such as world-class, commercial-ready, proven accuracy, buyer-validated, or enterprise-ready.\","
+    },
+    {
+      "file": "docs/launch-readiness/buyer-evidence-input-validation-2026-06-06.json",
+      "line": 160,
+      "claim": "enterprise_ready",
+      "severity": "P1",
+      "allowed_gate": "enterprise_ready_claim_blocked",
+      "boundary_context": true,
+      "text": "\"evidence\": \"Rows are checked for prohibited claims such as world-class, commercial-ready, proven accuracy, buyer-validated, or enterprise-ready.\","
+    },
+    {
+      "file": "docs/launch-readiness/buyer-evidence-input-validation-2026-06-06.md",
+      "line": 7,
+      "claim": "buyer_validated",
+      "severity": "P1",
+      "allowed_gate": "buyer_validated_claim_blocked",
+      "boundary_context": true,
+      "text": "This artifact validates buyer discovery CRM/call-sheet inputs before buyer proof can be upgraded. It is not buyer validation, willingness-to-pay proof, hosted proof, enterprise-security proof, or prediction-accuracy proof."
+    },
+    {
+      "file": "docs/launch-readiness/buyer-evidence-input-validation-2026-06-06.md",
+      "line": 25,
+      "claim": "commercial_ready",
+      "severity": "P1",
+      "allowed_gate": "commercial_ready_claim_blocked",
+      "boundary_context": true,
+      "text": "| claim_boundary_preserved | passed | Rows are checked for prohibited claims such as world-class, commercial-ready, proven accuracy, buyer-validated, or enterprise-ready. | repo_artifact |"
+    },
+    {
+      "file": "docs/launch-readiness/buyer-evidence-input-validation-2026-06-06.md",
+      "line": 25,
+      "claim": "buyer_validated",
+      "severity": "P1",
+      "allowed_gate": "buyer_validated_claim_blocked",
+      "boundary_context": true,
+      "text": "| claim_boundary_preserved | passed | Rows are checked for prohibited claims such as world-class, commercial-ready, proven accuracy, buyer-validated, or enterprise-ready. | repo_artifact |"
+    },
+    {
+      "file": "docs/launch-readiness/buyer-evidence-input-validation-2026-06-06.md",
+      "line": 25,
+      "claim": "enterprise_ready",
+      "severity": "P1",
+      "allowed_gate": "enterprise_ready_claim_blocked",
+      "boundary_context": true,
+      "text": "| claim_boundary_preserved | passed | Rows are checked for prohibited claims such as world-class, commercial-ready, proven accuracy, buyer-validated, or enterprise-ready. | repo_artifact |"
+    },
+    {
+      "file": "docs/launch-readiness/buyer-evidence-input-validation-checklist-2026-06-06.csv",
+      "line": 10,
+      "claim": "commercial_ready",
+      "severity": "P1",
+      "allowed_gate": "commercial_ready_claim_blocked",
+      "boundary_context": true,
+      "text": "claim_boundary_preserved,passed,\"Rows are checked for prohibited claims such as world-class, commercial-ready, proven accuracy, buyer-validated, or enterprise-ready.\",repo_artifact"
+    },
+    {
+      "file": "docs/launch-readiness/buyer-evidence-input-validation-checklist-2026-06-06.csv",
+      "line": 10,
+      "claim": "buyer_validated",
+      "severity": "P1",
+      "allowed_gate": "buyer_validated_claim_blocked",
+      "boundary_context": true,
+      "text": "claim_boundary_preserved,passed,\"Rows are checked for prohibited claims such as world-class, commercial-ready, proven accuracy, buyer-validated, or enterprise-ready.\",repo_artifact"
+    },
+    {
+      "file": "docs/launch-readiness/buyer-evidence-input-validation-checklist-2026-06-06.csv",
+      "line": 10,
+      "claim": "enterprise_ready",
+      "severity": "P1",
+      "allowed_gate": "enterprise_ready_claim_blocked",
+      "boundary_context": true,
+      "text": "claim_boundary_preserved,passed,\"Rows are checked for prohibited claims such as world-class, commercial-ready, proven accuracy, buyer-validated, or enterprise-ready.\",repo_artifact"
+    },
+    {
+      "file": "docs/launch-readiness/buyer-proof-gate-2026-06-06.json",
+      "line": 28,
+      "claim": "buyer_validated",
+      "severity": "P1",
+      "allowed_gate": "buyer_validated_claim_blocked",
+      "boundary_context": true,
+      "text": "\"LOI, paid-pilot, procurement-path, or referenceable buyer evidence.\","
+    },
+    {
+      "file": "docs/launch-readiness/buyer-proof-gate-2026-06-06.json",
+      "line": 75,
+      "claim": "buyer_validated",
+      "severity": "P1",
+      "allowed_gate": "buyer_validated_claim_blocked",
+      "boundary_context": true,
+      "text": "\"alignment\": \"Geopolitical risk is a live buyer concern, but concern must be converted into named workflow pain and willingness-to-pay proof.\""
+    },
+    {
+      "file": "docs/launch-readiness/buyer-proof-gate-2026-06-06.md",
+      "line": 7,
+      "claim": "buyer_validated",
+      "severity": "P1",
+      "allowed_gate": "buyer_validated_claim_blocked",
+      "boundary_context": true,
+      "text": "This artifact makes buyer-validation proof rules explicit. It does not prove completed discovery, willingness to pay, LOI, paid-pilot, procurement-path, or referenceable buyer evidence."
+    },
+    {
+      "file": "docs/launch-readiness/buyer-proof-gate-2026-06-06.md",
+      "line": 15,
+      "claim": "buyer_validated",
+      "severity": "P1",
+      "allowed_gate": "buyer_validated_claim_blocked",
+      "boundary_context": true,
+      "text": "Prohibited current claim: **Buyer-validated willingness to pay.**"
+    },
+    {
+      "file": "docs/launch-readiness/buyer-proof-gate-2026-06-06.md",
+      "line": 49,
+      "claim": "buyer_validated",
+      "severity": "P1",
+      "allowed_gate": "buyer_validated_claim_blocked",
+      "boundary_context": true,
+      "text": "| Tradeweb ICD Portal Client Survey 2026 | https://www.tradeweb.com/newsroom/media-center/news-releases/geopolitical-risk-concerns-surge-for-corporate-treasurers-according-to-2026-tradeweb-icd-portal-client-survey/ | Geopolitical risk is a live buyer concern, "
+    },
+    {
+      "file": "docs/launch-readiness/buyer-substitution-evidence-validation-2026-06-06.json",
+      "line": 157,
+      "claim": "commercial_ready",
+      "severity": "P1",
+      "allowed_gate": "commercial_ready_claim_blocked",
+      "boundary_context": true,
+      "text": "\"evidence\": \"Rows are checked for prohibited claims such as world-class, commercial-ready, buyer-validated, replacement, parity, or enterprise-ready.\","
+    },
+    {
+      "file": "docs/launch-readiness/buyer-substitution-evidence-validation-2026-06-06.json",
+      "line": 157,
+      "claim": "buyer_validated",
+      "severity": "P1",
+      "allowed_gate": "buyer_validated_claim_blocked",
+      "boundary_context": true,
+      "text": "\"evidence\": \"Rows are checked for prohibited claims such as world-class, commercial-ready, buyer-validated, replacement, parity, or enterprise-ready.\","
+    },
+    {
+      "file": "docs/launch-readiness/buyer-substitution-evidence-validation-2026-06-06.json",
+      "line": 157,
+      "claim": "enterprise_ready",
+      "severity": "P1",
+      "allowed_gate": "enterprise_ready_claim_blocked",
+      "boundary_context": true,
+      "text": "\"evidence\": \"Rows are checked for prohibited claims such as world-class, commercial-ready, buyer-validated, replacement, parity, or enterprise-ready.\","
+    },
+    {
+      "file": "docs/launch-readiness/buyer-substitution-evidence-validation-2026-06-06.md",
+      "line": 19,
+      "claim": "buyer_validated",
+      "severity": "P1",
+      "allowed_gate": "buyer_validated_claim_blocked",
+      "boundary_context": true,
+      "text": "Buyer-validated claim allowed: **false**."
+    },
+    {
+      "file": "docs/launch-readiness/buyer-substitution-evidence-validation-2026-06-06.md",
+      "line": 37,
+      "claim": "commercial_ready",
+      "severity": "P1",
+      "allowed_gate": "commercial_ready_claim_blocked",
+      "boundary_context": true,
+      "text": "| claim_boundary_preserved | passed | repo_artifact | Rows are checked for prohibited claims such as world-class, commercial-ready, buyer-validated, replacement, parity, or enterprise-ready. |"
+    },
+    {
+      "file": "docs/launch-readiness/buyer-substitution-evidence-validation-2026-06-06.md",
+      "line": 37,
+      "claim": "buyer_validated",
+      "severity": "P1",
+      "allowed_gate": "buyer_validated_claim_blocked",
+      "boundary_context": true,
+      "text": "| claim_boundary_preserved | passed | repo_artifact | Rows are checked for prohibited claims such as world-class, commercial-ready, buyer-validated, replacement, parity, or enterprise-ready. |"
+    },
+    {
+      "file": "docs/launch-readiness/buyer-substitution-evidence-validation-2026-06-06.md",
+      "line": 37,
+      "claim": "enterprise_ready",
+      "severity": "P1",
+      "allowed_gate": "enterprise_ready_claim_blocked",
+      "boundary_context": true,
+      "text": "| claim_boundary_preserved | passed | repo_artifact | Rows are checked for prohibited claims such as world-class, commercial-ready, buyer-validated, replacement, parity, or enterprise-ready. |"
+    },
+    {
+      "file": "docs/launch-readiness/buyer-substitution-evidence-validation-checklist-2026-06-06.csv",
+      "line": 10,
+      "claim": "commercial_ready",
+      "severity": "P1",
+      "allowed_gate": "commercial_ready_claim_blocked",
+      "boundary_context": true,
+      "text": "claim_boundary_preserved,passed,repo_artifact,\"Rows are checked for prohibited claims such as world-class, commercial-ready, buyer-validated, replacement, parity, or enterprise-ready.\""
+    },
+    {
+      "file": "docs/launch-readiness/buyer-substitution-evidence-validation-checklist-2026-06-06.csv",
+      "line": 10,
+      "claim": "buyer_validated",
+      "severity": "P1",
+      "allowed_gate": "buyer_validated_claim_blocked",
+      "boundary_context": true,
+      "text": "claim_boundary_preserved,passed,repo_artifact,\"Rows are checked for prohibited claims such as world-class, commercial-ready, buyer-validated, replacement, parity, or enterprise-ready.\""
+    },
+    {
+      "file": "docs/launch-readiness/buyer-substitution-evidence-validation-checklist-2026-06-06.csv",
+      "line": 10,
+      "claim": "enterprise_ready",
+      "severity": "P1",
+      "allowed_gate": "enterprise_ready_claim_blocked",
+      "boundary_context": true,
+      "text": "claim_boundary_preserved,passed,repo_artifact,\"Rows are checked for prohibited claims such as world-class, commercial-ready, buyer-validated, replacement, parity, or enterprise-ready.\""
+    },
+    {
+      "file": "docs/launch-readiness/buyer-substitution-proof-kit-2026-06-06.json",
+      "line": 83,
+      "claim": "buyer_validated",
+      "severity": "P1",
+      "allowed_gate": "buyer_validated_claim_blocked",
+      "boundary_context": true,
+      "text": "\"evidence\": \"defensible_competitive_wedge_claim_allowed=true; buyer_validated=false.\""
+    },
+    {
+      "file": "docs/launch-readiness/buyer-substitution-proof-kit-2026-06-06.json",
+      "line": 114,
+      "claim": "replacement_or_parity",
+      "severity": "P2",
+      "allowed_gate": "competitive_replacement_or_parity_claim_blocked",
+      "boundary_context": true,
+      "text": "\"must_not_claim\": \"Palantir-class enterprise deployment, ontology depth, or scaled operational automation\","
+    },
+    {
+      "file": "docs/launch-readiness/buyer-substitution-proof-kit-2026-06-06.json",
+      "line": 127,
+      "claim": "accurate_predictions",
+      "severity": "P1",
+      "allowed_gate": "accuracy_claim_blocked",
+      "boundary_context": true,
+      "text": "\"must_not_claim\": \"forecasting parity, world-class accuracy, or benchmark superiority before real resolved outcomes\","
+    },
+    {
+      "file": "docs/launch-readiness/buyer-substitution-proof-kit-2026-06-06.json",
+      "line": 127,
+      "claim": "replacement_or_parity",
+      "severity": "P2",
+      "allowed_gate": "competitive_replacement_or_parity_claim_blocked",
+      "boundary_context": true,
+      "text": "\"must_not_claim\": \"forecasting parity, world-class accuracy, or benchmark superiority before real resolved outcomes\","
+    },
+    {
+      "file": "docs/launch-readiness/buyer-substitution-proof-kit-2026-06-06.json",
+      "line": 252,
+      "claim": "replacement_or_parity",
+      "severity": "P2",
+      "allowed_gate": "competitive_replacement_or_parity_claim_blocked",
+      "boundary_context": true,
+      "text": "\"must_not_claim\": \"Palantir-class enterprise deployment, ontology depth, or scaled operational automation\","
+    },
+    {
+      "file": "docs/launch-readiness/buyer-substitution-proof-kit-2026-06-06.json",
+      "line": 342,
+      "claim": "replacement_or_parity",
+      "severity": "P2",
+      "allowed_gate": "competitive_replacement_or_parity_claim_blocked",
+      "boundary_context": true,
+      "text": "\"must_not_claim\": \"Palantir-class enterprise deployment, ontology depth, or scaled operational automation\","
+    },
+    {
+      "file": "docs/launch-readiness/buyer-substitution-proof-kit-2026-06-06.json",
+      "line": 432,
+      "claim": "replacement_or_parity",
+      "severity": "P2",
+      "allowed_gate": "competitive_replacement_or_parity_claim_blocked",
+      "boundary_context": true,
+      "text": "\"must_not_claim\": \"Palantir-class enterprise deployment, ontology depth, or scaled operational automation\","
+    },
+    {
+      "file": "docs/launch-readiness/buyer-substitution-proof-kit-2026-06-06.json",
+      "line": 522,
+      "claim": "replacement_or_parity",
+      "severity": "P2",
+      "allowed_gate": "competitive_replacement_or_parity_claim_blocked",
+      "boundary_context": true,
+      "text": "\"must_not_claim\": \"Palantir-class enterprise deployment, ontology depth, or scaled operational automation\","
+    },
+    {
+      "file": "docs/launch-readiness/buyer-substitution-proof-kit-2026-06-06.json",
+      "line": 792,
+      "claim": "replacement_or_parity",
+      "severity": "P2",
+      "allowed_gate": "competitive_replacement_or_parity_claim_blocked",
+      "boundary_context": true,
+      "text": "\"must_not_claim\": \"Palantir-class enterprise deployment, ontology depth, or scaled operational automation\","
+    },
+    {
+      "file": "docs/launch-readiness/buyer-substitution-proof-kit-2026-06-06.json",
+      "line": 972,
+      "claim": "accurate_predictions",
+      "severity": "P1",
+      "allowed_gate": "accuracy_claim_blocked",
+      "boundary_context": true,
+      "text": "\"must_not_claim\": \"forecasting parity, world-class accuracy, or benchmark superiority before real resolved outcomes\","
+    },
+    {
+      "file": "docs/launch-readiness/buyer-substitution-proof-kit-2026-06-06.json",
+      "line": 972,
+      "claim": "replacement_or_parity",
+      "severity": "P2",
+      "allowed_gate": "competitive_replacement_or_parity_claim_blocked",
+      "boundary_context": true,
+      "text": "\"must_not_claim\": \"forecasting parity, world-class accuracy, or benchmark superiority before real resolved outcomes\","
+    },
+    {
+      "file": "docs/launch-readiness/buyer-substitution-proof-kit-2026-06-06.json",
+      "line": 1141,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "\"proof_boundary\": \"This kit prepares buyer substitution testing. It does not prove buyer validation, replacement, parity, paid-pilot demand, or world-class prediction accuracy.\""
+    },
+    {
+      "file": "docs/launch-readiness/buyer-substitution-proof-kit-2026-06-06.md",
+      "line": 9,
+      "claim": "buyer_validated",
+      "severity": "P1",
+      "allowed_gate": "buyer_validated_claim_blocked",
+      "boundary_context": true,
+      "text": "Buyer-validated claim allowed: **false**."
+    },
+    {
+      "file": "docs/launch-readiness/buyer-substitution-proof-kit-2026-06-06.md",
+      "line": 30,
+      "claim": "buyer_validated",
+      "severity": "P1",
+      "allowed_gate": "buyer_validated_claim_blocked",
+      "boundary_context": true,
+      "text": "| defensible_wedge_still_pilot_only | passed | defensible_competitive_wedge_claim_allowed=true; buyer_validated=false. |"
+    },
+    {
+      "file": "docs/launch-readiness/buyer-substitution-proof-kit-2026-06-06.md",
+      "line": 53,
+      "claim": "replacement_or_parity",
+      "severity": "P2",
+      "allowed_gate": "competitive_replacement_or_parity_claim_blocked",
+      "boundary_context": true,
+      "text": "| Operational AI platforms | Palantir AIP | enterprise ontology, governed data integration, operational AI workflows, automation, and human-in-the-loop controls | narrow, fast guided pilot for strategy/risk teams that do not yet need enterprise ontology deploy"
+    },
+    {
+      "file": "docs/launch-readiness/buyer-substitution-proof-kit-2026-06-06.md",
+      "line": 54,
+      "claim": "accurate_predictions",
+      "severity": "P1",
+      "allowed_gate": "accuracy_claim_blocked",
+      "boundary_context": true,
+      "text": "| Forecasting services and tournaments | Metaculus; Good Judgment | large scored question history, professional forecasters, calibration, benchmark discipline, and custom forecasting services | workflow bridge from research evidence to forecast-draft governanc"
+    },
+    {
+      "file": "docs/launch-readiness/buyer-substitution-proof-kit-2026-06-06.md",
+      "line": 54,
+      "claim": "replacement_or_parity",
+      "severity": "P2",
+      "allowed_gate": "competitive_replacement_or_parity_claim_blocked",
+      "boundary_context": true,
+      "text": "| Forecasting services and tournaments | Metaculus; Good Judgment | large scored question history, professional forecasters, calibration, benchmark discipline, and custom forecasting services | workflow bridge from research evidence to forecast-draft governanc"
+    },
+    {
+      "file": "docs/launch-readiness/buyer-substitution-proof-kit-2026-06-06.md",
+      "line": 67,
+      "claim": "world_class_accuracy",
+      "severity": "P1",
+      "allowed_gate": "world_class_prediction_claim_blocked",
+      "boundary_context": true,
+      "text": "This kit prepares buyer substitution testing. It does not prove buyer validation, replacement, parity, paid-pilot demand, or world-class prediction accuracy."
+    },
+    {
+      "file": "docs/launch-readiness/buyer-substitution-test-sheet-2026-06-06.csv",
+      "line": 2,
+      "claim": "replacement_or_parity",
+      "severity": "P2",
+      "allowed_gate": "competitive_replacement_or_parity_claim_blocked",
+      "boundary_context": true,
+      "text": "1,GAO Center for Strategic Foresight,https://www.gao.gov/about/what-gao-does/audit-role/csf/,Strategic foresight director or federal program-analysis lead,Enterprise/public-sector strategic decision intelligence,1,Operational AI platforms,Palantir AIP,https://"
+    },
+    {
+      "file": "docs/launch-readiness/buyer-substitution-test-sheet-2026-06-06.csv",
+      "line": 5,
+      "claim": "replacement_or_parity",
+      "severity": "P2",
+      "allowed_gate": "competitive_replacement_or_parity_claim_blocked",
+      "boundary_context": true,
+      "text": "2,UK Government Office for Science Futures and Foresight,https://www.gov.uk/government/groups/futures-and-foresight,\"Futures, foresight, or horizon-scanning team lead\",Enterprise/public-sector strategic decision intelligence,1,Operational AI platforms,Palantir"
+    },
+    {
+      "file": "docs/launch-readiness/buyer-substitution-test-sheet-2026-06-06.csv",
+      "line": 8,
+      "claim": "replacement_or_parity",
+      "severity": "P2",
+      "allowed_gate": "competitive_replacement_or_parity_claim_blocked",
+      "boundary_context": true,
+      "text": "3,OECD Strategic Foresight Unit / Government Foresight Community,https://www.oecd.org/strategic-foresight/,Strategic foresight unit lead or GFC program contact,Enterprise/public-sector strategic decision intelligence,1,Operational AI platforms,Palantir AIP,htt"
+    },
+    {
+      "file": "docs/launch-readiness/buyer-substitution-test-sheet-2026-06-06.csv",
+      "line": 11,
+      "claim": "replacement_or_parity",
+      "severity": "P2",
+      "allowed_gate": "competitive_replacement_or_parity_claim_blocked",
+      "boundary_context": true,
+      "text": "4,Policy Horizons Canada,https://horizons.service.canada.ca/en/home/index.shtml,Foresight analyst or policy innovation lead,Enterprise/public-sector strategic decision intelligence,1,Operational AI platforms,Palantir AIP,https://www.palantir.com/platforms/aip/"
+    },
+    {
+      "file": "docs/launch-readiness/buyer-substitution-test-sheet-2026-06-06.csv",
+      "line": 20,
+      "claim": "replacement_or_parity",
+      "severity": "P2",
+      "allowed_gate": "competitive_replacement_or_parity_claim_blocked",
+      "boundary_context": true,
+      "text": "7,World Economic Forum Strategic Intelligence,https://www.weforum.org/focus/strategic-intelligence/,Strategic Intelligence partnerships or content lead,Enterprise/public-sector strategic decision intelligence,1,Operational AI platforms,Palantir AIP,https://www"
+    },
+    {
+      "file": "docs/launch-readiness/buyer-substitution-test-sheet-2026-06-06.csv",
+      "line": 26,
+      "claim": "accurate_predictions",
+      "severity": "P1",
+      "allowed_gate": "accuracy_claim_blocked",
+      "boundary_context": true,
+      "text": "13,Metaculus FutureEval,https://www.metaculus.com/futureeval/,Forecasting evaluation or services lead,Governed forecasting and research workflow,1,Forecasting services and tournaments,Metaculus; Good Judgment,https://www.metaculus.com/futureeval/,\"large scored"
+    }
+  ],
+  "acceptance_gates": [
+    {
+      "gate": "launch_artifact_corpus_present",
+      "status": "passed",
+      "evidence": "246 launch-readiness JSON/Markdown/CSV artifacts scanned across 126030 lines.",
+      "proof_bucket": "repo_artifact"
+    },
+    {
+      "gate": "claim_gate_artifacts_present",
+      "status": "passed",
+      "evidence": "Commercial confidence, market niche, competitive positioning, prediction science, buyer, hosted, and enterprise gates are readable.",
+      "proof_bucket": "repo_artifact"
+    },
+    {
+      "gate": "unsupported_high_risk_claims_absent",
+      "status": "passed",
+      "evidence": "0 unsupported high-risk claim mentions; 651 mentions are in blocked/prohibited/caveated contexts.",
+      "proof_bucket": "repo_artifact"
+    },
+    {
+      "gate": "world_class_prediction_claim_blocked",
+      "status": "passed",
+      "evidence": "commercial_decision=not_95_confident; prediction_science_world_class=false.",
+      "proof_bucket": "repo_artifact"
+    },
+    {
+      "gate": "accuracy_claim_blocked",
+      "status": "passed",
+      "evidence": "prediction_science_accuracy_claim_allowed=false; prediction_science_ready_for_claim_review=false.",
+      "proof_bucket": "repo_artifact"
+    },
+    {
+      "gate": "buyer_validated_claim_blocked",
+      "status": "passed",
+      "evidence": "buyer_validation_verified=false; market_niche_buyer_validated=false.",
+      "proof_bucket": "owner_input"
+    },
+    {
+      "gate": "hosted_live_claim_blocked",
+      "status": "passed",
+      "evidence": "hosted_ready_for_buyer_safe_claims=false; market_niche_hosted_live=false.",
+      "proof_bucket": "hosted_live"
+    },
+    {
+      "gate": "enterprise_ready_claim_blocked",
+      "status": "passed",
+      "evidence": "enterprise_ready_for_review=false; market_niche_enterprise_ready=false.",
+      "proof_bucket": "owner_input"
+    },
+    {
+      "gate": "competitive_replacement_or_parity_claim_blocked",
+      "status": "passed",
+      "evidence": "replacement=false; palantir_equivalence=false; forecasting_parity=false.",
+      "proof_bucket": "repo_artifact"
+    },
+    {
+      "gate": "commercial_ready_claim_blocked",
+      "status": "passed",
+      "evidence": "launch_decision=pilot-only; confidence_decision=not_95_confident.",
+      "proof_bucket": "repo_artifact"
+    }
+  ],
+  "release_holds": [
+    {
+      "hold": "recheck_claim_consistency_after_owner_data_or_hosted_proof",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "Rerun this validator whenever buyer calls, hosted proof, enterprise evidence, or resolved forecast data changes claim eligibility."
+    },
+    {
+      "hold": "owner_approved_external_claim_language_missing",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "Owner-approved external-share copy review before outreach, decks, or public claims."
+    }
+  ],
+  "proof_boundary": "This validator checks whether generated launch-readiness artifacts keep high-risk commercial, buyer, hosted, enterprise, competitive, and prediction claims inside blocked/prohibited/caveated contexts. It does not prove buyer demand, hosted readiness, enterprise procurement readiness, or prediction accuracy."
+}

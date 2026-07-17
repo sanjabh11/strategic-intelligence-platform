@@ -1,0 +1,342 @@
+{
+  "schema_version": "competitive-positioning-evidence-validation-v1",
+  "generated_at": "2026-06-07T03:39:31.514Z",
+  "status": "competitive_positioning_validation_ready_pilot_only_not_buyer_validated",
+  "source": {
+    "market_differentiation": "docs/launch-readiness/market-differentiation-validation-2026-06-06.md",
+    "pilot_offer_pack": "docs/launch-readiness/pilot-offer-pack-2026-06-06.json",
+    "market_niche_validation": "docs/launch-readiness/market-niche-evidence-validation-2026-06-06.json",
+    "buyer_proof_gate": "docs/launch-readiness/buyer-proof-gate-2026-06-06.json",
+    "local_browser_route_proof": "docs/launch-readiness/local-browser-route-proof-2026-06-06.json",
+    "hosted_proof_validation": "docs/launch-readiness/hosted-operational-proof-evidence-validation-2026-06-06.json",
+    "scoring_validation": "docs/launch-readiness/forecast-scoring-evidence-validation-2026-06-06.json",
+    "enterprise_procurement_gate": "docs/launch-readiness/enterprise-procurement-readiness-gate-2026-06-06.json",
+    "launch_evidence": "docs/launch-readiness/launch-evidence-2026-06-06.json"
+  },
+  "summary": {
+    "market_signal_row_count": 7,
+    "current_competitive_source_count": 14,
+    "top_five_niche_row_count": 5,
+    "competitor_substitute_row_count": 7,
+    "required_competitor_category_count": 7,
+    "required_competitor_category_present_count": 7,
+    "loophole_row_count": 6,
+    "buyer_plan_row_count": 5,
+    "pilot_substitution_count": 5,
+    "pilot_substitution_required_niche_count": 5,
+    "pilot_substitution_covered_niche_count": 5,
+    "pilot_substitution_coverage_complete": true,
+    "pilot_source_alignment_count": 8,
+    "market_niche_buyer_safe_pilot_claim_allowed": true,
+    "local_route_proof_ready": true,
+    "buyer_validation_verified": false,
+    "hosted_ready_for_buyer_safe_claims": false,
+    "scoring_output_ready_for_claim_review": false,
+    "enterprise_procurement_ready_for_review": false,
+    "active_release_hold_count": 5,
+    "defensible_competitive_wedge_claim_allowed": true,
+    "replacement_claim_allowed": false,
+    "data_breadth_superiority_claim_allowed": false,
+    "palantir_equivalence_claim_allowed": false,
+    "expert_advisory_replacement_claim_allowed": false,
+    "forecasting_parity_claim_allowed": false,
+    "generic_ai_superiority_claim_allowed": false,
+    "buyer_validated_claim_allowed": false,
+    "hosted_live_claim_allowed": false,
+    "enterprise_ready_claim_allowed": false,
+    "accuracy_claim_allowed": false,
+    "world_class_prediction_claim_allowed": false
+  },
+  "current_competitive_sources": [
+    {
+      "source": "Recorded Future Geopolitical Intelligence",
+      "url": "https://www.recordedfuture.com/products/geopolitical-intelligence",
+      "implication": "Threat-intelligence incumbents win on monitoring breadth and analyst support; this app should not claim raw coverage superiority."
+    },
+    {
+      "source": "Palantir AIP and Foundry platform overview",
+      "url": "https://www.palantir.com/docs/foundry/platform-overview",
+      "implication": "Operational AI incumbents win on data integration, ontology, security, and deployment depth; this app should sell a narrower strategic workflow pilot."
+    },
+    {
+      "source": "AlphaSense Enterprise Intelligence private-cloud documentation",
+      "url": "https://developer.alpha-sense.com/enterprise/",
+      "implication": "Enterprise market-intelligence incumbents compete on premium content, proprietary/internal-content search, deployment options, mTLS, certifications, and access controls."
+    },
+    {
+      "source": "Quid AI-powered consumer and market intelligence",
+      "url": "https://www.quid.com/",
+      "implication": "Market-intelligence incumbents compete on data coverage, proprietary NLP, context customization, and decision-ready workflows; this app should not claim data-breadth superiority."
+    },
+    {
+      "source": "World Economic Forum Strategic Intelligence",
+      "url": "https://www.weforum.org/focus/strategic-intelligence/",
+      "implication": "Strategic-intelligence incumbents validate the category but raise the bar for curated expert networks, maps, and foresight credibility."
+    },
+    {
+      "source": "Control Risks RiskMap 2026",
+      "url": "https://www.controlrisks.com/riskmap",
+      "implication": "Consulting and advisory incumbents validate buyer urgency but have trust, analyst, and briefing credibility this app has not proven."
+    },
+    {
+      "source": "Eurasia Group political risk advisory",
+      "url": "https://www.eurasiagroup.net/services/political-risk-advisory",
+      "implication": "Political-risk advisory substitutes reinforce that buyer value is judgment, briefing, and decision context, not only event feeds."
+    },
+    {
+      "source": "Oxford Analytica advisory services",
+      "url": "https://www.oxan.com/",
+      "implication": "Analyst-led briefing incumbents are a substitute for executive/analyst briefing workflows."
+    },
+    {
+      "source": "Metaculus FutureEval methodology",
+      "url": "https://www.metaculus.com/futureeval/methodology/",
+      "implication": "Forecasting parity claims require resolved questions and comparable human/model baselines."
+    },
+    {
+      "source": "Metaculus forecasting platform and aggregation engine",
+      "url": "https://www.metaculus.com/about/",
+      "implication": "Forecasting-platform substitutes bring resolved-question history, aggregation, tournaments, private spaces, and pro forecasters."
+    },
+    {
+      "source": "ForecastBench",
+      "url": "https://forecastingresearch.org/research/forecastbench",
+      "implication": "World-class forecasting claims need contamination-resistant benchmark discipline."
+    },
+    {
+      "source": "Good Judgment Superforecasting services",
+      "url": "https://goodjudgment.com/",
+      "implication": "Forecasting services and training are credible substitutes, but this app needs real outcomes before claiming performance parity."
+    },
+    {
+      "source": "FiscalNote political prediction-market expansion",
+      "url": "https://fiscalnote.com/newsroom/fiscalnote-announces-major-expansion-into-political-prediction-markets",
+      "implication": "Policy intelligence and prediction-market expansion validate the governed forecasting wedge while raising proof and regulatory expectations."
+    },
+    {
+      "source": "World Economic Forum Strategic Intelligence",
+      "url": "https://www.weforum.org/focus/strategic-intelligence/",
+      "implication": "Strategic-intelligence platforms validate complexity mapping and foresight demand, but this app needs workflow proof to avoid being only a map or content layer."
+    }
+  ],
+  "competitor_coverage": [
+    {
+      "id": "geopolitical_intelligence",
+      "label": "Recorded Future / geopolitical intelligence platforms",
+      "present": true,
+      "row": "Recorded Future | Broad geopolitical and threat intelligence monitoring with alerts, country risk, and analyst support. | More explicit actor/countermove reasoning and forecast handoff in a lightweight workflow. | Far weaker data breadth, analyst bench, hosted proof, and enterprise trust center. | Buyers may already have threat-intel subscriptions."
+    },
+    {
+      "id": "operational_ai",
+      "label": "Palantir AIP / operational AI platforms",
+      "present": true,
+      "row": "Palantir AIP/Ontology | Governed operational AI with enterprise data, logic, action, security, and feedback loops. | Much lighter pilot path for strategic briefs and forecasts without enterprise transformation. | Not comparable on integrations, ontology, permissions, deployment rigor, or enterprise scale. | Procurement may prefer established operational AI platforms."
+    },
+    {
+      "id": "forecasting_services",
+      "label": "Metaculus / Good Judgment / forecasting services",
+      "present": true,
+      "row": "Metaculus / Good Judgment | Forecasting communities, professional forecasts, custom forecasting, and training. | Connects forecasts to source-backed strategic reasoning and human review inside one app. | No real community, no pro forecaster network, no proven Brier track record. | Forecasting buyers will demand comparable accuracy evidence."
+    },
+    {
+      "id": "expert_advisory",
+      "label": "Control Risks / Eurasia / EIU advisory substitutes",
+      "present": true,
+      "row": "Control Risks / Eurasia Group / EIU | Expert advisory, country risk, executive briefings, and geopolitical foresight. | Faster self-serve draft workflow and repeatable evidence-to-forecast artifact generation. | Lower trust, no senior analyst access, no established advisory brand. | Buyers may see this as a tool, not a replacement."
+    },
+    {
+      "id": "policy_intelligence",
+      "label": "FiscalNote / policy intelligence platforms",
+      "present": true,
+      "row": "FiscalNote / policy intelligence platforms | Policy/regulatory intelligence and emerging political prediction market layers. | More generalized actor-reasoning plus forecast governance for strategic questions. | Less policy data coverage, fewer integrations, no policy customer proof. | Need avoid competing head-on as policy data platform."
+    },
+    {
+      "id": "manual_workflow",
+      "label": "Internal analyst spreadsheets and memos",
+      "present": true,
+      "row": "Internal analyst spreadsheets and memos | Low-cost, trusted, tailored manual workflow. | Better repeatability, provenance, review states, forecast conversion, and calibration path. | Adoption requires workflow change and trust in AI-assisted output. | Teams may stay manual until a pilot proves time saved."
+    },
+    {
+      "id": "generic_llm",
+      "label": "Generic LLM copilots",
+      "present": true,
+      "row": "Generic LLM copilots | Cheap broad answer generation. | Evidence-gated, domain-shaped, reviewable, and forecast-aware workflow. | Generic copilots are already embedded in buyer stacks. | Must prove differentiated workflow value, not just better prompts."
+    }
+  ],
+  "pilot_substitution_coverage_by_niche": [
+    {
+      "niche": "Enterprise/public-sector strategic decision intelligence",
+      "covered": true,
+      "substitute_count": 2,
+      "substitutes": [
+        "Operational AI platforms",
+        "Public-sector foresight process"
+      ]
+    },
+    {
+      "niche": "Governed forecasting and research workflow",
+      "covered": true,
+      "substitute_count": 1,
+      "substitutes": [
+        "Forecasting services and tournaments"
+      ]
+    },
+    {
+      "niche": "Geopolitical risk radar and scenario monitor",
+      "covered": true,
+      "substitute_count": 1,
+      "substitutes": [
+        "Geopolitical intelligence platforms"
+      ]
+    },
+    {
+      "niche": "Executive and analyst briefing layer",
+      "covered": true,
+      "substitute_count": 2,
+      "substitutes": [
+        "Operational AI platforms",
+        "Public-sector foresight process"
+      ]
+    },
+    {
+      "niche": "Negotiation and strategic reasoning training",
+      "covered": true,
+      "substitute_count": 1,
+      "substitutes": [
+        "Strategy training and simulation programs"
+      ]
+    }
+  ],
+  "acceptance_gates": [
+    {
+      "gate": "market_differentiation_artifact_present",
+      "status": "passed",
+      "evidence": "docs/launch-readiness/market-differentiation-validation-2026-06-06.md length=12838.",
+      "proof_bucket": "repo_artifact"
+    },
+    {
+      "gate": "source_backed_market_signals_present",
+      "status": "passed",
+      "evidence": "7 market-signal rows in Markdown; 14 current competitive-source anchors attached.",
+      "proof_bucket": "repo_artifact"
+    },
+    {
+      "gate": "top_five_niche_revalidation_present",
+      "status": "passed",
+      "evidence": "5 niche rows loaded from market differentiation artifact.",
+      "proof_bucket": "repo_artifact"
+    },
+    {
+      "gate": "competitor_substitute_matrix_complete",
+      "status": "passed",
+      "evidence": "7/7 required substitute categories found; 7 competitor rows loaded.",
+      "proof_bucket": "repo_artifact"
+    },
+    {
+      "gate": "loopholes_and_avoid_claims_present",
+      "status": "passed",
+      "evidence": "6 loophole rows loaded; claims-to-avoid section present=true.",
+      "proof_bucket": "repo_artifact"
+    },
+    {
+      "gate": "ten_call_buyer_plan_present",
+      "status": "passed",
+      "evidence": "5 buyer-validation plan rows loaded.",
+      "proof_bucket": "repo_artifact"
+    },
+    {
+      "gate": "prohibited_strength_claims_absent",
+      "status": "passed",
+      "evidence": "0 prohibited equivalence/superiority patterns found in competitor strength cells.",
+      "proof_bucket": "repo_artifact"
+    },
+    {
+      "gate": "pilot_substitution_matrix_consistent",
+      "status": "passed",
+      "evidence": "5 pilot-offer substitution rows, 5/5 required niches covered, and 8 source-alignment rows loaded.",
+      "proof_bucket": "repo_artifact"
+    },
+    {
+      "gate": "market_niche_gate_buyer_safe",
+      "status": "passed",
+      "evidence": "Market niche validation status=market_niche_evidence_validation_ready_not_buyer_validated; buyer_safe_pilot_claim_allowed=true.",
+      "proof_bucket": "repo_artifact"
+    },
+    {
+      "gate": "local_route_proof_supports_demo_not_live_claim",
+      "status": "passed",
+      "evidence": "Local route proof status=local_route_proof_ready_not_hosted_proof; rendered_or_expected_auth_gate_count=7; hosted_live_proof=false.",
+      "proof_bucket": "local"
+    },
+    {
+      "gate": "buyer_validated_claim_blocked",
+      "status": "passed",
+      "evidence": "Buyer proof status=buyer_proof_gate_ready_not_buyer_validation; buyer_validation_verified=false.",
+      "proof_bucket": "owner_input"
+    },
+    {
+      "gate": "hosted_live_claim_blocked",
+      "status": "passed",
+      "evidence": "Hosted proof status=hosted_operational_evidence_validation_ready_no_hosted_runs; ready_for_buyer_safe_hosted_claims=false.",
+      "proof_bucket": "hosted_live"
+    },
+    {
+      "gate": "enterprise_ready_claim_blocked",
+      "status": "passed",
+      "evidence": "Enterprise procurement status=enterprise_procurement_gate_ready_not_owner_approved_or_security_proof; enterprise_ready=false.",
+      "proof_bucket": "owner_input"
+    },
+    {
+      "gate": "forecasting_parity_claim_blocked",
+      "status": "passed",
+      "evidence": "Scoring status=forecast_scoring_evidence_validation_sample_only_not_claim_proof; scoring_ready=false; accuracy_claim_allowed=false; world_class_prediction_claim_allowed=false.",
+      "proof_bucket": "owner_input"
+    }
+  ],
+  "release_holds": [
+    {
+      "hold": "buyer_competitive_validation_missing",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "Run the 10-call validation plan with at least three qualified follow-ups and one paid-pilot/LOI/procurement-path signal."
+    },
+    {
+      "hold": "hosted_competitive_demo_proof_missing",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "Attach hosted route/API proof before claiming live competitive demo readiness."
+    },
+    {
+      "hold": "forecasting_parity_proof_missing",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "Owner-approved resolved forecasts, comparable baselines, leakage review, scoring output, and approved claim language."
+    },
+    {
+      "hold": "enterprise_substitute_trust_gap_missing",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "Enterprise procurement/security proof before comparing against established operational AI or advisory substitutes."
+    },
+    {
+      "hold": "owner_approved_competitive_claim_language_missing",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "Owner-approved external-share language for competitive positioning and buyer-facing proof packets."
+    }
+  ],
+  "recommended_market_language": [
+    "lightweight governed strategic-intelligence pilot",
+    "evidence-to-actor-reasoning-to-review-to-forecast workflow",
+    "complements geopolitical intelligence, advisory, forecasting, and generic AI tools"
+  ],
+  "prohibited_market_language": [
+    "replacement for geopolitical intelligence teams",
+    "Palantir-class operational AI",
+    "ForecastBench/Metaculus/Good Judgment parity",
+    "world-class accurate predictions",
+    "enterprise-ready secure deployment",
+    "live market-data intelligence"
+  ],
+  "proof_boundary": "This validator converts the competitive/substitute comparison into machine-checkable pilot positioning. It does not prove buyer demand, hosted live readiness, enterprise trust, data breadth superiority, expert-advisory replacement, or forecasting parity."
+}

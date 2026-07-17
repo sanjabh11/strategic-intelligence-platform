@@ -20,6 +20,20 @@ if (!ENDPOINT || !SERVICE_KEY) {
 const ajv = new Ajv({ allErrors: true, strict: false });
 addFormats(ajv);
 
+const advancedFrameworkSchema = {
+  type: 'object',
+  required: ['framework', 'status', 'summary', 'normalized_inputs', 'results', 'diagnostics', 'warnings'],
+  properties: {
+    framework: { type: 'string', enum: ['coalitional', 'signaling', 'correlated', 'evolutionary', 'bounded_rationality'] },
+    status: { type: 'string', enum: ['deterministic', 'heuristic', 'incomplete_inputs', 'rejected'] },
+    summary: { type: 'string' },
+    normalized_inputs: { type: 'object' },
+    results: { type: ['object', 'null'] },
+    diagnostics: { type: 'object' },
+    warnings: { type: 'array', items: { type: 'string' } }
+  }
+};
+
 // Comprehensive response schema validation
 const responseSchema = {
   type: 'object',
@@ -57,6 +71,16 @@ const responseSchema = {
                   payoffs: { type: 'array' },
                   stability: { type: 'number', minimum: 0, maximum: 1 }
                 }
+              }
+            },
+            advanced_frameworks: {
+              type: 'object',
+              properties: {
+                coalitional: advancedFrameworkSchema,
+                signaling: advancedFrameworkSchema,
+                correlated: advancedFrameworkSchema,
+                evolutionary: advancedFrameworkSchema,
+                bounded_rationality: advancedFrameworkSchema
               }
             }
           }
@@ -170,8 +194,58 @@ async function testPrisonersDilemma() {
   console.log(`   - Equilibria found: ${eqs?.length || 0}`);
 }
 
+async function testCoalitionalFramework() {
+  console.log('\n🤝 [3] Testing coalitional advanced framework');
+  const payload = {
+    scenario_text: 'Three parliamentary blocs can form binding coalitions and divide rewards. Model every coalition worth and compute a fair payoff split.',
+    audience: 'researcher',
+    options: { forceFresh: true },
+    run_id: `test_coalition_${Date.now()}`
+  };
+
+  const res = await callAnalyze(payload);
+  const ok = validateResponse(res);
+  if (!ok) {
+    console.error('Schema validation errors:', validateResponse.errors);
+    throw new Error('Schema validation failed for coalitional test');
+  }
+
+  const framework = res.analysis.simulation_results?.advanced_frameworks?.coalitional;
+  await assert(framework?.status === 'deterministic',
+    `Expected deterministic coalitional framework, got: ${JSON.stringify(framework)}`);
+  await assert(Object.keys(framework?.normalized_inputs || {}).length > 0,
+    `Expected normalized inputs for coalitional framework, got: ${JSON.stringify(framework)}`);
+
+  console.log('✅ Coalitional framework test PASSED');
+}
+
+async function testSignalingFramework() {
+  console.log('\n📡 [4] Testing signaling advanced framework');
+  const payload = {
+    scenario_text: 'An incumbent firm may be strong or weak, knows its type privately, and can signal before an entrant chooses whether to enter.',
+    audience: 'researcher',
+    options: { forceFresh: true },
+    run_id: `test_signaling_${Date.now()}`
+  };
+
+  const res = await callAnalyze(payload);
+  const ok = validateResponse(res);
+  if (!ok) {
+    console.error('Schema validation errors:', validateResponse.errors);
+    throw new Error('Schema validation failed for signaling test');
+  }
+
+  const framework = res.analysis.simulation_results?.advanced_frameworks?.signaling;
+  await assert(framework?.status === 'deterministic',
+    `Expected deterministic signaling framework, got: ${JSON.stringify(framework)}`);
+  await assert(Object.keys(framework?.normalized_inputs || {}).length > 0,
+    `Expected normalized inputs for signaling framework, got: ${JSON.stringify(framework)}`);
+
+  console.log('✅ Signaling framework test PASSED');
+}
+
 async function testTariffImpact() {
-  console.log('\n📊 [3] Testing Tariff impact retrievals (uncomtrade)');
+  console.log('\n📊 [5] Testing Tariff impact retrievals (uncomtrade)');
   const payload = {
     scenario_text: "India-US trade standoff: estimate 6-month export drop pct for India if tariffs go from 10% to 50%. Provide a numeric claim named '6m_projected_export_drop_pct' with evidence.",
     audience: "researcher",
@@ -201,7 +275,7 @@ async function testTariffImpact() {
 }
 
 async function testAISafety() {
-  console.log('\n🤖 [4] Testing AI safety analysis (evidence-backed)');
+  console.log('\n🤖 [6] Testing AI safety analysis (evidence-backed)');
   const payload = {
     scenario_text: "Three major tech companies (Apple, Google, Microsoft) decide whether to lead with strict AI safety standards or compete. Provide evidence-backed recommendations.",
     audience: "researcher",
@@ -230,7 +304,7 @@ async function testAISafety() {
 }
 
 async function testCacheBypass() {
-  console.log('\n💾 [5] Testing cache bypass behavior');
+  console.log('\n💾 [7] Testing cache bypass behavior');
   const scenario = "Gold price now for investment";
 
   // Fresh run
@@ -302,6 +376,22 @@ async function runAllTests() {
     passed++;
   } catch (error) {
     console.error(`❌ Tariff impact test FAILED: ${error.message}`);
+    failed++;
+  }
+
+  try {
+    await testCoalitionalFramework();
+    passed++;
+  } catch (error) {
+    console.error(`❌ Coalitional framework test FAILED: ${error.message}`);
+    failed++;
+  }
+
+  try {
+    await testSignalingFramework();
+    passed++;
+  } catch (error) {
+    console.error(`❌ Signaling framework test FAILED: ${error.message}`);
     failed++;
   }
 

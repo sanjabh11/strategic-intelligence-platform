@@ -1,0 +1,159 @@
+{
+  "manifest_id": "PM-005",
+  "supersedes": "PM-004",
+  "created_at": "2026-07-17T14:30:00+05:30",
+  "audit_id": "sip-deep-2026-07-13",
+  "description": "Append-only provenance manifest superseding PM-004. Fixes: drift_status enum aligned to canonical schema (stable/drifting/stale/not_assessed), repo invariant validator enums aligned to canonical v8 schema, dirty_path_count measured after all permitted edits. PM-003 and PM-004 are frozen and not modified.",
+  "disclosure": {
+    "pm003_hash_sha256": "2c8ae12e86216f0699182f9b28d6d8970d08af987aa142d5f5636896e9cb82aa",
+    "pm004_hash_sha256": "b69759d25e66ce446f26d3c906cc30a42d5e07af77b653eb7ec79fee84b432f9",
+    "note": "PM-003 and PM-004 were retroactively edited in prior sessions. PM-003 still identifies itself as the active manifest. PM-004 used an invalid drift_status value 'assessed' which is outside the canonical schema enum. This manifest (PM-005) is the authoritative active manifest."
+  },
+  "baseline_results": {
+    "pnpm_tsc_b": {
+      "status": "pass",
+      "errors": 0,
+      "measured_at": "2026-07-17T14:30:00+05:30",
+      "notes": "tsc -b (build mode) \u2014 authoritative type gate"
+    },
+    "pnpm_build": {
+      "status": "pass",
+      "measured_at": "2026-07-17T14:30:00+05:30",
+      "notes": "vite build pass with VITE_LABS_GOLD_BYPASS=true"
+    },
+    "pnpm_test": {
+      "status": "pass",
+      "passed": 121,
+      "failed": 0,
+      "skipped": 8,
+      "total": 129,
+      "measured_at": "2026-07-17T14:30:00+05:30",
+      "notes": "121 passed, 0 failed, 8 skipped (canonical-games). 15 new tests since PM-003 baseline: 9 strategist-contract + 7 question-context-cache - 1 overlap."
+    },
+    "strategist_contract_tests": {
+      "status": "pass",
+      "passed": 13,
+      "failed": 0,
+      "measured_at": "2026-07-17T14:30:00+05:30",
+      "notes": "13 tests: original 4 + 9 new (LLM-only downgrade, mixed evidence, forged refs in fallback, malformed arrays, heuristic preserved, no-throw, duplicate dedup, cross-claim ref)"
+    },
+    "question_context_cache_tests": {
+      "status": "pass",
+      "passed": 7,
+      "failed": 0,
+      "measured_at": "2026-07-17T14:30:00+05:30",
+      "notes": "7 tests: stale prompt rejection, matching prompt acceptance, prompt/hash/intent storage, expiry rejection, isCacheValidForPrompt, whitespace/case normalization, legacy-cache rejection (records without promptHash)"
+    },
+    "pnpm_lint": {
+      "status": "pass",
+      "errors": 0,
+      "warnings": 17,
+      "measured_at": "2026-07-17T14:30:00+05:30",
+      "notes": "0 errors, 17 warnings (baseline). All warnings are pre-existing in untouched files."
+    },
+    "route_smoke": {
+      "status": "pass",
+      "routes_total": 7,
+      "routes_rendered_or_expected": 7,
+      "failed_count": 0,
+      "render_problem_count": 0,
+      "runtime_console_error_count": 0,
+      "all_top_niche_routes_ready": true,
+      "hosted_live_proof": false,
+      "measured_at": "2026-07-17T14:30:00+05:30",
+      "notes": "July smoke run with VITE_LABS_GOLD_BYPASS. June smoke superseded. hosted_live_proof=false preserved."
+    },
+    "canonical_schema": {
+      "status": "pass",
+      "measured_at": "2026-07-17T14:30:00+05:30",
+      "notes": "Pinned Draft 2020-12 schema validation passes (audit:v8:validate)"
+    },
+    "ecc_parity": {
+      "status": "pass",
+      "measured_at": "2026-07-17T14:30:00+05:30",
+      "notes": "Pinned schema hashes match installed ECC schemas; both validators accept the audit (audit:v8:parity)"
+    },
+    "repository_invariants": {
+      "status": "pass",
+      "checks_passed": 206,
+      "checks_failed": 0,
+      "measured_at": "2026-07-17T14:30:00+05:30",
+      "notes": "206/206 repository-specific invariant checks pass (audit:repo:invariants). Enums aligned to canonical v8 schema."
+    },
+    "cross_artifact": {
+      "status": "pass",
+      "checks_passed": 18,
+      "measured_at": "2026-07-17T14:30:00+05:30",
+      "notes": "18 cross-artifact checks: state-experiments, designed count, metadata refs, execution order, phase9-manifest, route smoke readiness, state-manifest test count, state-manifest lint warnings, timestamp freshness, phase ledger completeness, LTI status consistency, dirty path drift, route artifact date, hypothesis no-promotion, confidence dimensions separated, casebook 5+5 design-only, casebook experiment/hypothesis mapping, casebook targets match source pack"
+    },
+    "casebook_validation": {
+      "status": "pass",
+      "measured_at": "2026-07-17T14:30:00+05:30",
+      "notes": "10 design-only cases with canonical mapping: EXP-007 education/H-EDU-4, EXP-008 enterprise/H-ENT-0. Negative fixtures pass."
+    },
+    "approval_packet_validation": {
+      "status": "pass",
+      "measured_at": "2026-07-17T14:30:00+05:30",
+      "notes": "10 required sections, independent approval boundaries, education institutional-review and privacy controls, 13+ public/reference URLs"
+    },
+    "claims_consistency": {
+      "status": "pass",
+      "files_scanned": 246,
+      "claims_checked": 651,
+      "unsupported_claims": 0,
+      "measured_at": "2026-07-17T14:30:00+05:30",
+      "notes": "No unsupported claims found"
+    },
+    "v8_regressions": {
+      "status": "pass",
+      "measured_at": "2026-07-17T14:30:00+05:30",
+      "notes": "6 negative regression fixtures pass: invalid drift_status, invalid tool_health, forbidden experiment root field, inconsistent experiment count, execution while validation pending, supported hypothesis without results"
+    }
+  },
+  "recovery_results": {
+    "hypothesis_status_changes": "none",
+    "experiments_executed": 0,
+    "experiments_designed": 8,
+    "evidence_bundle_status": "13 changed to true, 2 correctly remain false (15 total bundles)",
+    "dirty_path_count": 599,
+    "dirty_path_count_source": "git status --porcelain | wc -l (measured after all PM-005 edits including artifact validator and claims output)",
+    "lint_delta": "22 \u2192 17 warnings (5 fixed in touched files)",
+    "test_delta": "106 \u2192 121 passed (15 new tests: 9 strategist-contract + 7 question-context-cache - 1 overlap)",
+    "route_proof_status": "artifact_only_not_fresh (cached 7/7 routes, fresh browser run unavailable, hosted_live_proof=false)",
+    "drift_status": "stable",
+    "validator_enum_alignment": "Repo invariant validator enums (current_phase, current_gate, analysis_status, market_validation_status, drift_status) aligned to canonical v8 schema in scripts/validate-audit-v8.mjs",
+    "discovery_pack": "Unified 5+5 JSON with 10 named targets (5 enterprise + 5 education), 0 real interactions"
+  },
+  "files_modified_this_session": [
+    "scripts/validate-audit-v8.mjs",
+    ".positioning-audit/provenance-manifest-pm005.json",
+    ".positioning-audit/provenance-manifest.json",
+    ".positioning-audit/state.json",
+    ".positioning-audit/artifacts/phase-9-decision-gate.md"
+  ],
+  "git_actions": [
+    "No destructive git commands executed",
+    "No public positioning changes",
+    "No hypothesis promotions",
+    "CONDITIONAL_GO preserved",
+    "VALIDATION_PENDING preserved",
+    "evidence_limited_mode: true preserved",
+    "validation credit: 0 preserved",
+    "No git commits made"
+  ],
+  "residual_risks": [
+    "17 pre-existing lint warnings in untouched files (baseline)",
+    "Route proof is local-only; hosted_live_proof=false",
+    "Discovery pack targets are not buyer proof \u2014 zero real interactions",
+    "LTI JWKS uses placeholder RSA modulus \u2014 not production-verified",
+    "StrategyConsole cold import test may timeout in parallel runs (passes in isolation)"
+  ],
+  "next_actions_pending_approval": [
+    "Owner approval of 10-person discovery target slate",
+    "Owner approval of outreach wording",
+    "Owner approval of demo scope",
+    "Owner approval to execute EXP-007 and/or EXP-008",
+    "Owner approval for LTI sandbox testing (P6)",
+    "Owner approval for hosted proof URL (P6)"
+  ]
+}

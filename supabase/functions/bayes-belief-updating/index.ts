@@ -4,7 +4,7 @@
 // Endpoint: POST /functions/v1/bayes-belief-updating
 // Advanced real-time Bayesian belief network updates for strategic intelligence
 
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { createClient } from 'npm:@supabase/supabase-js@2'
 
 function jsonResponse(status: number, body: any) {
   return new Response(JSON.stringify(body), {
@@ -229,6 +229,7 @@ function calculateBeliefStability(beliefs: Record<string, number>): number {
   return Math.min(1.0, maxBelief / (entropy + 1));
 }
 
+// INTERNAL: Called server-side, relies on RLS for auth
 Deno.serve(async (req) => {
   if (req.method !== 'POST') {
     return jsonResponse(405, { ok: false, message: 'Method Not Allowed' });

@@ -5,12 +5,13 @@
 // - GET /functions/v1/review_queue - Fetch pending reviews
 // - POST /functions/v1/analysis/{id}/review - Approve/reject analysis
 
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { createClient } from 'npm:@supabase/supabase-js@2'
+import { hydrateAnalysisJson } from '../_shared/analysis-artifacts.ts'
 
 // --- Environment helpers ---
-const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!
-const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
-const SUPABASE_ANON_KEY = Deno.env.get('SUPABASE_ANON_KEY') || ''
+const SUPABASE_URL = Deno.env.get('SUPABASE_URL') || Deno.env.get('SB_URL') || Deno.env.get('URL')!
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || Deno.env.get('SB_SERVICE_ROLE_KEY') || Deno.env.get('SERVICE_ROLE_KEY')!
+const SUPABASE_ANON_KEY = Deno.env.get('SUPABASE_ANON_KEY') || Deno.env.get('SB_ANON_KEY') || Deno.env.get('ANON_KEY') || ''
 
 if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
   console.error("Missing Supabase environment variables")
@@ -34,7 +35,7 @@ function jsonResponse(status: number, body: unknown) {
     status,
     headers: {
       'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Origin': Deno.env.get('ALLOWED_ORIGIN') || Deno.env.get('APP_URL') || 'null',
       'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type, Authorization, apikey, X-Client-Info'
     },
@@ -75,7 +76,12 @@ async function handleRequestReview(analysisId: string, req: Request) {
   try {
     const analysis = await getAnalysisRun(analysisId)
 
-    if (requester.role !== 'reviewer' && analysis.user_id !== requester.id) {
+    const analysisOwnerId = typeof analysis.user_id === 'string' && analysis.user_id.trim().length > 0
+      ? analysis.user_id
+      : null
+    const canRequestReview = requester.role === 'reviewer' || analysisOwnerId === requester.id || analysisOwnerId === null
+
+    if (!canRequestReview) {
       return jsonResponse(403, { ok: false, message: 'Forbidden - analysis owner or reviewer required' })
     }
 
@@ -123,7 +129,12 @@ async function getPendingReviews() {
       created_at,
       status,
       audience,
-      analysis_json
+      review_reason,
+      evidence_backed,
+      analysis_json,
+      payload_mode,
+      artifact_bucket,
+      artifact_path
     `)
     .eq('status', 'under_review')
     .order('created_at', { ascending: false })
@@ -132,7 +143,11 @@ async function getPendingReviews() {
     throw new Error(`Database error: ${error.message}`)
   }
 
-  return data || []
+  const rows = data || []
+  return await Promise.all(rows.map(async (row: any) => ({
+    ...row,
+    analysis_json: await hydrateAnalysisJson(supabaseAdmin, row),
+  })))
 }
 
 // Enhanced detection for high-stakes geopolitical analyses that need review
@@ -259,7 +274,9 @@ async function handleReviewQueue(req: Request) {
         reviewer_guidance: isHighStakes ?
           '🚨 HIGH PRIORITY: This analysis involves geopolitical factors. Verify claims, sources, and strategic implications before approval.' :
           'Standard review: Check for logical consistency and appropriate sources.',
-        evidence_backed: analysis?.provenance?.evidence_backed || false,
+        evidence_backed: typeof review.evidence_backed === 'boolean'
+          ? review.evidence_backed
+          : analysis?.provenance?.evidence_backed || false,
         retrieval_count: analysis?.provenance?.retrieval_count || 0,
         analysis_json: analysis // Include full analysis for additional data
       }
@@ -351,8 +368,8 @@ Deno.serve(async (req) => {
 
     // Normalize checks to support function mounted at /functions/v1/human-review
     const isReviewQueue = pathname.endsWith('/review_queue') || pathname.endsWith('/human-review/review_queue')
-    const analysisReviewMatch = pathname.match(/\/functions\/v1\/(?:human-review\/)?analysis\/([^/]+)\/review$/)
-    const analysisRequestMatch = pathname.match(/\/functions\/v1\/(?:human-review\/)?analysis\/([^/]+)\/request-review$/)
+    const analysisReviewMatch = pathname.match(/(?:\/functions\/v1)?(?:\/human-review)?\/analysis\/([^/]+)\/review$/)
+    const analysisRequestMatch = pathname.match(/(?:\/functions\/v1)?(?:\/human-review)?\/analysis\/([^/]+)\/request-review$/)
 
     // GET .../review_queue
     if (method === 'GET' && isReviewQueue) {

@@ -1,0 +1,8 @@
+gate,status,proof_bucket,evidence,next_action
+supabase_cli_available,passed,local,Supabase CLI source npm_exec_supabase@2.105.0; version 2.105.0.,No CLI install action needed for access preflight.
+core_hosted_env_present,passed,local,All required core hosted env keys are present by name.,Keep values redacted; do not store secrets in artifacts.
+strategist_provider_key_present,passed,local,At least one strategist provider key is present by name.,Run hosted strategist smoke only after owner approval.
+project_visibility_checked,passed,hosted_live_access_check,projects list access=visible; listed_project_count=7; target_project_visible=false.,Confirm project ref or grant access to the intended Supabase project.
+function_management_access,blocked,hosted_live_access_check,functions list access=access_denied_403.,Grant Supabase function-management visibility for the target project or correct the project ref.
+secret_management_access,blocked,hosted_live_access_check,secrets list access=access_denied_403.,Grant secret-management visibility for the target project or use an owner-generated redacted manifest.
+payment_proof_values_present,blocked,local,"Missing STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, STRIPE_ACADEMIC_PRICE_ID.",Provide Stripe proof values before pricing/payment hosted proof.

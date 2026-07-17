@@ -1,0 +1,171 @@
+{
+  "schema_version": "forecast-scoring-evidence-validation-v1",
+  "generated_at": "2026-06-06T16:58:17.443Z",
+  "status": "forecast_scoring_evidence_validation_sample_only_not_claim_proof",
+  "proof_boundary": "This artifact validates calibration-ledger and benchmark-comparison outputs before prediction-accuracy claims can be reviewed. It is not buyer validation, hosted proof, security proof, independent benchmark certification, or world-class prediction proof.",
+  "source": {
+    "calibration_ledger": "docs/launch-readiness/resolved-forecast-calibration-ledger-2026-06-06.json",
+    "calibration_ledger_mode": "sample_fixture",
+    "calibration_ledger_commercial_claim_status": "not_launch_proof",
+    "benchmark_comparison": "docs/launch-readiness/forecast-benchmark-comparison-2026-06-06.json",
+    "benchmark_comparison_status": "sample_only_not_launch_proof",
+    "accuracy_input_validation": "docs/launch-readiness/accuracy-evidence-input-validation-2026-06-06.json",
+    "accuracy_input_validation_status": "accuracy_input_validation_ready_no_real_rows",
+    "leakage_review_validation": "docs/launch-readiness/forecast-leakage-review-validation-2026-06-06.json",
+    "leakage_review_validation_status": "forecast_leakage_review_validation_ready_no_real_forecast_rows",
+    "forecast_claim_governance": "docs/launch-readiness/forecast-claim-governance-2026-06-06.json",
+    "min_source_sample_size": 25,
+    "min_reliability_bins": 5
+  },
+  "summary": {
+    "approved_export_mode": false,
+    "sample_only": true,
+    "included_point_count": 30,
+    "source_count": 5,
+    "max_source_sample_size": 6,
+    "reliability_ready_source_count": 0,
+    "baselines_loaded": 3,
+    "source_backed_baseline_count": 0,
+    "comparisons_made": 15,
+    "app_lower_brier_comparison_count": 14,
+    "valid_resolved_forecast_count": 0,
+    "valid_baseline_count": 0,
+    "accuracy_inputs_ready_for_scoring": false,
+    "leakage_review_passed": false,
+    "active_release_hold_count": 7,
+    "scoring_output_ready_for_claim_review": false,
+    "accuracy_claim_allowed": false,
+    "world_class_prediction_claim_allowed": false
+  },
+  "acceptance_gates": [
+    {
+      "gate": "scoring_artifacts_present",
+      "status": "passed",
+      "evidence": "Calibration ledger exists=true; benchmark comparison exists=true.",
+      "proof_bucket": "repo_artifact"
+    },
+    {
+      "gate": "approved_export_used",
+      "status": "open_sample_or_no_real_scoring",
+      "evidence": "Calibration ledger mode is sample_fixture; approved_export or approved_owner_export is required for claim review.",
+      "proof_bucket": "owner_input"
+    },
+    {
+      "gate": "ledger_commercial_status_usable",
+      "status": "open_sample_or_no_real_scoring",
+      "evidence": "Calibration ledger commercial_claim_status=not_launch_proof; max source sample size 6/25.",
+      "proof_bucket": "repo_artifact"
+    },
+    {
+      "gate": "scoring_sample_size_and_reliability_bins",
+      "status": "open_sample_or_no_real_scoring",
+      "evidence": "0/5 sources meet sample-size and reliability-bin requirements; included points=30.",
+      "proof_bucket": "repo_artifact"
+    },
+    {
+      "gate": "benchmark_comparison_usable",
+      "status": "open_sample_or_no_real_scoring",
+      "evidence": "Benchmark status=sample_only_not_launch_proof; baselines=3; comparisons=15.",
+      "proof_bucket": "repo_artifact"
+    },
+    {
+      "gate": "baseline_source_and_comparability_present",
+      "status": "open_sample_or_no_real_scoring",
+      "evidence": "0/3 baselines have source URLs and positive sample sizes.",
+      "proof_bucket": "owner_input"
+    },
+    {
+      "gate": "accuracy_inputs_validated_before_scoring",
+      "status": "open_sample_or_no_real_scoring",
+      "evidence": "Accuracy input validation status=accuracy_input_validation_ready_no_real_rows with 0 valid forecasts, 0 valid baselines, and 6 active holds.",
+      "proof_bucket": "owner_input"
+    },
+    {
+      "gate": "leakage_review_passed_before_claim_review",
+      "status": "open_sample_or_no_real_scoring",
+      "evidence": "Leakage review status=forecast_leakage_review_validation_ready_no_real_forecast_rows; ready controls 0/8; active holds 5.",
+      "proof_bucket": "owner_input"
+    },
+    {
+      "gate": "claim_language_still_blocked",
+      "status": "passed",
+      "evidence": "Forecast claim governance approved_world_class_claim=false.",
+      "proof_bucket": "repo_artifact"
+    }
+  ],
+  "release_holds": [
+    {
+      "hold": "approved_export_used",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "Calibration ledger mode is sample_fixture; approved_export or approved_owner_export is required for claim review."
+    },
+    {
+      "hold": "ledger_commercial_status_usable",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "Calibration ledger commercial_claim_status=not_launch_proof; max source sample size 6/25."
+    },
+    {
+      "hold": "scoring_sample_size_and_reliability_bins",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "0/5 sources meet sample-size and reliability-bin requirements; included points=30."
+    },
+    {
+      "hold": "benchmark_comparison_usable",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "Benchmark status=sample_only_not_launch_proof; baselines=3; comparisons=15."
+    },
+    {
+      "hold": "baseline_source_and_comparability_present",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "0/3 baselines have source URLs and positive sample sizes."
+    },
+    {
+      "hold": "accuracy_inputs_validated_before_scoring",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "Accuracy input validation status=accuracy_input_validation_ready_no_real_rows with 0 valid forecasts, 0 valid baselines, and 6 active holds."
+    },
+    {
+      "hold": "leakage_review_passed_before_claim_review",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "Leakage review status=forecast_leakage_review_validation_ready_no_real_forecast_rows; ready controls 0/8; active holds 5."
+    }
+  ],
+  "current_source_alignment": [
+    {
+      "source": "ForecastBench",
+      "url": "https://forecastingresearch.org/research/forecastbench",
+      "alignment": "Use dynamic, future-event forecasting questions and baseline comparison before any AI forecasting accuracy claim."
+    },
+    {
+      "source": "ForecastBench docs",
+      "url": "https://www.forecastbench.org/docs/",
+      "alignment": "Use Brier-style scoring, question-set methodology, resolved forecasts, and ranking caveats for fair benchmark comparisons."
+    },
+    {
+      "source": "Metaculus FutureEval methodology",
+      "url": "https://www.metaculus.com/futureeval/methodology/",
+      "alignment": "Compare AI forecasts with human/community/pro baselines on questions forecast before the answers are known."
+    },
+    {
+      "source": "NIST AI RMF Core Measure",
+      "url": "https://airc.nist.gov/airmf-resources/airmf/5-sec-core/",
+      "alignment": "Performance measurement needs documented uncertainty, benchmark comparison, and reporting before system claims are relied upon."
+    }
+  ],
+  "next_commands_after_owner_data": [
+    "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:accuracy:validate-inputs -- --forecast-csv <owner-approved-resolved-export.csv> --baseline-csv <owner-approved-baseline.csv> --min-sample-size 25",
+    "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:forecast:leakage-review -- --update-evidence",
+    "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:calibration:ledger -- --input <owner-approved-resolved-export.json-or-csv> --source-mode approved_export --min-sample-size 25",
+    "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:forecast:benchmark -- --ledger docs/launch-readiness/resolved-forecast-calibration-ledger-2026-06-06.json --baseline <owner-approved-baseline.json-or-csv>",
+    "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:forecast:validate-scoring -- --calibration-ledger docs/launch-readiness/resolved-forecast-calibration-ledger-2026-06-06.json --benchmark-comparison docs/launch-readiness/forecast-benchmark-comparison-2026-06-06.json --accuracy-input-validation docs/launch-readiness/accuracy-evidence-input-validation-2026-06-06.json --leakage-review-validation docs/launch-readiness/forecast-leakage-review-validation-2026-06-06.json --forecast-claim-governance docs/launch-readiness/forecast-claim-governance-2026-06-06.json --json-output docs/launch-readiness/forecast-scoring-evidence-validation-2026-06-06.json --md-output docs/launch-readiness/forecast-scoring-evidence-validation-2026-06-06.md --csv-output docs/launch-readiness/forecast-scoring-evidence-validation-checklist-2026-06-06.csv --update-evidence",
+    "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:forecast:claim-governance",
+    "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:commercial:confidence"
+  ]
+}

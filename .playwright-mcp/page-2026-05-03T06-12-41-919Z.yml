@@ -1,0 +1,94 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - navigation [ref=e4]:
+      - generic [ref=e6]:
+        - generic [ref=e7]:
+          - link "Strategy Console" [ref=e8] [cursor=pointer]:
+            - /url: /console
+            - img [ref=e9]
+            - generic [ref=e19]: Strategy Console
+          - 'button "Learning Mode: OFF" [ref=e21] [cursor=pointer]':
+            - img [ref=e22]
+            - text: "Learning Mode: OFF"
+        - generic [ref=e25]:
+          - link "Console" [ref=e26] [cursor=pointer]:
+            - /url: /console
+            - img [ref=e27]
+            - text: Console
+          - link "Insights" [ref=e29] [cursor=pointer]:
+            - /url: /insights
+            - img [ref=e30]
+            - text: Insights
+          - link "Commodities" [ref=e33] [cursor=pointer]:
+            - /url: /commodities
+            - img [ref=e34]
+            - text: Commodities
+          - link "Labs" [ref=e36] [cursor=pointer]:
+            - /url: /labs
+            - img [ref=e37]
+            - text: Labs
+          - link "Templates" [ref=e39] [cursor=pointer]:
+            - /url: /templates
+            - img [ref=e40]
+            - text: Templates
+          - link "Forecasts" [ref=e43] [cursor=pointer]:
+            - /url: /forecasts
+            - img [ref=e44]
+            - text: Forecasts
+          - link "Pricing" [ref=e47] [cursor=pointer]:
+            - /url: /pricing
+            - img [ref=e48]
+            - text: Pricing
+    - main [ref=e50]:
+      - generic [ref=e52]:
+        - generic [ref=e53]:
+          - heading "Strategy Console" [level=1] [ref=e54]
+          - paragraph [ref=e55]: Run evidence-backed strategic analysis in seconds. Real citations. Real simulations. Real clarity.
+        - generic [ref=e57]:
+          - button "Strategic Analysis" [ref=e58] [cursor=pointer]
+          - button "Strategist" [ref=e59] [cursor=pointer]
+        - generic [ref=e60]:
+          - generic [ref=e61]:
+            - generic [ref=e62]: Describe your strategic scenario
+            - textbox "e.g., Three tech companies must decide on AI safety standards. Each can lead with strict standards, follow consensus, or prioritize competitive advantage..." [ref=e63]: US, EU, and China are deciding on semiconductor supply chain policies amid geopolitical tensions. Each region can choose 'aggressive domestic production', 'selective partnerships', or 'maintain global integration'. The decisions affect technological sovereignty, economic efficiency, innovation networks, and international trade relationships.
+            - generic [ref=e64]:
+              - generic [ref=e65]: "Try:"
+              - button "Tech Giants AI Safety Coordination..." [ref=e66] [cursor=pointer]
+              - button "Semiconductor Supply Chain Strategy..." [active] [ref=e67] [cursor=pointer]
+              - button "Climate Policy Coordination..." [ref=e68] [cursor=pointer]
+          - generic [ref=e69]:
+            - generic [ref=e71]:
+              - generic [ref=e72]:
+                - img [ref=e74]
+                - generic [ref=e77]:
+                  - generic [ref=e78]:
+                    - text: Evidence Retrieval
+                    - generic [ref=e79]: Active
+                  - generic [ref=e80]: Real citations from Exa, Crossref, GDELT, Firecrawl, and official data providers
+              - button [ref=e81] [cursor=pointer]
+            - button "Advanced analysis settings (1 selected) Keep the flagship path simple and open these only when needed" [ref=e84] [cursor=pointer]:
+              - generic [ref=e85]:
+                - img [ref=e86]
+                - generic [ref=e88]:
+                  - generic [ref=e89]: Advanced analysis settings (1 selected)
+                  - generic [ref=e90]: Keep the flagship path simple and open these only when needed
+              - img [ref=e91]
+          - button "Run Analysis" [ref=e94] [cursor=pointer]:
+            - img [ref=e95]
+            - text: Run Analysis
+    - contentinfo [ref=e97]:
+      - generic [ref=e99]:
+        - paragraph [ref=e100]: Strategy Console - Evidence-Backed Strategic Analysis
+        - paragraph [ref=e101]: Real citations. Real simulations. Real clarity.
+  - generic [ref=e103]:
+    - generic [ref=e104]: 👋
+    - generic [ref=e105]:
+      - heading "Welcome to Strategic Intelligence" [level=3] [ref=e106]
+      - paragraph [ref=e107]:
+        - text: Turn on
+        - strong [ref=e108]: Learning Mode
+        - text: if you want chart and concept explanations while you explore. This prompt stays out of the way so you can keep navigating the product.
+      - generic [ref=e109]:
+        - button "Enable Learning Mode" [ref=e110] [cursor=pointer]
+        - button "Dismiss" [ref=e111] [cursor=pointer]
+      - paragraph [ref=e112]: You can toggle Learning Mode later from the header at any time.

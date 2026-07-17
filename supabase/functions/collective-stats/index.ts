@@ -3,7 +3,8 @@
 // Deno runtime
 // Endpoint: GET /functions/v1/collective-stats
 
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { createClient } from 'npm:@supabase/supabase-js@2'
+import { getAuthenticatedUser, jsonResponse } from '../_shared/auth.ts'
 
 function jsonResponse(status: number, body: unknown) {
   return new Response(JSON.stringify(body), {
@@ -13,6 +14,11 @@ function jsonResponse(status: number, body: unknown) {
 }
 
 Deno.serve(async (req) => {
+  // Auth check
+  const _user = await getAuthenticatedUser(req)
+  if (!_user) return jsonResponse(401, { ok: false, error: 'authentication_required' })
+
+
   if (req.method !== 'GET') return jsonResponse(405, { ok: false, message: 'Method Not Allowed' })
   try {
     const ref = Deno.env.get('SUPABASE_PROJECT_REF') || 'jxdihzqoaxtydolmltdr'

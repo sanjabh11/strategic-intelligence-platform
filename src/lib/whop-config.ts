@@ -5,9 +5,7 @@
 export interface WhopConfig {
     appId: string;
     clientId: string;
-    clientSecret: string;
     redirectUri: string;
-    webhookSecret: string;
 }
 
 export interface WhopPricingTier {
@@ -53,9 +51,7 @@ export interface TierLimits {
 export const WHOP_CONFIG: WhopConfig = {
     appId: import.meta.env.VITE_WHOP_APP_ID || '',
     clientId: import.meta.env.VITE_WHOP_CLIENT_ID || '',
-    clientSecret: import.meta.env.VITE_WHOP_CLIENT_SECRET || '', // Server-side only
     redirectUri: import.meta.env.VITE_WHOP_REDIRECT_URI || `${window.location.origin}/auth/whop/callback`,
-    webhookSecret: import.meta.env.VITE_WHOP_WEBHOOK_SECRET || '' // Server-side only
 };
 
 // Stripe fallback configuration
@@ -172,7 +168,7 @@ export const PRICING_TIERS: WhopPricingTier[] = [
             'Live Intel Dashboard',
             'Trading Signals (BUY/SELL/HOLD)',
             'Corporate War Room',
-            'Game Tree Builder (n-player)',
+            'Sequential Game Studio',
             'Forecasting Engine',
             'API access',
             'Priority support'
@@ -215,15 +211,16 @@ export const PRICING_TIERS: WhopPricingTier[] = [
         features: [
             'Everything in Elite',
             'Unlimited everything',
-            'White-label branding',
-            'Custom integrations',
-            'SSO / SAML authentication',
-            'Dedicated account manager',
-            'SLA guarantee',
-            'Custom training modules',
+            'Enterprise pilot onboarding',
+            'White-label reporting scoping',
+            'Custom integration scoping',
+            'SSO / SAML readiness review',
+            'Named launch support contact',
+            'Pilot SLA requirements review',
+            'Custom training module scoping',
             'Private scenario library',
             'Team collaboration (10 seats)',
-            'Audit logs & compliance'
+            'Audit-log and compliance evidence review'
         ],
         limits: {
             maxDailyRuns: -1,

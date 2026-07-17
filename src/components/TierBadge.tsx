@@ -5,7 +5,7 @@
 import React from 'react';
 import { Crown, Sparkles, Zap, Lock } from 'lucide-react';
 
-export type TierLevel = 'basic' | 'pro' | 'elite';
+export type TierLevel = 'free' | 'pro' | 'elite';
 
 interface TierBadgeProps {
   tier: TierLevel;
@@ -22,9 +22,9 @@ const TIER_CONFIG: Record<TierLevel, {
   textColor: string;
   borderColor: string;
 }> = {
-  basic: {
-    label: 'Basic',
-    icon: Zap,
+  free: {
+    label: 'Free',
+    icon: Lock,
     bgColor: 'bg-slate-500/20',
     textColor: 'text-slate-400',
     borderColor: 'border-slate-500/30'
@@ -96,7 +96,7 @@ export const UpgradeBadge: React.FC<UpgradeBadgeProps> = ({
   className = ''
 }) => {
   const tierHierarchy: Record<TierLevel, number> = {
-    basic: 1,
+    free: 1,
     pro: 2,
     elite: 3
   };

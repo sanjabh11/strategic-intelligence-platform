@@ -1,0 +1,129 @@
+{
+  "manifest_id": "PM-004",
+  "supersedes": "PM-003",
+  "created_at": "2026-07-17T11:31:00+05:30",
+  "audit_id": "sip-deep-2026-07-13",
+  "description": "Append-only provenance manifest superseding PM-003. Fixes: lti-launch.status corrected to schema-valid 'unavailable', test count synchronized to 121, dirty-path count updated to live measurement (586), drift_status set to 'assessed'. No historical data in PM-003 was overwritten.",
+  "baseline_results": {
+    "pnpm_tsc_b": {
+      "status": "pass",
+      "errors": 0,
+      "measured_at": "2026-07-17T11:31:00+05:30",
+      "notes": "tsc -b (build mode) — authoritative type gate"
+    },
+    "pnpm_build": {
+      "status": "pass",
+      "measured_at": "2026-07-17T11:31:00+05:30",
+      "notes": "vite build pass with VITE_LABS_GOLD_BYPASS=true"
+    },
+    "pnpm_test": {
+      "status": "pass",
+      "passed": 121,
+      "failed": 0,
+      "skipped": 8,
+      "total": 129,
+      "measured_at": "2026-07-17T11:31:00+05:30",
+      "notes": "121 passed, 0 failed, 8 skipped (canonical-games). 15 new tests since PM-003 baseline: 9 strategist-contract + 7 question-context-cache - 1 overlap."
+    },
+    "strategist_contract_tests": {
+      "status": "pass",
+      "passed": 13,
+      "failed": 0,
+      "measured_at": "2026-07-17T11:31:00+05:30",
+      "notes": "13 tests: original 4 + 9 new (LLM-only downgrade, mixed evidence, forged refs in fallback, malformed arrays, heuristic preserved, no-throw, duplicate dedup, cross-claim ref)"
+    },
+    "question_context_cache_tests": {
+      "status": "pass",
+      "passed": 7,
+      "failed": 0,
+      "measured_at": "2026-07-17T11:31:00+05:30",
+      "notes": "7 tests: stale prompt rejection, matching prompt acceptance, prompt/hash/intent storage, expiry rejection, isCacheValidForPrompt, whitespace/case normalization, legacy-cache rejection (records without promptHash)"
+    },
+    "pnpm_lint": {
+      "status": "pass",
+      "errors": 0,
+      "warnings": 17,
+      "measured_at": "2026-07-17T11:31:00+05:30",
+      "notes": "0 errors, 17 warnings (baseline). All warnings are pre-existing in untouched files."
+    },
+    "route_smoke": {
+      "status": "pass",
+      "routes_total": 7,
+      "routes_rendered_or_expected": 7,
+      "failed_count": 0,
+      "render_problem_count": 0,
+      "runtime_console_error_count": 0,
+      "all_top_niche_routes_ready": true,
+      "hosted_live_proof": false,
+      "measured_at": "2026-07-17T11:31:00+05:30",
+      "notes": "July smoke run with VITE_LABS_GOLD_BYPASS. June smoke superseded. hosted_live_proof=false preserved."
+    },
+    "cross_artifact_consistency": {
+      "status": "pass",
+      "checks_passed": 15,
+      "measured_at": "2026-07-17T11:31:00+05:30",
+      "notes": "15 cross-artifact checks: state-experiments, designed count, metadata refs, execution order, phase9-manifest, route smoke readiness, state-manifest test count, state-manifest lint warnings, timestamp freshness, phase ledger completeness, LTI status consistency (strengthened: rejects blocked_partial), dirty path drift (warn), route artifact date, hypothesis no-promotion, confidence dimensions separated"
+    },
+    "claims_consistency": {
+      "status": "pass",
+      "files_scanned": 246,
+      "claims_checked": 651,
+      "unsupported_claims": 0,
+      "measured_at": "2026-07-17T11:31:00+05:30",
+      "notes": "No unsupported claims found"
+    }
+  },
+  "recovery_results": {
+    "hypothesis_status_changes": "none",
+    "experiments_executed": 0,
+    "experiments_designed": 8,
+    "evidence_bundle_status": "13 changed to true, 2 correctly remain false (15 total bundles)",
+    "dirty_path_count": 586,
+    "dirty_path_count_source": "git status --porcelain | wc -l (measured 2026-07-17T11:31:00+05:30)",
+    "lint_delta": "22 → 17 warnings (5 fixed in touched files)",
+    "test_delta": "106 → 121 passed (15 new tests: 9 strategist-contract + 7 question-context-cache - 1 overlap)",
+    "route_proof_status": "local_route_proof_ready_not_hosted_proof (7/7 routes, 0 failures, hosted_live_proof=false)",
+    "lti_status_correction": "blocked_partial → unavailable (schema-valid; blocked_partial detail retained in notes)",
+    "drift_status": "assessed",
+    "discovery_pack": "Unified 5+5 JSON with 10 named targets (5 enterprise + 5 education), 0 real interactions"
+  },
+  "files_modified_this_session": [
+    ".positioning-audit/state.json",
+    ".positioning-audit/provenance-manifest.json",
+    ".positioning-audit/provenance-manifest-pm004.json",
+    ".positioning-audit/evidence-corpus.json",
+    ".positioning-audit/artifacts/phase-9-decision-gate.md",
+    "scripts/verify-cross-artifact-consistency.mjs",
+    "scripts/build-local-browser-route-proof.mjs",
+    "src/lib/strategistContract.ts",
+    "src/lib/questionContextCache.ts",
+    "src/components/StrategyConsole.tsx",
+    "tests/strategist-contract.test.ts",
+    "tests/question-context-cache.test.ts"
+  ],
+  "git_actions": [
+    "No destructive git commands executed",
+    "No public positioning changes",
+    "No hypothesis promotions",
+    "CONDITIONAL_GO preserved",
+    "VALIDATION_PENDING preserved",
+    "evidence_limited_mode: true preserved",
+    "validation credit: 0 preserved",
+    "No git commits made"
+  ],
+  "residual_risks": [
+    "17 pre-existing lint warnings in untouched files (baseline)",
+    "Route proof is local-only; hosted_live_proof=false",
+    "Discovery pack targets are not buyer proof — zero real interactions",
+    "LTI JWKS uses placeholder RSA modulus — not production-verified",
+    "StrategyConsole cold import test may timeout in parallel runs (passes in isolation)"
+  ],
+  "next_actions_pending_approval": [
+    "Owner approval of 10-person discovery target slate",
+    "Owner approval of outreach wording",
+    "Owner approval of demo scope",
+    "Owner approval to execute EXP-007 and/or EXP-008",
+    "Owner approval for LTI sandbox testing (P6)",
+    "Owner approval for hosted proof URL (P6)"
+  ]
+}

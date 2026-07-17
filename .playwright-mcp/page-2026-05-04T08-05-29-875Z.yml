@@ -1,0 +1,132 @@
+- generic [ref=e3]:
+  - navigation [ref=e4]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - link "Strategy Console" [ref=e8] [cursor=pointer]:
+          - /url: /console
+          - img [ref=e9]
+          - generic [ref=e19]: Strategy Console
+        - 'button "Learning Mode: OFF" [ref=e21] [cursor=pointer]':
+          - img [ref=e22]
+          - text: "Learning Mode: OFF"
+      - generic [ref=e25]:
+        - link "Console" [ref=e26] [cursor=pointer]:
+          - /url: /console
+          - img [ref=e27]
+          - text: Console
+        - link "Templates" [ref=e29] [cursor=pointer]:
+          - /url: /templates
+          - img [ref=e30]
+          - text: Templates
+        - link "Forecasts" [ref=e33] [cursor=pointer]:
+          - /url: /forecasts
+          - img [ref=e34]
+          - text: Forecasts
+  - main [ref=e37]:
+    - generic [ref=e131]:
+      - generic [ref=e132]:
+        - heading "Strategy Console" [level=1] [ref=e133]
+        - paragraph [ref=e134]: Run evidence-backed strategic analysis in seconds. Real citations. Real simulations. Real clarity.
+      - button "Strategic Analysis" [ref=e137] [cursor=pointer]
+      - generic [ref=e138]:
+        - generic [ref=e139]:
+          - generic [ref=e140]: Describe your strategic scenario
+          - textbox "e.g., Three tech companies must decide on AI safety standards. Each can lead with strict standards, follow consensus, or prioritize competitive advantage..." [ref=e141]: US, EU, and China are deciding on semiconductor supply chain policies amid geopolitical tensions. Each region can choose 'aggressive domestic production', 'selective partnerships', or 'maintain global integration'. The decisions affect technological sovereignty, economic efficiency, innovation networks, and international trade relationships.
+          - generic [ref=e142]:
+            - generic [ref=e143]: "Try:"
+            - button "Tech Giants AI Safety Coordination..." [ref=e144] [cursor=pointer]
+            - button "Semiconductor Supply Chain Strategy..." [ref=e145] [cursor=pointer]
+            - button "Climate Policy Coordination..." [ref=e146] [cursor=pointer]
+        - generic [ref=e147]:
+          - generic [ref=e148]:
+            - generic [ref=e149]:
+              - generic [ref=e150]:
+                - img [ref=e152]
+                - generic [ref=e155]:
+                  - generic [ref=e156]:
+                    - text: Evidence Retrieval
+                    - generic [ref=e157]: Active
+                  - generic [ref=e158]: Real citations from Exa, Crossref, GDELT, Firecrawl, and official data providers
+              - button [disabled] [ref=e159]
+            - generic [ref=e161]:
+              - img [ref=e162]
+              - generic [ref=e164]: External beta mode keeps evidence retrieval on and routes every public run through the hosted evidence-backed path.
+          - button "Advanced analysis settings (1 selected) Keep the flagship path simple and open these only when needed" [ref=e166] [cursor=pointer]:
+            - generic [ref=e167]:
+              - img [ref=e168]
+              - generic [ref=e170]:
+                - generic [ref=e171]: Advanced analysis settings (1 selected)
+                - generic [ref=e172]: Keep the flagship path simple and open these only when needed
+            - img [ref=e173]
+        - generic [ref=e175]:
+          - button "Run Analysis" [ref=e176] [cursor=pointer]:
+            - img [ref=e280]
+            - text: Run Analysis
+          - generic [ref=e207]:
+            - img [ref=e282]
+            - generic [ref=e211]: Complete
+      - generic [ref=e285]:
+        - generic [ref=e287]:
+          - generic [ref=e288]:
+            - generic [ref=e289]: Public trust gate
+            - generic [ref=e290]: Insufficient evidence for a public call
+            - paragraph [ref=e291]: This beta only surfaces public predictions when the hosted run is genuinely evidence-backed. The current result is being withheld because the evidence threshold was not met strongly enough for a public-facing recommendation.
+            - generic [ref=e292]:
+              - generic [ref=e293]: 0 sources
+              - generic [ref=e294]: Evidence not verified
+              - generic [ref=e295]: 0 providers
+              - generic [ref=e296]: the next 3 years
+            - paragraph [ref=e297]: Refine the scenario, narrow the claim, or browse a curated template while stronger evidence is gathered.
+          - generic [ref=e298]:
+            - generic [ref=e299]: Next step
+            - generic [ref=e300]: Strengthen the evidence case
+            - generic [ref=e301]: Public beta users only receive a recommendation after the hosted run clears the evidence threshold.
+            - generic [ref=e302]:
+              - button "Refine scenario" [ref=e303] [cursor=pointer]
+              - button "Browse templates" [ref=e304] [cursor=pointer]
+        - generic [ref=e305]:
+          - generic [ref=e307]:
+            - generic [ref=e308]:
+              - generic [ref=e309]: Governance & Deep Review
+              - generic [ref=e310]: Go deeper when needed. The answer stays upfront; evidence, governance, and renderings remain one click away.
+            - generic [ref=e311]:
+              - button "Evidence not verified" [ref=e312] [cursor=pointer]
+              - button "Review not requested" [ref=e313] [cursor=pointer]
+              - button "2 governance blockers" [ref=e314] [cursor=pointer]
+              - button "Contested engine view" [ref=e315] [cursor=pointer]
+              - button "Advisory uncalibrated" [ref=e316] [cursor=pointer]
+              - button "Supporting views" [ref=e317] [cursor=pointer]
+          - generic [ref=e319]:
+            - generic [ref=e320]:
+              - generic [ref=e321]:
+                - generic [ref=e322]:
+                  - generic [ref=e323]: Governed workflow status
+                  - generic [ref=e324]: Enterprise governance stays intact, but it no longer needs to dominate the first screen.
+                - generic [ref=e325]: Continue with evidence-backed analysis
+              - generic [ref=e326]:
+                - generic [ref=e327]:
+                  - generic [ref=e328]: Analysis
+                  - generic [ref=e329]: Complete
+                  - generic [ref=e330]: Analysis completed and ready for packaging.
+                - generic [ref=e331]:
+                  - generic [ref=e332]: Strategist brief
+                  - generic [ref=e333]: Available
+                  - generic [ref=e334]: Generate or refresh the strategist brief before handoff.
+                - generic [ref=e335]:
+                  - generic [ref=e336]: Human review
+                  - generic [ref=e337]: Available
+                  - generic [ref=e338]: No completed human review is recorded yet.
+                - generic [ref=e339]:
+                  - generic [ref=e340]: Forecast draft
+                  - generic [ref=e341]: In progress
+                  - generic [ref=e342]: Linked analysis is not evidence-backed. Human review should complete before public publication.
+            - generic [ref=e344]:
+              - img [ref=e345]
+              - generic [ref=e347]:
+                - generic [ref=e348]: Strategist brief is private during this beta
+                - generic [ref=e349]: Doctrine-backed brief generation, persistence, war-room handoff, and governed collaboration are reserved for analyst accounts during the first public beta.
+                - button "Continue with evidence-backed analysis" [ref=e351] [cursor=pointer]
+  - contentinfo [ref=e179]:
+    - generic [ref=e181]:
+      - paragraph [ref=e182]: Strategy Console - Evidence-Backed Strategic Analysis
+      - paragraph [ref=e183]: Real citations. Real simulations. Real clarity.

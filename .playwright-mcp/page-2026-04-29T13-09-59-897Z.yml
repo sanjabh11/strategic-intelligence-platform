@@ -1,0 +1,306 @@
+- generic [ref=e3]:
+  - navigation [ref=e4]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - link "Strategy Console" [ref=e8] [cursor=pointer]:
+          - /url: /console
+          - img [ref=e9]
+          - generic [ref=e19]: Strategy Console
+        - 'button "Learning Mode: OFF" [ref=e21] [cursor=pointer]':
+          - img [ref=e22]
+          - text: "Learning Mode: OFF"
+      - generic [ref=e25]:
+        - link "Console" [ref=e26] [cursor=pointer]:
+          - /url: /console
+          - img [ref=e27]
+          - text: Console
+        - link "Insights" [ref=e29] [cursor=pointer]:
+          - /url: /insights
+          - img [ref=e30]
+          - text: Insights
+        - link "Labs" [ref=e33] [cursor=pointer]:
+          - /url: /labs
+          - img [ref=e34]
+          - text: Labs
+        - link "Templates" [ref=e36] [cursor=pointer]:
+          - /url: /templates
+          - img [ref=e37]
+          - text: Templates
+        - link "Forecasts" [ref=e40] [cursor=pointer]:
+          - /url: /forecasts
+          - img [ref=e41]
+          - text: Forecasts
+        - link "Pricing" [ref=e44] [cursor=pointer]:
+          - /url: /pricing
+          - img [ref=e45]
+          - text: Pricing
+  - main [ref=e47]:
+    - generic [ref=e50]:
+      - generic [ref=e51]: Testing override active for Gold module. The UI is temporarily unlocked without changing live entitlements.
+      - generic [ref=e54]:
+        - img [ref=e56]
+        - generic [ref=e58]:
+          - heading "Commodity Response Workspace" [level=2] [ref=e59]
+          - paragraph [ref=e60]: Procurement-led volatility response for gold and oil exposed decisions
+      - generic [ref=e355]:
+        - generic [ref=e356]:
+          - generic [ref=e357]:
+            - generic [ref=e358]: Market feed status
+            - generic [ref=e359]: market-feeds
+          - generic [ref=e360]: Degraded feed
+        - generic [ref=e361]: "coinbase-btc: live • gold-provider: unconfigured • oil-provider: unconfigured"
+        - generic [ref=e362]:
+          - generic [ref=e363]:
+            - img [ref=e364]
+            - generic [ref=e366]: Gold provider is not configured.
+          - generic [ref=e367]:
+            - img [ref=e368]
+            - generic [ref=e370]: Oil provider is not configured.
+      - generic [ref=e372]:
+        - img [ref=e373]
+        - generic [ref=e375]: Live gold price is currently unavailable. The module stays in degraded mode until the Gold feed recovers.
+      - generic [ref=e61]:
+        - generic [ref=e62]:
+          - generic [ref=e63]:
+            - heading "Procurement Response Playbook" [level=3] [ref=e64]:
+              - img [ref=e65]
+              - text: Procurement Response Playbook
+            - paragraph [ref=e68]: Live market context routed through doctrine selection, supplier leverage mapping, and buyer response posture.
+          - generic [ref=e69]:
+            - generic [ref=e70]: sequential bargaining
+            - generic [ref=e71]: sequential / incomplete
+        - generic [ref=e72]:
+          - button "Price increase pushback Challenge pass-through, hold on precedent, and trade only for reciprocal movement." [ref=e73] [cursor=pointer]:
+            - generic [ref=e74]: Price increase pushback
+            - generic [ref=e75]: Challenge pass-through, hold on precedent, and trade only for reciprocal movement.
+          - button "Constrained supply allocation Secure continuity first, then control price leakage through allocation-linked trades." [ref=e76] [cursor=pointer]:
+            - generic [ref=e77]: Constrained supply allocation
+            - generic [ref=e78]: Secure continuity first, then control price leakage through allocation-linked trades.
+          - button "Renewal under switching leverage Use migration or alternate supply leverage without giving away future renewal posture." [ref=e79] [cursor=pointer]:
+            - generic [ref=e80]: Renewal under switching leverage
+            - generic [ref=e81]: Use migration or alternate supply leverage without giving away future renewal posture.
+        - generic [ref=e82]:
+          - generic [ref=e83]:
+            - generic [ref=e84]:
+              - generic [ref=e85]: Volatility driver summary
+              - generic [ref=e86]: No dominant live commodity move is available. Hold the workspace in contingency mode and rely more heavily on lead time, allocation, and fallback evidence.
+            - generic [ref=e87]:
+              - generic [ref=e88]: Recommended posture
+              - generic [ref=e89]: Challenge the pass-through. Demand justification for the increase, tie any movement to reciprocal terms, and keep alternate supply options visible.
+              - generic [ref=e90]: The scenario is a multi-round bargaining problem with uncertain flexibility, BATNA, and package trade-offs.
+            - generic [ref=e91]:
+              - generic [ref=e92]: Supplier leverage map
+              - generic [ref=e93]:
+                - generic [ref=e94]:
+                  - generic [ref=e95]: Primary supplier
+                  - generic [ref=e96]: Leverage is balanced enough that package trade-offs matter more than spot commentary alone.
+                  - generic [ref=e97]: Test whether the supplier can justify pass-through with continuity risk rather than just spot-market narrative.
+                - generic [ref=e98]:
+                  - generic [ref=e99]: Buyer / procurement lead
+                  - generic [ref=e100]: Inventory, alternate suppliers, timing flexibility, and non-price tradeables shift reservation logic.
+                  - generic [ref=e101]: Use package trades, not isolated asks, to recover value.
+                - generic [ref=e102]:
+                  - generic [ref=e103]: Market / policy environment
+                  - generic [ref=e104]: Tariffs, sanctions, shipping constraints, and currency moves can amplify or dampen supplier pressure.
+                  - generic [ref=e105]: Watch triggers that would change whether speed or price control is the dominant objective.
+          - generic [ref=e106]:
+            - generic [ref=e107]:
+              - generic [ref=e108]: Buyer tradeables
+              - generic [ref=e109]:
+                - generic [ref=e110]: volume commitment
+                - generic [ref=e111]: contract term
+                - generic [ref=e112]: payment timing
+                - generic [ref=e113]: forecast visibility
+                - generic [ref=e114]: onboarding or support scope
+                - generic [ref=e115]: termination or renewal flexibility
+            - generic [ref=e116]:
+              - generic [ref=e117]: Trigger watchlist
+              - list [ref=e118]:
+                - listitem [ref=e119]:
+                  - img [ref=e120]
+                  - generic [ref=e122]: additional 3%+ move in the dominant commodity feed
+                - listitem [ref=e123]:
+                  - img [ref=e124]
+                  - generic [ref=e126]: supplier allocation or lead-time notice
+                - listitem [ref=e127]:
+                  - img [ref=e128]
+                  - generic [ref=e130]: tariff, sanctions, or shipping disruptions affecting supply
+                - listitem [ref=e131]:
+                  - img [ref=e132]
+                  - generic [ref=e134]: evidence that alternate suppliers can absorb more volume
+                - listitem [ref=e135]:
+                  - img [ref=e136]
+                  - generic [ref=e138]: material shift in FX or financing conditions
+            - generic [ref=e139]:
+              - generic [ref=e140]: Claim-to-evidence
+              - generic [ref=e141]:
+                - generic [ref=e142]:
+                  - generic [ref=e143]: Live commodity evidence is sparse, so posture should stay review-visible rather than fully evidence-backed.
+                  - generic [ref=e144]: Provider mode (partial)
+                - generic [ref=e145]:
+                  - generic [ref=e146]: The provider is degraded, so the playbook should emphasize trigger monitoring and contingency planning over point certainty.
+                  - generic [ref=e147]: Market provider mode (direct)
+        - generic [ref=e148]:
+          - button "Brief in Console" [ref=e149] [cursor=pointer]:
+            - img [ref=e150]
+            - text: Brief in Console
+          - button "Test Countermoves in Studio" [ref=e152] [cursor=pointer]:
+            - img [ref=e153]
+            - text: Test Countermoves in Studio
+      - generic [ref=e157]:
+        - button "Market Overview" [ref=e158] [cursor=pointer]:
+          - generic [ref=e159]:
+            - img [ref=e160]
+            - generic [ref=e163]: Market Overview
+          - img [ref=e164]
+        - generic [ref=e167]: Live market data is currently unavailable. This module stays visible for QA, but simulation remains disabled until the Gold feed returns a real spot price.
+      - generic [ref=e173]:
+        - heading "Macro Scenario Parameters" [level=3] [ref=e174]:
+          - img [ref=e175]
+          - text: Macro Scenario Parameters
+        - generic [ref=e179]:
+          - generic [ref=e180]:
+            - generic [ref=e181]: Inflation Rate (%)
+            - spinbutton [ref=e182]: "3.5"
+          - generic [ref=e183]:
+            - generic [ref=e184]: Dollar Index
+            - spinbutton [ref=e185]: "100"
+          - generic [ref=e186]:
+            - generic [ref=e187]: Fed Funds Rate (%)
+            - spinbutton [ref=e188]: "5.25"
+          - generic [ref=e189]:
+            - generic [ref=e190]: Geopolitical Risk (0-1)
+            - slider [ref=e191]: "0.5"
+            - generic [ref=e192]: "0.5"
+          - generic [ref=e193]:
+            - generic [ref=e194]: Recession Probability
+            - slider [ref=e195]: "0.25"
+            - generic [ref=e196]: 25%
+      - generic [ref=e197]:
+        - heading "Advanced demand-side actors" [level=3] [ref=e198]:
+          - img [ref=e199]
+          - text: Advanced demand-side actors
+        - generic [ref=e203]:
+          - generic [ref=e204]:
+            - generic [ref=e205]:
+              - generic [ref=e206]:
+                - img [ref=e207]
+                - generic [ref=e211]: PBoC (China)
+              - generic [ref=e212]: Accumulating
+            - generic [ref=e213]:
+              - generic [ref=e214]:
+                - text: Current Reserves
+                - generic [ref=e215]: 2,235 t
+              - generic [ref=e216]:
+                - text: Target
+                - generic [ref=e217]: 3,000 t
+            - generic [ref=e219]:
+              - generic [ref=e220]: Reserve Progress
+              - generic [ref=e221]: 75%
+            - generic [ref=e224]:
+              - text: Buying Pressure
+              - slider [ref=e225]: "0.7"
+              - generic [ref=e226]:
+                - generic [ref=e227]: Selling
+                - generic [ref=e228]: Neutral
+                - generic [ref=e229]: Buying
+          - generic [ref=e230]:
+            - generic [ref=e231]:
+              - generic [ref=e232]:
+                - img [ref=e233]
+                - generic [ref=e237]: Bank of Russia
+              - generic [ref=e238]: Accumulating
+            - generic [ref=e239]:
+              - generic [ref=e240]:
+                - text: Current Reserves
+                - generic [ref=e241]: 2,330 t
+              - generic [ref=e242]:
+                - text: Target
+                - generic [ref=e243]: 2,500 t
+            - generic [ref=e245]:
+              - generic [ref=e246]: Reserve Progress
+              - generic [ref=e247]: 93%
+            - generic [ref=e250]:
+              - text: Buying Pressure
+              - slider [ref=e251]: "0.4"
+              - generic [ref=e252]:
+                - generic [ref=e253]: Selling
+                - generic [ref=e254]: Neutral
+                - generic [ref=e255]: Buying
+          - generic [ref=e256]:
+            - generic [ref=e257]:
+              - generic [ref=e258]:
+                - img [ref=e259]
+                - generic [ref=e263]: RBI (India)
+              - generic [ref=e264]: Accumulating
+            - generic [ref=e265]:
+              - generic [ref=e266]:
+                - text: Current Reserves
+                - generic [ref=e267]: 800 t
+              - generic [ref=e268]:
+                - text: Target
+                - generic [ref=e269]: 1,000 t
+            - generic [ref=e271]:
+              - generic [ref=e272]: Reserve Progress
+              - generic [ref=e273]: 80%
+            - generic [ref=e276]:
+              - text: Buying Pressure
+              - slider [ref=e277]: "0.5"
+              - generic [ref=e278]:
+                - generic [ref=e279]: Selling
+                - generic [ref=e280]: Neutral
+                - generic [ref=e281]: Buying
+          - generic [ref=e282]:
+            - generic [ref=e283]:
+              - generic [ref=e284]:
+                - img [ref=e285]
+                - generic [ref=e289]: Federal Reserve
+              - generic [ref=e290]: Holding
+            - generic [ref=e291]:
+              - generic [ref=e292]:
+                - text: Current Reserves
+                - generic [ref=e293]: 8,133 t
+              - generic [ref=e294]:
+                - text: Target
+                - generic [ref=e295]: 8,133 t
+            - generic [ref=e297]:
+              - generic [ref=e298]: Reserve Progress
+              - generic [ref=e299]: 100%
+            - generic [ref=e302]:
+              - text: Buying Pressure
+              - slider [ref=e303]: "0"
+              - generic [ref=e304]:
+                - generic [ref=e305]: Selling
+                - generic [ref=e306]: Neutral
+                - generic [ref=e307]: Buying
+          - generic [ref=e308]:
+            - generic [ref=e309]:
+              - generic [ref=e310]:
+                - img [ref=e311]
+                - generic [ref=e315]: ECB
+              - generic [ref=e316]: Holding
+            - generic [ref=e317]:
+              - generic [ref=e318]:
+                - text: Current Reserves
+                - generic [ref=e319]: 10,773 t
+              - generic [ref=e320]:
+                - text: Target
+                - generic [ref=e321]: 10,773 t
+            - generic [ref=e323]:
+              - generic [ref=e324]: Reserve Progress
+              - generic [ref=e325]: 100%
+            - generic [ref=e328]:
+              - text: Buying Pressure
+              - slider [ref=e329]: "-0.1"
+              - generic [ref=e330]:
+                - generic [ref=e331]: Selling
+                - generic [ref=e332]: Neutral
+                - generic [ref=e333]: Buying
+      - button "Run Market Structure Simulation" [disabled] [ref=e335]:
+        - img [ref=e336]
+        - text: Run Market Structure Simulation
+      - generic [ref=e338]: Simulation is disabled until the live Gold feed returns a usable spot price.
+  - contentinfo [ref=e339]:
+    - generic [ref=e341]:
+      - paragraph [ref=e342]: Strategy Console - Evidence-Backed Strategic Analysis
+      - paragraph [ref=e343]: Real citations. Real simulations. Real clarity.

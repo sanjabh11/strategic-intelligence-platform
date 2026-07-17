@@ -1,6 +1,8 @@
 // Audience-specific Types for Strategic Intelligence Platform
 // These types define the structure of analysis_json field for different audiences
 
+import type { AdvancedGameOutputs } from '../lib/strategistContract';
+
 export interface SourceCitation {
   id: string;
   title: string;
@@ -107,7 +109,7 @@ export interface ResearcherViewData {
   payoff_matrix: any;
   solver_config: {
     seed: number;
-    method: "recursive_nash" | "replicator" | "best_response";
+    method: "recursive_nash" | "replicator" | "best_response" | "shapley_core" | "perfect_bayesian" | "correlated_equilibrium" | "replicator_dynamics" | "logit_qre";
     iterations: number;
   };
   simulation_results: {
@@ -127,6 +129,7 @@ export interface ResearcherViewData {
         effect_on_outcome: number;
       }>;
     };
+    advanced_frameworks?: AdvancedGameOutputs;
   };
   notebook_snippet: string;
   data_exports: {

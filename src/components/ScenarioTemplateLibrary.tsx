@@ -347,7 +347,7 @@ const CATEGORY_COLORS: Record<string, string> = {
 
 interface ScenarioTemplateLibraryProps {
   onSelectTemplate: (template: ScenarioTemplate) => void;
-  userTier?: 'free' | 'analyst' | 'pro' | 'enterprise' | 'academic';
+  userTier?: 'free' | 'pro' | 'elite' | 'enterprise' | 'academic';
 }
 
 const ScenarioTemplateLibrary: React.FC<ScenarioTemplateLibraryProps> = ({
@@ -534,12 +534,18 @@ const ScenarioTemplateLibrary: React.FC<ScenarioTemplateLibraryProps> = ({
 
                 {/* Action Button */}
                 <button
+                  onClick={() => {
+                    if (isLocked) {
+                      window.location.href = '/pricing';
+                    } else {
+                      onSelectTemplate(template);
+                    }
+                  }}
                   className={`w-full py-2 rounded-lg flex items-center justify-center gap-2 text-sm font-medium transition-colors ${
                     isLocked 
-                      ? 'bg-slate-700 text-slate-500 cursor-not-allowed'
+                      ? 'bg-slate-700 text-slate-500 hover:bg-slate-600 cursor-pointer'
                       : 'bg-indigo-500 hover:bg-indigo-600 text-white'
                   }`}
-                  disabled={isLocked}
                 >
                   {isLocked ? (
                     <>

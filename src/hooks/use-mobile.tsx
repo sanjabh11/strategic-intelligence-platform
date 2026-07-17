@@ -50,7 +50,7 @@ export function useAnalyzeStream() {
           const payload = JSON.parse(dataLine)
           setEvents(prev => prev.concat({ type: evt, payload }))
           if (evt === 'complete') setActive(false)
-        } catch {}
+        } catch { /* ignore malformed SSE lines */ }
       }
     }
   }

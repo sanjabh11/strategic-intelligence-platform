@@ -14,43 +14,41 @@ export interface EvidenceLimits {
 }
 
 // Evidence limits per Whop tier
-const TIER_EVIDENCE_LIMITS: Record<'basic' | 'pro' | 'elite', EvidenceLimits> = {
-  basic: {
+const TIER_EVIDENCE_LIMITS: Record<'free' | 'pro' | 'elite', EvidenceLimits> = {
+  free: {
     maxSources: 5,
     maxSourcesPerProvider: 2,
-    providers: ['google_cse'], // Basic only gets Google CSE
+    providers: ['exa'], // Basic tier gets Exa only
     canUsePremiumProviders: false,
     isUnlimited: false
   },
   pro: {
     maxSources: 20,
     maxSourcesPerProvider: 8,
-    providers: ['google_cse', 'perplexity', 'crossref', 'gdelt'],
+    providers: ['exa', 'crossref', 'gdelt'],
     canUsePremiumProviders: true,
     isUnlimited: false
   },
   elite: {
     maxSources: -1, // Unlimited
     maxSourcesPerProvider: -1,
-    providers: ['google_cse', 'perplexity', 'crossref', 'gdelt', 'firecrawl'],
+    providers: ['exa', 'crossref', 'gdelt', 'firecrawl'],
     canUsePremiumProviders: true,
     isUnlimited: true
   }
 };
 
 // Map subscription tiers to Whop tiers
-const mapToWhopTier = (tier: SubscriptionTier): 'basic' | 'pro' | 'elite' => {
+const mapToWhopTier = (tier: SubscriptionTier): 'free' | 'pro' | 'elite' => {
   switch (tier) {
     case 'free':
-    case 'analyst':
-      return 'basic';
     case 'pro':
-    case 'academic':
       return 'pro';
+    case 'academic':
     case 'enterprise':
       return 'elite';
     default:
-      return 'basic';
+      return 'free';
   }
 };
 
@@ -96,7 +94,7 @@ export function useEvidenceLimits(userId?: string) {
   const getUpgradeMessage = useCallback((): string | null => {
     if (whopTier === 'elite') return null;
     
-    if (whopTier === 'basic') {
+    if (whopTier === 'free') {
       return 'Upgrade to Pro for 20 sources from 4 providers, or Elite for unlimited access.';
     }
     

@@ -1,0 +1,408 @@
+{
+  "schema_version": "comparative-5plus5-discovery-pack-v1",
+  "generated_at": "2026-07-17T09:21:19.635171",
+  "audit_id": "sip-deep-2026-07-13",
+  "status": "DESIGNED \u2014 zero calls executed",
+  "proof_boundary": "target_pack_not_buyer_proof",
+  "experiment_refs": [
+    "EXP-007",
+    "EXP-008"
+  ],
+  "lanes": {
+    "education": {
+      "description": "Game theory, economics, and strategic reasoning teaching \u2014 complement to MobLab, not a replacement",
+      "target_count": 5,
+      "competitive_context": "MobLab (https://www.moblab.com/products/classroom) provides interactive games, assignments, and gradebook. This workflow is an evidence/governance complement, not a replacement."
+    },
+    "enterprise": {
+      "description": "Enterprise/public-sector strategic decision intelligence \u2014 foresight, risk, and policy analysis",
+      "target_count": 5,
+      "competitive_context": "Complements existing foresight and risk workflows; does not replace consultancy or analyst services."
+    }
+  },
+  "targets": [
+    {
+      "target_id": "ENT-001",
+      "lane": "enterprise",
+      "rank": 1,
+      "organization": "GAO Center for Strategic Foresight",
+      "role": "Strategic foresight director or federal program-analysis lead",
+      "source_url": "https://www.gao.gov/about/what-gao-does/audit-role/csf/",
+      "access_path": "Public website \u2192 organizational contact form or directory",
+      "fit_rationale": "Clear mandate around trends affecting federal agencies and programs.",
+      "proof_asset": "Console to strategist brief to human-review and forecast-draft handoff.",
+      "approval_status": "not_contacted",
+      "do_not_contact_constraints": "Do not contact without owner approval; no world-class prediction claims",
+      "niche": "Enterprise/public-sector strategic decision intelligence",
+      "call_status": "not_contacted",
+      "validation_status": "not_contacted_not_buyer_proof",
+      "discovery_questions": [
+        "Where does GAO Center for Strategic Foresight currently lose time or confidence moving from source material to a decision-ready brief?",
+        "Which evidence, review, or governance step is mandatory before a forecast or scenario recommendation is trusted?",
+        "What proof would you need from a guided pilot before sponsoring a broader evaluation?",
+        "Which existing tool, analyst workflow, consultancy, or spreadsheet would this need to complement or replace?",
+        "If the workflow helped, what concrete next step would be credible: second review, internal demo, paid pilot, LOI, or no action?"
+      ],
+      "required_capture_fields": [
+        "buyer_role",
+        "proof_shown",
+        "objection",
+        "next_action",
+        "willingness_to_pay_signal",
+        "baseline_value_or_current_workflow",
+        "pilot_outcome_value_or_expected_delta",
+        "quality_signal",
+        "buyer_decision_event",
+        "outcome_evidence_notes"
+      ]
+    },
+    {
+      "target_id": "ENT-002",
+      "lane": "enterprise",
+      "rank": 2,
+      "organization": "UK Government Office for Science Futures and Foresight",
+      "role": "Futures, foresight, or horizon-scanning team lead",
+      "source_url": "https://www.gov.uk/government/groups/futures-and-foresight",
+      "access_path": "Public website \u2192 organizational contact form or directory",
+      "fit_rationale": "Publishes an active offer for futures support, training, advisory services, and horizon scanning.",
+      "proof_asset": "Actor/countermove brief plus review state and forecast-governance caveats.",
+      "approval_status": "not_contacted",
+      "do_not_contact_constraints": "Do not contact without owner approval; no world-class prediction claims",
+      "niche": "Enterprise/public-sector strategic decision intelligence",
+      "call_status": "not_contacted",
+      "validation_status": "not_contacted_not_buyer_proof",
+      "discovery_questions": [
+        "Where does UK Government Office for Science Futures and Foresight currently lose time or confidence moving from source material to a decision-ready brief?",
+        "Which evidence, review, or governance step is mandatory before a forecast or scenario recommendation is trusted?",
+        "What proof would you need from a guided pilot before sponsoring a broader evaluation?",
+        "Which existing tool, analyst workflow, consultancy, or spreadsheet would this need to complement or replace?",
+        "If the workflow helped, what concrete next step would be credible: second review, internal demo, paid pilot, LOI, or no action?"
+      ],
+      "required_capture_fields": [
+        "buyer_role",
+        "proof_shown",
+        "objection",
+        "next_action",
+        "willingness_to_pay_signal",
+        "baseline_value_or_current_workflow",
+        "pilot_outcome_value_or_expected_delta",
+        "quality_signal",
+        "buyer_decision_event",
+        "outcome_evidence_notes"
+      ]
+    },
+    {
+      "target_id": "ENT-003",
+      "lane": "enterprise",
+      "rank": 3,
+      "organization": "OECD Strategic Foresight Unit / Government Foresight Community",
+      "role": "Strategic foresight unit lead or GFC program contact",
+      "source_url": "https://www.oecd.org/strategic-foresight/",
+      "access_path": "Public website \u2192 organizational contact form or directory",
+      "fit_rationale": "OECD explicitly frames strategic foresight as modern evidence-based and anticipatory policymaking.",
+      "proof_asset": "Public-sector scenario brief with transparent uncertainty and policy trade-off questions.",
+      "approval_status": "not_contacted",
+      "do_not_contact_constraints": "Do not contact without owner approval; no world-class prediction claims",
+      "niche": "Enterprise/public-sector strategic decision intelligence",
+      "call_status": "not_contacted",
+      "validation_status": "not_contacted_not_buyer_proof",
+      "discovery_questions": [
+        "Where does OECD Strategic Foresight Unit / Government Foresight Community currently lose time or confidence moving from source material to a decision-ready brief?",
+        "Which evidence, review, or governance step is mandatory before a forecast or scenario recommendation is trusted?",
+        "What proof would you need from a guided pilot before sponsoring a broader evaluation?",
+        "Which existing tool, analyst workflow, consultancy, or spreadsheet would this need to complement or replace?",
+        "If the workflow helped, what concrete next step would be credible: second review, internal demo, paid pilot, LOI, or no action?"
+      ],
+      "required_capture_fields": [
+        "buyer_role",
+        "proof_shown",
+        "objection",
+        "next_action",
+        "willingness_to_pay_signal",
+        "baseline_value_or_current_workflow",
+        "pilot_outcome_value_or_expected_delta",
+        "quality_signal",
+        "buyer_decision_event",
+        "outcome_evidence_notes"
+      ]
+    },
+    {
+      "target_id": "ENT-004",
+      "lane": "enterprise",
+      "rank": 4,
+      "organization": "Policy Horizons Canada",
+      "role": "Foresight analyst or policy innovation lead",
+      "source_url": "https://horizons.service.canada.ca/en/home/index.shtml",
+      "access_path": "Public website \u2192 organizational contact form or directory",
+      "fit_rationale": "Uses foresight to help federal policy and programs operate under uncertainty.",
+      "proof_asset": "Evidence bundle and audience-specific briefing for a policy uncertainty.",
+      "approval_status": "not_contacted",
+      "do_not_contact_constraints": "Do not contact without owner approval; no world-class prediction claims",
+      "niche": "Enterprise/public-sector strategic decision intelligence",
+      "call_status": "not_contacted",
+      "validation_status": "not_contacted_not_buyer_proof",
+      "discovery_questions": [
+        "Where does Policy Horizons Canada currently lose time or confidence moving from source material to a decision-ready brief?",
+        "Which evidence, review, or governance step is mandatory before a forecast or scenario recommendation is trusted?",
+        "What proof would you need from a guided pilot before sponsoring a broader evaluation?",
+        "Which existing tool, analyst workflow, consultancy, or spreadsheet would this need to complement or replace?",
+        "If the workflow helped, what concrete next step would be credible: second review, internal demo, paid pilot, LOI, or no action?"
+      ],
+      "required_capture_fields": [
+        "buyer_role",
+        "proof_shown",
+        "objection",
+        "next_action",
+        "willingness_to_pay_signal",
+        "baseline_value_or_current_workflow",
+        "pilot_outcome_value_or_expected_delta",
+        "quality_signal",
+        "buyer_decision_event",
+        "outcome_evidence_notes"
+      ]
+    },
+    {
+      "target_id": "ENT-005",
+      "lane": "enterprise",
+      "rank": 5,
+      "organization": "Atlantic Council GeoStrategy Initiative",
+      "role": "Foresight, strategy, or program lead",
+      "source_url": "https://www.atlanticcouncil.org/our-programs/foresight-strategy-and-risks-initiative/",
+      "access_path": "Public website \u2192 organizational contact form or directory",
+      "fit_rationale": "Produces global foresight and long-range strategy work for complex international issues.",
+      "proof_asset": "Analyst briefing layer plus forecast-draft governance for a Global Foresight scenario.",
+      "approval_status": "not_contacted",
+      "do_not_contact_constraints": "Do not contact without owner approval; no world-class prediction claims",
+      "niche": "Executive and analyst briefing layer",
+      "call_status": "not_contacted",
+      "validation_status": "not_contacted_not_buyer_proof",
+      "discovery_questions": [
+        "Where does Atlantic Council GeoStrategy Initiative currently lose time or confidence moving from source material to a decision-ready brief?",
+        "Which evidence, review, or governance step is mandatory before a forecast or scenario recommendation is trusted?",
+        "What proof would you need from a guided pilot before sponsoring a broader evaluation?",
+        "Which existing tool, analyst workflow, consultancy, or spreadsheet would this need to complement or replace?",
+        "If the workflow helped, what concrete next step would be credible: second review, internal demo, paid pilot, LOI, or no action?"
+      ],
+      "required_capture_fields": [
+        "buyer_role",
+        "proof_shown",
+        "objection",
+        "next_action",
+        "willingness_to_pay_signal",
+        "baseline_value_or_current_workflow",
+        "pilot_outcome_value_or_expected_delta",
+        "quality_signal",
+        "buyer_decision_event",
+        "outcome_evidence_notes"
+      ]
+    },
+    {
+      "target_id": "EDU-001",
+      "lane": "education",
+      "rank": 1,
+      "organization": "Stanford GSB \u2014 Political Economy Group",
+      "role": "Game theory / political economy professor or teaching faculty",
+      "source_url": "https://www.gsb.stanford.edu/fac-research/academic-groups/political-economy",
+      "access_path": "Department faculty page \u2192 email or office hours",
+      "fit_rationale": "Teaches game theory and strategic decision-making; may need evidence-to-reasoning workflow for case studies",
+      "proof_asset": "Console to strategist brief with actor reasoning and equilibrium analysis for a classroom case",
+      "approval_status": "not_contacted",
+      "do_not_contact_constraints": "Do not contact without owner approval; no outreach to students",
+      "niche": "Education \u2014 game theory and strategic reasoning teaching",
+      "call_status": "not_contacted",
+      "validation_status": "not_contacted_not_buyer_proof",
+      "discovery_questions": [
+        "How do you currently move from a game-theory model to a decision-ready brief for students?",
+        "What evidence or reasoning steps do you require before presenting a case as 'decision-ready'?",
+        "Would an evidence-to-actor-reasoning-to-forecast workflow complement your current teaching tools?",
+        "What would you need to see before adopting this in a course or recommending it to colleagues?"
+      ],
+      "required_capture_fields": [
+        "buyer_role",
+        "proof_shown",
+        "objection",
+        "next_action",
+        "willingness_to_pay_signal",
+        "baseline_value_or_current_workflow",
+        "pilot_outcome_value_or_expected_delta",
+        "quality_signal",
+        "buyer_decision_event",
+        "outcome_evidence_notes"
+      ]
+    },
+    {
+      "target_id": "EDU-002",
+      "lane": "education",
+      "rank": 2,
+      "organization": "MIT OpenCourseWare \u2014 Game Theory and Strategic Decision Making",
+      "role": "Course coordinator or instructional designer for strategy courses",
+      "source_url": "https://ocw.mit.edu/courses/14-12-game-theory-spring-2015/",
+      "access_path": "OCW faculty contact \u2192 email via MIT directory",
+      "fit_rationale": "Publishes game theory course materials; may benefit from interactive evidence-to-reasoning tools for online learners",
+      "proof_asset": "Console workflow showing evidence bundle, actor map, and equilibrium for a classic game theory scenario",
+      "approval_status": "not_contacted",
+      "do_not_contact_constraints": "Do not contact without owner approval; respect OCW editorial independence",
+      "niche": "Education \u2014 game theory and strategic reasoning teaching",
+      "call_status": "not_contacted",
+      "validation_status": "not_contacted_not_buyer_proof",
+      "discovery_questions": [
+        "What tools do students currently use to explore game-theory scenarios interactively?",
+        "Where does the gap exist between theory and decision-ready reasoning in your course materials?",
+        "Would an evidence-linked actor reasoning workflow complement MobLab or other interactive tools?",
+        "What proof would you need before recommending this as a teaching supplement?"
+      ],
+      "required_capture_fields": [
+        "buyer_role",
+        "proof_shown",
+        "objection",
+        "next_action",
+        "willingness_to_pay_signal",
+        "baseline_value_or_current_workflow",
+        "pilot_outcome_value_or_expected_delta",
+        "quality_signal",
+        "buyer_decision_event",
+        "outcome_evidence_notes"
+      ]
+    },
+    {
+      "target_id": "EDU-003",
+      "lane": "education",
+      "rank": 3,
+      "organization": "University of Chicago \u2014 Pearson Institute for the Study and Resolution of Global Conflicts",
+      "role": "Research fellow or faculty lead in conflict resolution and game theory",
+      "source_url": "https://pearsoninstitute.uchicago.edu/",
+      "access_path": "Institute faculty page \u2192 email or seminar scheduling",
+      "fit_rationale": "Applies game theory to conflict resolution; may need evidence-to-forecast governance for research workflows",
+      "proof_asset": "Console to strategist brief with actor reasoning, countermoves, and forecast-draft governance for a conflict scenario",
+      "approval_status": "not_contacted",
+      "do_not_contact_constraints": "Do not contact without owner approval; no claims about prediction accuracy",
+      "niche": "Education \u2014 game theory and strategic reasoning teaching",
+      "call_status": "not_contacted",
+      "validation_status": "not_contacted_not_buyer_proof",
+      "discovery_questions": [
+        "How do you currently move from a game-theory model to a policy-relevant recommendation?",
+        "What evidence and review steps are required before a forecast is trusted in your research?",
+        "Would a governed evidence-to-forecast workflow complement your current analytical tools?",
+        "What would convince you to pilot this in a research project or seminar?"
+      ],
+      "required_capture_fields": [
+        "buyer_role",
+        "proof_shown",
+        "objection",
+        "next_action",
+        "willingness_to_pay_signal",
+        "baseline_value_or_current_workflow",
+        "pilot_outcome_value_or_expected_delta",
+        "quality_signal",
+        "buyer_decision_event",
+        "outcome_evidence_notes"
+      ]
+    },
+    {
+      "target_id": "EDU-004",
+      "lane": "education",
+      "rank": 4,
+      "organization": "Yale University \u2014 Jackson School of Global Affairs",
+      "role": "Professor of grand strategy, international relations, or decision analysis",
+      "source_url": "https://jackson.yale.edu/",
+      "access_path": "Faculty directory \u2192 email or office hours",
+      "fit_rationale": "Teaches grand strategy and decision analysis; may benefit from evidence-to-reasoning workflow for policy cases",
+      "proof_asset": "Console workflow showing evidence bundle, actor reasoning, and equilibrium for a geopolitical strategy case",
+      "approval_status": "not_contacted",
+      "do_not_contact_constraints": "Do not contact without owner approval; respect academic independence",
+      "niche": "Education \u2014 game theory and strategic reasoning teaching",
+      "call_status": "not_contacted",
+      "validation_status": "not_contacted_not_buyer_proof",
+      "discovery_questions": [
+        "How do students currently explore the gap between strategic theory and evidence-linked decision-making?",
+        "What tools do you use to show actor reasoning and countermoves in a policy scenario?",
+        "Would a governed evidence-to-forecast workflow complement your current case-teaching approach?",
+        "What proof would you need before adopting this as a teaching tool?"
+      ],
+      "required_capture_fields": [
+        "buyer_role",
+        "proof_shown",
+        "objection",
+        "next_action",
+        "willingness_to_pay_signal",
+        "baseline_value_or_current_workflow",
+        "pilot_outcome_value_or_expected_delta",
+        "quality_signal",
+        "buyer_decision_event",
+        "outcome_evidence_notes"
+      ]
+    },
+    {
+      "target_id": "EDU-005",
+      "lane": "education",
+      "rank": 5,
+      "organization": "INSEAD \u2014 Strategy Department",
+      "role": "Strategy professor or case-method teaching faculty",
+      "source_url": "https://www.insead.edu/departments/strategy",
+      "access_path": "Department faculty page \u2192 email or research outreach",
+      "fit_rationale": "Teaches strategy with case method; may benefit from evidence-to-actor-reasoning workflow for case preparation",
+      "proof_asset": "Console to strategist brief with evidence bundle, actor map, and equilibrium for a business strategy case",
+      "approval_status": "not_contacted",
+      "do_not_contact_constraints": "Do not contact without owner approval; no commercial claims without evidence",
+      "niche": "Education \u2014 game theory and strategic reasoning teaching",
+      "call_status": "not_contacted",
+      "validation_status": "not_contacted_not_buyer_proof",
+      "discovery_questions": [
+        "How do you currently help students move from case evidence to strategic recommendations?",
+        "What reasoning steps do you require students to show before accepting a recommendation?",
+        "Would an evidence-to-actor-reasoning-to-forecast workflow complement your case-teaching tools?",
+        "What would you need to see before piloting this in an MBA or executive program?"
+      ],
+      "required_capture_fields": [
+        "buyer_role",
+        "proof_shown",
+        "objection",
+        "next_action",
+        "willingness_to_pay_signal",
+        "baseline_value_or_current_workflow",
+        "pilot_outcome_value_or_expected_delta",
+        "quality_signal",
+        "buyer_decision_event",
+        "outcome_evidence_notes"
+      ]
+    }
+  ],
+  "summary": {
+    "total_targets": 10,
+    "education_targets": 5,
+    "enterprise_targets": 5,
+    "real_interaction_count": 0,
+    "completed_call_count": 0,
+    "qualified_followup_count": 0,
+    "paid_pilot_or_loi_count": 0
+  },
+  "success_gate": {
+    "min_calls_per_lane": 5,
+    "min_qualified_followups_total": 3,
+    "min_paid_pilot_or_loi": 1,
+    "required_capture_fields": [
+      "buyer_role",
+      "proof_shown",
+      "objection",
+      "next_action",
+      "willingness_to_pay_signal",
+      "baseline_value_or_current_workflow",
+      "pilot_outcome_value_or_expected_delta",
+      "quality_signal",
+      "buyer_decision_event",
+      "outcome_evidence_notes"
+    ]
+  },
+  "use_rules": [
+    "Do not send messages or run discovery calls without owner approval.",
+    "Do not count a target as buyer proof until a real completed interaction records the required fields.",
+    "Keep world-class prediction language prohibited until resolved-outcome calibration and real baseline proof exist.",
+    "Interest or a survey response is NOT willingness to pay.",
+    "Education positioning must be an evidence/governance complement to MobLab, not a replacement claim."
+  ],
+  "approval_required_before_execution": [
+    "Owner approval of the ten-person slate",
+    "Owner approval of outreach wording",
+    "Owner approval of demo scope"
+  ]
+}

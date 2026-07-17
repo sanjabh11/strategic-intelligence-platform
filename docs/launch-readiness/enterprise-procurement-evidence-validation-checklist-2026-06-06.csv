@@ -1,0 +1,10 @@
+gate,status,evidence,proof_bucket
+register_schema_present,passed,Register schema includes 18 required columns.,repo_artifact
+all_required_document_rows_present,passed,8 register rows loaded for 8 required documents.,repo_artifact
+owner_approved_documents_present,open_no_owner_documents,0 owner-approved document rows loaded.,owner_input
+document_row_quality,open_no_owner_documents,0 row-level errors and 0 warnings across enterprise procurement evidence register.,owner_input
+privacy_dpa_ready,open_no_owner_documents,privacy_dpa_ready=false.,owner_input
+support_sla_ready,open_no_owner_documents,support_sla_ready=false.,owner_input
+incident_response_ready,open_no_owner_documents,incident_response_ready=false.,owner_input
+external_share_approval_ready,open_no_owner_documents,0 external-share-approved document rows loaded.,owner_input
+all_required_documents_ready,open_no_owner_documents,0/8 required document rows are ready.,owner_input

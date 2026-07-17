@@ -1,0 +1,216 @@
+{
+  "schema_version": "pilot-package-readiness-v1",
+  "generated_at": "2026-06-07T03:39:51.561Z",
+  "status": "pilot_package_ready_for_owner_review_not_external_share",
+  "proof_boundary": "This artifact validates that the five-niche pilot package is coherent and ready for owner review. It is not buyer validation, hosted proof, enterprise readiness, prediction accuracy proof, or external-share approval.",
+  "source": {
+    "evidence": "docs/launch-readiness/launch-evidence-2026-06-06.json",
+    "pilot_offer_pack": "docs/launch-readiness/pilot-offer-pack-2026-06-06.json",
+    "pilot_outcome_measurement_kit": "docs/launch-readiness/pilot-outcome-measurement-kit-2026-06-06.json",
+    "market_niche_validation": "docs/launch-readiness/market-niche-evidence-validation-2026-06-06.json",
+    "competitive_positioning_validation": "docs/launch-readiness/competitive-positioning-evidence-validation-2026-06-06.json",
+    "buyer_discovery_kit": "docs/launch-readiness/buyer-discovery-kit-2026-06-06.json",
+    "buyer_execution_readiness": "docs/launch-readiness/buyer-validation-execution-readiness-2026-06-06.json",
+    "buyer_substitution_evidence_validation": "docs/launch-readiness/buyer-substitution-evidence-validation-2026-06-06.json",
+    "local_browser_route_proof": "docs/launch-readiness/local-browser-route-proof-2026-06-06.json",
+    "hosted_smoke_execution_readiness": "docs/launch-readiness/hosted-smoke-execution-readiness-2026-06-06.json",
+    "owner_approval_validation": "docs/launch-readiness/owner-approval-register-validation-2026-06-06.json",
+    "claim_consistency_validation": "docs/launch-readiness/claim-consistency-validation-2026-06-06.json",
+    "external_source_freshness": "docs/launch-readiness/external-source-freshness-2026-06-06.json",
+    "commercial_confidence_gate": "docs/launch-readiness/commercial-confidence-gate-2026-06-06.json"
+  },
+  "summary": {
+    "package_ready_for_owner_review": true,
+    "external_share_ready": false,
+    "offer_ready": true,
+    "required_niche_count": 5,
+    "packaged_niche_count": 5,
+    "missing_niche_count": 0,
+    "selected_target_count": 10,
+    "selected_top_five_niche_count": 5,
+    "proof_packet_existing_count": 7,
+    "proof_packet_count": 7,
+    "local_route_ready": true,
+    "buyer_execution_ready": true,
+    "buyer_validation_verified": false,
+    "outcome_measurement_ready": true,
+    "outcome_proof_claimed": false,
+    "substitution_protocol_ready": true,
+    "hosted_proof_complete": false,
+    "owner_approval_ready": false,
+    "owner_approved_count": 0,
+    "owner_required_count": 14,
+    "claim_consistency_ready": true,
+    "source_freshness_ready": true,
+    "source_count": 52,
+    "access_limited_source_count": 8,
+    "broken_source_count": 0,
+    "market_buyer_safe_pilot_claim_allowed": true,
+    "competitive_wedge_claim_allowed": true,
+    "buyer_validated_claim_allowed": false,
+    "hosted_live_claim_allowed": false,
+    "enterprise_ready_claim_allowed": false,
+    "accuracy_claim_allowed": false,
+    "world_class_prediction_claim_allowed": false
+  },
+  "pilot_package_rows": [
+    {
+      "niche": "Enterprise/public-sector strategic decision intelligence",
+      "packaged": true,
+      "selected_target_count": 5,
+      "proof_asset_count": 3,
+      "sale_boundary": "guided pilot only; no commercial-ready or prediction-superiority claim",
+      "readiness_score_percent": 80
+    },
+    {
+      "niche": "Governed forecasting and research workflow",
+      "packaged": true,
+      "selected_target_count": 1,
+      "proof_asset_count": 3,
+      "sale_boundary": "do not sell accuracy until owner-approved resolved outcomes and real baselines are scored",
+      "readiness_score_percent": 35
+    },
+    {
+      "niche": "Geopolitical risk radar and scenario monitor",
+      "packaged": true,
+      "selected_target_count": 1,
+      "proof_asset_count": 3,
+      "sale_boundary": "requires hosted non-simulated feed proof and freshness/SLA labels before production claims",
+      "readiness_score_percent": 75
+    },
+    {
+      "niche": "Executive and analyst briefing layer",
+      "packaged": true,
+      "selected_target_count": 2,
+      "proof_asset_count": 2,
+      "sale_boundary": "use as demo narrative, not standalone enterprise platform claim",
+      "readiness_score_percent": 78
+    },
+    {
+      "niche": "Negotiation and strategic reasoning training",
+      "packaged": true,
+      "selected_target_count": 1,
+      "proof_asset_count": 2,
+      "sale_boundary": "requires classroom hosted smoke and buyer-specific curriculum proof before packaging as training product",
+      "readiness_score_percent": 55
+    }
+  ],
+  "acceptance_gates": [
+    {
+      "gate": "pilot_offer_contract_ready",
+      "status": "passed",
+      "proof_bucket": "repo_artifact",
+      "evidence": "status=pilot_offer_pack_ready_not_buyer_proof; allowed_claims=4; prohibited_claims=5; success_criteria=4.",
+      "next_action": "Use this as the offer contract for owner review."
+    },
+    {
+      "gate": "top_five_niche_package_coverage",
+      "status": "passed",
+      "proof_bucket": "repo_artifact",
+      "evidence": "5/5 niche rows present; missing=none; proof_rows=5; boundary_rows=5.",
+      "next_action": "Keep the five-niche offer sequence fixed until buyer evidence changes it."
+    },
+    {
+      "gate": "proof_packet_files_exist",
+      "status": "passed",
+      "proof_bucket": "repo_artifact",
+      "evidence": "7/7 proof-packet files exist.",
+      "next_action": "Attach this packet only as repo/local proof."
+    },
+    {
+      "gate": "local_route_baseline_ready",
+      "status": "passed",
+      "proof_bucket": "local",
+      "evidence": "local_route_proof_ready_not_hosted_proof; routes=7; runtime_errors=0; hosted_live_proof=false.",
+      "next_action": "Use as local route baseline only."
+    },
+    {
+      "gate": "buyer_execution_slate_ready",
+      "status": "passed",
+      "proof_bucket": "repo_artifact",
+      "evidence": "execution_ready=true; selected_targets=10; selected_top_five=5/5; missing=none.",
+      "next_action": "Owner can approve or edit the call slate."
+    },
+    {
+      "gate": "pilot_outcome_measurement_ready",
+      "status": "passed_not_outcome_proof",
+      "proof_bucket": "repo_artifact",
+      "evidence": "pilot_outcome_measurement_kit_ready_not_outcome_proof; outcome_measurement_ready=true; outcome_proof_claimed=false; top_five=5/5; forbidden_claims=0.",
+      "next_action": "Attach the outcome measurement kit before owner-approved buyer calls."
+    },
+    {
+      "gate": "substitution_protocol_ready",
+      "status": "passed_not_buyer_proof",
+      "proof_bucket": "repo_artifact",
+      "evidence": "buyer_substitution_evidence_validation_ready_no_real_calls; real_interactions=0; ready_for_buyer_proof_gate=false.",
+      "next_action": "Execute owner-approved substitution calls before replacement or parity claims."
+    },
+    {
+      "gate": "source_freshness_ready",
+      "status": "passed_with_access_limits",
+      "proof_bucket": "repo_artifact",
+      "evidence": "external_source_freshness_completed_with_access_limits; checked=52/52; access_limited=8; broken=0.",
+      "next_action": "Use source freshness as desk-research proof only."
+    },
+    {
+      "gate": "claim_consistency_ready",
+      "status": "passed",
+      "proof_bucket": "repo_artifact",
+      "evidence": "claim_consistency_validation_passed_pilot_only_boundaries; unsupported=0.",
+      "next_action": "Rerun after any buyer-facing package language change."
+    },
+    {
+      "gate": "owner_approval_gate",
+      "status": "blocked_owner_approval_missing",
+      "proof_bucket": "owner_input",
+      "evidence": "owner_approval_register_ready_no_owner_approvals; owner_approved=0/14; ready_for_downstream_evidence=false.",
+      "next_action": "Owner reviews approval rows before external sharing or downstream proof execution."
+    },
+    {
+      "gate": "buyer_and_hosted_proof_absent",
+      "status": "blocked_no_upgrade",
+      "proof_bucket": "owner_input_and_hosted_live",
+      "evidence": "buyer_validated=false; hosted_proof_complete=false; hosted_status=hosted_smoke_execution_blocked_project_privileges_owner_unblock_ready.",
+      "next_action": "Do not upgrade beyond owner-review pilot package until buyer and hosted proof pass."
+    },
+    {
+      "gate": "claim_upgrade_guardrail",
+      "status": "passed_blocking_upgrades",
+      "proof_bucket": "repo_artifact",
+      "evidence": "commercial_ready=false; world_class_prediction=false; hosted_live=false; buyer_validated=false; enterprise_ready=false.",
+      "next_action": "Keep package language pilot-only until owner, buyer, hosted, enterprise, and prediction gates pass."
+    }
+  ],
+  "release_holds": [
+    {
+      "hold": "owner_approval_missing",
+      "severity": "P0",
+      "status": "active",
+      "evidence_needed": "13/13 owner approval rows reviewed, claim boundaries acknowledged, and approved for downstream evidence execution."
+    },
+    {
+      "hold": "buyer_validation_missing",
+      "severity": "P0",
+      "status": "active",
+      "evidence_needed": "10 completed buyer calls, three qualified follow-ups, and one paid-pilot/LOI/procurement-path signal."
+    },
+    {
+      "hold": "hosted_proof_missing",
+      "severity": "P0",
+      "status": "active",
+      "evidence_needed": "Executed hosted smoke evidence with deploy binding, redacted logs/screenshots, and core route/API coverage."
+    },
+    {
+      "hold": "prediction_accuracy_missing",
+      "severity": "P0",
+      "status": "active",
+      "evidence_needed": "Owner-approved resolved forecasts, comparable baselines, leakage review, scoring, and approved claim language."
+    }
+  ],
+  "next_actions": [
+    "Owner reviews the pilot package, approval register, and pilot-only external language before any external share.",
+    "After owner approval, execute buyer calls and substitution tests; do not claim buyer validation from package readiness.",
+    "After hosted access unblocks, run hosted smoke and attach redacted logs/screenshots before hosted-live claims.",
+    "After real resolved forecast rows and baselines exist, rerun leakage, scoring, prediction science, and confidence gates."
+  ]
+}

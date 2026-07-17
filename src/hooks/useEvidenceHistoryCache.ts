@@ -8,7 +8,7 @@ export interface EvidenceQueryEntry {
   query: string
   timestamp: string
   sourcesFound: number
-  providersTried: string[] // e.g., ['perplexity','google','firecrawl']
+  providersTried: string[] // e.g., ['exa', 'gdelt', 'firecrawl']
   hash: string
 }
 
@@ -43,7 +43,7 @@ export function useEvidenceHistoryCache() {
   }, [])
 
   const save = useCallback((items: EvidenceQueryEntry[]) => {
-    try { localStorage.setItem(CACHE_KEY, JSON.stringify(items)) } catch {}
+    try { localStorage.setItem(CACHE_KEY, JSON.stringify(items)) } catch { /* localStorage may be unavailable */ }
   }, [])
 
   const add = useCallback((entry: { query: string; sourcesFound: number; providersTried: string[] }) => {
@@ -68,7 +68,7 @@ export function useEvidenceHistoryCache() {
 
   const clear = useCallback(() => {
     setHistory([])
-    try { localStorage.removeItem(CACHE_KEY) } catch {}
+    try { localStorage.removeItem(CACHE_KEY) } catch { /* localStorage may be unavailable */ }
   }, [])
 
   return { history, loading, add, clear, MAX_ENTRIES, EXPIRY_DAYS }

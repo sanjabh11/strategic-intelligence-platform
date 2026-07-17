@@ -4,14 +4,15 @@
 // Endpoint: POST /functions/v1/recursive-equilibrium
 // PRD-compliant RecursiveNashEngine implementation for quantum game theory
 
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { createClient } from 'npm:@supabase/supabase-js@2'
+import { getAuthenticatedUser, jsonResponse } from '../_shared/auth.ts'
 
 function jsonResponse(status: number, body: any) {
   return new Response(JSON.stringify(body), {
     status,
     headers: {
       'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Origin': Deno.env.get('ALLOWED_ORIGIN') || Deno.env.get('APP_URL') || 'null',
       'Access-Control-Allow-Methods': 'POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type, Authorization, apikey, X-Client-Info'
     }
@@ -67,6 +68,7 @@ interface RecursiveEquilibriumRequest {
     convergenceThreshold: number;
     quantumEnabled: boolean;
     randomSeed?: number;
+    solverMethod?: 'fictitious_play' | 'cfr_plus';
   };
   currentState?: {
     beliefs: Record<string, Record<string, number>>; // Belief structures
@@ -331,7 +333,7 @@ class RecursiveNashEngine {
 
       for (const action of player.actions) {
         if (scenario.payoffMatrix) {
-          expectedPayoffs[action] = this.computeExpectedPayoff(playerId, action, scenario.payoffMatrix, opponentsBeliefs, player.actions.indexOf(action));
+          expectedPayoffs[action] = this.computeExpectedPayoff(playerId, action, scenario.payoffMatrix, opponentsBeliefs, player.actions.indexOf(action), scenario);
         } else {
           // Deterministic fallback if no payoff matrix provided
           expectedPayoffs[action] = this.deterministicPayoff(playerId, action);
@@ -383,22 +385,35 @@ class RecursiveNashEngine {
     action: string,
     payoffMatrix: number[][][],
     opponentBeliefs: Record<string, Record<string, number>>,
-    actionIndex: number
+    actionIndex: number,
+    scenario: RecursiveEquilibriumRequest['scenario']
   ): number {
 
     if (!payoffMatrix || payoffMatrix.length === 0) {
-      return this.deterministicPayoff(playerId, action); // Deterministic fallback
+      return this.deterministicPayoff(playerId, action);
     }
 
-    let expectedPayoff = 0;
-    const playerIndex = 0; // TODO: Map playerId to matrix index
+    const playerIndex = scenario.players.findIndex(p => p.id === playerId);
+    if (playerIndex < 0) return this.deterministicPayoff(playerId, action);
 
-    // Sum over all opponent action profiles weighted by beliefs
-    if (payoffMatrix[actionIndex]) {
-      for (let oppAction = 0; oppAction < payoffMatrix[actionIndex].length; oppAction++) {
-        if (payoffMatrix[actionIndex][oppAction] && Array.isArray(payoffMatrix[actionIndex][oppAction])) {
-          expectedPayoff += payoffMatrix[actionIndex][oppAction][playerIndex] * 0.5; // Simplified
-        }
+    const opponents = scenario.players.filter(p => p.id !== playerId);
+    if (opponents.length === 0) {
+      return payoffMatrix[actionIndex]?.[0]?.[playerIndex] ?? 0;
+    }
+
+    // For 2-player games: payoffMatrix[actionIndex][oppActionIndex][playerIndex]
+    // Weight by opponent belief probabilities
+    let expectedPayoff = 0;
+    const opponent = opponents[0];
+    const opponentActions = opponent.actions;
+    const oppBeliefs = opponentBeliefs[opponent.id] || {};
+
+    for (let oppIdx = 0; oppIdx < opponentActions.length; oppIdx++) {
+      const oppAction = opponentActions[oppIdx];
+      const beliefProb = oppBeliefs[oppAction] ?? (1 / opponentActions.length);
+      const payoff = payoffMatrix[actionIndex]?.[oppIdx]?.[playerIndex];
+      if (typeof payoff === 'number') {
+        expectedPayoff += payoff * beliefProb;
       }
     }
 
@@ -444,10 +459,41 @@ class RecursiveNashEngine {
     const payoffs: Record<string, number> = {};
 
     for (const player of scenario.players) {
-      // Deterministic aggregate payoff based on current mixed strategy weights
-      const strat = strategies[player.id] || {};
-      const base = Object.entries(strat).reduce((sum, [act, p]) => sum + p * this.deterministicPayoff(player.id, act) * 100, 0);
-      payoffs[player.id] = Number(base.toFixed(6));
+      if (scenario.payoffMatrix && scenario.payoffMatrix.length > 0) {
+        // Use actual payoff matrix with belief-weighted computation
+        const playerIndex = scenario.players.findIndex(p => p.id === player.id);
+        const opponents = scenario.players.filter(p => p.id !== player.id);
+        const strat = strategies[player.id] || {};
+        let totalPayoff = 0;
+
+        for (const [action, actionProb] of Object.entries(strat)) {
+          const actionIdx = player.actions.indexOf(action);
+          if (actionIdx < 0) continue;
+
+          if (opponents.length > 0) {
+            const opponent = opponents[0];
+            const oppStrat = strategies[opponent.id] || {};
+            for (const [oppAction, oppProb] of Object.entries(oppStrat)) {
+              const oppIdx = opponent.actions.indexOf(oppAction);
+              const payoff = scenario.payoffMatrix[actionIdx]?.[oppIdx]?.[playerIndex];
+              if (typeof payoff === 'number') {
+                totalPayoff += actionProb * oppProb * payoff;
+              }
+            }
+          } else {
+            const payoff = scenario.payoffMatrix[actionIdx]?.[0]?.[playerIndex];
+            if (typeof payoff === 'number') {
+              totalPayoff += actionProb * payoff;
+            }
+          }
+        }
+        payoffs[player.id] = Number(totalPayoff.toFixed(6));
+      } else {
+        // Deterministic fallback when no payoff matrix provided
+        const strat = strategies[player.id] || {};
+        const base = Object.entries(strat).reduce((sum, [act, p]) => sum + p * this.deterministicPayoff(player.id, act) * 100, 0);
+        payoffs[player.id] = Number(base.toFixed(6));
+      }
     }
 
     return payoffs;
@@ -639,12 +685,134 @@ class RecursiveNashEngine {
   }
 }
 
+// CFR+ (Counterfactual Regret Minimization Plus) engine for 2-player normal-form games
+// Based on Zinkevich et al. 2007 and Tammelin et al. 2015 CFR+ variant
+class CFRPlusEngine {
+  private regret: number[][];
+  private cumulativeStrategy: number[][];
+  private iterations: number;
+  private convergenceThreshold: number;
+
+  constructor(
+    private numActionsP1: number,
+    private numActionsP2: number,
+    private payoffMatrix: number[][], // [actionP1][actionP2] = payoff for P1 (zero-sum: P2 gets -payoff)
+    iterations: number = 1000,
+    convergenceThreshold: number = 1e-6
+  ) {
+    this.regret = Array.from({ length: 2 }, () =>
+      Array.from({ length: Math.max(numActionsP1, numActionsP2) }, () => 0)
+    );
+    this.cumulativeStrategy = Array.from({ length: 2 }, () =>
+      Array.from({ length: Math.max(numActionsP1, numActionsP2) }, () => 0)
+    );
+    this.iterations = iterations;
+    this.convergenceThreshold = convergenceThreshold;
+  }
+
+  private getStrategy(player: number, numActions: number): number[] {
+    const positiveRegret = this.regret[player].slice(0, numActions).map(r => Math.max(0, r));
+    const sum = positiveRegret.reduce((a, b) => a + b, 0);
+    if (sum > 0) {
+      return positiveRegret.map(r => r / sum);
+    }
+    return Array.from({ length: numActions }, () => 1 / numActions);
+  }
+
+  solve(): { strategyP1: number[]; strategyP2: number[]; exploitability: number } {
+    let prevStrategyP1 = Array.from({ length: this.numActionsP1 }, () => 1 / this.numActionsP1);
+    let prevStrategyP2 = Array.from({ length: this.numActionsP2 }, () => 1 / this.numActionsP2);
+
+    for (let t = 1; t <= this.iterations; t++) {
+      const strategyP1 = this.getStrategy(0, this.numActionsP1);
+      const strategyP2 = this.getStrategy(1, this.numActionsP2);
+
+      // Compute counterfactual values for P1
+      const cfvP1 = Array.from({ length: this.numActionsP1 }, (_, a1) => {
+        let v = 0;
+        for (let a2 = 0; a2 < this.numActionsP2; a2++) {
+          v += strategyP2[a2] * this.payoffMatrix[a1][a2];
+        }
+        return v;
+      });
+      const avgCfvP1 = strategyP1.reduce((sum, s, a) => sum + s * cfvP1[a], 0);
+
+      // Update regrets for P1 (CFR+: use positive cumulative regret)
+      for (let a = 0; a < this.numActionsP1; a++) {
+        this.regret[0][a] = Math.max(0, this.regret[0][a] + (cfvP1[a] - avgCfvP1));
+      }
+
+      // Compute counterfactual values for P2 (zero-sum: P2 minimizes P1 payoff)
+      const cfvP2 = Array.from({ length: this.numActionsP2 }, (_, a2) => {
+        let v = 0;
+        for (let a1 = 0; a1 < this.numActionsP1; a1++) {
+          v += strategyP1[a1] * (-this.payoffMatrix[a1][a2]);
+        }
+        return v;
+      });
+      const avgCfvP2 = strategyP2.reduce((sum, s, a) => sum + s * cfvP2[a], 0);
+
+      // Update regrets for P2
+      for (let a = 0; a < this.numActionsP2; a++) {
+        this.regret[1][a] = Math.max(0, this.regret[1][a] + (cfvP2[a] - avgCfvP2));
+      }
+
+      // Accumulate strategy for average (CFR+ uses weighted average: t * strategy)
+      for (let a = 0; a < this.numActionsP1; a++) {
+        this.cumulativeStrategy[0][a] += t * strategyP1[a];
+      }
+      for (let a = 0; a < this.numActionsP2; a++) {
+        this.cumulativeStrategy[1][a] += t * strategyP2[a];
+      }
+
+      // Check convergence
+      const diff1 = Math.max(...strategyP1.map((s, i) => Math.abs(s - prevStrategyP1[i])));
+      const diff2 = Math.max(...strategyP2.map((s, i) => Math.abs(s - prevStrategyP2[i])));
+      if (diff1 < this.convergenceThreshold && diff2 < this.convergenceThreshold) {
+        break;
+      }
+      prevStrategyP1 = [...strategyP1];
+      prevStrategyP2 = [...strategyP2];
+    }
+
+    // Normalize cumulative strategy
+    const sumP1 = this.cumulativeStrategy[0].slice(0, this.numActionsP1).reduce((a, b) => a + b, 0) || 1;
+    const sumP2 = this.cumulativeStrategy[1].slice(0, this.numActionsP2).reduce((a, b) => a + b, 0) || 1;
+    const avgP1 = this.cumulativeStrategy[0].slice(0, this.numActionsP1).map(s => s / sumP1);
+    const avgP2 = this.cumulativeStrategy[1].slice(0, this.numActionsP2).map(s => s / sumP2);
+
+    // Compute exploitability (how much a best response can exploit the average strategy)
+    const brP1 = Math.max(...avgP2.map((_, a2) => {
+      let v = 0;
+      for (let a1 = 0; a1 < this.numActionsP1; a1++) {
+        v += avgP1[a1] * this.payoffMatrix[a1][a2];
+      }
+      return v;
+    }));
+    const brP2 = Math.min(...avgP1.map((_, a1) => {
+      let v = 0;
+      for (let a2 = 0; a2 < this.numActionsP2; a2++) {
+        v += avgP2[a2] * this.payoffMatrix[a1][a2];
+      }
+      return v;
+    }));
+    const exploitability = Math.abs(brP1 - brP2);
+
+    return { strategyP1: avgP1, strategyP2: avgP2, exploitability };
+  }
+}
+
 // Main edge function handler
 Deno.serve(async (req) => {
+  // Auth check
+  const _user = await getAuthenticatedUser(req)
+  if (!_user) return jsonResponse(401, { ok: false, error: 'authentication_required' })
+
+
   // Handle CORS
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: {
-      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Origin': Deno.env.get('ALLOWED_ORIGIN') || Deno.env.get('APP_URL') || 'null',
       'Access-Control-Allow-Methods': 'POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type, Authorization, apikey, X-Client-Info'
     }});
@@ -688,8 +856,63 @@ Deno.serve(async (req) => {
       config.randomSeed
     );
 
-    // Compute meta-equilibrium
-    const response = await engine.computeMetaEquilibrium(request.scenario);
+    // Use CFR+ for 2-player games with payoff matrix when requested or as default
+    const useCFRPlus = (config.solverMethod === 'cfr_plus' || (!config.solverMethod && request.scenario.payoffMatrix && request.scenario.players.length === 2))
+      && request.scenario.payoffMatrix
+      && request.scenario.players.length === 2;
+
+    let response: RecursiveEquilibriumResponse;
+    if (useCFRPlus) {
+      const p1Actions = request.scenario.players[0].actions;
+      const p2Actions = request.scenario.players[1].actions;
+      // Extract P1 payoff matrix: payoffMatrix[a1][a2][0] = P1's payoff
+      const p1Payoffs = request.scenario.payoffMatrix.map(row =>
+        row.map(cell => (Array.isArray(cell) && typeof cell[0] === 'number') ? cell[0] : 0)
+      );
+      const cfrEngine = new CFRPlusEngine(p1Actions.length, p2Actions.length, p1Payoffs, config.iterations, config.convergenceThreshold);
+      const cfrResult = cfrEngine.solve();
+
+      const nashProfile: Record<string, Record<string, number>> = {};
+      nashProfile[request.scenario.players[0].id] = {};
+      p1Actions.forEach((action, i) => { nashProfile[request.scenario.players[0].id][action] = cfrResult.strategyP1[i]; });
+      nashProfile[request.scenario.players[1].id] = {};
+      p2Actions.forEach((action, i) => { nashProfile[request.scenario.players[1].id][action] = cfrResult.strategyP2[i]; });
+
+      response = {
+        runId: '',
+        equilibriumFound: cfrResult.exploitability < 0.01,
+        nashEquilibrium: {
+          profile: nashProfile,
+          stability: 1 - Math.min(1, cfrResult.exploitability * 10),
+          method: 'CFR+ (Counterfactual Regret Minimization Plus)',
+          convergenceIteration: config.iterations,
+          confidence: { lower: 1 - cfrResult.exploitability, upper: 1 },
+        },
+        evolutionaryTrajectory: {
+          iterationHistory: [],
+          convergenceMetadata: {
+            finalIteration: config.iterations,
+            totalIterations: config.iterations,
+            convergedReason: cfrResult.exploitability < 0.01 ? 'CFR+ exploitability below threshold' : 'Maximum iterations exceeded',
+            numericalStability: 1 - cfrResult.exploitability,
+          },
+        },
+        strategicInsights: {
+          equilibriumClassification: cfrResult.exploitability < 0.001 ? 'Pure Strategy Nash Equilibrium' : 'Mixed Strategy Nash Equilibrium (CFR+)',
+          robustnessAnalysis: {
+            perturbationResistance: 1 - cfrResult.exploitability,
+            informationSensitivity: 0.3,
+            strategicDominance: false,
+          },
+          recommendationSummary: [
+            { priority: 1, action: 'Follow CFR+ equilibrium strategy', reasoning: `Exploitability: ${cfrResult.exploitability.toFixed(6)}`, confidence: 1 - cfrResult.exploitability },
+          ],
+        },
+      };
+    } else {
+      // Compute meta-equilibrium using recursive fictitious play
+      response = await engine.computeMetaEquilibrium(request.scenario);
+    }
     response.runId = request.runId; // Set runId from request
 
     // Persist results to database (optional)

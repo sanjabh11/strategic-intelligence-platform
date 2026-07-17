@@ -8,7 +8,7 @@ function sseHeaders() {
     'Content-Type': 'text/event-stream',
     'Cache-Control': 'no-cache, no-transform',
     'Connection': 'keep-alive',
-    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Origin': Deno.env.get('ALLOWED_ORIGIN') || Deno.env.get('APP_URL') || 'null',
   })
 }
 
@@ -27,6 +27,7 @@ function mulberry32(seed: number) {
   }
 }
 
+// PUBLIC: No auth required
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: sseHeaders() })
   if (req.method !== 'POST') return new Response('Method Not Allowed', { status: 405, headers: sseHeaders() })

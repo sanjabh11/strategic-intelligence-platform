@@ -2,11 +2,11 @@
 // Handles LMS integration for Canvas, Moodle, Blackboard
 // Part of Monetization Strategy Phase 2 - Educational Market
 
-import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { createClient } from 'npm:@supabase/supabase-js@2'
+import { decodeBase64Url } from 'jsr:@std/encoding@1.0.10/base64url'
 
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Origin': Deno.env.get('ALLOWED_ORIGIN') || Deno.env.get('APP_URL') || 'null',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
 }
@@ -40,7 +40,8 @@ interface LTI13Message {
   family_name?: string;
 }
 
-serve(async (req: Request) => {
+// PUBLIC: No auth required
+Deno.serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
   }
@@ -151,7 +152,7 @@ async function handleOIDCLogin(req: Request, supabase: any): Promise<Response> {
   })
 }
 
-// Step 2: Handle Launch (callback from LMS)
+// Step 2: Handle Launch (callback from LMS) with secure JWT verification
 async function handleLaunch(req: Request, supabase: any): Promise<Response> {
   const formData = await req.formData()
   const idToken = formData.get('id_token') as string
@@ -179,16 +180,16 @@ async function handleLaunch(req: Request, supabase: any): Promise<Response> {
     )
   }
 
-  // Verify JWT signature using platform's JWKS
+  // SECURE: Verify JWT signature using platform JWKS
   const platform = session.lti_platforms
   let payload: LTI13Message | null = null
 
   try {
-    payload = await verifyJWT(idToken, platform)
-  } catch (err) {
-    const msg = err instanceof Error ? err.message : 'JWT verification failed'
+    payload = await verifyLTIToken(idToken, platform)
+  } catch (verifyError) {
+    console.error('JWT verification failed:', verifyError)
     return new Response(
-      JSON.stringify({ error: msg }),
+      JSON.stringify({ error: 'JWT verification failed', details: verifyError.message }),
       { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
   }
@@ -197,6 +198,31 @@ async function handleLaunch(req: Request, supabase: any): Promise<Response> {
     return new Response(
       JSON.stringify({ error: 'Invalid JWT' }),
       { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    )
+  }
+
+  // Validate issuer matches registered platform
+  if (payload.iss !== platform.issuer) {
+    return new Response(
+      JSON.stringify({ error: 'Issuer mismatch' }),
+      { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    )
+  }
+
+  // Validate audience (client_id)
+  if (payload.aud !== platform.client_id) {
+    return new Response(
+      JSON.stringify({ error: 'Audience mismatch' }),
+      { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    )
+  }
+
+  // Validate token expiration
+  const now = Math.floor(Date.now() / 1000)
+  if (payload.exp && payload.exp < now) {
+    return new Response(
+      JSON.stringify({ error: 'Token expired' }),
+      { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
   }
 
@@ -212,10 +238,19 @@ async function handleLaunch(req: Request, supabase: any): Promise<Response> {
   const ltiContext = payload['https://purl.imsglobal.org/spec/lti/claim/context']
   const ltiRoles = payload['https://purl.imsglobal.org/spec/lti/claim/roles'] || []
   const resourceLink = payload['https://purl.imsglobal.org/spec/lti/claim/resource_link']
+  const deploymentId = payload['https://purl.imsglobal.org/spec/lti/claim/deployment_id']
 
-  // Find or create user
+  // Validate deployment_id if platform has deployments configured
+  if (platform.deployment_id && deploymentId !== platform.deployment_id) {
+    return new Response(
+      JSON.stringify({ error: 'Deployment ID mismatch' }),
+      { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    )
+  }
+
+  // Find or create user (rest of function unchanged)
   let userId: string | null = null
-  
+
   if (payload.email) {
     // Check if user exists
     const { data: existingUser } = await supabase
@@ -234,13 +269,14 @@ async function handleLaunch(req: Request, supabase: any): Promise<Response> {
         user_metadata: {
           full_name: payload.name || `${payload.given_name || ''} ${payload.family_name || ''}`.trim(),
           lti_user_id: payload.sub,
-          lti_platform: session.lti_platforms.name
+          lti_platform: session.lti_platforms.name,
+          lti_deployment_id: deploymentId
         }
       })
-      
+
       if (newUser) {
         userId = newUser.user.id
-        
+
         // Grant academic tier for LTI users
         await supabase.from('user_subscriptions').insert({
           user_id: userId,
@@ -260,7 +296,9 @@ async function handleLaunch(req: Request, supabase: any): Promise<Response> {
     lti_context_id: ltiContext?.id,
     lti_context_title: ltiContext?.title,
     lti_roles: ltiRoles,
-    launch_data: payload
+    launch_data: payload,
+    verified: true,
+    verified_at: new Date().toISOString()
   }).eq('id', session.id)
 
   // Handle classroom context
@@ -268,13 +306,17 @@ async function handleLaunch(req: Request, supabase: any): Promise<Response> {
     await handleClassroomContext(supabase, session.platform_id, ltiContext, userId, ltiRoles)
   }
 
-  // Generate session token and redirect to app
-  const appUrl = Deno.env.get('APP_URL') || 'https://strategic-intelligence.netlify.app'
-  const sessionToken = crypto.randomUUID() // In production, use proper JWT
-  
+  // Generate secure session token
+  const sessionToken = crypto.randomUUID()
+  await supabase.from('lti_sessions').update({
+    session_token: sessionToken
+  }).eq('id', session.id)
+
   // Redirect to app with context
+  const appUrl = Deno.env.get('APP_URL') || 'https://strategy-intelligence-platform.netlify.app'
   const redirectParams = new URLSearchParams({
     lti_session: session.id,
+    session_token: sessionToken,
     context: ltiContext?.id || '',
     resource: resourceLink?.id || ''
   })
@@ -304,9 +346,9 @@ async function handleClassroomContext(
     .contains('settings', { lti_context_id: context.id })
     .single()
 
-  const isInstructor = roles.some(r => 
-    r.includes('Instructor') || 
-    r.includes('Administrator') || 
+  const isInstructor = roles.some(r =>
+    r.includes('Instructor') ||
+    r.includes('Administrator') ||
     r.includes('ContentDeveloper')
   )
 
@@ -372,7 +414,7 @@ async function handleJWKS(supabase: any): Promise<Response> {
 // Platform registration endpoint (for admins)
 async function handlePlatformRegistration(req: Request, supabase: any): Promise<Response> {
   const body = await req.json()
-  
+
   const { name, platform_type, issuer, client_id, auth_endpoint, token_endpoint, jwks_endpoint, institution_name } = body
 
   if (!issuer || !client_id || !auth_endpoint) {
@@ -406,61 +448,142 @@ async function handlePlatformRegistration(req: Request, supabase: any): Promise<
   )
 }
 
-// JWT verification with JWKS-based signature validation
-async function verifyJWT(token: string, platform: any): Promise<LTI13Message | null> {
-  const parts = token.split('.')
-  if (parts.length !== 3) return null
+// Secure JWT verification with JWKS
+interface JWKSKey {
+  kty: string
+  kid: string
+  use?: string
+  key_ops?: string[]
+  alg?: string
+  x5c?: string[]
+  x5t?: string
+  'x5t#S256'?: string
+  n?: string
+  e?: string
+  d?: string
+  p?: string
+  q?: string
+  dp?: string
+  dq?: string
+  qi?: string
+  k?: string
+  crv?: string
+  x?: string
+  y?: string
+}
 
-  const header = JSON.parse(atob(parts[0].replace(/-/g, '+').replace(/_/g, '/')))
-  const payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')))
+interface JWKS {
+  keys: JWKSKey[]
+}
 
-  // Validate issuer and audience
-  if (platform?.issuer && payload.iss !== platform.issuer) {
-    throw new Error('JWT issuer mismatch')
-  }
-  if (platform?.client_id && payload.aud !== platform.client_id) {
-    throw new Error('JWT audience mismatch')
-  }
+// Cache for JWKS to avoid repeated fetches
+const jwksCache = new Map<string, { jwks: JWKS; expiry: number }>()
 
-  // Check expiration
-  const now = Math.floor(Date.now() / 1000)
-  if (payload.exp && payload.exp < now) {
-    throw new Error('JWT expired')
+async function fetchJWKS(jwksEndpoint: string): Promise<JWKS> {
+  // Check cache first
+  const cached = jwksCache.get(jwksEndpoint)
+  const now = Date.now()
+  if (cached && cached.expiry > now) {
+    return cached.jwks
   }
 
-  // Fetch JWKS from platform's jwks_url
-  const jwksUrl = platform?.jwks_url
-  if (!jwksUrl) {
-    throw new Error('Platform JWKS URL not configured — cannot verify signature')
+  // Fetch fresh JWKS
+  const response = await fetch(jwksEndpoint, {
+    headers: { 'Accept': 'application/json' }
+  })
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch JWKS: ${response.status} ${response.statusText}`)
   }
 
-  const jwksResponse = await fetch(jwksUrl)
-  if (!jwksResponse.ok) {
-    throw new Error(`Failed to fetch JWKS: ${jwksResponse.status}`)
+  const jwks: JWKS = await response.json()
+
+  // Cache for 1 hour
+  jwksCache.set(jwksEndpoint, {
+    jwks,
+    expiry: now + 60 * 60 * 1000
+  })
+
+  return jwks
+}
+
+async function verifyLTIToken(idToken: string, platform: any): Promise<LTI13Message> {
+  const parts = idToken.split('.')
+  if (parts.length !== 3) {
+    throw new Error('Invalid JWT format')
   }
-  const jwks = await jwksResponse.json()
-  const key = jwks.keys?.find((k: any) => k.kid === header.kid)
+
+  // Decode header to get key ID
+  const header = JSON.parse(new TextDecoder().decode(decodeBase64Url(parts[0])))
+  const kid = header.kid
+
+  if (!kid) {
+    throw new Error('JWT header missing kid')
+  }
+
+  // Fetch platform JWKS
+  const jwksEndpoint = platform.jwks_endpoint
+  if (!jwksEndpoint) {
+    throw new Error('Platform missing jwks_endpoint')
+  }
+
+  const jwks = await fetchJWKS(jwksEndpoint)
+  const key = jwks.keys.find(k => k.kid === kid)
+
   if (!key) {
-    throw new Error('JWT signing key not found in JWKS')
+    throw new Error(`Key ${kid} not found in JWKS`)
   }
 
-  // Import the public key for verification
-  const cryptoKey = await crypto.subtle.importKey(
-    'jwk',
-    key,
-    { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' },
-    false,
-    ['verify']
-  )
+  // For RSA keys, verify using Web Crypto API
+  if (key.kty === 'RSA' && key.n && key.e) {
+    // Import the public key
+    const publicKey = await crypto.subtle.importKey(
+      'jwk',
+      {
+        kty: key.kty,
+        n: key.n,
+        e: key.e,
+        alg: key.alg || 'RS256',
+        kid: key.kid
+      } as JsonWebKey,
+      { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' },
+      false,
+      ['verify']
+    )
 
-  // Verify signature
-  const data = new TextEncoder().encode(`${parts[0]}.${parts[1]}`)
-  const signature = Uint8Array.from(atob(parts[2].replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0))
-  const valid = await crypto.subtle.verify('RSASSA-PKCS1-v1_5', cryptoKey, signature, data)
+    // Prepare data for verification
+    const data = new TextEncoder().encode(`${parts[0]}.${parts[1]}`)
+    const signature = decodeBase64Url(parts[2])
 
-  if (!valid) {
-    throw new Error('JWT signature verification failed')
+    // Verify signature
+    const isValid = await crypto.subtle.verify(
+      'RSASSA-PKCS1-v1_5',
+      publicKey,
+      signature,
+      data
+    )
+
+    if (!isValid) {
+      throw new Error('JWT signature verification failed')
+    }
+  } else {
+    throw new Error(`Unsupported key type: ${key.kty}`)
   }
+
+  // Decode payload
+  const payload = JSON.parse(new TextDecoder().decode(decodeBase64Url(parts[1])))
 
   return payload as LTI13Message
+}
+
+// Legacy decoder for non-verified contexts (should not be used for LTI launches)
+function decodeJWT(token: string): any {
+  try {
+    const parts = token.split('.')
+    if (parts.length !== 3) return null
+    const payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')))
+    return payload
+  } catch {
+    return null
+  }
 }

@@ -1,11 +1,12 @@
 // AI Conflict Mediator - Fair dispute resolution using mechanism design
 // Based on Harvard PON research and game-theoretic fair division algorithms
 
-import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { createClient } from 'npm:@supabase/supabase-js@2'
+import { getAuthenticatedUser, jsonResponse } from '../_shared/auth.ts'
+import { checkRateLimit, logApiUsage, rateLimitResponse } from '../_shared/rate-limiter.ts'
 
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Origin': Deno.env.get('ALLOWED_ORIGIN') || Deno.env.get('APP_URL') || 'null',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
@@ -19,7 +20,16 @@ interface MediationRequest {
   party_b_id?: string
 }
 
-serve(async (req) => {
+Deno.serve(async (req) => {
+  // Auth check
+  const _user = await getAuthenticatedUser(req)
+  if (!_user) return jsonResponse(401, { ok: false, error: 'authentication_required' })
+
+  const rateLimit = await checkRateLimit(_user.id, 'ai-mediator')
+  if (!rateLimit.allowed) return rateLimitResponse(rateLimit.retryAfterSeconds)
+  await logApiUsage(_user.id, 'ai-mediator')
+
+
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
   }

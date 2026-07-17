@@ -4,7 +4,8 @@
 // Endpoint: POST /functions/v1/collective-intelligence
 // Advanced real-time collaborative strategic analysis and insight aggregation
 
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { createClient } from 'npm:@supabase/supabase-js@2'
+import { getAuthenticatedUser, jsonResponse } from '../_shared/auth.ts'
 
 function jsonResponse(status: number, body: any) {
   return new Response(JSON.stringify(body), {
@@ -483,6 +484,11 @@ class CollectiveIntelligenceEngine {
 
 // Main handler
 Deno.serve(async (req) => {
+  // Auth check
+  const _user = await getAuthenticatedUser(req)
+  if (!_user) return jsonResponse(401, { ok: false, error: 'authentication_required' })
+
+
   if (req.method !== 'POST') {
     return jsonResponse(405, { ok: false, message: 'Method Not Allowed' });
   }

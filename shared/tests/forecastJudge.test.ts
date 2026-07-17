@@ -9,6 +9,7 @@
  * - Verdict assessment and severity classification
  */
 
+import { describe, it, expect } from 'vitest'
 import {
   getJudgeConfig,
   mapIntentToJudgeFamily,

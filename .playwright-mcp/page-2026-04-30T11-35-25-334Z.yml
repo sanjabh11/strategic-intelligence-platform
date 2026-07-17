@@ -1,0 +1,111 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - navigation [ref=e4]:
+      - generic [ref=e6]:
+        - generic [ref=e7]:
+          - link "Strategy Console" [ref=e8] [cursor=pointer]:
+            - /url: /console
+            - img [ref=e9]
+            - generic [ref=e19]: Strategy Console
+          - 'button "Learning Mode: OFF" [ref=e21] [cursor=pointer]':
+            - img [ref=e22]
+            - text: "Learning Mode: OFF"
+        - generic [ref=e25]:
+          - link "Console" [ref=e26] [cursor=pointer]:
+            - /url: /console
+            - img [ref=e27]
+            - text: Console
+          - link "Insights" [ref=e29] [cursor=pointer]:
+            - /url: /insights
+            - img [ref=e30]
+            - text: Insights
+          - link "Commodities" [ref=e33] [cursor=pointer]:
+            - /url: /commodities
+            - img [ref=e34]
+            - text: Commodities
+          - link "Labs" [ref=e36] [cursor=pointer]:
+            - /url: /labs
+            - img [ref=e37]
+            - text: Labs
+          - link "Templates" [ref=e39] [cursor=pointer]:
+            - /url: /templates
+            - img [ref=e40]
+            - text: Templates
+          - link "Forecasts" [ref=e43] [cursor=pointer]:
+            - /url: /forecasts
+            - img [ref=e44]
+            - text: Forecasts
+          - link "Pricing" [ref=e47] [cursor=pointer]:
+            - /url: /pricing
+            - img [ref=e48]
+            - text: Pricing
+    - main [ref=e50]:
+      - generic [ref=e52]:
+        - generic [ref=e53]:
+          - generic [ref=e54]:
+            - img [ref=e55]
+            - text: Guided Practice Surface
+          - heading "Strategy Labs" [level=1] [ref=e57]
+          - paragraph [ref=e58]: "The console remains the main strategist surface. Labs now exposes the first two premium practice modules that are already credible in the current codebase: guided negotiation and sequential-game modeling."
+          - generic [ref=e59]:
+            - generic [ref=e60]:
+              - img [ref=e61]
+              - text: FREE access
+            - link "Return to Strategy Console" [ref=e64] [cursor=pointer]:
+              - /url: /console
+        - generic [ref=e65]:
+          - generic [ref=e67]:
+            - generic [ref=e68]:
+              - generic [ref=e69]: Connected Product Surfaces
+              - heading "Move from guided practice into live workflows" [level=2] [ref=e70]
+              - paragraph [ref=e71]: Labs is now part of a broader product path. Jump into the live commodity workspace or instructional delivery surfaces without losing the current strategist context.
+            - generic [ref=e72]:
+              - button "Open commodities" [ref=e73] [cursor=pointer]:
+                - img [ref=e74]
+                - text: Open commodities
+              - button "Open classrooms" [ref=e76] [cursor=pointer]:
+                - img [ref=e77]
+                - text: Open classrooms
+          - generic [ref=e80]:
+            - generic [ref=e81]:
+              - img [ref=e83]
+              - generic [ref=e85]: PRO
+            - generic [ref=e86]:
+              - generic [ref=e87]: Strategist practice
+              - heading "Negotiation Dojo" [level=2] [ref=e88]
+              - paragraph [ref=e89]: Practice offer strategy, BATNA discipline, and concession timing in guided bargaining scenarios.
+              - paragraph [ref=e90]: Scenario-based today; deeper strategist telemetry can layer on without changing the route.
+            - generic [ref=e91]:
+              - generic [ref=e92]: Upgrade to pro to unlock
+              - button "View pricing" [ref=e93] [cursor=pointer]:
+                - text: View pricing
+                - img [ref=e94]
+          - generic [ref=e96]:
+            - generic [ref=e97]:
+              - img [ref=e99]
+              - generic [ref=e103]: PRO
+            - generic [ref=e104]:
+              - generic [ref=e105]: Countermove testing
+              - heading "Sequential Game Studio" [level=2] [ref=e106]
+              - paragraph [ref=e107]: Template-driven countermove planning for sequential bargaining, supplier pressure, and escalation paths.
+              - paragraph [ref=e108]: Template-first studio is live; deeper evidence-linked solver guidance can layer on without changing the route.
+            - generic [ref=e109]:
+              - generic [ref=e110]: Upgrade to pro to unlock
+              - button "View pricing" [ref=e111] [cursor=pointer]:
+                - text: View pricing
+                - img [ref=e112]
+    - contentinfo [ref=e114]:
+      - generic [ref=e116]:
+        - paragraph [ref=e117]: Strategy Console - Evidence-Backed Strategic Analysis
+        - paragraph [ref=e118]: Real citations. Real simulations. Real clarity.
+  - generic [ref=e121]:
+    - generic [ref=e122]: 👋
+    - heading "Welcome to Strategic Intelligence!" [level=3] [ref=e123]
+    - paragraph [ref=e124]:
+      - text: This platform uses advanced game theory to analyze strategic situations. Would you like to enable
+      - strong [ref=e125]: Learning Mode
+      - text: to see helpful explanations for all charts and concepts?
+    - generic [ref=e126]:
+      - button "Yes, help me learn!" [ref=e127] [cursor=pointer]
+      - button "Skip for now" [ref=e128] [cursor=pointer]
+    - paragraph [ref=e129]: You can always toggle Learning Mode later using the button in the header.

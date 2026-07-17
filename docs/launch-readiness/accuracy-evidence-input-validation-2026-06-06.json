@@ -1,0 +1,168 @@
+{
+  "schema_version": "accuracy-evidence-input-validation-v1",
+  "generated_at": "2026-06-06T11:47:11.409Z",
+  "status": "accuracy_input_validation_ready_no_real_rows",
+  "proof_boundary": "This artifact validates owner-supplied resolved-forecast and baseline inputs before scoring. It is not prediction-accuracy proof, benchmark superiority proof, hosted proof, or buyer proof.",
+  "source": {
+    "forecast_input": "docs/launch-readiness/approved-resolved-forecast-export-template-2026-06-06.csv",
+    "forecast_input_kind": "csv",
+    "baseline_input": "docs/launch-readiness/forecast-baseline-template-2026-06-06.csv",
+    "baseline_input_kind": "csv",
+    "minimum_sample_size": 25
+  },
+  "summary": {
+    "forecast_rows_read": 0,
+    "valid_resolved_forecast_count": 0,
+    "forecast_rows_with_source_backed_resolution_count": 0,
+    "forecast_rows_with_pre_resolution_timestamp_count": 0,
+    "baseline_rows_read": 0,
+    "valid_baseline_count": 0,
+    "source_backed_baseline_count": 0,
+    "forecast_missing_column_count": 0,
+    "baseline_missing_column_count": 0,
+    "row_issue_count": 0,
+    "active_release_hold_count": 6,
+    "ready_for_calibration_scoring": false,
+    "accuracy_claim_allowed": false
+  },
+  "required_columns": {
+    "forecasts": [
+      "id",
+      "title",
+      "question",
+      "current_probability",
+      "prediction_timestamp",
+      "is_resolved",
+      "resolution_outcome",
+      "resolved_at",
+      "resolution_source_url",
+      "resolution_notes",
+      "resolution_criteria",
+      "exclusion_review",
+      "game_theory_model"
+    ],
+    "baselines": [
+      "baseline_id",
+      "label",
+      "baseline_type",
+      "avg_brier",
+      "sample_size",
+      "source_url",
+      "question_set_scope",
+      "timestamp_policy",
+      "comparability_notes",
+      "notes"
+    ]
+  },
+  "acceptance_gates": [
+    {
+      "gate": "forecast_schema_present",
+      "status": "passed",
+      "evidence": "Forecast schema includes 13 required columns.",
+      "proof_bucket": "repo_artifact"
+    },
+    {
+      "gate": "baseline_schema_present",
+      "status": "passed",
+      "evidence": "Baseline schema includes 10 required columns.",
+      "proof_bucket": "repo_artifact"
+    },
+    {
+      "gate": "owner_rows_present",
+      "status": "open_no_real_rows",
+      "evidence": "0 forecast rows and 0 baseline rows loaded.",
+      "proof_bucket": "owner_input"
+    },
+    {
+      "gate": "minimum_resolved_forecast_rows",
+      "status": "open_no_real_rows",
+      "evidence": "0 valid resolved forecast rows; required 25.",
+      "proof_bucket": "owner_input"
+    },
+    {
+      "gate": "binary_resolution_probability_and_timestamp_quality",
+      "status": "open_no_real_rows",
+      "evidence": "0/0 forecast rows pass binary outcome, 0-1 probability, pre-resolution timestamp, resolution-source, criteria, and exclusion-review checks.",
+      "proof_bucket": "owner_input"
+    },
+    {
+      "gate": "comparable_baseline_present",
+      "status": "open_no_real_rows",
+      "evidence": "0/0 baseline rows pass Brier, sample-size, source, scope, timestamp, and comparability checks.",
+      "proof_bucket": "owner_input"
+    },
+    {
+      "gate": "placeholder_or_sample_rows_absent",
+      "status": "open_no_real_rows",
+      "evidence": "0 forecast placeholder rows and 0 baseline placeholder rows detected.",
+      "proof_bucket": "owner_input"
+    },
+    {
+      "gate": "ready_for_scoring_not_accuracy_proof",
+      "status": "open_no_real_rows",
+      "evidence": "Inputs are only ready for calibration and benchmark scoring after all prior gates pass; scoring still remains a separate artifact and hosted/security proof remains separate.",
+      "proof_bucket": "repo_artifact"
+    }
+  ],
+  "row_issues": [],
+  "release_holds": [
+    {
+      "hold": "owner_rows_present",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "0 forecast rows and 0 baseline rows loaded."
+    },
+    {
+      "hold": "minimum_resolved_forecast_rows",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "0 valid resolved forecast rows; required 25."
+    },
+    {
+      "hold": "binary_resolution_probability_and_timestamp_quality",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "0/0 forecast rows pass binary outcome, 0-1 probability, pre-resolution timestamp, resolution-source, criteria, and exclusion-review checks."
+    },
+    {
+      "hold": "comparable_baseline_present",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "0/0 baseline rows pass Brier, sample-size, source, scope, timestamp, and comparability checks."
+    },
+    {
+      "hold": "placeholder_or_sample_rows_absent",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "0 forecast placeholder rows and 0 baseline placeholder rows detected."
+    },
+    {
+      "hold": "ready_for_scoring_not_accuracy_proof",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "Inputs are only ready for calibration and benchmark scoring after all prior gates pass; scoring still remains a separate artifact and hosted/security proof remains separate."
+    }
+  ],
+  "next_commands_after_validation_pass": [
+    "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:calibration:ledger -- --input docs/launch-readiness/approved-resolved-forecast-export-template-2026-06-06.csv --source-mode approved_export --output docs/launch-readiness/resolved-forecast-calibration-ledger-approved-<date>.json --min-sample-size 25 --bins 5",
+    "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:forecast:benchmark -- --ledger docs/launch-readiness/resolved-forecast-calibration-ledger-approved-<date>.json --baseline docs/launch-readiness/forecast-baseline-template-2026-06-06.csv --output docs/launch-readiness/forecast-benchmark-comparison-approved-<date>.json",
+    "Re-run audit:forecast:claim-governance and audit:commercial:confidence after scored approved artifacts exist."
+  ],
+  "current_source_alignment": [
+    {
+      "source": "NIST AI RMF",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "alignment": "Use governed measurement and risk management before relying on AI prediction claims."
+    },
+    {
+      "source": "Metaculus FutureEval methodology",
+      "url": "https://www.metaculus.com/futureeval/methodology/",
+      "alignment": "Pre-resolution forecasts, proper scoring rules, and human/community baselines are required for credible forecasting evaluation."
+    },
+    {
+      "source": "ForecastBench",
+      "url": "https://www.forecastbench.org/about/",
+      "alignment": "Dynamic, contamination-resistant, continuously updated forecasting benchmarks keep accuracy claims tied to unresolved-when-forecast questions."
+    }
+  ]
+}

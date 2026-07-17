@@ -1,0 +1,46 @@
+table_name,column_name,data_type,is_nullable,column_default
+analysis_runs,id,uuid,NO,gen_random_uuid()
+analysis_runs,request_id,text,NO,NULL
+analysis_runs,scenario_id,uuid,YES,NULL
+analysis_runs,user_id,uuid,YES,NULL
+analysis_runs,schema_version,text,NO,'analysis_v1'::text
+analysis_runs,archetype,text,NO,'strategic_analysis'::text
+analysis_runs,confidence_score,numeric,YES,NULL
+analysis_runs,analysis_metadata,jsonb,NO,'{}'::jsonb
+analysis_runs,provenance,jsonb,NO,'{}'::jsonb
+analysis_runs,status,text,NO,'completed'::text
+analysis_runs,created_at,timestamp with time zone,NO,now()
+analysis_runs,updated_at,timestamp with time zone,NO,now()
+analysis_runs,model,text,YES,'unknown'::text
+analysis_runs,model_version,text,YES,NULL
+analysis_runs,fallback_used,boolean,YES,false
+analysis_runs,duration_ms,integer,YES,NULL
+analysis_runs,retrieval_ids,jsonb,YES,'[]'::jsonb
+analysis_runs,evidence_backed,boolean,YES,false
+analysis_runs,entities,ARRAY,YES,'{}'::text[]
+analysis_runs,facts,jsonb,YES,'[]'::jsonb
+analysis_runs,analysis_json,jsonb,YES,'{}'::jsonb
+analysis_runs,reviewer_id,uuid,YES,NULL
+analysis_runs,review_notes,text,YES,NULL
+analysis_runs,approved_at,timestamp with time zone,YES,NULL
+life_decisions,id,uuid,NO,gen_random_uuid()
+life_decisions,user_id,uuid,YES,NULL
+life_decisions,created_at,timestamp with time zone,YES,now()
+life_decisions,title,text,NO,NULL
+life_decisions,description,text,NO,NULL
+life_decisions,category,text,YES,NULL
+life_decisions,players,jsonb,NO,'[]'::jsonb
+life_decisions,strategies,jsonb,NO,'{}'::jsonb
+life_decisions,payoffs,jsonb,YES,NULL
+life_decisions,information_structure,text,YES,NULL
+life_decisions,detected_biases,jsonb,YES,'[]'::jsonb
+life_decisions,debiasing_interventions,jsonb,YES,'[]'::jsonb
+life_decisions,recommended_strategy,jsonb,YES,NULL
+life_decisions,equilibria,jsonb,YES,NULL
+life_decisions,expected_outcomes,jsonb,YES,NULL
+life_decisions,confidence_score,numeric,YES,NULL
+life_decisions,chosen_action,text,YES,NULL
+life_decisions,actual_outcome,text,YES,NULL
+life_decisions,outcome_quality_rating,integer,YES,NULL
+life_decisions,anonymized,boolean,YES,true
+life_decisions,shared_for_research,boolean,YES,false

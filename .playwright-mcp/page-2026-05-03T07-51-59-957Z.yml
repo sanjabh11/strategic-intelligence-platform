@@ -1,0 +1,49 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - navigation [ref=e4]:
+      - generic [ref=e6]:
+        - generic [ref=e7]:
+          - link "Strategy Console" [ref=e8] [cursor=pointer]:
+            - /url: /console
+            - img [ref=e9]
+            - generic [ref=e19]: Strategy Console
+          - 'button "Learning Mode: OFF" [ref=e21] [cursor=pointer]':
+            - img [ref=e22]
+            - text: "Learning Mode: OFF"
+        - generic [ref=e25]:
+          - link "Console" [ref=e26] [cursor=pointer]:
+            - /url: /console
+            - img [ref=e27]
+            - text: Console
+          - link "Templates" [ref=e29] [cursor=pointer]:
+            - /url: /templates
+            - img [ref=e30]
+            - text: Templates
+          - link "Forecasts" [ref=e33] [cursor=pointer]:
+            - /url: /forecasts
+            - img [ref=e34]
+            - text: Forecasts
+    - main [ref=e37]:
+      - generic [ref=e40]:
+        - img [ref=e41]
+        - generic [ref=e43]:
+          - heading "Classrooms are private during this beta" [level=1] [ref=e44]
+          - paragraph [ref=e45]: Instructional delivery, course assignments, and grading workflows remain private while the external beta stays focused on public analysis and forecast consumption.
+          - link "Open Forecasts" [ref=e47] [cursor=pointer]:
+            - /url: /forecasts
+    - contentinfo [ref=e48]:
+      - generic [ref=e50]:
+        - paragraph [ref=e51]: Strategy Console - Evidence-Backed Strategic Analysis
+        - paragraph [ref=e52]: Real citations. Real simulations. Real clarity.
+  - generic [ref=e54]:
+    - generic [ref=e55]: 👋
+    - generic [ref=e56]:
+      - heading "Welcome to Strategic Intelligence" [level=3] [ref=e57]
+      - paragraph [ref=e58]:
+        - text: Turn on
+        - strong [ref=e59]: Learning Mode
+        - text: if you want chart and concept explanations while you explore. This prompt stays out of the way so you can keep navigating the product.
+      - generic [ref=e60]:
+        - button "Enable Learning Mode" [ref=e61] [cursor=pointer]
+        - button "Dismiss" [ref=e62] [cursor=pointer]
+      - paragraph [ref=e63]: You can toggle Learning Mode later from the header at any time.

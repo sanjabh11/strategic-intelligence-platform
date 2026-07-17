@@ -1,0 +1,21 @@
+{
+  "scenario_text": "Three parliamentary blocs can form binding coalitions and divide ministerial rewards. Bloc A has 45 seats, Bloc B has 35, Bloc C has 20, and a majority requires 51 seats. Estimate coalition stability, fair payoff allocation, and explicitly model every coalition worth.",
+  "audience": "researcher",
+  "mode": "standard",
+  "expected_framework": "coalitional",
+  "advanced_game_inputs": {
+    "coalitional": {
+      "players": ["Bloc_A", "Bloc_B", "Bloc_C"],
+      "coalition_values": {
+        "__empty__": 0,
+        "Bloc_A": 0,
+        "Bloc_B": 0,
+        "Bloc_C": 0,
+        "Bloc_A|Bloc_B": 1,
+        "Bloc_A|Bloc_C": 1,
+        "Bloc_B|Bloc_C": 1,
+        "Bloc_A|Bloc_B|Bloc_C": 1
+      }
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "title": "Hold together a three-bloc procurement coalition",
+  "description": "Three procurement blocs can form binding coalitions and transfer value. Bloc A controls demand, Bloc B controls logistics, and Bloc C controls political approval. I need to keep the grand coalition stable and allocate gains fairly enough to prevent defection.",
+  "category": "business",
+  "persist": true,
+  "expected_framework": "coalitional",
+  "advanced_game_inputs": {
+    "coalitional": {
+      "players": ["you", "actor_1", "actor_2"],
+      "coalition_values": {
+        "__empty__": 0,
+        "you": 0,
+        "actor_1": 0,
+        "actor_2": 0,
+        "you|actor_1": 1,
+        "you|actor_2": 1,
+        "actor_1|actor_2": 1,
+        "you|actor_1|actor_2": 1
+      }
+    }
+  },
+  "evidenceContext": [
+    {
+      "id": "evidence_1",
+      "label": "Demand leverage",
+      "detail": "Bloc A controls the largest volume commitment",
+      "sourceType": "user_input"
+    },
+    {
+      "id": "evidence_2",
+      "label": "Logistics leverage",
+      "detail": "Bloc B controls the export and fulfillment corridor",
+      "sourceType": "user_input"
+    },
+    {
+      "id": "evidence_3",
+      "label": "Approval leverage",
+      "detail": "Bloc C controls the required approval pathway",
+      "sourceType": "user_input"
+    }
+  ]
+}

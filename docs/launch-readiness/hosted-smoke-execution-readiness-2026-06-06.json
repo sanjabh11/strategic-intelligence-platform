@@ -1,0 +1,204 @@
+{
+  "schema_version": "hosted-smoke-execution-readiness-v1",
+  "generated_at": "2026-06-06T17:41:41.072Z",
+  "status": "hosted_smoke_execution_blocked_project_privileges_owner_unblock_ready",
+  "source": {
+    "hosted_access_preflight": "docs/launch-readiness/hosted-access-preflight-validation-2026-06-06.json",
+    "hosted_proof_kit": "docs/launch-readiness/hosted-operational-proof-kit-2026-06-06.json",
+    "hosted_proof_validation": "docs/launch-readiness/hosted-operational-proof-evidence-validation-2026-06-06.json",
+    "local_browser_route_proof": "docs/launch-readiness/local-browser-route-proof-2026-06-06.json",
+    "claim_consistency_validation": "docs/launch-readiness/claim-consistency-validation-2026-06-06.json",
+    "commercial_confidence_gate": "docs/launch-readiness/commercial-confidence-gate-2026-06-06.json",
+    "launch_evidence": "docs/launch-readiness/launch-evidence-2026-06-06.json",
+    "hosted_dimension_status": "hosted_smoke_owner_unblock_ready_project_access_missing",
+    "hosted_dimension_score_percent": 25
+  },
+  "summary": {
+    "current_hosted_source_count": 6,
+    "hosted_access_preflight_status": "hosted_access_preflight_blocked_project_privileges",
+    "cli_available": true,
+    "core_env_present": true,
+    "strategist_provider_key_present": true,
+    "stripe_proof_ready": false,
+    "projects_list_access": "visible",
+    "target_project_visible": false,
+    "functions_list_access": "access_denied_403",
+    "secrets_list_access": "access_denied_403",
+    "management_access_ready": false,
+    "hosted_access_ready_for_smoke": false,
+    "smoke_plan_count": 12,
+    "smoke_script_present_count": 12,
+    "smoke_scripts_ready": true,
+    "evidence_register_row_count": 12,
+    "expected_smoke_count": 12,
+    "evidence_register_ready": true,
+    "executed_smoke_count": 0,
+    "passed_smoke_count": 0,
+    "buyer_claim_allowed_count": 0,
+    "redaction_verified_count": 0,
+    "log_evidence_present_count": 0,
+    "screenshot_evidence_present_count": 0,
+    "core_coverage_ready_count": 0,
+    "core_coverage_group_count": 7,
+    "local_browser_route_baseline_ready": true,
+    "claim_consistency_ready": true,
+    "active_release_hold_count": 7,
+    "owner_unblock_ready": true,
+    "hosted_smoke_execution_ready": false,
+    "hosted_proof_ready_for_buyer_safe_claims": false,
+    "hosted_proof_complete": false,
+    "hosted_claim_allowed": false
+  },
+  "current_hosted_proof_sources": [
+    {
+      "source": "Playwright configuration",
+      "url": "https://playwright.dev/docs/test-use-options",
+      "requirement": "Use explicit base URLs, browser context options, and trace/screenshot/video capture for repeatable browser smoke proof."
+    },
+    {
+      "source": "Playwright trace viewer",
+      "url": "https://playwright.dev/docs/trace-viewer",
+      "requirement": "Retain trace or screenshot evidence when a hosted smoke fails or needs review."
+    },
+    {
+      "source": "Supabase Edge Functions",
+      "url": "https://supabase.com/docs/guides/functions",
+      "requirement": "Treat deployed edge functions as a managed runtime surface that must be checked separately from repo-local code."
+    },
+    {
+      "source": "Supabase local development and CLI",
+      "url": "https://supabase.com/docs/guides/local-development",
+      "requirement": "Use the CLI for local development and project-scoped checks, but require actual project visibility before hosted proof claims."
+    },
+    {
+      "source": "Netlify Deploy Previews",
+      "url": "https://docs.netlify.com/site-deploys/deploy-previews/",
+      "requirement": "Bind browser proof to a concrete deployed URL, branch/deploy context, and environment-variable context before external review."
+    },
+    {
+      "source": "Netlify deploy overview",
+      "url": "https://docs.netlify.com/deploy/deploy-overview/",
+      "requirement": "Keep deploy identifiers and production/preview context explicit so smoke evidence can be tied to a specific release surface."
+    }
+  ],
+  "acceptance_gates": [
+    {
+      "gate": "current_hosted_proof_sources_attached",
+      "status": "passed",
+      "proof_bucket": "repo_artifact",
+      "evidence": "6 current hosted proof source anchors attached.",
+      "next_action": "Refresh hosted proof anchors when browser, deployment, or Supabase smoke methodology changes."
+    },
+    {
+      "gate": "hosted_smoke_scripts_ready",
+      "status": "passed",
+      "proof_bucket": "repo_artifact",
+      "evidence": "12/12 hosted smoke scripts are present.",
+      "next_action": "No script creation needed before owner unblock."
+    },
+    {
+      "gate": "hosted_evidence_register_ready",
+      "status": "passed",
+      "proof_bucket": "repo_artifact",
+      "evidence": "register rows=12/12; row_errors=0.",
+      "next_action": "Use the register to record hosted URL, deploy id, logs, screenshots, and redaction status."
+    },
+    {
+      "gate": "local_browser_route_baseline_ready",
+      "status": "passed",
+      "proof_bucket": "local",
+      "evidence": "local route status=local_route_proof_ready_not_hosted_proof; ready routes=7; runtime errors=0.",
+      "next_action": "Use this only as local baseline; do not claim hosted proof."
+    },
+    {
+      "gate": "hosted_access_preflight_ready",
+      "status": "open_hosted_access_blocked",
+      "proof_bucket": "hosted_live_access_check",
+      "evidence": "access_status=hosted_access_preflight_blocked_project_privileges; cli=true; core_env=true; provider_key=true; target_project_visible=false; functions_access=access_denied_403; secrets_access=access_denied_403; management_access_ready=false; stripe_proof_ready=false.",
+      "next_action": "Owner confirms project ref, grants function/secret management access, provides deploy URL/binding, and supplies Stripe proof values before smoke."
+    },
+    {
+      "gate": "hosted_smoke_evidence_present",
+      "status": "open_no_hosted_smoke_runs",
+      "proof_bucket": "hosted_live",
+      "evidence": "executed=0; passed=0; redaction_verified=0; logs=0; screenshots=0; core_coverage=0/7.",
+      "next_action": "Run hosted access, auth, schema, strategist, insights, retrieval/analyze, pricing, and entitlement smoke after access unblocks."
+    },
+    {
+      "gate": "hosted_claim_boundaries_preserved",
+      "status": "passed",
+      "proof_bucket": "repo_artifact",
+      "evidence": "claim_consistency_ready=true; hosted_claim_allowed=false; buyer_claim_allowed_count=0.",
+      "next_action": "Keep hosted-live and commercial-ready language blocked until evidence validator passes."
+    },
+    {
+      "gate": "hosted_owner_unblock_ready",
+      "status": "passed",
+      "proof_bucket": "repo_artifact",
+      "evidence": "owner_unblock_ready=true; hosted_smoke_execution_ready=false; hosted_proof_complete=false.",
+      "next_action": "Owner can unblock project access/deploy binding and then rerun hosted preflight."
+    }
+  ],
+  "release_holds": [
+    {
+      "hold": "target_project_visibility_missing",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "Intended Supabase project ref is visible to the authenticated CLI/account or corrected in the preflight."
+    },
+    {
+      "hold": "function_and_secret_management_access_missing",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "Project-scoped function and secret list commands succeed without exposing secret values."
+    },
+    {
+      "hold": "stripe_payment_proof_values_missing",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "Stripe proof keys are present by name for owner-approved test/payment proof."
+    },
+    {
+      "hold": "hosted_deploy_binding_missing",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "Owner-approved hosted URL plus deploy id or commit binding for the smoke run."
+    },
+    {
+      "hold": "hosted_smoke_runs_missing",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "Executed hosted smoke rows with run timestamp, operator, logs, screenshots where relevant, failure class, and redaction verification."
+    },
+    {
+      "hold": "core_hosted_coverage_missing",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "Hosted access, auth/entitlements, schema, strategist, geopolitical insights, retrieval/analyze, and pricing/payment coverage groups pass."
+    },
+    {
+      "hold": "owner_approved_hosted_claim_language_missing",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "Owner-approved external wording after hosted evidence validation passes."
+    }
+  ],
+  "owner_action_order": [
+    "Confirm or correct the intended Supabase project ref.",
+    "Grant project-scoped function and secret management visibility or provide an owner-generated redacted manifest.",
+    "Provide an owner-approved hosted URL and deploy id or commit binding.",
+    "Provide Stripe proof values for payment/pricing smoke in test mode.",
+    "Rerun hosted access preflight, then run the hosted smoke plan and record logs/screenshots in the evidence register.",
+    "Rerun hosted operational proof validation, hosted smoke execution readiness, claim consistency, and commercial confidence before changing hosted-live language."
+  ],
+  "proof_boundary": {
+    "proves": [
+      "The repo has hosted smoke scripts, local route baseline proof, evidence-register structure, and claim-boundary checks ready for owner unblock.",
+      "Hosted smoke cannot start yet because project access, deploy binding, payment proof values, and hosted evidence are missing."
+    ],
+    "does_not_prove": [
+      "Hosted runtime health, production readiness, buyer-safe hosted claims, commercial readiness, or prediction accuracy.",
+      "That Browser or Playwright has verified a live hosted URL in this phase."
+    ]
+  }
+}

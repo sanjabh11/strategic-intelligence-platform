@@ -8,9 +8,12 @@ import {
   Plus, Search, ChevronRight, Award, BarChart3, Calendar,
   CheckCircle, XCircle, HelpCircle, Globe, Zap, Eye
 } from 'lucide-react';
-import { useLocation } from 'react-router-dom';
-import { assessForecastReadiness, assessPublishGovernance, getAnalysisFreshness, type ForecastLinkedAnalysisState } from '../lib/forecastGovernance';
-import { ENDPOINTS, getAuthHeaders, getUserAuthHeaders, supabase } from '../lib/supabase';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { assessForecastReadiness, assessPublishGovernance, buildGovernanceSummary, getAnalysisFreshness, type ForecastLinkedAnalysisState, type GovernanceSummary } from '../lib/forecastGovernance';
+import { ENDPOINTS, getAuthHeaders, getUserAuthHeaders, isLocalPreviewOrigin, supabase } from '../lib/supabase';
+import type { WarRoomRouteState } from '../lib/warRoom';
+import { labelCalibrationStatus, type CalibrationStatusLike } from '../../shared/mlAdvisory';
+import { isPublicAnalysisOnlyBeta } from '../lib/publicBeta';
 
 interface Forecast {
   id: string;
@@ -52,6 +55,7 @@ interface WeightedConsensusResult {
   superforecasterCount: number;
   brierWeightedMean: number;
   confidenceWeightedMean: number;
+  extremizationFactor?: number;
   topForecasters: Array<{
     user_id: string;
     probability: number;
@@ -63,6 +67,11 @@ interface WeightedConsensusResult {
     sampleSize: string;
     expertAgreement: number;
   };
+  rawProbability: number;
+  calibratedProbability: number;
+  calibrationStatus: CalibrationStatusLike;
+  calibrationVersion: string | null;
+  calibrationSampleSize: number;
 }
 
 interface UserPrediction {
@@ -98,6 +107,56 @@ interface GovernanceSignal {
   tone: string;
 }
 
+function getForecastModel(forecast: Forecast) {
+  return (forecast.game_theory_model as Record<string, any> | null) || null;
+}
+
+function getForecastPublicAnswer(forecast: Forecast) {
+  return getForecastModel(forecast)?.multi_agent_forecast?.publicAnswer
+    || getForecastModel(forecast)?.public_answer
+    || null;
+}
+
+function getForecastProvenance(forecast: Forecast) {
+  return getForecastModel(forecast)?.provenance || null;
+}
+
+function getForecastEvidenceCount(forecast: Forecast) {
+  const model = getForecastModel(forecast);
+  const multiAgentForecast = model?.multi_agent_forecast;
+  return typeof multiAgentForecast?.metadata?.evidenceCount === 'number'
+    ? multiAgentForecast.metadata.evidenceCount
+    : typeof multiAgentForecast?.evidenceCount === 'number'
+      ? multiAgentForecast.evidenceCount
+      : typeof model?.retrieval_count === 'number'
+        ? model.retrieval_count
+        : typeof model?.evidence_bundle?.source_count === 'number'
+          ? model.evidence_bundle.source_count
+          : null;
+}
+
+function getForecastDistinctProviderCount(forecast: Forecast) {
+  const summary = getForecastModel(forecast)?.retrieval_provider_summary;
+  return typeof summary?.distinctProviderCount === 'number' ? summary.distinctProviderCount : null;
+}
+
+function normalizeConsensusError(error: unknown) {
+  const message = error instanceof Error ? error.message : String(error || 'Consensus unavailable')
+  if (/not_found|requested function was not found|failed to fetch|http 404/i.test(message)) {
+    return 'Consensus view is not live for this forecast yet.'
+  }
+  return message
+}
+
+const EMPTY_LINKED_ANALYSIS_REVIEW: LinkedAnalysisReviewState = {
+  analysisId: null,
+  status: null,
+  reviewReason: null,
+  evidenceBacked: null,
+  createdAt: null,
+  loading: false
+};
+
 const CATEGORIES = [
   { id: 'all', label: 'All', icon: Globe },
   { id: 'geopolitical', label: 'Geopolitical', icon: Globe },
@@ -116,12 +175,17 @@ const CATEGORY_COLORS: Record<string, string> = {
   other: 'bg-slate-500/20 text-slate-400 border-slate-500/30',
 };
 
+const useHostedForecastRegistryInLocalPreview =
+  String(import.meta.env.VITE_HOSTED_FORECASTS_IN_LOCAL_PREVIEW ?? '').toLowerCase() === 'true';
+
 interface ForecastRegistryProps {
   userId?: string;
 }
 
 const ForecastRegistry: React.FC<ForecastRegistryProps> = ({ userId }) => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const publicAnalysisOnlyViewer = isPublicAnalysisOnlyBeta && !userId;
   const [forecasts, setForecasts] = useState<Forecast[]>([]);
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [selectedForecast, setSelectedForecast] = useState<Forecast | null>(null);
@@ -156,6 +220,7 @@ const ForecastRegistry: React.FC<ForecastRegistryProps> = ({ userId }) => {
   const [weightedConsensusError, setWeightedConsensusError] = useState<string | null>(null);
   const [creatingForecast, setCreatingForecast] = useState(false);
   const [createForecastError, setCreateForecastError] = useState<string | null>(null);
+  const [forecastLoadError, setForecastLoadError] = useState<string | null>(null);
   const [linkedAnalysisReview, setLinkedAnalysisReview] = useState<LinkedAnalysisReviewState>({
     analysisId: null,
     status: null,
@@ -164,10 +229,13 @@ const ForecastRegistry: React.FC<ForecastRegistryProps> = ({ userId }) => {
     createdAt: null,
     loading: false
   });
+  const [forecastReviewStates, setForecastReviewStates] = useState<Record<string, LinkedAnalysisReviewState>>({});
 
   const getTrustSignals = (forecast: Forecast, consensus: WeightedConsensusResult | null, reviewState: LinkedAnalysisReviewState) => {
-    const gameTheoryModel = forecast.game_theory_model as Record<string, any> | null;
+    const gameTheoryModel = getForecastModel(forecast);
     const multiAgentForecast = gameTheoryModel?.multi_agent_forecast;
+    const publicAnswer = getForecastPublicAnswer(forecast);
+    const provenance = getForecastProvenance(forecast);
     const contradictionCount = Array.isArray(multiAgentForecast?.contradictionPoints)
       ? multiAgentForecast.contradictionPoints.length
       : 0;
@@ -184,7 +252,7 @@ const ForecastRegistry: React.FC<ForecastRegistryProps> = ({ userId }) => {
       signals.push({ label: 'Review pending', tone: 'border-amber-500/30 bg-amber-500/10 text-amber-300' });
     } else if (reviewState.status === 'rejected') {
       signals.push({ label: 'Review rejected', tone: 'border-rose-500/30 bg-rose-500/10 text-rose-300' });
-    } else if (reviewState.evidenceBacked === true) {
+    } else if (reviewState.evidenceBacked === true || provenance?.evidence_backed === true) {
       signals.push({ label: 'Evidence-backed analysis', tone: 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300' });
     }
 
@@ -192,12 +260,37 @@ const ForecastRegistry: React.FC<ForecastRegistryProps> = ({ userId }) => {
       signals.push({ label: linkedAnalysisFreshness.label, tone: linkedAnalysisFreshness.tone });
     }
 
-    if (typeof multiAgentForecast?.evidenceCount === 'number') {
+    const evidenceCount = getForecastEvidenceCount(forecast);
+
+    if (typeof evidenceCount === 'number') {
       signals.push(
-        multiAgentForecast.evidenceCount >= 4
+        (reviewState.evidenceBacked === true || provenance?.evidence_backed === true || evidenceCount >= 4)
           ? { label: 'Evidence-backed', tone: 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300' }
           : { label: 'Limited evidence', tone: 'border-amber-500/30 bg-amber-500/10 text-amber-300' }
       );
+    }
+
+    if (publicAnswer?.answer_release_status && publicAnswer.answer_release_status !== 'ready') {
+      signals.push(
+        publicAnswer.answer_release_status === 'needs_more_input'
+          ? { label: 'Awaiting context', tone: 'border-amber-500/30 bg-amber-500/10 text-amber-300' }
+          : { label: 'Public answer withheld', tone: 'border-rose-500/30 bg-rose-500/10 text-rose-300' }
+      );
+    } else if (publicAnswer?.confidence_label) {
+      signals.push(
+        publicAnswer.confidence_label === 'High'
+          ? { label: 'High-confidence public answer', tone: 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300' }
+          : publicAnswer.confidence_label === 'Moderate'
+            ? { label: 'Moderate-confidence public answer', tone: 'border-cyan-500/30 bg-cyan-500/10 text-cyan-300' }
+            : publicAnswer.confidence_label === 'Needs more input'
+              ? { label: 'Needs more input', tone: 'border-amber-500/30 bg-amber-500/10 text-amber-300' }
+              : { label: 'Limited-confidence public answer', tone: 'border-amber-500/30 bg-amber-500/10 text-amber-300' }
+      );
+    }
+
+    const providerCount = getForecastDistinctProviderCount(forecast);
+    if (typeof providerCount === 'number' && providerCount >= 2) {
+      signals.push({ label: `${providerCount} providers`, tone: 'border-slate-500/30 bg-slate-500/10 text-slate-300' });
     }
 
     if ((multiAgentForecast?.disagreementIndex ?? 0) >= 0.2 || contradictionCount > 0) {
@@ -240,10 +333,16 @@ const ForecastRegistry: React.FC<ForecastRegistryProps> = ({ userId }) => {
   // Fetch forecasts
   const fetchForecasts = useCallback(async () => {
     setLoading(true);
+    setForecastLoadError(null);
+    if (isLocalPreviewOrigin && !useHostedForecastRegistryInLocalPreview) {
+      setForecasts([]);
+      setLoading(false);
+      return;
+    }
     try {
       let query = supabase
         .from('forecasts')
-        .select('id, title, description, category, question, resolution_criteria, resolution_date, current_probability, prediction_count, view_count, is_resolved, resolution_outcome, tags, created_at, creator_id, analysis_run_id')
+        .select('id, title, description, category, question, resolution_criteria, resolution_date, current_probability, prediction_count, view_count, is_resolved, resolution_outcome, tags, created_at, creator_id, analysis_run_id, game_theory_model')
         .eq('is_public', true)
         .order('created_at', { ascending: false });
 
@@ -259,16 +358,79 @@ const ForecastRegistry: React.FC<ForecastRegistryProps> = ({ userId }) => {
         query = query.or(`title.ilike.%${searchQuery}%,question.ilike.%${searchQuery}%`);
       }
 
-      const { data, error } = await query.limit(50);
+      const result = await Promise.race([
+        query.limit(50),
+        new Promise<never>((_, reject) => {
+          setTimeout(() => reject(new Error('Forecast list request timed out. Please retry.')), 10000);
+        })
+      ]) as Awaited<ReturnType<typeof query.limit>>;
+
+      const { data, error } = result;
 
       if (error) throw error;
       setForecasts(data || []);
     } catch (err) {
+      if (isLocalPreviewOrigin) {
+        console.warn('Forecast registry using local preview empty state because hosted forecasts are unreachable:', err);
+        setForecasts([]);
+        setForecastLoadError(null);
+        return;
+      }
       console.error('Error fetching forecasts:', err);
+      setForecasts([]);
+      setForecastLoadError(err instanceof Error ? err.message : 'Failed to load forecasts');
     } finally {
       setLoading(false);
     }
   }, [selectedCategory, showResolved, searchQuery]);
+
+  const hydrateForecastReviewStates = useCallback(async (items: Forecast[]) => {
+    const analysisIds = Array.from(new Set(items.map((forecast) => forecast.analysis_run_id).filter(Boolean))) as string[];
+
+    if (analysisIds.length === 0) {
+      setForecastReviewStates({});
+      return;
+    }
+
+    if (isLocalPreviewOrigin) {
+      setForecastReviewStates({});
+      return;
+    }
+
+    const baseState = Object.fromEntries(
+      analysisIds.map((analysisId) => [analysisId, {
+        analysisId,
+        status: null,
+        reviewReason: null,
+        evidenceBacked: null,
+        createdAt: null,
+        loading: false
+      } satisfies LinkedAnalysisReviewState])
+    );
+
+    try {
+      const { data, error } = await supabase
+        .from('analysis_runs')
+        .select('id, status, review_reason, evidence_backed, created_at')
+        .in('id', analysisIds);
+
+      if (error) throw error;
+
+      for (const row of data || []) {
+        baseState[row.id] = {
+          analysisId: row.id,
+          status: typeof row.status === 'string' ? row.status : null,
+          reviewReason: typeof row.review_reason === 'string' ? row.review_reason : null,
+          evidenceBacked: typeof row.evidence_backed === 'boolean' ? row.evidence_backed : null,
+          createdAt: typeof row.created_at === 'string' ? row.created_at : null,
+          loading: false
+        };
+      }
+      setForecastReviewStates(baseState);
+    } catch {
+      setForecastReviewStates(baseState);
+    }
+  }, []);
 
   const fetchForecastById = useCallback(async (forecastId: string) => {
     const { data, error } = await supabase
@@ -288,7 +450,7 @@ const ForecastRegistry: React.FC<ForecastRegistryProps> = ({ userId }) => {
     try {
       const response = await fetch(ENDPOINTS.BRIER_WEIGHTED_CONSENSUS, {
         method: 'POST',
-        headers: getAuthHeaders(),
+        headers: await getUserAuthHeaders(),
         body: JSON.stringify({ forecastId })
       });
       const json = await response.json();
@@ -301,7 +463,7 @@ const ForecastRegistry: React.FC<ForecastRegistryProps> = ({ userId }) => {
     } catch (err) {
       console.error('Error fetching weighted consensus:', err);
       setWeightedConsensus(null);
-      setWeightedConsensusError(err instanceof Error ? err.message : 'Failed to load weighted consensus');
+      setWeightedConsensusError(normalizeConsensusError(err));
     } finally {
       setWeightedConsensusLoading(false);
     }
@@ -309,6 +471,10 @@ const ForecastRegistry: React.FC<ForecastRegistryProps> = ({ userId }) => {
 
   // Fetch leaderboard
   const fetchLeaderboard = useCallback(async () => {
+    if (isLocalPreviewOrigin && !useHostedForecastRegistryInLocalPreview) {
+      setLeaderboard([]);
+      return;
+    }
     try {
       const { data, error } = await supabase
         .from('forecast_scores')
@@ -319,6 +485,10 @@ const ForecastRegistry: React.FC<ForecastRegistryProps> = ({ userId }) => {
       if (error) throw error;
       setLeaderboard(data || []);
     } catch (err) {
+      if (isLocalPreviewOrigin) {
+        setLeaderboard([]);
+        return;
+      }
       console.error('Error fetching leaderboard:', err);
     }
   }, []);
@@ -357,21 +527,43 @@ const ForecastRegistry: React.FC<ForecastRegistryProps> = ({ userId }) => {
   }, [fetchForecasts, fetchLeaderboard]);
 
   useEffect(() => {
-    const stateDraft = (location.state as { prefillDraft?: ForecastDraft; openCreate?: boolean } | null)?.prefillDraft;
+    hydrateForecastReviewStates(forecasts);
+  }, [forecasts, hydrateForecastReviewStates]);
+
+  useEffect(() => {
+    const routeState = location.state as { prefillDraft?: ForecastDraft; openCreate?: boolean } | null;
+    const stateDraft = routeState?.prefillDraft;
+    const requestedAnalysisRunId = new URLSearchParams(location.search).get('analysis_run_id')?.trim() || '';
     if (stateDraft) {
       applyDraft(stateDraft);
       return;
     }
 
-    const stored = sessionStorage.getItem('forecast-registry-draft');
-    if (!stored) return;
+    const shouldOpenCreate = location.pathname === '/forecasts/new' || Boolean(routeState?.openCreate);
+    if (shouldOpenCreate) {
+      if (!userId) {
+        setView('list');
+        return;
+      }
+      if (requestedAnalysisRunId) {
+        setNewForecast(prev => prev.analysis_run_id === requestedAnalysisRunId ? prev : {
+          ...prev,
+          analysis_run_id: requestedAnalysisRunId
+        });
+      }
+      setView('create');
+      return;
+    }
 
     try {
-      applyDraft(JSON.parse(stored) as ForecastDraft);
+      const storedDraft = sessionStorage.getItem('forecast-registry-draft');
+      if (storedDraft) {
+        applyDraft(JSON.parse(storedDraft) as ForecastDraft);
+      }
     } catch (err) {
       console.error('Failed to parse forecast registry draft:', err);
     }
-  }, [location.state, applyDraft]);
+  }, [location.pathname, location.search, location.state, applyDraft]);
 
   useEffect(() => {
     if (selectedForecast) {
@@ -385,14 +577,7 @@ const ForecastRegistry: React.FC<ForecastRegistryProps> = ({ userId }) => {
       : selectedForecast?.analysis_run_id || null;
 
     if (!activeAnalysisId) {
-      setLinkedAnalysisReview({
-        analysisId: null,
-        status: null,
-        reviewReason: null,
-        evidenceBacked: null,
-        createdAt: null,
-        loading: false
-      });
+      setLinkedAnalysisReview(EMPTY_LINKED_ANALYSIS_REVIEW);
       return;
     }
 
@@ -453,6 +638,7 @@ const ForecastRegistry: React.FC<ForecastRegistryProps> = ({ userId }) => {
 
     async function hydrateForecastDetail() {
       try {
+        if (!selectedForecast) return;
         const hasLoadedGameTheoryModel = Object.prototype.hasOwnProperty.call(selectedForecast, 'game_theory_model');
 
         if (!hasLoadedGameTheoryModel) {
@@ -573,25 +759,95 @@ const ForecastRegistry: React.FC<ForecastRegistryProps> = ({ userId }) => {
     }
   };
 
+  const handleFixBlockers = () => {
+    const requiredFields = [
+      { field: 'question' as const, label: 'Forecast Question' },
+      { field: 'resolution_criteria' as const, label: 'Resolution Criteria' },
+      { field: 'title' as const, label: 'Title' }
+    ];
+
+    for (const { field, label } of requiredFields) {
+      const value = newForecast[field];
+      if (!value || (typeof value === 'string' && !value.trim())) {
+        setCreateForecastError(`${label} is required to publish.`);
+        return;
+      }
+    }
+
+    // If no required fields missing, check publish governance blockers
+    if (draftPublishGovernance.blockers.length > 0) {
+      setCreateForecastError(draftPublishGovernance.blockers[0]);
+    }
+  };
+
   // Format probability display
   const formatProbability = (prob: number | null) => {
     if (prob === null) return '?%';
     return `${Math.round(prob * 100)}%`;
   };
 
+  const buildForecastGovernanceSummary = (
+    forecast: Forecast,
+    reviewState: LinkedAnalysisReviewState,
+    consensus: WeightedConsensusResult | null = null,
+    governance?: ReturnType<typeof assessPublishGovernance>,
+    readiness?: ReturnType<typeof assessForecastReadiness>
+  ) => {
+    const multiAgentForecast = (forecast.game_theory_model as Record<string, any> | null)?.multi_agent_forecast;
+    const provenance = getForecastProvenance(forecast);
+    return buildGovernanceSummary({
+      readiness,
+      governance,
+      reviewState,
+      consensus,
+      provenanceEvidenceBacked: typeof provenance?.evidence_backed === 'boolean' ? provenance.evidence_backed : null,
+      disagreementIndex: typeof multiAgentForecast?.disagreementIndex === 'number' ? multiAgentForecast.disagreementIndex : null,
+      evidenceCount: getForecastEvidenceCount(forecast)
+    });
+  };
+
+  const renderGovernanceSnapshot = (summary: GovernanceSummary) => (
+    <div className="grid gap-3 md:grid-cols-3">
+      <div className={`rounded-lg border px-3 py-3 ${summary.review_state.tone}`}>
+        <div className="text-[11px] uppercase tracking-wide opacity-80">Review state</div>
+        <div className="mt-1 text-sm font-medium">{summary.review_state.label}</div>
+        <div className="mt-1 text-xs opacity-90">{summary.review_state.detail}</div>
+      </div>
+      <div className={`rounded-lg border px-3 py-3 ${summary.evidence_backed_state.tone}`}>
+        <div className="text-[11px] uppercase tracking-wide opacity-80">Evidence status</div>
+        <div className="mt-1 text-sm font-medium">{summary.evidence_backed_state.label}</div>
+        <div className="mt-1 text-xs opacity-90">{summary.evidence_backed_state.detail}</div>
+      </div>
+      <div className={`rounded-lg border px-3 py-3 ${(summary.consensus_reliability || summary.review_state).tone}`}>
+        <div className="text-[11px] uppercase tracking-wide opacity-80">Consensus quality</div>
+        <div className="mt-1 text-sm font-medium">{summary.consensus_reliability?.label || 'Consensus still forming'}</div>
+        <div className="mt-1 text-xs opacity-90">
+          {summary.consensus_reliability?.detail || 'Consensus quality becomes more precise once more scoring signal is available.'}
+        </div>
+      </div>
+    </div>
+  );
+
   // Render forecast card
-  const renderForecastCard = (forecast: Forecast) => (
-    <div
-      key={forecast.id}
-      className={`bg-slate-800 rounded-xl border transition-all cursor-pointer ${
-        forecast.is_resolved ? 'border-slate-700 opacity-75' : 'border-slate-700 hover:border-cyan-500/50'
-      }`}
-      onClick={() => {
-        setSelectedForecast(forecast);
-        setView('detail');
-      }}
-    >
-      <div className="p-4">
+  const renderForecastCard = (forecast: Forecast) => {
+    const reviewState = forecast.analysis_run_id ? (forecastReviewStates[forecast.analysis_run_id] || EMPTY_LINKED_ANALYSIS_REVIEW) : EMPTY_LINKED_ANALYSIS_REVIEW;
+    const governanceSummary = buildForecastGovernanceSummary(forecast, reviewState);
+    const trustSignals = getTrustSignals(forecast, null, reviewState).slice(0, 3);
+    const evidenceBundle = (forecast.game_theory_model as Record<string, any> | null)?.evidence_bundle;
+    const publicAnswer = getForecastPublicAnswer(forecast);
+
+    return (
+      <div
+        key={forecast.id}
+        className={`bg-slate-800 rounded-xl border transition-all cursor-pointer ${
+          forecast.is_resolved ? 'border-slate-700 opacity-75' : 'border-slate-700 hover:border-cyan-500/50'
+        }`}
+        onClick={() => {
+          setSelectedForecast(forecast);
+          setView('detail');
+        }}
+      >
+        <div className="p-4">
         {/* Header */}
         <div className="flex items-start justify-between mb-3">
           <span className={`px-2 py-1 rounded-full text-xs border ${CATEGORY_COLORS[forecast.category]}`}>
@@ -612,7 +868,34 @@ const ForecastRegistry: React.FC<ForecastRegistryProps> = ({ userId }) => {
 
         {/* Question */}
         <h3 className="font-semibold text-white mb-2 line-clamp-2">{forecast.question}</h3>
-        
+        {publicAnswer?.direct_answer && (
+          <p className="mb-3 text-sm leading-6 text-slate-300 line-clamp-3">{publicAnswer.direct_answer}</p>
+        )}
+
+        <div className="mb-3 flex flex-wrap gap-2">
+          <span className={`px-2 py-1 rounded-full text-[11px] border ${governanceSummary.review_state.tone}`}>
+            {governanceSummary.review_state.label}
+          </span>
+          <span className={`px-2 py-1 rounded-full text-[11px] border ${governanceSummary.evidence_backed_state.tone}`}>
+            {governanceSummary.evidence_backed_state.label}
+          </span>
+          {governanceSummary.freshness && (
+            <span className={`px-2 py-1 rounded-full text-[11px] border ${governanceSummary.freshness.tone}`}>
+              {governanceSummary.freshness.label}
+            </span>
+          )}
+        </div>
+
+        {trustSignals.length > 0 && (
+          <div className="mb-3 flex flex-wrap gap-2">
+            {trustSignals.map(signal => (
+              <span key={signal.label} className={`px-2 py-1 rounded-full text-[11px] border ${signal.tone}`}>
+                {signal.label}
+              </span>
+            ))}
+          </div>
+        )}
+
         {/* Probability Display */}
         <div className="mb-3">
           <div className="flex items-center justify-between text-sm mb-1">
@@ -656,17 +939,47 @@ const ForecastRegistry: React.FC<ForecastRegistryProps> = ({ userId }) => {
             </span>
           )}
         </div>
+        {evidenceBundle && (
+          <div className="mt-3 rounded-lg border border-slate-700 bg-slate-900/70 px-3 py-2 text-xs text-slate-400">
+            Evidence bundle: {evidenceBundle.source_count || evidenceBundle.items?.length || 0} sources · {evidenceBundle.claim_count || 0} mapped claims
+          </div>
+        )}
       </div>
-    </div>
-  );
+      </div>
+    );
+  };
 
   // Render forecast detail
   const renderForecastDetail = () => {
     if (!selectedForecast) return null;
 
     const trustSignals = getTrustSignals(selectedForecast, weightedConsensus, linkedAnalysisReview);
-    const multiAgentForecast = (selectedForecast.game_theory_model as Record<string, any> | null)?.multi_agent_forecast;
+    const model = getForecastModel(selectedForecast);
+    const multiAgentForecast = model?.multi_agent_forecast;
+    const publicAnswer = getForecastPublicAnswer(selectedForecast);
+    const evidenceBundle = model?.evidence_bundle;
+    const refreshAdvisory = model?.advisories as Record<string, any> | undefined;
+    const groundedEntities = Array.from(
+      new Map(
+        (((model?.provenance?.grounded_entities as Array<Record<string, any>> | undefined) || [])
+          .map((entity) => [entity.entity_key || entity.label, entity]))
+      ).values()
+    );
     const linkedAnalysisFreshness = getAnalysisFreshness(linkedAnalysisReview.createdAt);
+    const governanceSummary = buildForecastGovernanceSummary(selectedForecast, linkedAnalysisReview, weightedConsensus);
+    const sendForecastToWarRoom = () => {
+      const state: WarRoomRouteState = {
+        decisionLogDraft: {
+          title: selectedForecast.question,
+          summary: selectedForecast.description || selectedForecast.resolution_criteria,
+          sourceSurface: 'forecast_detail',
+          linkedForecastId: selectedForecast.id,
+          linkedForecastTitle: selectedForecast.title
+        }
+      };
+
+      navigate('/war-room', { state });
+    };
 
     return (
       <div className="space-y-6">
@@ -688,7 +1001,7 @@ const ForecastRegistry: React.FC<ForecastRegistryProps> = ({ userId }) => {
                 selectedForecast.resolution_outcome === 'yes' ? 'bg-green-500/20 text-green-400' :
                 'bg-red-500/20 text-red-400'
               }`}>
-                {selectedForecast.resolution_outcome === 'yes' ? 
+                {selectedForecast.resolution_outcome === 'yes' ?
                   <CheckCircle className="w-4 h-4" /> : <XCircle className="w-4 h-4" />}
                 Resolved: {selectedForecast.resolution_outcome?.toUpperCase()}
               </div>
@@ -697,8 +1010,30 @@ const ForecastRegistry: React.FC<ForecastRegistryProps> = ({ userId }) => {
 
           <h2 className="text-2xl font-bold text-white mb-4">{selectedForecast.question}</h2>
 
+          {publicAnswer?.direct_answer && (
+            <div className="mb-4 rounded-xl border border-cyan-500/20 bg-cyan-500/5 p-4">
+              <div className="text-xs uppercase tracking-[0.2em] text-cyan-300">Direct answer</div>
+              <div className="mt-2 text-lg font-semibold text-white">{publicAnswer.best_current_call}</div>
+              <p className="mt-2 text-sm leading-6 text-slate-200">{publicAnswer.direct_answer}</p>
+              <div className="mt-3 grid gap-3 md:grid-cols-3">
+                <div className="rounded-lg border border-slate-700 bg-slate-900/60 px-3 py-3">
+                  <div className="text-[11px] uppercase tracking-wide text-slate-500">Time horizon</div>
+                  <div className="mt-1 text-sm font-medium text-white">{publicAnswer.time_horizon}</div>
+                </div>
+                <div className="rounded-lg border border-slate-700 bg-slate-900/60 px-3 py-3">
+                  <div className="text-[11px] uppercase tracking-wide text-slate-500">Confidence label</div>
+                  <div className="mt-1 text-sm font-medium text-white">{publicAnswer.confidence_label}</div>
+                </div>
+                <div className="rounded-lg border border-slate-700 bg-slate-900/60 px-3 py-3">
+                  <div className="text-[11px] uppercase tracking-wide text-slate-500">What to do next</div>
+                  <div className="mt-1 text-sm font-medium text-white">{publicAnswer.what_to_do_next}</div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {selectedForecast.description && (
-            <p className="text-slate-400 mb-4">{selectedForecast.description}</p>
+            <p className="text-slate-400 mb-4 whitespace-pre-line">{selectedForecast.description}</p>
           )}
 
           {trustSignals.length > 0 && (
@@ -708,6 +1043,33 @@ const ForecastRegistry: React.FC<ForecastRegistryProps> = ({ userId }) => {
                   {signal.label}
                 </span>
               ))}
+            </div>
+          )}
+
+          {!publicAnalysisOnlyViewer && (
+            <div className="mb-4 flex flex-wrap gap-3">
+              <button
+                onClick={sendForecastToWarRoom}
+                className="rounded-lg bg-fuchsia-500/90 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-fuchsia-400"
+              >
+                Save to war room
+              </button>
+            </div>
+          )}
+
+          {renderGovernanceSnapshot(governanceSummary)}
+
+          {refreshAdvisory?.refresh_needed && (
+            <div className="mb-6 rounded-lg border border-amber-500/30 bg-amber-500/10 p-4">
+              <div className="text-sm font-medium text-amber-200">Refresh recommended</div>
+              <div className="mt-1 text-sm text-amber-100">
+                {refreshAdvisory.refresh_reason || 'A recent drift signal marked this forecast for re-evaluation.'}
+              </div>
+              {refreshAdvisory.refresh_marked_at && (
+                <div className="mt-2 text-xs text-amber-200/80">
+                  Marked {new Date(refreshAdvisory.refresh_marked_at).toLocaleString()}
+                </div>
+              )}
             </div>
           )}
 
@@ -725,6 +1087,12 @@ const ForecastRegistry: React.FC<ForecastRegistryProps> = ({ userId }) => {
               <div className="text-sm text-slate-500 mt-2">
                 Based on {selectedForecast.prediction_count} predictions
               </div>
+              {weightedConsensus && (
+                <div className="mt-3 text-xs text-slate-400">
+                  Advisory calibration {formatProbability(weightedConsensus.calibratedProbability)} · {labelCalibrationStatus(weightedConsensus.calibrationStatus)}
+                  {weightedConsensus.calibrationSampleSize > 0 && ` · ${weightedConsensus.calibrationSampleSize} resolved cases`}
+                </div>
+              )}
             </div>
 
             <div className="h-4 bg-slate-600 rounded-full overflow-hidden mt-4">
@@ -747,13 +1115,13 @@ const ForecastRegistry: React.FC<ForecastRegistryProps> = ({ userId }) => {
             <div className="bg-slate-700/50 rounded-lg p-4">
               <div className="text-sm text-slate-400 mb-1">Weighted Consensus</div>
               <div className="text-2xl font-bold text-cyan-300">
-                {weightedConsensus ? formatProbability(weightedConsensus.brierWeightedMean) : '—'}
+                {weightedConsensus ? formatProbability(weightedConsensus.calibratedProbability) : '—'}
               </div>
               <div className="text-xs text-slate-500 mt-2">
                 {weightedConsensusLoading
                   ? 'Computing weighted consensus…'
                   : weightedConsensus
-                    ? `Reliability ${(weightedConsensus.reliability.score * 100).toFixed(0)}%`
+                    ? `Raw ${formatProbability(weightedConsensus.rawProbability)} · reliability ${(weightedConsensus.reliability.score * 100).toFixed(0)}%`
                     : weightedConsensusError || 'Available once predictions accumulate'}
               </div>
             </div>
@@ -822,6 +1190,62 @@ const ForecastRegistry: React.FC<ForecastRegistryProps> = ({ userId }) => {
               )}
             </div>
           )}
+
+          {evidenceBundle && (
+            <div className="mb-6 rounded-lg border border-slate-700 bg-slate-700/50 p-4">
+              <div className="text-sm text-slate-400 mb-1">Evidence Bundle</div>
+              <div className="text-white text-sm">{evidenceBundle.name || 'Strategy Console evidence bundle'}</div>
+              <div className="text-xs text-slate-500 mt-2">
+                {evidenceBundle.source_count || evidenceBundle.items?.length || 0} sources · {evidenceBundle.claim_count || 0} mapped claims
+              </div>
+              {Array.isArray(evidenceBundle.items) && evidenceBundle.items.length > 0 && (
+                <div className="mt-3 space-y-2">
+                  {evidenceBundle.items.slice(0, 3).map((item: any) => (
+                    <div key={item.id} className="rounded-lg border border-slate-600 bg-slate-800/80 px-3 py-2 text-xs text-slate-300">
+                      <span className="font-medium text-slate-100">{item.label}</span>
+                      <span className="text-slate-500"> · {item.sourceType}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {groundedEntities.length > 0 && (
+            <div className="mb-6 rounded-lg border border-cyan-500/20 bg-cyan-500/5 p-4">
+              <div className="text-sm text-cyan-200 mb-2">Grounded entities</div>
+              <div className="flex flex-wrap gap-2">
+                {groundedEntities.map((entity: any) => (
+                  <span
+                    key={`${entity.entity_key || entity.label}:${entity.matched_text || entity.label}`}
+                    className="rounded-full border border-cyan-500/20 bg-slate-900/70 px-3 py-1 text-xs text-cyan-100"
+                  >
+                    {entity.label}
+                    {typeof entity.confidence === 'number' && ` · ${(entity.confidence * 100).toFixed(0)}%`}
+                  </span>
+                ))}
+              </div>
+              <div className="mt-2 text-xs text-slate-400">
+                Retrieval policy: {(model?.provenance?.retrieval_policy_id as string | undefined) || 'entity_rank_v1'}
+              </div>
+            </div>
+          )}
+
+          {publicAnswer?.watch_factors?.length ? (
+            <div className="mb-6 rounded-lg border border-amber-500/20 bg-amber-500/5 p-4">
+              <div className="text-sm text-amber-200 mb-2">Watch factors</div>
+              <div className="flex flex-wrap gap-2">
+                {publicAnswer.watch_factors.map((factor: any) => (
+                  <span
+                    key={factor}
+                    className="rounded-full border border-amber-500/20 bg-slate-900/70 px-3 py-1 text-xs text-amber-100"
+                  >
+                    {factor}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ) : null}
 
           {/* Resolution Info */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -958,8 +1382,23 @@ const ForecastRegistry: React.FC<ForecastRegistryProps> = ({ userId }) => {
   );
 
   // Render create forecast form
-  const renderCreateForm = () => (
-    <div className="bg-slate-800 rounded-xl p-6 border border-slate-700 max-w-2xl">
+  const renderCreateForm = () => {
+    const draftModel = newForecast.game_theory_model as Record<string, any> | null;
+    const draftEvidenceBundle = draftModel?.evidence_bundle;
+    const draftGovernanceSummary = buildGovernanceSummary({
+      readiness: draftReadiness,
+      governance: draftPublishGovernance,
+      reviewState: linkedAnalysisReview,
+      disagreementIndex: typeof draftModel?.multi_agent_forecast?.disagreementIndex === 'number'
+        ? draftModel.multi_agent_forecast.disagreementIndex
+        : null,
+      evidenceCount: typeof draftModel?.multi_agent_forecast?.evidenceCount === 'number'
+        ? draftModel.multi_agent_forecast.evidenceCount
+        : null
+    });
+
+    return (
+      <div className="bg-slate-800 rounded-xl p-6 border border-slate-700 max-w-2xl">
       <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
         <Plus className="w-5 h-5 text-cyan-400" />
         Create New Forecast
@@ -991,6 +1430,10 @@ const ForecastRegistry: React.FC<ForecastRegistryProps> = ({ userId }) => {
           )}
         </div>
       )}
+
+      <div className="mb-4">
+        {renderGovernanceSnapshot(draftGovernanceSummary)}
+      </div>
 
       <div className={`mb-4 rounded-lg border px-4 py-3 ${
         draftPublishGovernance.status === 'ready'
@@ -1042,6 +1485,25 @@ const ForecastRegistry: React.FC<ForecastRegistryProps> = ({ userId }) => {
           </div>
         )}
       </div>
+
+      {draftEvidenceBundle && (
+        <div className="mb-4 rounded-lg border border-slate-700 bg-slate-900/60 px-4 py-3">
+          <div className="text-sm font-medium text-white">Research-to-forecast evidence bundle</div>
+          <div className="mt-1 text-xs text-slate-400">
+            {draftEvidenceBundle.name || 'Strategy Console evidence bundle'} · {draftEvidenceBundle.source_count || draftEvidenceBundle.items?.length || 0} sources · {draftEvidenceBundle.claim_count || 0} mapped claims
+          </div>
+          {Array.isArray(draftEvidenceBundle.items) && draftEvidenceBundle.items.length > 0 && (
+            <div className="mt-3 space-y-2">
+              {draftEvidenceBundle.items.slice(0, 4).map((item: any) => (
+                <div key={item.id} className="rounded-lg border border-slate-700 bg-slate-800/80 px-3 py-2 text-xs text-slate-300">
+                  <span className="font-medium text-slate-100">{item.label}</span>
+                  <span className="text-slate-500"> · {item.sourceType}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {createForecastError && (
         <div className="mb-4 rounded-lg border border-rose-500/20 bg-rose-500/5 px-4 py-3 text-sm text-rose-200">
@@ -1134,8 +1596,12 @@ const ForecastRegistry: React.FC<ForecastRegistryProps> = ({ userId }) => {
 
         <div className="flex gap-3 pt-4">
           <button
-            onClick={handleCreateForecast}
-            disabled={creatingForecast || !newForecast.title.trim() || !newForecast.question || !newForecast.resolution_criteria || !draftPublishGovernance.canPublish}
+            onClick={draftPublishGovernance.status === 'blocked' ? handleFixBlockers : handleCreateForecast}
+            disabled={
+              creatingForecast ||
+              Boolean(linkedAnalysisReview.loading && newForecast.analysis_run_id) ||
+              (draftPublishGovernance.status !== 'blocked' && !draftPublishGovernance.canPublish)
+            }
             className="px-6 py-2 bg-cyan-500 hover:bg-cyan-600 disabled:bg-slate-700 disabled:text-slate-500 text-white rounded-lg font-medium"
           >
             {creatingForecast
@@ -1159,8 +1625,9 @@ const ForecastRegistry: React.FC<ForecastRegistryProps> = ({ userId }) => {
           </button>
         </div>
       </div>
-    </div>
-  );
+      </div>
+    );
+  };
 
   return (
     <div className="space-y-6">
@@ -1176,7 +1643,7 @@ const ForecastRegistry: React.FC<ForecastRegistryProps> = ({ userId }) => {
           </div>
           <div className="flex gap-2">
             <button
-              onClick={() => setView('leaderboard')}
+              onClick={() => setView(prev => prev === 'leaderboard' ? 'list' : 'leaderboard')}
               className={`px-4 py-2 rounded-lg flex items-center gap-2 ${
                 view === 'leaderboard' ? 'bg-white/20' : 'bg-white/10 hover:bg-white/15'
               }`}
@@ -1241,9 +1708,20 @@ const ForecastRegistry: React.FC<ForecastRegistryProps> = ({ userId }) => {
       )}
 
       {/* Content */}
-      {loading ? (
+      {view === 'list' && loading ? (
         <div className="flex items-center justify-center py-12">
           <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-cyan-500"></div>
+        </div>
+      ) : forecastLoadError && view === 'list' ? (
+        <div className="rounded-xl border border-rose-500/20 bg-rose-500/5 px-6 py-10 text-center text-rose-200">
+          <div className="text-lg font-medium">Failed to load forecasts</div>
+          <div className="text-sm mt-2 text-rose-100/80">{forecastLoadError}</div>
+          <button
+            onClick={() => fetchForecasts()}
+            className="mt-4 px-4 py-2 bg-rose-500/20 hover:bg-rose-500/30 rounded-lg text-sm"
+          >
+            Retry
+          </button>
         </div>
       ) : (
         <>
@@ -1251,9 +1729,36 @@ const ForecastRegistry: React.FC<ForecastRegistryProps> = ({ userId }) => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {forecasts.map(renderForecastCard)}
               {forecasts.length === 0 && (
-                <div className="col-span-full text-center py-12 text-slate-500">
+                <div className="col-span-full rounded-xl border border-slate-700 bg-slate-800/60 px-6 py-12 text-center text-slate-500">
                   <HelpCircle className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                  <p>No forecasts found. Create the first one!</p>
+                  <p className="text-lg font-medium text-slate-200">No live forecasts are published yet.</p>
+                  <p className="mx-auto mt-2 max-w-2xl text-sm leading-6 text-slate-400">
+                    This beta stays truthful: the public registry only shows real forecasts after they have been created and published.
+                    Use templates or the strategy console to explore the workflow while the first live forecasts are still being prepared.
+                  </p>
+                  <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+                    <button
+                      onClick={() => navigate('/templates')}
+                      className="inline-flex items-center gap-2 rounded-lg border border-slate-600 px-4 py-2 text-sm font-medium text-slate-200 hover:bg-slate-700"
+                    >
+                      Browse Templates
+                    </button>
+                    <button
+                      onClick={() => navigate('/console')}
+                      className="inline-flex items-center gap-2 rounded-lg border border-cyan-500/30 bg-cyan-500/10 px-4 py-2 text-sm font-medium text-cyan-100 hover:bg-cyan-500/20"
+                    >
+                      Open Strategy Console
+                    </button>
+                    {userId && (
+                      <button
+                        onClick={() => setView('create')}
+                        className="inline-flex items-center gap-2 rounded-lg bg-cyan-500 px-4 py-2 text-sm font-medium text-white hover:bg-cyan-600"
+                      >
+                        <Plus className="w-4 h-4" />
+                        Create Forecast
+                      </button>
+                    )}
+                  </div>
                 </div>
               )}
             </div>

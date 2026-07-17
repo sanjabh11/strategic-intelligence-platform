@@ -3,11 +3,12 @@
 // Models Central Bank reserve optimization, Miner production decisions
 // Part of Monetization Strategy - Key differentiation feature
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   TrendingUp, TrendingDown, DollarSign, Building2, Factory,
   Globe, RefreshCw, Play, Info, ChevronDown, ChevronUp,
-  Target, Zap, AlertTriangle, BarChart3, PieChart
+  Target, Zap, AlertTriangle, BarChart3, PieChart, ArrowRight, ShieldCheck
 } from 'lucide-react';
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
@@ -15,6 +16,11 @@ import {
   PolarAngleAxis, PolarRadiusAxis, Radar
 } from 'recharts';
 import { GoldModuleGate } from './SubscriptionGate';
+import TestingAccessOverrideBanner from './TestingAccessOverrideBanner';
+import { ENDPOINTS, getUserAuthHeaders } from '../lib/supabase';
+import { buildCommodityResponsePlaybook } from '../../shared/gameTheoryKnowledge';
+import type { AttributionSummary, DriftSignalSummary, GroundedEntityRef } from '../../shared/mlAdvisory';
+import { format, parseISO } from 'date-fns';
 
 // Types for Gold Game
 interface CentralBankAgent {
@@ -39,13 +45,50 @@ interface MinerAgent {
 interface GoldMarketState {
   spotPrice: number;
   dayChange: number;
-  weekChange: number;
-  yearChange: number;
-  totalSupply: number;
-  totalDemand: number;
-  centralBankDemand: number;
-  jewelryDemand: number;
-  investmentDemand: number;
+}
+
+interface MarketProviderDetail {
+  name: string;
+  mode: 'live' | 'degraded' | 'unconfigured' | 'simulated';
+  url?: string;
+  note?: string;
+}
+
+interface MarketProviderDiagnostics {
+  provider: string;
+  mode: 'live' | 'degraded' | 'simulated';
+  warnings: string[];
+  details: MarketProviderDetail[];
+  sources: string[];
+  fetched_at: string;
+}
+
+interface MarketPricePoint {
+  asset: string;
+  price: number;
+  currency: string;
+  unit: string;
+  change_24h: number;
+}
+
+interface MarketStreamResponse {
+  success?: boolean;
+  provider?: MarketProviderDiagnostics;
+  market_data?: MarketPricePoint[];
+  strategic_scenarios?: Array<{
+    asset: string;
+    pattern: string;
+    game_type: string;
+    description: string;
+    recommendation: string;
+    entity_refs?: GroundedEntityRef[];
+    drift_signal?: DriftSignalSummary | null;
+    attribution?: AttributionSummary | null;
+  }>;
+  entity_refs?: GroundedEntityRef[];
+  drift_signal?: DriftSignalSummary | null;
+  attribution?: AttributionSummary | null;
+  timestamp?: string;
 }
 
 interface EquilibriumResult {
@@ -60,6 +103,7 @@ interface EquilibriumResult {
 interface GoldGameModuleProps {
   userId?: string;
   isLearningMode?: boolean;
+  testingAccessOverride?: boolean;
 }
 
 // Default agents based on real-world data
@@ -77,10 +121,20 @@ const DEFAULT_MINERS: MinerAgent[] = [
   { id: 'agnico', name: 'Agnico Eagle', productionCapacity: 3.5, productionCost: 1100, currentProduction: 3.3, strategies: ['optimize', 'curtail'] }
 ];
 
-const GoldGameModule: React.FC<GoldGameModuleProps> = ({ userId, isLearningMode = false }) => {
+const GoldGameModule: React.FC<GoldGameModuleProps> = ({ userId, isLearningMode = false, testingAccessOverride = false }) => {
+  const navigate = useNavigate();
   const [centralBanks, setCentralBanks] = useState<CentralBankAgent[]>(DEFAULT_CENTRAL_BANKS);
   const [miners, setMiners] = useState<MinerAgent[]>(DEFAULT_MINERS);
   const [marketState, setMarketState] = useState<GoldMarketState | null>(null);
+  const [marketProvider, setMarketProvider] = useState<MarketProviderDiagnostics | null>(null);
+  const [marketAssets, setMarketAssets] = useState<MarketPricePoint[]>([]);
+  const [marketScenarios, setMarketScenarios] = useState<NonNullable<MarketStreamResponse['strategic_scenarios']>>([]);
+  const [marketEntityRefs, setMarketEntityRefs] = useState<GroundedEntityRef[]>([]);
+  const [marketDriftSignal, setMarketDriftSignal] = useState<DriftSignalSummary | null>(null);
+  const [lastSuccessfulMarketFetchAt, setLastSuccessfulMarketFetchAt] = useState<string | null>(null);
+  const [marketLoading, setMarketLoading] = useState(true);
+  const [marketError, setMarketError] = useState<string | null>(null);
+  const [workspaceScenario, setWorkspaceScenario] = useState<'vendor-price-increase-pushback' | 'constrained-supply-allocation' | 'renewal-under-switching-leverage'>('vendor-price-increase-pushback');
   const [equilibrium, setEquilibrium] = useState<EquilibriumResult | null>(null);
   const [isSimulating, setIsSimulating] = useState(false);
   const [simulationHistory, setSimulationHistory] = useState<any[]>([]);
@@ -93,27 +147,104 @@ const GoldGameModule: React.FC<GoldGameModuleProps> = ({ userId, isLearningMode 
     recessionProbability: 0.25
   });
 
-  // Fetch real-time gold price (simulated for demo)
+  const providerBadgeClass = marketProvider?.mode === 'live'
+    ? 'bg-emerald-900/30 text-emerald-300 border-emerald-500/30'
+    : 'bg-amber-900/30 text-amber-300 border-amber-500/30';
+
+  const workspace = useMemo(() => buildCommodityResponsePlaybook({
+    workflow: 'procurement',
+    scenarioId: workspaceScenario,
+    marketAssets,
+    providerMode: marketProvider?.mode ?? 'degraded'
+  }), [marketAssets, marketProvider?.mode, workspaceScenario]);
+
+  const openWorkspaceInConsole = useCallback(() => {
+    const sourceLine = marketProvider ? `Provider mode: ${marketProvider.mode}.` : 'Provider mode unavailable.'
+    const scenarioText = [
+      `Commodity response brief request (${workspaceScenario.replace(/-/g, ' ')}).`,
+      workspace.playbook.volatility_driver_summary,
+      `Recommended posture: ${workspace.playbook.recommended_negotiation_posture}`,
+      `Buyer tradeables: ${workspace.playbook.buyer_tradeables.join(', ')}`,
+      `Trigger watchlist: ${workspace.playbook.trigger_watchlist.join('; ')}`,
+      sourceLine
+    ].join('\n')
+    navigate('/console', { state: { scenarioText } })
+  }, [marketProvider, navigate, workspace.playbook, workspaceScenario]);
+
+  const openWorkspaceInStudio = useCallback(() => {
+    const templateId = workspaceScenario === 'constrained-supply-allocation'
+      ? 'supplier-squeeze-tree'
+      : 'vendor-renewal-tree'
+    navigate('/labs/game-tree', {
+      state: {
+        templateId,
+        scenarioText: workspace.playbook.volatility_driver_summary
+      }
+    })
+  }, [navigate, workspace.playbook.volatility_driver_summary, workspaceScenario]);
+
   const fetchMarketData = useCallback(async () => {
-    // In production, this would call the gold-data-stream edge function
-    // For now, simulate realistic market data
-    const basePrice = 2350 + (Math.random() - 0.5) * 50;
-    setMarketState({
-      spotPrice: basePrice,
-      dayChange: (Math.random() - 0.5) * 2,
-      weekChange: (Math.random() - 0.3) * 5,
-      yearChange: 12 + (Math.random() - 0.5) * 4,
-      totalSupply: 4800,
-      totalDemand: 4900,
-      centralBankDemand: 1100,
-      jewelryDemand: 2200,
-      investmentDemand: 1100
-    });
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => controller.abort(), 10000);
+
+    try {
+      setMarketLoading(true);
+      setMarketError(null);
+
+      const response = await fetch(ENDPOINTS.MARKET_STREAM, {
+        method: 'GET',
+        headers: await getUserAuthHeaders(),
+        signal: controller.signal
+      });
+
+      const payload = await response.json().catch(() => null) as MarketStreamResponse | null;
+      if (!response.ok) {
+        throw new Error(`market-stream failed with HTTP ${response.status}`);
+      }
+
+      const provider = payload?.provider ?? null;
+      const marketData = Array.isArray(payload?.market_data) ? payload.market_data : [];
+      const scenarios = Array.isArray(payload?.strategic_scenarios) ? payload.strategic_scenarios : [];
+      const goldPoint = marketData.find((asset) => asset.asset.toLowerCase() === 'gold') ?? null;
+
+      setMarketProvider(provider);
+      setMarketAssets(marketData);
+      setMarketScenarios(scenarios);
+      setMarketEntityRefs(Array.isArray(payload?.entity_refs) ? payload.entity_refs : []);
+      setMarketDriftSignal(payload?.drift_signal ?? null);
+      setLastSuccessfulMarketFetchAt(payload?.timestamp ?? provider?.fetched_at ?? new Date().toISOString());
+
+      if (!goldPoint) {
+        setMarketState(null);
+        setMarketError('Live gold price is currently unavailable. The simulation stays disabled until the Gold feed returns a usable spot price.');
+        return;
+      }
+
+      setMarketState({
+        spotPrice: goldPoint.price,
+        dayChange: goldPoint.change_24h
+      });
+    } catch (error) {
+      const message = error instanceof Error
+        ? (error.name === 'AbortError' ? 'market-stream timed out after 15s' : error.message)
+        : 'Failed to load market-stream';
+      setMarketState(null);
+      setMarketError(
+        message.includes('404')
+          ? 'The commodity market feed endpoint is currently unavailable.'
+          : message.includes('timed out')
+            ? 'The commodity market feed timed out before it returned a fresh price snapshot.'
+            : 'The commodity market feed is temporarily unavailable.'
+      );
+    } finally {
+      window.clearTimeout(timeoutId);
+      setMarketLoading(false);
+    }
   }, []);
 
   useEffect(() => {
     fetchMarketData();
-    const interval = setInterval(fetchMarketData, 30000); // Update every 30s
+    const interval = setInterval(fetchMarketData, 60000);
     return () => clearInterval(interval);
   }, [fetchMarketData]);
 
@@ -136,7 +267,11 @@ const GoldGameModule: React.FC<GoldGameModuleProps> = ({ userId, isLearningMode 
       const riskPremium = scenarioParams.geopoliticalRisk * 200; // Up to $200 premium
       const interestImpact = -(scenarioParams.interestRates - 3) * 30; // Higher rates = lower gold
       
-      const basePrice = marketState?.spotPrice || 2350;
+      if (!marketState) {
+        throw new Error('Live gold price is unavailable.');
+      }
+
+      const basePrice = marketState.spotPrice;
       const equilibriumPrice = basePrice + inflationImpact + dollarImpact + riskPremium + interestImpact + 
         (totalBuyingPressure * 100);
       
@@ -248,6 +383,7 @@ const GoldGameModule: React.FC<GoldGameModuleProps> = ({ userId, isLearningMode 
   return (
     <GoldModuleGate userId={userId}>
       <div className="space-y-6">
+        {testingAccessOverride && <TestingAccessOverrideBanner scope="Gold module" />}
         {/* Header */}
         <div className="bg-gradient-to-r from-amber-600 to-yellow-600 p-6 rounded-xl text-white">
           <div className="flex items-center justify-between">
@@ -256,8 +392,8 @@ const GoldGameModule: React.FC<GoldGameModuleProps> = ({ userId, isLearningMode 
                 <DollarSign className="w-8 h-8" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold">The Gold Game</h2>
-                <p className="text-amber-100">Game-Theoretic Gold Price Forecasting</p>
+                <h2 className="text-2xl font-bold">Commodity Response Workspace</h2>
+                <p className="text-amber-100">Procurement-led volatility response for gold and oil exposed decisions</p>
               </div>
             </div>
             {marketState && (
@@ -274,18 +410,227 @@ const GoldGameModule: React.FC<GoldGameModuleProps> = ({ userId, isLearningMode 
           </div>
         </div>
 
+        {marketProvider && (
+          <div className="rounded-lg border border-slate-700 bg-slate-800/70 p-4">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <div className="text-sm font-medium text-slate-200">Market feed status</div>
+                <div className="text-xs text-slate-400">{marketProvider.provider}</div>
+              </div>
+              <div className={`rounded-full border px-3 py-1 text-xs font-medium uppercase tracking-wide ${providerBadgeClass}`}>
+                {marketProvider.mode === 'live' ? 'Live feed' : 'Degraded feed'}
+              </div>
+            </div>
+            <div className="mt-3 text-xs text-slate-400">
+              {marketProvider.details.map((detail) => `${detail.name}: ${detail.mode}`).join(' • ')}
+            </div>
+            {marketProvider.warnings.length > 0 && (
+              <div className="mt-3 space-y-2">
+                {marketProvider.warnings.map((warning) => (
+                  <div key={warning} className="flex items-start gap-2 text-sm text-amber-300">
+                    <AlertTriangle className="mt-0.5 h-4 w-4 flex-shrink-0" />
+                    <span>{warning}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+            {marketDriftSignal && marketDriftSignal.state !== 'stable' && (
+              <div className="mt-3 rounded-lg border border-amber-500/20 bg-amber-500/10 px-3 py-2 text-xs text-amber-200">
+                Drift advisory: {marketDriftSignal.surface} / {marketDriftSignal.scope_key} is in {marketDriftSignal.state} state ({marketDriftSignal.score.toFixed(3)} vs {marketDriftSignal.threshold.toFixed(3)}).
+              </div>
+            )}
+            {marketEntityRefs.length > 0 && (
+              <div className="mt-3 flex flex-wrap gap-2">
+                {marketEntityRefs.slice(0, 6).map((entity) => (
+                  <span key={`${entity.entity_key}:${entity.matched_text}`} className="rounded-full border border-cyan-500/20 bg-cyan-500/10 px-2.5 py-1 text-[11px] text-cyan-100">
+                    {entity.label}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {marketError && (
+          <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-amber-100">
+            <div className="flex flex-wrap items-start justify-between gap-4">
+              <div className="max-w-3xl">
+                <div className="text-sm font-semibold uppercase tracking-wide text-amber-50">Feed unavailable</div>
+                <p className="mt-2 leading-6">
+                  The commodity workspace is still available, but the live price feed could not refresh. We are keeping the simulation disabled instead of pretending a live market state exists.
+                </p>
+              </div>
+              <button
+                onClick={fetchMarketData}
+                className="inline-flex items-center gap-2 rounded-lg bg-slate-900/70 px-4 py-2 text-sm font-medium text-white hover:bg-slate-900"
+              >
+                <RefreshCw className="h-4 w-4" />
+                Retry feed
+              </button>
+            </div>
+            <div className="mt-3 grid gap-2 text-sm text-amber-100/90 md:grid-cols-2">
+              <div>
+                <span className="font-medium text-white">Last successful refresh:</span>{' '}
+                {lastSuccessfulMarketFetchAt ? format(parseISO(lastSuccessfulMarketFetchAt), 'MMM d, yyyy HH:mm') : 'No successful refresh yet in this session'}
+              </div>
+              <div>
+                <span className="font-medium text-white">Beta trust note:</span>{' '}
+                The playbook remains visible for doctrine and negotiation prep, but live-price-backed simulation is unavailable.
+              </div>
+            </div>
+            <div className="mt-3 flex items-start gap-2 rounded-lg border border-amber-500/20 bg-slate-900/40 px-3 py-2 text-sm text-amber-100">
+              <AlertTriangle className="mt-0.5 h-4 w-4 flex-shrink-0" />
+              <span>{marketError}</span>
+            </div>
+          </div>
+        )}
+
+        <div className="rounded-xl border border-slate-700 bg-slate-800 p-6">
+          <div className="mb-4 flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <h3 className="flex items-center gap-2 text-lg font-semibold text-white">
+                <ShieldCheck className="h-5 w-5 text-cyan-300" />
+                Procurement Response Playbook
+              </h3>
+              <p className="mt-1 text-sm text-slate-400">
+                Live market context routed through doctrine selection, supplier leverage mapping, and buyer response posture.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <span className="rounded-full border border-cyan-500/30 bg-cyan-500/10 px-3 py-1 text-xs font-medium text-cyan-200">
+                {workspace.classification.game_family.replace(/_/g, ' ')}
+              </span>
+              <span className="rounded-full border border-slate-600 bg-slate-900 px-3 py-1 text-xs font-medium text-slate-300">
+                {workspace.classification.move_structure} / {workspace.classification.information_structure}
+              </span>
+            </div>
+          </div>
+
+          <div className="grid gap-3 md:grid-cols-3">
+            {[
+              {
+                id: 'vendor-price-increase-pushback',
+                title: 'Price increase pushback',
+                detail: 'Challenge pass-through, hold on precedent, and trade only for reciprocal movement.'
+              },
+              {
+                id: 'constrained-supply-allocation',
+                title: 'Constrained supply allocation',
+                detail: 'Secure continuity first, then control price leakage through allocation-linked trades.'
+              },
+              {
+                id: 'renewal-under-switching-leverage',
+                title: 'Renewal under switching leverage',
+                detail: 'Use migration or alternate supply leverage without giving away future renewal posture.'
+              }
+            ].map((option) => (
+              <button
+                key={option.id}
+                onClick={() => setWorkspaceScenario(option.id as typeof workspaceScenario)}
+                className={`rounded-lg border p-4 text-left transition-colors ${
+                  workspaceScenario === option.id
+                    ? 'border-cyan-500/40 bg-cyan-500/10'
+                    : 'border-slate-700 bg-slate-900/60 hover:border-slate-600'
+                }`}
+              >
+                <div className="font-medium text-white">{option.title}</div>
+                <div className="mt-2 text-sm text-slate-400">{option.detail}</div>
+              </button>
+            ))}
+          </div>
+
+          <div className="mt-5 grid gap-4 lg:grid-cols-[1.2fr,0.8fr]">
+            <div className="space-y-4">
+              <div className="rounded-lg border border-slate-700 bg-slate-900/70 p-4">
+                <div className="text-xs uppercase tracking-wide text-slate-500">Volatility driver summary</div>
+                <div className="mt-2 text-sm leading-6 text-slate-200">{workspace.playbook.volatility_driver_summary}</div>
+              </div>
+              <div className="rounded-lg border border-slate-700 bg-slate-900/70 p-4">
+                <div className="text-xs uppercase tracking-wide text-slate-500">Recommended posture</div>
+                <div className="mt-2 text-sm leading-6 text-slate-200">{workspace.playbook.recommended_negotiation_posture}</div>
+                <div className="mt-3 text-xs text-cyan-200">{workspace.classification.why_fit}</div>
+              </div>
+              <div className="rounded-lg border border-slate-700 bg-slate-900/70 p-4">
+                <div className="text-xs uppercase tracking-wide text-slate-500">Supplier leverage map</div>
+                <div className="mt-3 space-y-3">
+                  {workspace.playbook.supplier_leverage_map.map((entry) => (
+                    <div key={entry.actor} className="rounded-lg border border-slate-700 bg-slate-800/80 p-3">
+                      <div className="font-medium text-slate-100">{entry.actor}</div>
+                      <div className="mt-2 text-sm text-slate-300">{entry.leverage}</div>
+                      <div className="mt-2 text-xs text-cyan-200">{entry.implication}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div className="rounded-lg border border-slate-700 bg-slate-900/70 p-4">
+                <div className="text-xs uppercase tracking-wide text-slate-500">Buyer tradeables</div>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {workspace.playbook.buyer_tradeables.map((tradeable) => (
+                    <span key={tradeable} className="rounded-full border border-slate-600 bg-slate-800 px-3 py-1 text-xs text-slate-200">
+                      {tradeable}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <div className="rounded-lg border border-slate-700 bg-slate-900/70 p-4">
+                <div className="text-xs uppercase tracking-wide text-slate-500">Trigger watchlist</div>
+                <ul className="mt-3 space-y-2 text-sm text-slate-300">
+                  {workspace.playbook.trigger_watchlist.map((trigger) => (
+                    <li key={trigger} className="flex items-start gap-2">
+                      <AlertTriangle className="mt-0.5 h-4 w-4 flex-shrink-0 text-amber-300" />
+                      <span>{trigger}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="rounded-lg border border-slate-700 bg-slate-900/70 p-4">
+                <div className="text-xs uppercase tracking-wide text-slate-500">Claim-to-evidence</div>
+                <div className="mt-3 space-y-3">
+                  {workspace.playbook.claim_to_evidence.map((claim) => (
+                    <div key={claim.claim_id} className="rounded-lg border border-slate-700 bg-slate-800/80 p-3">
+                      <div className="text-sm text-slate-100">{claim.claim_text}</div>
+                      <div className="mt-2 text-xs text-slate-400">
+                        {claim.evidence_refs.map((reference) => `${reference.label} (${reference.support})`).join(' • ')}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-5 flex flex-wrap gap-3">
+            <button
+              onClick={openWorkspaceInConsole}
+              className="inline-flex items-center gap-2 rounded-lg bg-cyan-500 px-4 py-2 text-sm font-medium text-white hover:bg-cyan-400"
+            >
+              <ArrowRight className="h-4 w-4" />
+              Brief in Console
+            </button>
+            <button
+              onClick={openWorkspaceInStudio}
+              className="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-slate-100 hover:bg-slate-950"
+            >
+              <Target className="h-4 w-4" />
+              Test Countermoves in Studio
+            </button>
+          </div>
+        </div>
+
         {/* Learning Mode Explanation */}
         {isLearningMode && (
           <div className="bg-blue-900/30 border border-blue-500/30 rounded-lg p-4">
             <div className="flex items-start gap-3">
               <Info className="w-5 h-5 text-blue-400 mt-0.5" />
               <div>
-                <h4 className="font-medium text-blue-300 mb-1">How The Gold Game Works</h4>
+                <h4 className="font-medium text-blue-300 mb-1">How the Commodity Workspace Works</h4>
                 <p className="text-sm text-slate-300">
-                  This module models gold prices as the outcome of strategic interactions between Central Banks 
-                  (who manage reserves) and Mining companies (who control supply). Rather than extrapolating 
-                  from historical prices, we calculate the Nash Equilibrium of their strategic decisions to 
-                  predict where prices will stabilize.
+                  This workspace treats live gold and oil moves as bargaining inputs, then converts them into a
+                  procurement response playbook: who has leverage, which tradeables matter, and what needs
+                  immediate monitoring before you concede value.
                 </p>
               </div>
             </div>
@@ -305,28 +650,72 @@ const GoldGameModule: React.FC<GoldGameModuleProps> = ({ userId, isLearningMode 
             {expandedSection === 'market' ? <ChevronUp className="w-5 h-5 text-slate-400" /> : <ChevronDown className="w-5 h-5 text-slate-400" />}
           </button>
           
-          {expandedSection === 'market' && marketState && (
+          {expandedSection === 'market' && (
             <div className="p-4 pt-0 border-t border-slate-700">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="bg-slate-700 rounded-lg p-4 text-center">
-                  <div className="text-sm text-slate-400">Spot Price</div>
-                  <div className="text-2xl font-bold text-amber-400">${marketState.spotPrice.toFixed(0)}</div>
+              {marketLoading ? (
+                <div className="flex items-center justify-center py-8 text-slate-300">
+                  <RefreshCw className="mr-2 h-5 w-5 animate-spin text-cyan-400" />
+                  Loading live market feed...
                 </div>
-                <div className="bg-slate-700 rounded-lg p-4 text-center">
-                  <div className="text-sm text-slate-400">YTD Change</div>
-                  <div className={`text-2xl font-bold ${marketState.yearChange >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                    {marketState.yearChange >= 0 ? '+' : ''}{marketState.yearChange.toFixed(1)}%
+              ) : marketState ? (
+                <>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="bg-slate-700 rounded-lg p-4 text-center">
+                      <div className="text-sm text-slate-400">Spot Price</div>
+                      <div className="text-2xl font-bold text-amber-400">${marketState.spotPrice.toFixed(2)}</div>
+                    </div>
+                    <div className="bg-slate-700 rounded-lg p-4 text-center">
+                      <div className="text-sm text-slate-400">24h Change</div>
+                      <div className={`text-2xl font-bold ${marketState.dayChange >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                        {marketState.dayChange >= 0 ? '+' : ''}{marketState.dayChange.toFixed(2)}%
+                      </div>
+                    </div>
+                    <div className="bg-slate-700 rounded-lg p-4 text-center">
+                      <div className="text-sm text-slate-400">Feed Mode</div>
+                      <div className="text-2xl font-bold text-slate-200 capitalize">{marketProvider?.mode ?? 'unknown'}</div>
+                    </div>
+                    <div className="bg-slate-700 rounded-lg p-4 text-center">
+                      <div className="text-sm text-slate-400">Assets Covered</div>
+                      <div className="text-2xl font-bold text-slate-200">{marketAssets.length}</div>
+                    </div>
                   </div>
+
+                  <div className="mt-4 grid gap-3 md:grid-cols-3">
+                    {marketAssets.map((asset) => (
+                      <div key={asset.asset} className="rounded-lg border border-slate-700 bg-slate-900/60 p-3">
+                        <div className="text-xs uppercase tracking-wide text-slate-500">{asset.asset}</div>
+                        <div className="mt-1 text-lg font-semibold text-slate-100">
+                          ${asset.price.toFixed(2)} <span className="text-xs text-slate-400">/{asset.unit}</span>
+                        </div>
+                        <div className={`mt-1 text-xs ${asset.change_24h >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                          {asset.change_24h >= 0 ? '+' : ''}{asset.change_24h.toFixed(2)}% over 24h
+                        </div>
+                        {marketScenarios.find((scenario) => scenario.asset === asset.asset)?.entity_refs?.length ? (
+                          <div className="mt-2 flex flex-wrap gap-1.5">
+                            {marketScenarios.find((scenario) => scenario.asset === asset.asset)?.entity_refs?.slice(0, 2).map((entity) => (
+                              <span key={`${asset.asset}:${entity.entity_key}`} className="rounded-full border border-cyan-500/20 bg-cyan-500/10 px-2 py-0.5 text-[10px] text-cyan-100">
+                                {entity.label}
+                              </span>
+                            ))}
+                          </div>
+                        ) : null}
+                      </div>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <div className="rounded-lg border border-slate-700 bg-slate-900/60 p-4 text-sm text-slate-300">
+                  <div className="font-medium text-slate-100">Simulation is paused until the live Gold feed recovers.</div>
+                  <p className="mt-2 leading-6 text-slate-300">
+                    You can still inspect the procurement response playbook, supplier leverage framing, and buyer tradeables, but the live market path stays disabled until a fresh Gold spot price is available.
+                  </p>
+                  <p className="mt-3 text-xs text-slate-400">
+                    {lastSuccessfulMarketFetchAt
+                      ? `Last successful market refresh: ${format(parseISO(lastSuccessfulMarketFetchAt), 'MMM d, yyyy HH:mm')}.`
+                      : 'No successful market refresh has been recorded in this session yet.'}
+                  </p>
                 </div>
-                <div className="bg-slate-700 rounded-lg p-4 text-center">
-                  <div className="text-sm text-slate-400">Supply</div>
-                  <div className="text-2xl font-bold text-slate-200">{marketState.totalSupply}t</div>
-                </div>
-                <div className="bg-slate-700 rounded-lg p-4 text-center">
-                  <div className="text-sm text-slate-400">Demand</div>
-                  <div className="text-2xl font-bold text-slate-200">{marketState.totalDemand}t</div>
-                </div>
-              </div>
+              )}
             </div>
           )}
         </div>
@@ -400,7 +789,7 @@ const GoldGameModule: React.FC<GoldGameModuleProps> = ({ userId, isLearningMode 
         <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
           <h3 className="font-semibold text-slate-200 mb-4 flex items-center gap-2">
             <Building2 className="w-5 h-5 text-amber-400" />
-            Central Bank Agents
+            Advanced demand-side actors
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {centralBanks.map(renderCentralBankCard)}
@@ -411,8 +800,8 @@ const GoldGameModule: React.FC<GoldGameModuleProps> = ({ userId, isLearningMode 
         <div className="flex justify-center">
           <button
             onClick={runSimulation}
-            disabled={isSimulating}
-            className="px-8 py-4 bg-gradient-to-r from-amber-500 to-yellow-500 text-white font-bold rounded-xl hover:from-amber-600 hover:to-yellow-600 disabled:opacity-50 flex items-center gap-3 text-lg"
+            disabled={isSimulating || !marketState}
+            className="px-8 py-4 bg-gradient-to-r from-amber-500 to-yellow-500 text-white font-bold rounded-xl hover:from-amber-600 hover:to-yellow-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-3 text-lg"
           >
             {isSimulating ? (
               <>
@@ -422,11 +811,16 @@ const GoldGameModule: React.FC<GoldGameModuleProps> = ({ userId, isLearningMode 
             ) : (
               <>
                 <Play className="w-6 h-6" />
-                Run Gold Game Simulation
+                Run Market Structure Simulation
               </>
             )}
           </button>
         </div>
+        {!marketState && (
+          <div className="text-center text-sm text-slate-400">
+            Simulation is disabled until the live Gold feed returns a usable spot price. The workspace remains available for doctrine review and negotiation preparation.
+          </div>
+        )}
 
         {/* Results */}
         {equilibrium && (
@@ -493,12 +887,12 @@ const GoldGameModule: React.FC<GoldGameModuleProps> = ({ userId, isLearningMode 
             <div className="mt-4 p-4 bg-amber-900/20 rounded-lg border border-amber-500/30">
               <div className="flex items-center gap-2 mb-2">
                 <Zap className="w-4 h-4 text-amber-400" />
-                <span className="font-medium text-amber-300">Dominant Strategy</span>
+              <span className="font-medium text-amber-300">Dominant Strategy</span>
               </div>
               <p className="text-slate-300">{equilibrium.dominantStrategy}</p>
               <p className="text-sm text-slate-400 mt-2">
-                Based on the current configuration of Central Bank reserve targets and macro conditions, 
-                the game-theoretic model predicts this as the most likely equilibrium outcome.
+                Based on the current demand-side assumptions and macro conditions, the game-theoretic sandbox
+                predicts this as the most likely equilibrium outcome.
               </p>
             </div>
           </div>

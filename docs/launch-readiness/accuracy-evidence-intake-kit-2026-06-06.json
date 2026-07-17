@@ -1,0 +1,142 @@
+{
+  "schema_version": "accuracy-evidence-intake-kit-v1",
+  "generated_at": "2026-06-06T11:46:34.792Z",
+  "status": "accuracy_intake_ready_not_accuracy_proof",
+  "proof_boundary": "This kit defines owner-approved resolved-forecast and baseline inputs. It is not prediction-accuracy proof, benchmark proof, or world-class forecasting evidence until real resolved data is supplied and scored.",
+  "source": {
+    "calibration_ledger": "docs/launch-readiness/resolved-forecast-calibration-ledger-2026-06-06.json",
+    "calibration_claim_status": "not_launch_proof",
+    "calibration_mode": "sample_fixture",
+    "benchmark_comparison": "docs/launch-readiness/forecast-benchmark-comparison-2026-06-06.json",
+    "benchmark_status": "sample_only_not_launch_proof",
+    "benchmark_ledger_mode": "sample_fixture"
+  },
+  "required_owner_inputs": [
+    {
+      "artifact": "docs/launch-readiness/approved-resolved-forecast-export-template-2026-06-06.csv",
+      "purpose": "Owner-approved resolved forecast export for audit:calibration:ledger.",
+      "minimum_rows": 25,
+      "required_columns": [
+        "id",
+        "title",
+        "question",
+        "current_probability",
+        "prediction_timestamp",
+        "is_resolved",
+        "resolution_outcome",
+        "resolved_at",
+        "resolution_source_url",
+        "resolution_notes",
+        "resolution_criteria",
+        "exclusion_review",
+        "game_theory_model"
+      ],
+      "notes": [
+        "Use only binary resolved forecasts with yes/no, true/false, 1/0, occurred/not_occurred, or equivalent outcomes.",
+        "Attach prediction_timestamp before resolved_at for every row; current_probability without a pre-resolution timestamp is not sufficient for an accuracy claim.",
+        "Attach resolution_criteria and exclusion_review so leakage, ambiguity, and post-hoc selection can be audited.",
+        "Exclude unresolved, ambiguous, canceled, non-binary, or probability-missing questions.",
+        "Provide resolution source URL or notes for each included row.",
+        "Do not include confidential buyer, user, or credential data."
+      ]
+    },
+    {
+      "artifact": "forecast_predictions sidecar or embedded forecast_predictions array",
+      "purpose": "Optional community/user prediction rows for community_prediction_mean scoring.",
+      "required_columns": [
+        "forecast_id",
+        "probability",
+        "prediction_source",
+        "prediction_timestamp",
+        "forecaster_type",
+        "notes"
+      ],
+      "notes": [
+        "Use only probabilities made before resolution.",
+        "Keep forecaster identity redacted unless explicit permission exists."
+      ]
+    },
+    {
+      "artifact": "docs/launch-readiness/forecast-baseline-template-2026-06-06.csv",
+      "purpose": "Real human/community/pro/external baseline for audit:forecast:benchmark.",
+      "minimum_rows": 1,
+      "required_columns": [
+        "baseline_id",
+        "label",
+        "baseline_type",
+        "avg_brier",
+        "sample_size",
+        "source_url",
+        "question_set_scope",
+        "timestamp_policy",
+        "comparability_notes",
+        "notes"
+      ],
+      "notes": [
+        "Aggregate baselines must be comparable to the evaluated question set.",
+        "Per-forecast baselines can be supplied separately with forecast_id, probability, and optional outcome.",
+        "Source URLs, sample sizes, question-set scope, timestamp policy, and comparability notes must be attached to every baseline claim."
+      ]
+    }
+  ],
+  "acceptance_gates": [
+    {
+      "gate": "input_validation",
+      "required": true,
+      "pass_condition": "audit:accuracy:validate-inputs passes against the owner-approved forecast export and real comparable baseline before scoring commands run."
+    },
+    {
+      "gate": "approved_export",
+      "required": true,
+      "pass_condition": "audit:calibration:ledger is run with --source-mode approved_export against owner-approved resolved forecasts."
+    },
+    {
+      "gate": "minimum_sample_size",
+      "required": true,
+      "pass_condition": "At least one scored source has sample_size >= 25."
+    },
+    {
+      "gate": "reliability_bins",
+      "required": true,
+      "pass_condition": "Reliability bins are generated with --bins 5 and non-empty bins are reported with observed_frequency and calibration_error."
+    },
+    {
+      "gate": "comparable_baseline",
+      "required": true,
+      "pass_condition": "audit:forecast:benchmark compares the approved ledger against a real human/community/pro/external baseline on same or explicitly comparable questions."
+    },
+    {
+      "gate": "claim_language",
+      "required": true,
+      "pass_condition": "Market copy remains calibration-aware decision support unless approved export, sample size, reliability, and comparable baseline gates all pass."
+    }
+  ],
+  "commands_after_owner_export": [
+    "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:accuracy:validate-inputs -- --forecast-csv <owner-approved-resolved-forecast-export.csv> --baseline-csv <real-human-community-pro-baseline.csv> --json-output docs/launch-readiness/accuracy-evidence-input-validation-approved-<date>.json --md-output docs/launch-readiness/accuracy-evidence-input-validation-approved-<date>.md --csv-output docs/launch-readiness/accuracy-evidence-input-validation-checklist-approved-<date>.csv --min-sample-size 25",
+    "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:calibration:ledger -- --input <owner-approved-resolved-forecast-export.json-or-csv> --source-mode approved_export --output docs/launch-readiness/resolved-forecast-calibration-ledger-approved-<date>.json --min-sample-size 25 --bins 5",
+    "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:forecast:benchmark -- --ledger docs/launch-readiness/resolved-forecast-calibration-ledger-approved-<date>.json --baseline <real-human-community-pro-baseline.json-or-csv> --output docs/launch-readiness/forecast-benchmark-comparison-approved-<date>.json",
+    "Re-run audit:commercial:confidence only after the approved ledger and real baseline artifacts are attached."
+  ],
+  "current_blockers": [
+    "Current calibration ledger status is not_launch_proof with mode sample_fixture.",
+    "Current benchmark status is sample_only_not_launch_proof with ledger mode sample_fixture.",
+    "No owner-approved resolved export or real comparable baseline is attached in this evidence set."
+  ],
+  "external_methodology_alignment": [
+    {
+      "framework": "Metaculus FutureEval",
+      "source_url": "https://www.metaculus.com/futureeval/methodology/",
+      "requirement": "Evaluate AI forecasting on unresolved-when-forecast questions and compare against human/community baselines on shared resolved questions."
+    },
+    {
+      "framework": "ForecastBench",
+      "source_url": "https://www.forecastbench.org/about/",
+      "requirement": "Use a dynamic contamination-resistant forecasting benchmark with human comparison groups where possible."
+    },
+    {
+      "framework": "NIST AI RMF Measure",
+      "source_url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "requirement": "Measure and monitor performance in deployment-relevant conditions before relying on system claims."
+    }
+  ]
+}

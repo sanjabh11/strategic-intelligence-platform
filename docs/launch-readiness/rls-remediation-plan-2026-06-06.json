@@ -1,0 +1,2266 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-06-06T17:05:42.408Z",
+  "source": {
+    "audit_report": "docs/launch-readiness/rls-policy-audit-2026-06-06.json",
+    "mode": "static_remediation_plan",
+    "production_state_verified": false
+  },
+  "summary": {
+    "source_migration_file_count": 57,
+    "source_policy_count": 186,
+    "source_finding_count": 162,
+    "source_p1_finding_count": 78,
+    "affected_table_count": 70,
+    "p1_table_count": 44,
+    "remediation_batch_count": 10,
+    "commercial_security_status": "not_enterprise_ready"
+  },
+  "best_practice_mapping": [
+    {
+      "framework": "OWASP API1:2023 Broken Object Level Authorization",
+      "requirement": "Every record-access path needs object-level authorization tied to the requesting actor and the requested object.",
+      "implication": "Broad USING (true), public role policies, and anonymous writes are not acceptable for private strategic-intelligence data."
+    },
+    {
+      "framework": "Supabase RLS and database testing guidance",
+      "requirement": "RLS policies should be automated-test covered via application tests or Supabase CLI SQL/pgTAP tests.",
+      "implication": "A policy migration is not complete until anon, unrelated authenticated, owner/member, reviewer, and service-role behavior is proven."
+    },
+    {
+      "framework": "NIST SSDF SP 800-218",
+      "requirement": "Secure software practices should reduce vulnerability likelihood and provide acquisition-ready communication between producer and customer.",
+      "implication": "This remediation plan is a procurement evidence artifact, not proof that deployed policies are already fixed."
+    },
+    {
+      "framework": "CISA Secure by Design",
+      "requirement": "Product owners should take ownership of customer security outcomes and ship secure defaults.",
+      "implication": "Enterprise pilots should wait for table-scoped least-privilege policies and hosted proof."
+    }
+  ],
+  "remediation_batches": [
+    {
+      "domain": "advanced_services",
+      "priority": "P1",
+      "table_count": 10,
+      "p1_table_count": 10,
+      "tables": [
+        "agent_beliefs",
+        "analysis_trajectories",
+        "belief_networks",
+        "collective_insights",
+        "information_value_analysis",
+        "insight_reactions",
+        "quantum_strategic_states",
+        "scale_invariant_adaptations",
+        "shared_strategies",
+        "strategic_patterns"
+      ],
+      "buyer_impact": "Advanced outputs can contain customer scenario data and should not be anonymously writable or broadly readable.",
+      "recommended_policy_direction": "Require owner-bound inserts and reads, or service-role mediated writes from authenticated analysis jobs.",
+      "acceptance_tests": [
+        "anon role cannot read or write private rows",
+        "unrelated authenticated user cannot access another owner/member row",
+        "intended owner/member/reviewer/service-role path still works",
+        "published public summary rows remain readable only when explicitly classified public"
+      ]
+    },
+    {
+      "domain": "forecasting_and_ml_evaluation",
+      "priority": "P1",
+      "table_count": 15,
+      "p1_table_count": 8,
+      "tables": [
+        "whitebox_experiment_evaluations",
+        "whitebox_experiment_state",
+        "strategy_outcomes",
+        "cross_domain_transfer_results",
+        "dynamic_recalibration_results",
+        "outcome_forecasting_results",
+        "strategy_success_analysis",
+        "temporal_optimization_results",
+        "calibration_models",
+        "community_metrics",
+        "drift_signals",
+        "forecast_scores",
+        "shadow_model_registry",
+        "shadow_predictions",
+        "temporal_forecasts"
+      ],
+      "buyer_impact": "Prediction-science claims require protected evaluation data, shadow runs, and resolved-outcome ledgers.",
+      "recommended_policy_direction": "Restrict evaluation, shadow, and calibration tables to service-role jobs, owners, reviewers, and explicitly public published summaries.",
+      "acceptance_tests": [
+        "anon role cannot read or write private rows",
+        "unrelated authenticated user cannot access another owner/member row",
+        "intended owner/member/reviewer/service-role path still works",
+        "published public summary rows remain readable only when explicitly classified public"
+      ]
+    },
+    {
+      "domain": "collaboration_and_warroom",
+      "priority": "P1",
+      "table_count": 7,
+      "p1_table_count": 7,
+      "tables": [
+        "collaborative_messages",
+        "collaborative_sessions",
+        "session_participants",
+        "warroom_assumptions",
+        "warroom_comments",
+        "warroom_decision_logs",
+        "warroom_scenario_versions"
+      ],
+      "buyer_impact": "Collaboration memory and war-room records are enterprise-sensitive and need team/member scoped access.",
+      "recommended_policy_direction": "Scope reads and writes to room/session membership, creator ownership, explicit reviewer roles, or service-role jobs.",
+      "acceptance_tests": [
+        "anon role cannot read or write private rows",
+        "unrelated authenticated user cannot access another owner/member row",
+        "intended owner/member/reviewer/service-role path still works",
+        "published public summary rows remain readable only when explicitly classified public"
+      ]
+    },
+    {
+      "domain": "retrieval_and_evidence",
+      "priority": "P1",
+      "table_count": 6,
+      "p1_table_count": 6,
+      "tables": [
+        "retrievals",
+        "retrieval_cache",
+        "retrieval_entity_links",
+        "retrieval_provider_runs",
+        "evidence_citations",
+        "evidence_sources"
+      ],
+      "buyer_impact": "Evidence, retrieval cache, and provider runs can expose query intent, sources, and analysis context.",
+      "recommended_policy_direction": "Separate public citation reads from private retrieval logs; route anonymous evidence writes through edge functions with rate limits and provenance metadata.",
+      "acceptance_tests": [
+        "anon role cannot read or write private rows",
+        "unrelated authenticated user cannot access another owner/member row",
+        "intended owner/member/reviewer/service-role path still works",
+        "published public summary rows remain readable only when explicitly classified public"
+      ]
+    },
+    {
+      "domain": "identity_and_review",
+      "priority": "P1",
+      "table_count": 5,
+      "p1_table_count": 5,
+      "tables": [
+        "analysis_runs",
+        "human_reviews",
+        "users",
+        "asset_storage",
+        "schema_failures"
+      ],
+      "buyer_impact": "Directly affects user privacy, review confidentiality, and buyer trust in analysis ownership.",
+      "recommended_policy_direction": "Require authenticated owner, reviewer, or service-role access; remove unconditional public reads and anonymous writes except through audited edge functions.",
+      "acceptance_tests": [
+        "anon role cannot read or write private rows",
+        "unrelated authenticated user cannot access another owner/member row",
+        "intended owner/member/reviewer/service-role path still works",
+        "published public summary rows remain readable only when explicitly classified public"
+      ]
+    },
+    {
+      "domain": "classroom",
+      "priority": "P1",
+      "table_count": 4,
+      "p1_table_count": 3,
+      "tables": [
+        "classroom_assignments",
+        "classroom_activity",
+        "classrooms",
+        "classroom_members"
+      ],
+      "buyer_impact": "Academic pilots need teacher/student membership boundaries and privacy-safe activity logs.",
+      "recommended_policy_direction": "Restrict access by classroom membership and teacher role; prove non-members cannot read or write classroom artifacts.",
+      "acceptance_tests": [
+        "anon role cannot read or write private rows",
+        "unrelated authenticated user cannot access another owner/member row",
+        "intended owner/member/reviewer/service-role path still works",
+        "published public summary rows remain readable only when explicitly classified public"
+      ]
+    },
+    {
+      "domain": "observability",
+      "priority": "P1",
+      "table_count": 3,
+      "p1_table_count": 3,
+      "tables": [
+        "monitoring_alerts",
+        "rpc_errors",
+        "third_party_noise"
+      ],
+      "buyer_impact": "Operational logs can expose system internals, provider failures, and customer activity.",
+      "recommended_policy_direction": "Restrict observability records to service-role/admin/reviewer roles; expose only redacted health summaries.",
+      "acceptance_tests": [
+        "anon role cannot read or write private rows",
+        "unrelated authenticated user cannot access another owner/member row",
+        "intended owner/member/reviewer/service-role path still works",
+        "published public summary rows remain readable only when explicitly classified public"
+      ]
+    },
+    {
+      "domain": "analysis_execution",
+      "priority": "P1",
+      "table_count": 7,
+      "p1_table_count": 2,
+      "tables": [
+        "analysis_jobs",
+        "analysis_features",
+        "multiplayer_participants",
+        "multiplayer_sessions",
+        "circuit_breaker",
+        "rate_limit_tracking",
+        "real_time_events"
+      ],
+      "buyer_impact": "Analysis execution and public-beta intake tables can expose job state, feature outputs, abuse controls, and user workflow metadata.",
+      "recommended_policy_direction": "Route anonymous public-beta writes through edge functions, bind job reads/writes to owner or service-role, and expose only redacted public status.",
+      "acceptance_tests": [
+        "anon role cannot read or write private rows",
+        "unrelated authenticated user cannot access another owner/member row",
+        "intended owner/member/reviewer/service-role path still works",
+        "published public summary rows remain readable only when explicitly classified public"
+      ]
+    },
+    {
+      "domain": "public_catalog_candidates",
+      "priority": "P2",
+      "table_count": 9,
+      "p1_table_count": 0,
+      "tables": [
+        "assignment_submissions",
+        "campaign_participants",
+        "cooperation_campaigns",
+        "game_definitions",
+        "patterns",
+        "signaling_recommendations",
+        "domain_specific_patterns",
+        "marketplace_scenarios",
+        "tier_limits"
+      ],
+      "buyer_impact": "Some catalog rows may be intentionally public, but enterprise buyers need an exception register explaining why broad reads are safe.",
+      "recommended_policy_direction": "Classify each table as public catalog or private pilot data; retain public reads only for explicitly published catalog rows and block anonymous writes.",
+      "acceptance_tests": [
+        "anon role cannot read or write private rows",
+        "unrelated authenticated user cannot access another owner/member row",
+        "intended owner/member/reviewer/service-role path still works",
+        "published public summary rows remain readable only when explicitly classified public"
+      ]
+    },
+    {
+      "domain": "ontology_and_graph",
+      "priority": "P2",
+      "table_count": 4,
+      "p1_table_count": 0,
+      "tables": [
+        "entity_graph_edges",
+        "entity_graph_nodes",
+        "ontology_aliases",
+        "ontology_entities"
+      ],
+      "buyer_impact": "Ontology and graph data can reveal strategic context, source linkage, and inferred entities across customer analyses.",
+      "recommended_policy_direction": "Separate globally public ontology references from customer-derived graph edges; require owner/service-role access for derived graph records.",
+      "acceptance_tests": [
+        "anon role cannot read or write private rows",
+        "unrelated authenticated user cannot access another owner/member row",
+        "intended owner/member/reviewer/service-role path still works",
+        "published public summary rows remain readable only when explicitly classified public"
+      ]
+    }
+  ],
+  "priority_tables": [
+    {
+      "table": "analysis_runs",
+      "domain": "identity_and_review",
+      "priority": "P1",
+      "finding_count": 7,
+      "p1_finding_count": 6,
+      "issue_types": [
+        "anonymous_write_check",
+        "policy_grants_to_public_role",
+        "sensitive_table_read_without_identity_predicate",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "buyer_impact": "Directly affects user privacy, review confidentiality, and buyer trust in analysis ownership.",
+      "recommended_policy_direction": "Require authenticated owner, reviewer, or service-role access; remove unconditional public reads and anonymous writes except through audited edge functions.",
+      "required_tests": [
+        "Add anon insert denial tests and a separate service-role/edge-function happy-path test.",
+        "Add role-scoped access tests for anon, authenticated owner, unrelated authenticated user, reviewer, and service role.",
+        "Add positive and negative read tests for owner/member/reviewer versus unrelated user.",
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows.",
+        "Add write denial tests for unrelated users and write acceptance tests for the intended actor."
+      ],
+      "remediation_notes": [
+        "Remove direct anon writes or move them behind an edge function/service-role flow with rate limits and input validation.",
+        "Replace TO public with explicit roles and predicates; use public only for tables classified as public catalog/read-only.",
+        "Add a visible identity, ownership, role, membership, or publication-state predicate.",
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate.",
+        "Add ownership, service-role, or reviewer predicates to write policies."
+      ],
+      "source_locations": [
+        "supabase/migrations/20250304_0001_create_users_table.sql:54",
+        "supabase/migrations/20250826_0001_init.sql:43",
+        "supabase/migrations/20250902184556_0002_write_policies.sql:9",
+        "supabase/migrations/20250902184557_0003_mvp_anon_insert.sql:10"
+      ]
+    },
+    {
+      "table": "monitoring_alerts",
+      "domain": "observability",
+      "priority": "P1",
+      "finding_count": 6,
+      "p1_finding_count": 5,
+      "issue_types": [
+        "anonymous_write_check",
+        "sensitive_table_read_without_identity_predicate",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "buyer_impact": "Operational logs can expose system internals, provider failures, and customer activity.",
+      "recommended_policy_direction": "Restrict observability records to service-role/admin/reviewer roles; expose only redacted health summaries.",
+      "required_tests": [
+        "Add anon insert denial tests and a separate service-role/edge-function happy-path test.",
+        "Add positive and negative read tests for owner/member/reviewer versus unrelated user.",
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows.",
+        "Add write denial tests for unrelated users and write acceptance tests for the intended actor."
+      ],
+      "remediation_notes": [
+        "Remove direct anon writes or move them behind an edge function/service-role flow with rate limits and input validation.",
+        "Add a visible identity, ownership, role, membership, or publication-state predicate.",
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate.",
+        "Add ownership, service-role, or reviewer predicates to write policies."
+      ],
+      "source_locations": [
+        "supabase/migrations/20250907110000_observability_tables.sql:36",
+        "supabase/migrations/20250918110000_advanced_services_tables.sql:170",
+        "supabase/migrations/20250918110000_advanced_services_tables.sql:173"
+      ]
+    },
+    {
+      "table": "human_reviews",
+      "domain": "identity_and_review",
+      "priority": "P1",
+      "finding_count": 4,
+      "p1_finding_count": 4,
+      "issue_types": [
+        "sensitive_table_read_without_identity_predicate",
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "buyer_impact": "Directly affects user privacy, review confidentiality, and buyer trust in analysis ownership.",
+      "recommended_policy_direction": "Require authenticated owner, reviewer, or service-role access; remove unconditional public reads and anonymous writes except through audited edge functions.",
+      "required_tests": [
+        "Add positive and negative read tests for owner/member/reviewer versus unrelated user.",
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows."
+      ],
+      "remediation_notes": [
+        "Add a visible identity, ownership, role, membership, or publication-state predicate.",
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate."
+      ],
+      "source_locations": [
+        "supabase/migrations/20250304_0001_create_users_table.sql:62",
+        "supabase/migrations/20250904_0010_extend_analysis_runs_for_audience.sql:99"
+      ]
+    },
+    {
+      "table": "retrievals",
+      "domain": "retrieval_and_evidence",
+      "priority": "P1",
+      "finding_count": 4,
+      "p1_finding_count": 4,
+      "issue_types": [
+        "sensitive_table_read_without_identity_predicate",
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "buyer_impact": "Evidence, retrieval cache, and provider runs can expose query intent, sources, and analysis context.",
+      "recommended_policy_direction": "Separate public citation reads from private retrieval logs; route anonymous evidence writes through edge functions with rate limits and provenance metadata.",
+      "required_tests": [
+        "Add positive and negative read tests for owner/member/reviewer versus unrelated user.",
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows."
+      ],
+      "remediation_notes": [
+        "Add a visible identity, ownership, role, membership, or publication-state predicate.",
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate."
+      ],
+      "source_locations": [
+        "supabase/migrations/20250904_0010_extend_analysis_runs_for_audience.sql:136",
+        "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql:212"
+      ]
+    },
+    {
+      "table": "users",
+      "domain": "identity_and_review",
+      "priority": "P1",
+      "finding_count": 4,
+      "p1_finding_count": 4,
+      "issue_types": [
+        "sensitive_table_read_without_identity_predicate",
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "buyer_impact": "Directly affects user privacy, review confidentiality, and buyer trust in analysis ownership.",
+      "recommended_policy_direction": "Require authenticated owner, reviewer, or service-role access; remove unconditional public reads and anonymous writes except through audited edge functions.",
+      "required_tests": [
+        "Add positive and negative read tests for owner/member/reviewer versus unrelated user.",
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows."
+      ],
+      "remediation_notes": [
+        "Add a visible identity, ownership, role, membership, or publication-state predicate.",
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate."
+      ],
+      "source_locations": [
+        "supabase/migrations/20250304_0001_create_users_table.sql:58",
+        "supabase/migrations/20250904_0010_extend_analysis_runs_for_audience.sql:105"
+      ]
+    },
+    {
+      "table": "collaborative_messages",
+      "domain": "collaboration_and_warroom",
+      "priority": "P1",
+      "finding_count": 4,
+      "p1_finding_count": 3,
+      "issue_types": [
+        "anonymous_write_check",
+        "sensitive_table_read_without_identity_predicate",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "buyer_impact": "Collaboration memory and war-room records are enterprise-sensitive and need team/member scoped access.",
+      "recommended_policy_direction": "Scope reads and writes to room/session membership, creator ownership, explicit reviewer roles, or service-role jobs.",
+      "required_tests": [
+        "Add anon insert denial tests and a separate service-role/edge-function happy-path test.",
+        "Add positive and negative read tests for owner/member/reviewer versus unrelated user.",
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows.",
+        "Add write denial tests for unrelated users and write acceptance tests for the intended actor."
+      ],
+      "remediation_notes": [
+        "Remove direct anon writes or move them behind an edge function/service-role flow with rate limits and input validation.",
+        "Add a visible identity, ownership, role, membership, or publication-state predicate.",
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate.",
+        "Add ownership, service-role, or reviewer predicates to write policies."
+      ],
+      "source_locations": [
+        "supabase/migrations/20250102184612_0008_evidence_collective.sql:147",
+        "supabase/migrations/20250102184612_0008_evidence_collective.sql:160"
+      ]
+    },
+    {
+      "table": "collaborative_sessions",
+      "domain": "collaboration_and_warroom",
+      "priority": "P1",
+      "finding_count": 4,
+      "p1_finding_count": 3,
+      "issue_types": [
+        "anonymous_write_check",
+        "sensitive_table_read_without_identity_predicate",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "buyer_impact": "Collaboration memory and war-room records are enterprise-sensitive and need team/member scoped access.",
+      "recommended_policy_direction": "Scope reads and writes to room/session membership, creator ownership, explicit reviewer roles, or service-role jobs.",
+      "required_tests": [
+        "Add anon insert denial tests and a separate service-role/edge-function happy-path test.",
+        "Add positive and negative read tests for owner/member/reviewer versus unrelated user.",
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows.",
+        "Add write denial tests for unrelated users and write acceptance tests for the intended actor."
+      ],
+      "remediation_notes": [
+        "Remove direct anon writes or move them behind an edge function/service-role flow with rate limits and input validation.",
+        "Add a visible identity, ownership, role, membership, or publication-state predicate.",
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate.",
+        "Add ownership, service-role, or reviewer predicates to write policies."
+      ],
+      "source_locations": [
+        "supabase/migrations/20250102184612_0008_evidence_collective.sql:135",
+        "supabase/migrations/20250102184612_0008_evidence_collective.sql:156"
+      ]
+    },
+    {
+      "table": "session_participants",
+      "domain": "collaboration_and_warroom",
+      "priority": "P1",
+      "finding_count": 4,
+      "p1_finding_count": 3,
+      "issue_types": [
+        "anonymous_write_check",
+        "sensitive_table_read_without_identity_predicate",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "buyer_impact": "Collaboration memory and war-room records are enterprise-sensitive and need team/member scoped access.",
+      "recommended_policy_direction": "Scope reads and writes to room/session membership, creator ownership, explicit reviewer roles, or service-role jobs.",
+      "required_tests": [
+        "Add anon insert denial tests and a separate service-role/edge-function happy-path test.",
+        "Add positive and negative read tests for owner/member/reviewer versus unrelated user.",
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows.",
+        "Add write denial tests for unrelated users and write acceptance tests for the intended actor."
+      ],
+      "remediation_notes": [
+        "Remove direct anon writes or move them behind an edge function/service-role flow with rate limits and input validation.",
+        "Add a visible identity, ownership, role, membership, or publication-state predicate.",
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate.",
+        "Add ownership, service-role, or reviewer predicates to write policies."
+      ],
+      "source_locations": [
+        "supabase/migrations/20250102184612_0008_evidence_collective.sql:138",
+        "supabase/migrations/20250102184612_0008_evidence_collective.sql:157"
+      ]
+    },
+    {
+      "table": "analysis_jobs",
+      "domain": "analysis_execution",
+      "priority": "P1",
+      "finding_count": 5,
+      "p1_finding_count": 2,
+      "issue_types": [
+        "anonymous_write_check",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT",
+        "UPDATE"
+      ],
+      "buyer_impact": "Analysis execution and public-beta intake tables can expose job state, feature outputs, abuse controls, and user workflow metadata.",
+      "recommended_policy_direction": "Route anonymous public-beta writes through edge functions, bind job reads/writes to owner or service-role, and expose only redacted public status.",
+      "required_tests": [
+        "Add anon insert denial tests and a separate service-role/edge-function happy-path test.",
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows.",
+        "Add write denial tests for unrelated users and write acceptance tests for the intended actor."
+      ],
+      "remediation_notes": [
+        "Remove direct anon writes or move them behind an edge function/service-role flow with rate limits and input validation.",
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate.",
+        "Add ownership, service-role, or reviewer predicates to write policies."
+      ],
+      "source_locations": [
+        "supabase/migrations/20250902184558_0004_jobs.sql:22",
+        "supabase/migrations/20250902184558_0004_jobs.sql:28",
+        "supabase/migrations/20250902184558_0004_jobs.sql:36"
+      ]
+    },
+    {
+      "table": "analysis_features",
+      "domain": "analysis_execution",
+      "priority": "P1",
+      "finding_count": 4,
+      "p1_finding_count": 2,
+      "issue_types": [
+        "anonymous_write_check",
+        "policy_grants_to_public_role",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "buyer_impact": "Analysis execution and public-beta intake tables can expose job state, feature outputs, abuse controls, and user workflow metadata.",
+      "recommended_policy_direction": "Route anonymous public-beta writes through edge functions, bind job reads/writes to owner or service-role, and expose only redacted public status.",
+      "required_tests": [
+        "Add anon insert denial tests and a separate service-role/edge-function happy-path test.",
+        "Add role-scoped access tests for anon, authenticated owner, unrelated authenticated user, reviewer, and service role.",
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows.",
+        "Add write denial tests for unrelated users and write acceptance tests for the intended actor."
+      ],
+      "remediation_notes": [
+        "Remove direct anon writes or move them behind an edge function/service-role flow with rate limits and input validation.",
+        "Replace TO public with explicit roles and predicates; use public only for tables classified as public catalog/read-only.",
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate.",
+        "Add ownership, service-role, or reviewer predicates to write policies."
+      ],
+      "source_locations": [
+        "supabase/migrations/20250826_0001_init.sql:49",
+        "supabase/migrations/20250902184556_0002_write_policies.sql:17",
+        "supabase/migrations/20250902184557_0003_mvp_anon_insert.sql:18"
+      ]
+    },
+    {
+      "table": "asset_storage",
+      "domain": "identity_and_review",
+      "priority": "P1",
+      "finding_count": 2,
+      "p1_finding_count": 2,
+      "issue_types": [
+        "sensitive_table_read_without_identity_predicate",
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "buyer_impact": "Directly affects user privacy, review confidentiality, and buyer trust in analysis ownership.",
+      "recommended_policy_direction": "Require authenticated owner, reviewer, or service-role access; remove unconditional public reads and anonymous writes except through audited edge functions.",
+      "required_tests": [
+        "Add positive and negative read tests for owner/member/reviewer versus unrelated user.",
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows."
+      ],
+      "remediation_notes": [
+        "Add a visible identity, ownership, role, membership, or publication-state predicate.",
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate."
+      ],
+      "source_locations": [
+        "supabase/migrations/20250904_0010_extend_analysis_runs_for_audience.sql:102"
+      ]
+    },
+    {
+      "table": "retrieval_cache",
+      "domain": "retrieval_and_evidence",
+      "priority": "P1",
+      "finding_count": 2,
+      "p1_finding_count": 2,
+      "issue_types": [
+        "sensitive_table_read_without_identity_predicate",
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "buyer_impact": "Evidence, retrieval cache, and provider runs can expose query intent, sources, and analysis context.",
+      "recommended_policy_direction": "Separate public citation reads from private retrieval logs; route anonymous evidence writes through edge functions with rate limits and provenance metadata.",
+      "required_tests": [
+        "Add positive and negative read tests for owner/member/reviewer versus unrelated user.",
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows."
+      ],
+      "remediation_notes": [
+        "Add a visible identity, ownership, role, membership, or publication-state predicate.",
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate."
+      ],
+      "source_locations": [
+        "supabase/migrations/20250906110000_add_retrieval_cache_ph4.sql:30"
+      ]
+    },
+    {
+      "table": "retrieval_entity_links",
+      "domain": "retrieval_and_evidence",
+      "priority": "P1",
+      "finding_count": 2,
+      "p1_finding_count": 2,
+      "issue_types": [
+        "sensitive_table_read_without_identity_predicate",
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "buyer_impact": "Evidence, retrieval cache, and provider runs can expose query intent, sources, and analysis context.",
+      "recommended_policy_direction": "Separate public citation reads from private retrieval logs; route anonymous evidence writes through edge functions with rate limits and provenance metadata.",
+      "required_tests": [
+        "Add positive and negative read tests for owner/member/reviewer versus unrelated user.",
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows."
+      ],
+      "remediation_notes": [
+        "Add a visible identity, ownership, role, membership, or publication-state predicate.",
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate."
+      ],
+      "source_locations": [
+        "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql:215"
+      ]
+    },
+    {
+      "table": "retrieval_provider_runs",
+      "domain": "retrieval_and_evidence",
+      "priority": "P1",
+      "finding_count": 2,
+      "p1_finding_count": 2,
+      "issue_types": [
+        "sensitive_table_read_without_identity_predicate",
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "buyer_impact": "Evidence, retrieval cache, and provider runs can expose query intent, sources, and analysis context.",
+      "recommended_policy_direction": "Separate public citation reads from private retrieval logs; route anonymous evidence writes through edge functions with rate limits and provenance metadata.",
+      "required_tests": [
+        "Add positive and negative read tests for owner/member/reviewer versus unrelated user.",
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows."
+      ],
+      "remediation_notes": [
+        "Add a visible identity, ownership, role, membership, or publication-state predicate.",
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate."
+      ],
+      "source_locations": [
+        "supabase/migrations/20260502000200_retrieval_provider_recovery.sql:37"
+      ]
+    },
+    {
+      "table": "rpc_errors",
+      "domain": "observability",
+      "priority": "P1",
+      "finding_count": 2,
+      "p1_finding_count": 2,
+      "issue_types": [
+        "sensitive_table_read_without_identity_predicate",
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "buyer_impact": "Operational logs can expose system internals, provider failures, and customer activity.",
+      "recommended_policy_direction": "Restrict observability records to service-role/admin/reviewer roles; expose only redacted health summaries.",
+      "required_tests": [
+        "Add positive and negative read tests for owner/member/reviewer versus unrelated user.",
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows."
+      ],
+      "remediation_notes": [
+        "Add a visible identity, ownership, role, membership, or publication-state predicate.",
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate."
+      ],
+      "source_locations": [
+        "supabase/migrations/20250907110000_observability_tables.sql:56"
+      ]
+    },
+    {
+      "table": "schema_failures",
+      "domain": "identity_and_review",
+      "priority": "P1",
+      "finding_count": 2,
+      "p1_finding_count": 2,
+      "issue_types": [
+        "sensitive_table_read_without_identity_predicate",
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "buyer_impact": "Directly affects user privacy, review confidentiality, and buyer trust in analysis ownership.",
+      "recommended_policy_direction": "Require authenticated owner, reviewer, or service-role access; remove unconditional public reads and anonymous writes except through audited edge functions.",
+      "required_tests": [
+        "Add positive and negative read tests for owner/member/reviewer versus unrelated user.",
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows."
+      ],
+      "remediation_notes": [
+        "Add a visible identity, ownership, role, membership, or publication-state predicate.",
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate."
+      ],
+      "source_locations": [
+        "supabase/migrations/20250904_0010_extend_analysis_runs_for_audience.sql:128"
+      ]
+    },
+    {
+      "table": "whitebox_experiment_evaluations",
+      "domain": "forecasting_and_ml_evaluation",
+      "priority": "P1",
+      "finding_count": 2,
+      "p1_finding_count": 2,
+      "issue_types": [
+        "sensitive_table_read_without_identity_predicate",
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "buyer_impact": "Prediction-science claims require protected evaluation data, shadow runs, and resolved-outcome ledgers.",
+      "recommended_policy_direction": "Restrict evaluation, shadow, and calibration tables to service-role jobs, owners, reviewers, and explicitly public published summaries.",
+      "required_tests": [
+        "Add positive and negative read tests for owner/member/reviewer versus unrelated user.",
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows."
+      ],
+      "remediation_notes": [
+        "Add a visible identity, ownership, role, membership, or publication-state predicate.",
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate."
+      ],
+      "source_locations": [
+        "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql:224"
+      ]
+    },
+    {
+      "table": "whitebox_experiment_state",
+      "domain": "forecasting_and_ml_evaluation",
+      "priority": "P1",
+      "finding_count": 2,
+      "p1_finding_count": 2,
+      "issue_types": [
+        "sensitive_table_read_without_identity_predicate",
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "buyer_impact": "Prediction-science claims require protected evaluation data, shadow runs, and resolved-outcome ledgers.",
+      "recommended_policy_direction": "Restrict evaluation, shadow, and calibration tables to service-role jobs, owners, reviewers, and explicitly public published summaries.",
+      "required_tests": [
+        "Add positive and negative read tests for owner/member/reviewer versus unrelated user.",
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows."
+      ],
+      "remediation_notes": [
+        "Add a visible identity, ownership, role, membership, or publication-state predicate.",
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate."
+      ],
+      "source_locations": [
+        "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql:221"
+      ]
+    },
+    {
+      "table": "strategy_outcomes",
+      "domain": "forecasting_and_ml_evaluation",
+      "priority": "P1",
+      "finding_count": 6,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "anonymous_write_check",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "buyer_impact": "Prediction-science claims require protected evaluation data, shadow runs, and resolved-outcome ledgers.",
+      "recommended_policy_direction": "Restrict evaluation, shadow, and calibration tables to service-role jobs, owners, reviewers, and explicitly public published summaries.",
+      "required_tests": [
+        "Add anon insert denial tests and a separate service-role/edge-function happy-path test.",
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows.",
+        "Add write denial tests for unrelated users and write acceptance tests for the intended actor."
+      ],
+      "remediation_notes": [
+        "Remove direct anon writes or move them behind an edge function/service-role flow with rate limits and input validation.",
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate.",
+        "Add ownership, service-role, or reviewer predicates to write policies."
+      ],
+      "source_locations": [
+        "supabase/migrations/20250918110000_advanced_services_tables.sql:114",
+        "supabase/migrations/20250918110000_advanced_services_tables.sql:117",
+        "supabase/migrations/20251006100000_realtime_features.sql:275",
+        "supabase/migrations/20251213000000_eliminate_mock_data.sql:38",
+        "supabase/migrations/20251213000000_eliminate_mock_data.sql:49"
+      ]
+    },
+    {
+      "table": "classroom_assignments",
+      "domain": "classroom",
+      "priority": "P1",
+      "finding_count": 4,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "sensitive_table_read_without_identity_predicate",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "DELETE",
+        "INSERT",
+        "SELECT",
+        "UPDATE"
+      ],
+      "buyer_impact": "Academic pilots need teacher/student membership boundaries and privacy-safe activity logs.",
+      "recommended_policy_direction": "Restrict access by classroom membership and teacher role; prove non-members cannot read or write classroom artifacts.",
+      "required_tests": [
+        "Add positive and negative read tests for owner/member/reviewer versus unrelated user.",
+        "Add write denial tests for unrelated users and write acceptance tests for the intended actor."
+      ],
+      "remediation_notes": [
+        "Add a visible identity, ownership, role, membership, or publication-state predicate.",
+        "Add ownership, service-role, or reviewer predicates to write policies."
+      ],
+      "source_locations": [
+        "supabase/migrations/20260430123000_fix_classroom_policy_recursion.sql:149",
+        "supabase/migrations/20260430123000_fix_classroom_policy_recursion.sql:153",
+        "supabase/migrations/20260430123000_fix_classroom_policy_recursion.sql:158",
+        "supabase/migrations/20260430123000_fix_classroom_policy_recursion.sql:164"
+      ]
+    },
+    {
+      "table": "third_party_noise",
+      "domain": "observability",
+      "priority": "P1",
+      "finding_count": 4,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "anonymous_write_check",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "buyer_impact": "Operational logs can expose system internals, provider failures, and customer activity.",
+      "recommended_policy_direction": "Restrict observability records to service-role/admin/reviewer roles; expose only redacted health summaries.",
+      "required_tests": [
+        "Add anon insert denial tests and a separate service-role/edge-function happy-path test.",
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows.",
+        "Add write denial tests for unrelated users and write acceptance tests for the intended actor."
+      ],
+      "remediation_notes": [
+        "Remove direct anon writes or move them behind an edge function/service-role flow with rate limits and input validation.",
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate.",
+        "Add ownership, service-role, or reviewer predicates to write policies."
+      ],
+      "source_locations": [
+        "supabase/migrations/20250907110000_observability_tables.sql:17",
+        "supabase/migrations/20250918110000_advanced_services_tables.sql:162",
+        "supabase/migrations/20250918110000_advanced_services_tables.sql:165"
+      ]
+    },
+    {
+      "table": "agent_beliefs",
+      "domain": "advanced_services",
+      "priority": "P1",
+      "finding_count": 3,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "anonymous_write_check",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "buyer_impact": "Advanced outputs can contain customer scenario data and should not be anonymously writable or broadly readable.",
+      "recommended_policy_direction": "Require owner-bound inserts and reads, or service-role mediated writes from authenticated analysis jobs.",
+      "required_tests": [
+        "Add anon insert denial tests and a separate service-role/edge-function happy-path test.",
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows.",
+        "Add write denial tests for unrelated users and write acceptance tests for the intended actor."
+      ],
+      "remediation_notes": [
+        "Remove direct anon writes or move them behind an edge function/service-role flow with rate limits and input validation.",
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate.",
+        "Add ownership, service-role, or reviewer predicates to write policies."
+      ],
+      "source_locations": [
+        "supabase/migrations/20250902184559_0005_recursive.sql:33",
+        "supabase/migrations/20250902184559_0005_recursive.sql:43"
+      ]
+    },
+    {
+      "table": "analysis_trajectories",
+      "domain": "advanced_services",
+      "priority": "P1",
+      "finding_count": 3,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "anonymous_write_check",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "buyer_impact": "Advanced outputs can contain customer scenario data and should not be anonymously writable or broadly readable.",
+      "recommended_policy_direction": "Require owner-bound inserts and reads, or service-role mediated writes from authenticated analysis jobs.",
+      "required_tests": [
+        "Add anon insert denial tests and a separate service-role/edge-function happy-path test.",
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows.",
+        "Add write denial tests for unrelated users and write acceptance tests for the intended actor."
+      ],
+      "remediation_notes": [
+        "Remove direct anon writes or move them behind an edge function/service-role flow with rate limits and input validation.",
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate.",
+        "Add ownership, service-role, or reviewer predicates to write policies."
+      ],
+      "source_locations": [
+        "supabase/migrations/20250902184559_0005_recursive.sql:28",
+        "supabase/migrations/20250902184559_0005_recursive.sql:38"
+      ]
+    },
+    {
+      "table": "belief_networks",
+      "domain": "advanced_services",
+      "priority": "P1",
+      "finding_count": 3,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "anonymous_write_check",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "buyer_impact": "Advanced outputs can contain customer scenario data and should not be anonymously writable or broadly readable.",
+      "recommended_policy_direction": "Require owner-bound inserts and reads, or service-role mediated writes from authenticated analysis jobs.",
+      "required_tests": [
+        "Add anon insert denial tests and a separate service-role/edge-function happy-path test.",
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows.",
+        "Add write denial tests for unrelated users and write acceptance tests for the intended actor."
+      ],
+      "remediation_notes": [
+        "Remove direct anon writes or move them behind an edge function/service-role flow with rate limits and input validation.",
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate.",
+        "Add ownership, service-role, or reviewer predicates to write policies."
+      ],
+      "source_locations": [
+        "supabase/migrations/20250102184613_0007_quantum_table_schema.sql:81",
+        "supabase/migrations/20250102184613_0007_quantum_table_schema.sql:86"
+      ]
+    },
+    {
+      "table": "collective_insights",
+      "domain": "advanced_services",
+      "priority": "P1",
+      "finding_count": 3,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "anonymous_write_check",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "buyer_impact": "Advanced outputs can contain customer scenario data and should not be anonymously writable or broadly readable.",
+      "recommended_policy_direction": "Require owner-bound inserts and reads, or service-role mediated writes from authenticated analysis jobs.",
+      "required_tests": [
+        "Add anon insert denial tests and a separate service-role/edge-function happy-path test.",
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows.",
+        "Add write denial tests for unrelated users and write acceptance tests for the intended actor."
+      ],
+      "remediation_notes": [
+        "Remove direct anon writes or move them behind an edge function/service-role flow with rate limits and input validation.",
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate.",
+        "Add ownership, service-role, or reviewer predicates to write policies."
+      ],
+      "source_locations": [
+        "supabase/migrations/20250102184612_0008_evidence_collective.sql:141",
+        "supabase/migrations/20250102184612_0008_evidence_collective.sql:158"
+      ]
+    },
+    {
+      "table": "cross_domain_transfer_results",
+      "domain": "forecasting_and_ml_evaluation",
+      "priority": "P1",
+      "finding_count": 3,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "anonymous_write_check",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "buyer_impact": "Prediction-science claims require protected evaluation data, shadow runs, and resolved-outcome ledgers.",
+      "recommended_policy_direction": "Restrict evaluation, shadow, and calibration tables to service-role jobs, owners, reviewers, and explicitly public published summaries.",
+      "required_tests": [
+        "Add anon insert denial tests and a separate service-role/edge-function happy-path test.",
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows.",
+        "Add write denial tests for unrelated users and write acceptance tests for the intended actor."
+      ],
+      "remediation_notes": [
+        "Remove direct anon writes or move them behind an edge function/service-role flow with rate limits and input validation.",
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate.",
+        "Add ownership, service-role, or reviewer predicates to write policies."
+      ],
+      "source_locations": [
+        "supabase/migrations/20250918110000_advanced_services_tables.sql:154",
+        "supabase/migrations/20250918110000_advanced_services_tables.sql:157"
+      ]
+    },
+    {
+      "table": "dynamic_recalibration_results",
+      "domain": "forecasting_and_ml_evaluation",
+      "priority": "P1",
+      "finding_count": 3,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "anonymous_write_check",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "buyer_impact": "Prediction-science claims require protected evaluation data, shadow runs, and resolved-outcome ledgers.",
+      "recommended_policy_direction": "Restrict evaluation, shadow, and calibration tables to service-role jobs, owners, reviewers, and explicitly public published summaries.",
+      "required_tests": [
+        "Add anon insert denial tests and a separate service-role/edge-function happy-path test.",
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows.",
+        "Add write denial tests for unrelated users and write acceptance tests for the intended actor."
+      ],
+      "remediation_notes": [
+        "Remove direct anon writes or move them behind an edge function/service-role flow with rate limits and input validation.",
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate.",
+        "Add ownership, service-role, or reviewer predicates to write policies."
+      ],
+      "source_locations": [
+        "supabase/migrations/20250918110000_advanced_services_tables.sql:146",
+        "supabase/migrations/20250918110000_advanced_services_tables.sql:149"
+      ]
+    },
+    {
+      "table": "evidence_citations",
+      "domain": "retrieval_and_evidence",
+      "priority": "P1",
+      "finding_count": 3,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "anonymous_write_check",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "buyer_impact": "Evidence, retrieval cache, and provider runs can expose query intent, sources, and analysis context.",
+      "recommended_policy_direction": "Separate public citation reads from private retrieval logs; route anonymous evidence writes through edge functions with rate limits and provenance metadata.",
+      "required_tests": [
+        "Add anon insert denial tests and a separate service-role/edge-function happy-path test.",
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows.",
+        "Add write denial tests for unrelated users and write acceptance tests for the intended actor."
+      ],
+      "remediation_notes": [
+        "Remove direct anon writes or move them behind an edge function/service-role flow with rate limits and input validation.",
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate.",
+        "Add ownership, service-role, or reviewer predicates to write policies."
+      ],
+      "source_locations": [
+        "supabase/migrations/20250102184612_0008_evidence_collective.sql:130",
+        "supabase/migrations/20250102184612_0008_evidence_collective.sql:155"
+      ]
+    },
+    {
+      "table": "evidence_sources",
+      "domain": "retrieval_and_evidence",
+      "priority": "P1",
+      "finding_count": 3,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "anonymous_write_check",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "buyer_impact": "Evidence, retrieval cache, and provider runs can expose query intent, sources, and analysis context.",
+      "recommended_policy_direction": "Separate public citation reads from private retrieval logs; route anonymous evidence writes through edge functions with rate limits and provenance metadata.",
+      "required_tests": [
+        "Add anon insert denial tests and a separate service-role/edge-function happy-path test.",
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows.",
+        "Add write denial tests for unrelated users and write acceptance tests for the intended actor."
+      ],
+      "remediation_notes": [
+        "Remove direct anon writes or move them behind an edge function/service-role flow with rate limits and input validation.",
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate.",
+        "Add ownership, service-role, or reviewer predicates to write policies."
+      ],
+      "source_locations": [
+        "supabase/migrations/20250102184612_0008_evidence_collective.sql:127",
+        "supabase/migrations/20250102184612_0008_evidence_collective.sql:154"
+      ]
+    },
+    {
+      "table": "information_value_analysis",
+      "domain": "advanced_services",
+      "priority": "P1",
+      "finding_count": 3,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "anonymous_write_check",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "buyer_impact": "Advanced outputs can contain customer scenario data and should not be anonymously writable or broadly readable.",
+      "recommended_policy_direction": "Require owner-bound inserts and reads, or service-role mediated writes from authenticated analysis jobs.",
+      "required_tests": [
+        "Add anon insert denial tests and a separate service-role/edge-function happy-path test.",
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows.",
+        "Add write denial tests for unrelated users and write acceptance tests for the intended actor."
+      ],
+      "remediation_notes": [
+        "Remove direct anon writes or move them behind an edge function/service-role flow with rate limits and input validation.",
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate.",
+        "Add ownership, service-role, or reviewer predicates to write policies."
+      ],
+      "source_locations": [
+        "supabase/migrations/20250918100000_information_value_analysis.sql:18",
+        "supabase/migrations/20250918100000_information_value_analysis.sql:19"
+      ]
+    },
+    {
+      "table": "insight_reactions",
+      "domain": "advanced_services",
+      "priority": "P1",
+      "finding_count": 3,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "anonymous_write_check",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "buyer_impact": "Advanced outputs can contain customer scenario data and should not be anonymously writable or broadly readable.",
+      "recommended_policy_direction": "Require owner-bound inserts and reads, or service-role mediated writes from authenticated analysis jobs.",
+      "required_tests": [
+        "Add anon insert denial tests and a separate service-role/edge-function happy-path test.",
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows.",
+        "Add write denial tests for unrelated users and write acceptance tests for the intended actor."
+      ],
+      "remediation_notes": [
+        "Remove direct anon writes or move them behind an edge function/service-role flow with rate limits and input validation.",
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate.",
+        "Add ownership, service-role, or reviewer predicates to write policies."
+      ],
+      "source_locations": [
+        "supabase/migrations/20250102184612_0008_evidence_collective.sql:144",
+        "supabase/migrations/20250102184612_0008_evidence_collective.sql:159"
+      ]
+    },
+    {
+      "table": "outcome_forecasting_results",
+      "domain": "forecasting_and_ml_evaluation",
+      "priority": "P1",
+      "finding_count": 3,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "anonymous_write_check",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "buyer_impact": "Prediction-science claims require protected evaluation data, shadow runs, and resolved-outcome ledgers.",
+      "recommended_policy_direction": "Restrict evaluation, shadow, and calibration tables to service-role jobs, owners, reviewers, and explicitly public published summaries.",
+      "required_tests": [
+        "Add anon insert denial tests and a separate service-role/edge-function happy-path test.",
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows.",
+        "Add write denial tests for unrelated users and write acceptance tests for the intended actor."
+      ],
+      "remediation_notes": [
+        "Remove direct anon writes or move them behind an edge function/service-role flow with rate limits and input validation.",
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate.",
+        "Add ownership, service-role, or reviewer predicates to write policies."
+      ],
+      "source_locations": [
+        "supabase/migrations/20250918110000_advanced_services_tables.sql:138",
+        "supabase/migrations/20250918110000_advanced_services_tables.sql:141"
+      ]
+    },
+    {
+      "table": "quantum_strategic_states",
+      "domain": "advanced_services",
+      "priority": "P1",
+      "finding_count": 3,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "anonymous_write_check",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "buyer_impact": "Advanced outputs can contain customer scenario data and should not be anonymously writable or broadly readable.",
+      "recommended_policy_direction": "Require owner-bound inserts and reads, or service-role mediated writes from authenticated analysis jobs.",
+      "required_tests": [
+        "Add anon insert denial tests and a separate service-role/edge-function happy-path test.",
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows.",
+        "Add write denial tests for unrelated users and write acceptance tests for the intended actor."
+      ],
+      "remediation_notes": [
+        "Remove direct anon writes or move them behind an edge function/service-role flow with rate limits and input validation.",
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate.",
+        "Add ownership, service-role, or reviewer predicates to write policies."
+      ],
+      "source_locations": [
+        "supabase/migrations/20250102184613_0007_quantum_table_schema.sql:57",
+        "supabase/migrations/20250102184613_0007_quantum_table_schema.sql:62"
+      ]
+    },
+    {
+      "table": "scale_invariant_adaptations",
+      "domain": "advanced_services",
+      "priority": "P1",
+      "finding_count": 3,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "anonymous_write_check",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "buyer_impact": "Advanced outputs can contain customer scenario data and should not be anonymously writable or broadly readable.",
+      "recommended_policy_direction": "Require owner-bound inserts and reads, or service-role mediated writes from authenticated analysis jobs.",
+      "required_tests": [
+        "Add anon insert denial tests and a separate service-role/edge-function happy-path test.",
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows.",
+        "Add write denial tests for unrelated users and write acceptance tests for the intended actor."
+      ],
+      "remediation_notes": [
+        "Remove direct anon writes or move them behind an edge function/service-role flow with rate limits and input validation.",
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate.",
+        "Add ownership, service-role, or reviewer predicates to write policies."
+      ],
+      "source_locations": [
+        "supabase/migrations/20250918110000_advanced_services_tables.sql:122",
+        "supabase/migrations/20250918110000_advanced_services_tables.sql:125"
+      ]
+    },
+    {
+      "table": "shared_strategies",
+      "domain": "advanced_services",
+      "priority": "P1",
+      "finding_count": 3,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "anonymous_write_check",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "buyer_impact": "Advanced outputs can contain customer scenario data and should not be anonymously writable or broadly readable.",
+      "recommended_policy_direction": "Require owner-bound inserts and reads, or service-role mediated writes from authenticated analysis jobs.",
+      "required_tests": [
+        "Add anon insert denial tests and a separate service-role/edge-function happy-path test.",
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows.",
+        "Add write denial tests for unrelated users and write acceptance tests for the intended actor."
+      ],
+      "remediation_notes": [
+        "Remove direct anon writes or move them behind an edge function/service-role flow with rate limits and input validation.",
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate.",
+        "Add ownership, service-role, or reviewer predicates to write policies."
+      ],
+      "source_locations": [
+        "supabase/migrations/20250902184600_0006_collective.sql:28",
+        "supabase/migrations/20250902184600_0006_collective.sql:38"
+      ]
+    },
+    {
+      "table": "strategic_patterns",
+      "domain": "advanced_services",
+      "priority": "P1",
+      "finding_count": 3,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "anonymous_write_check",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "buyer_impact": "Advanced outputs can contain customer scenario data and should not be anonymously writable or broadly readable.",
+      "recommended_policy_direction": "Require owner-bound inserts and reads, or service-role mediated writes from authenticated analysis jobs.",
+      "required_tests": [
+        "Add anon insert denial tests and a separate service-role/edge-function happy-path test.",
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows.",
+        "Add write denial tests for unrelated users and write acceptance tests for the intended actor."
+      ],
+      "remediation_notes": [
+        "Remove direct anon writes or move them behind an edge function/service-role flow with rate limits and input validation.",
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate.",
+        "Add ownership, service-role, or reviewer predicates to write policies."
+      ],
+      "source_locations": [
+        "supabase/migrations/20250102184613_0007_quantum_table_schema.sql:69",
+        "supabase/migrations/20250102184613_0007_quantum_table_schema.sql:74"
+      ]
+    },
+    {
+      "table": "strategy_success_analysis",
+      "domain": "forecasting_and_ml_evaluation",
+      "priority": "P1",
+      "finding_count": 3,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "anonymous_write_check",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "buyer_impact": "Prediction-science claims require protected evaluation data, shadow runs, and resolved-outcome ledgers.",
+      "recommended_policy_direction": "Restrict evaluation, shadow, and calibration tables to service-role jobs, owners, reviewers, and explicitly public published summaries.",
+      "required_tests": [
+        "Add anon insert denial tests and a separate service-role/edge-function happy-path test.",
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows.",
+        "Add write denial tests for unrelated users and write acceptance tests for the intended actor."
+      ],
+      "remediation_notes": [
+        "Remove direct anon writes or move them behind an edge function/service-role flow with rate limits and input validation.",
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate.",
+        "Add ownership, service-role, or reviewer predicates to write policies."
+      ],
+      "source_locations": [
+        "supabase/migrations/20250918110000_advanced_services_tables.sql:106",
+        "supabase/migrations/20250918110000_advanced_services_tables.sql:109"
+      ]
+    },
+    {
+      "table": "temporal_optimization_results",
+      "domain": "forecasting_and_ml_evaluation",
+      "priority": "P1",
+      "finding_count": 3,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "anonymous_write_check",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "buyer_impact": "Prediction-science claims require protected evaluation data, shadow runs, and resolved-outcome ledgers.",
+      "recommended_policy_direction": "Restrict evaluation, shadow, and calibration tables to service-role jobs, owners, reviewers, and explicitly public published summaries.",
+      "required_tests": [
+        "Add anon insert denial tests and a separate service-role/edge-function happy-path test.",
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows.",
+        "Add write denial tests for unrelated users and write acceptance tests for the intended actor."
+      ],
+      "remediation_notes": [
+        "Remove direct anon writes or move them behind an edge function/service-role flow with rate limits and input validation.",
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate.",
+        "Add ownership, service-role, or reviewer predicates to write policies."
+      ],
+      "source_locations": [
+        "supabase/migrations/20250918110000_advanced_services_tables.sql:130",
+        "supabase/migrations/20250918110000_advanced_services_tables.sql:133"
+      ]
+    },
+    {
+      "table": "classroom_activity",
+      "domain": "classroom",
+      "priority": "P1",
+      "finding_count": 1,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "sensitive_table_read_without_identity_predicate"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "buyer_impact": "Academic pilots need teacher/student membership boundaries and privacy-safe activity logs.",
+      "recommended_policy_direction": "Restrict access by classroom membership and teacher role; prove non-members cannot read or write classroom artifacts.",
+      "required_tests": [
+        "Add positive and negative read tests for owner/member/reviewer versus unrelated user."
+      ],
+      "remediation_notes": [
+        "Add a visible identity, ownership, role, membership, or publication-state predicate."
+      ],
+      "source_locations": [
+        "supabase/migrations/20260430123000_fix_classroom_policy_recursion.sql:197"
+      ]
+    },
+    {
+      "table": "classrooms",
+      "domain": "classroom",
+      "priority": "P1",
+      "finding_count": 1,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "sensitive_table_read_without_identity_predicate"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "buyer_impact": "Academic pilots need teacher/student membership boundaries and privacy-safe activity logs.",
+      "recommended_policy_direction": "Restrict access by classroom membership and teacher role; prove non-members cannot read or write classroom artifacts.",
+      "required_tests": [
+        "Add positive and negative read tests for owner/member/reviewer versus unrelated user."
+      ],
+      "remediation_notes": [
+        "Add a visible identity, ownership, role, membership, or publication-state predicate."
+      ],
+      "source_locations": [
+        "supabase/migrations/20260430123000_fix_classroom_policy_recursion.sql:102"
+      ]
+    },
+    {
+      "table": "warroom_assumptions",
+      "domain": "collaboration_and_warroom",
+      "priority": "P1",
+      "finding_count": 1,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "sensitive_table_read_without_identity_predicate"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "buyer_impact": "Collaboration memory and war-room records are enterprise-sensitive and need team/member scoped access.",
+      "recommended_policy_direction": "Scope reads and writes to room/session membership, creator ownership, explicit reviewer roles, or service-role jobs.",
+      "required_tests": [
+        "Add positive and negative read tests for owner/member/reviewer versus unrelated user."
+      ],
+      "remediation_notes": [
+        "Add a visible identity, ownership, role, membership, or publication-state predicate."
+      ],
+      "source_locations": [
+        "supabase/migrations/20260430000100_warroom_memory.sql:101"
+      ]
+    },
+    {
+      "table": "warroom_comments",
+      "domain": "collaboration_and_warroom",
+      "priority": "P1",
+      "finding_count": 1,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "sensitive_table_read_without_identity_predicate"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "buyer_impact": "Collaboration memory and war-room records are enterprise-sensitive and need team/member scoped access.",
+      "recommended_policy_direction": "Scope reads and writes to room/session membership, creator ownership, explicit reviewer roles, or service-role jobs.",
+      "required_tests": [
+        "Add positive and negative read tests for owner/member/reviewer versus unrelated user."
+      ],
+      "remediation_notes": [
+        "Add a visible identity, ownership, role, membership, or publication-state predicate."
+      ],
+      "source_locations": [
+        "supabase/migrations/20260430000100_warroom_memory.sql:135"
+      ]
+    },
+    {
+      "table": "warroom_decision_logs",
+      "domain": "collaboration_and_warroom",
+      "priority": "P1",
+      "finding_count": 1,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "sensitive_table_read_without_identity_predicate"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "buyer_impact": "Collaboration memory and war-room records are enterprise-sensitive and need team/member scoped access.",
+      "recommended_policy_direction": "Scope reads and writes to room/session membership, creator ownership, explicit reviewer roles, or service-role jobs.",
+      "required_tests": [
+        "Add positive and negative read tests for owner/member/reviewer versus unrelated user."
+      ],
+      "remediation_notes": [
+        "Add a visible identity, ownership, role, membership, or publication-state predicate."
+      ],
+      "source_locations": [
+        "supabase/migrations/20260430000100_warroom_memory.sql:84"
+      ]
+    },
+    {
+      "table": "warroom_scenario_versions",
+      "domain": "collaboration_and_warroom",
+      "priority": "P1",
+      "finding_count": 1,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "sensitive_table_read_without_identity_predicate"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "buyer_impact": "Collaboration memory and war-room records are enterprise-sensitive and need team/member scoped access.",
+      "recommended_policy_direction": "Scope reads and writes to room/session membership, creator ownership, explicit reviewer roles, or service-role jobs.",
+      "required_tests": [
+        "Add positive and negative read tests for owner/member/reviewer versus unrelated user."
+      ],
+      "remediation_notes": [
+        "Add a visible identity, ownership, role, membership, or publication-state predicate."
+      ],
+      "source_locations": [
+        "supabase/migrations/20260430000100_warroom_memory.sql:118"
+      ]
+    },
+    {
+      "table": "classroom_members",
+      "domain": "classroom",
+      "priority": "P2",
+      "finding_count": 2,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "UPDATE"
+      ],
+      "buyer_impact": "Academic pilots need teacher/student membership boundaries and privacy-safe activity logs.",
+      "recommended_policy_direction": "Restrict access by classroom membership and teacher role; prove non-members cannot read or write classroom artifacts.",
+      "required_tests": [
+        "Add write denial tests for unrelated users and write acceptance tests for the intended actor."
+      ],
+      "remediation_notes": [
+        "Add ownership, service-role, or reviewer predicates to write policies."
+      ],
+      "source_locations": [
+        "supabase/migrations/20260430123000_fix_classroom_policy_recursion.sql:133",
+        "supabase/migrations/20260430123000_fix_classroom_policy_recursion.sql:138"
+      ]
+    },
+    {
+      "table": "multiplayer_participants",
+      "domain": "analysis_execution",
+      "priority": "P2",
+      "finding_count": 2,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "buyer_impact": "Analysis execution and public-beta intake tables can expose job state, feature outputs, abuse controls, and user workflow metadata.",
+      "recommended_policy_direction": "Route anonymous public-beta writes through edge functions, bind job reads/writes to owner or service-role, and expose only redacted public status.",
+      "required_tests": [
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows.",
+        "Add write denial tests for unrelated users and write acceptance tests for the intended actor."
+      ],
+      "remediation_notes": [
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate.",
+        "Add ownership, service-role, or reviewer predicates to write policies."
+      ],
+      "source_locations": [
+        "supabase/migrations/20251006100000_realtime_features.sql:288",
+        "supabase/migrations/20251006100000_realtime_features.sql:292"
+      ]
+    },
+    {
+      "table": "multiplayer_sessions",
+      "domain": "analysis_execution",
+      "priority": "P2",
+      "finding_count": 2,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "buyer_impact": "Analysis execution and public-beta intake tables can expose job state, feature outputs, abuse controls, and user workflow metadata.",
+      "recommended_policy_direction": "Route anonymous public-beta writes through edge functions, bind job reads/writes to owner or service-role, and expose only redacted public status.",
+      "required_tests": [
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows.",
+        "Add write denial tests for unrelated users and write acceptance tests for the intended actor."
+      ],
+      "remediation_notes": [
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate.",
+        "Add ownership, service-role, or reviewer predicates to write policies."
+      ],
+      "source_locations": [
+        "supabase/migrations/20251006100000_realtime_features.sql:280",
+        "supabase/migrations/20251006100000_realtime_features.sql:284"
+      ]
+    },
+    {
+      "table": "assignment_submissions",
+      "domain": "public_catalog_candidates",
+      "priority": "P2",
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "UPDATE"
+      ],
+      "buyer_impact": "Some catalog rows may be intentionally public, but enterprise buyers need an exception register explaining why broad reads are safe.",
+      "recommended_policy_direction": "Classify each table as public catalog or private pilot data; retain public reads only for explicitly published catalog rows and block anonymous writes.",
+      "required_tests": [
+        "Add write denial tests for unrelated users and write acceptance tests for the intended actor."
+      ],
+      "remediation_notes": [
+        "Add ownership, service-role, or reviewer predicates to write policies."
+      ],
+      "source_locations": [
+        "supabase/migrations/20260430123000_fix_classroom_policy_recursion.sql:188"
+      ]
+    },
+    {
+      "table": "calibration_models",
+      "domain": "forecasting_and_ml_evaluation",
+      "priority": "P2",
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "buyer_impact": "Prediction-science claims require protected evaluation data, shadow runs, and resolved-outcome ledgers.",
+      "recommended_policy_direction": "Restrict evaluation, shadow, and calibration tables to service-role jobs, owners, reviewers, and explicitly public published summaries.",
+      "required_tests": [
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows."
+      ],
+      "remediation_notes": [
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate."
+      ],
+      "source_locations": [
+        "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql:203"
+      ]
+    },
+    {
+      "table": "campaign_participants",
+      "domain": "public_catalog_candidates",
+      "priority": "P2",
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT"
+      ],
+      "buyer_impact": "Some catalog rows may be intentionally public, but enterprise buyers need an exception register explaining why broad reads are safe.",
+      "recommended_policy_direction": "Classify each table as public catalog or private pilot data; retain public reads only for explicitly published catalog rows and block anonymous writes.",
+      "required_tests": [
+        "Add write denial tests for unrelated users and write acceptance tests for the intended actor."
+      ],
+      "remediation_notes": [
+        "Add ownership, service-role, or reviewer predicates to write policies."
+      ],
+      "source_locations": [
+        "supabase/migrations/20251005120000_competition_innovations.sql:425"
+      ]
+    },
+    {
+      "table": "circuit_breaker",
+      "domain": "analysis_execution",
+      "priority": "P2",
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "buyer_impact": "Analysis execution and public-beta intake tables can expose job state, feature outputs, abuse controls, and user workflow metadata.",
+      "recommended_policy_direction": "Route anonymous public-beta writes through edge functions, bind job reads/writes to owner or service-role, and expose only redacted public status.",
+      "required_tests": [
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows."
+      ],
+      "remediation_notes": [
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate."
+      ],
+      "source_locations": [
+        "supabase/migrations/20250906110000_add_retrieval_cache_ph4.sql:31"
+      ]
+    },
+    {
+      "table": "community_metrics",
+      "domain": "forecasting_and_ml_evaluation",
+      "priority": "P2",
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "buyer_impact": "Prediction-science claims require protected evaluation data, shadow runs, and resolved-outcome ledgers.",
+      "recommended_policy_direction": "Restrict evaluation, shadow, and calibration tables to service-role jobs, owners, reviewers, and explicitly public published summaries.",
+      "required_tests": [
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows."
+      ],
+      "remediation_notes": [
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate."
+      ],
+      "source_locations": [
+        "supabase/migrations/20250902184600_0006_collective.sql:33"
+      ]
+    },
+    {
+      "table": "cooperation_campaigns",
+      "domain": "public_catalog_candidates",
+      "priority": "P2",
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "buyer_impact": "Some catalog rows may be intentionally public, but enterprise buyers need an exception register explaining why broad reads are safe.",
+      "recommended_policy_direction": "Classify each table as public catalog or private pilot data; retain public reads only for explicitly published catalog rows and block anonymous writes.",
+      "required_tests": [
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows."
+      ],
+      "remediation_notes": [
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate."
+      ],
+      "source_locations": [
+        "supabase/migrations/20251005120000_competition_innovations.sql:421"
+      ]
+    },
+    {
+      "table": "drift_signals",
+      "domain": "forecasting_and_ml_evaluation",
+      "priority": "P2",
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "buyer_impact": "Prediction-science claims require protected evaluation data, shadow runs, and resolved-outcome ledgers.",
+      "recommended_policy_direction": "Restrict evaluation, shadow, and calibration tables to service-role jobs, owners, reviewers, and explicitly public published summaries.",
+      "required_tests": [
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows."
+      ],
+      "remediation_notes": [
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate."
+      ],
+      "source_locations": [
+        "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql:218"
+      ]
+    },
+    {
+      "table": "entity_graph_edges",
+      "domain": "ontology_and_graph",
+      "priority": "P2",
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "buyer_impact": "Ontology and graph data can reveal strategic context, source linkage, and inferred entities across customer analyses.",
+      "recommended_policy_direction": "Separate globally public ontology references from customer-derived graph edges; require owner/service-role access for derived graph records.",
+      "required_tests": [
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows."
+      ],
+      "remediation_notes": [
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate."
+      ],
+      "source_locations": [
+        "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql:236"
+      ]
+    },
+    {
+      "table": "entity_graph_nodes",
+      "domain": "ontology_and_graph",
+      "priority": "P2",
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "buyer_impact": "Ontology and graph data can reveal strategic context, source linkage, and inferred entities across customer analyses.",
+      "recommended_policy_direction": "Separate globally public ontology references from customer-derived graph edges; require owner/service-role access for derived graph records.",
+      "required_tests": [
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows."
+      ],
+      "remediation_notes": [
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate."
+      ],
+      "source_locations": [
+        "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql:233"
+      ]
+    },
+    {
+      "table": "forecast_scores",
+      "domain": "forecasting_and_ml_evaluation",
+      "priority": "P2",
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "buyer_impact": "Prediction-science claims require protected evaluation data, shadow runs, and resolved-outcome ledgers.",
+      "recommended_policy_direction": "Restrict evaluation, shadow, and calibration tables to service-role jobs, owners, reviewers, and explicitly public published summaries.",
+      "required_tests": [
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows."
+      ],
+      "remediation_notes": [
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate."
+      ],
+      "source_locations": [
+        "supabase/migrations/20251212120000_enterprise_sso.sql:341"
+      ]
+    },
+    {
+      "table": "game_definitions",
+      "domain": "public_catalog_candidates",
+      "priority": "P2",
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "buyer_impact": "Some catalog rows may be intentionally public, but enterprise buyers need an exception register explaining why broad reads are safe.",
+      "recommended_policy_direction": "Classify each table as public catalog or private pilot data; retain public reads only for explicitly published catalog rows and block anonymous writes.",
+      "required_tests": [
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows."
+      ],
+      "remediation_notes": [
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate."
+      ],
+      "source_locations": [
+        "supabase/migrations/20250904_0010_extend_analysis_runs_for_audience.sql:108"
+      ]
+    },
+    {
+      "table": "ontology_aliases",
+      "domain": "ontology_and_graph",
+      "priority": "P2",
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "buyer_impact": "Ontology and graph data can reveal strategic context, source linkage, and inferred entities across customer analyses.",
+      "recommended_policy_direction": "Separate globally public ontology references from customer-derived graph edges; require owner/service-role access for derived graph records.",
+      "required_tests": [
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows."
+      ],
+      "remediation_notes": [
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate."
+      ],
+      "source_locations": [
+        "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql:209"
+      ]
+    },
+    {
+      "table": "ontology_entities",
+      "domain": "ontology_and_graph",
+      "priority": "P2",
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "buyer_impact": "Ontology and graph data can reveal strategic context, source linkage, and inferred entities across customer analyses.",
+      "recommended_policy_direction": "Separate globally public ontology references from customer-derived graph edges; require owner/service-role access for derived graph records.",
+      "required_tests": [
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows."
+      ],
+      "remediation_notes": [
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate."
+      ],
+      "source_locations": [
+        "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql:206"
+      ]
+    },
+    {
+      "table": "patterns",
+      "domain": "public_catalog_candidates",
+      "priority": "P2",
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "buyer_impact": "Some catalog rows may be intentionally public, but enterprise buyers need an exception register explaining why broad reads are safe.",
+      "recommended_policy_direction": "Classify each table as public catalog or private pilot data; retain public reads only for explicitly published catalog rows and block anonymous writes.",
+      "required_tests": [
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows."
+      ],
+      "remediation_notes": [
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate."
+      ],
+      "source_locations": [
+        "supabase/migrations/20250826_0001_init.sql:55"
+      ]
+    },
+    {
+      "table": "rate_limit_tracking",
+      "domain": "analysis_execution",
+      "priority": "P2",
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "buyer_impact": "Analysis execution and public-beta intake tables can expose job state, feature outputs, abuse controls, and user workflow metadata.",
+      "recommended_policy_direction": "Route anonymous public-beta writes through edge functions, bind job reads/writes to owner or service-role, and expose only redacted public status.",
+      "required_tests": [
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows."
+      ],
+      "remediation_notes": [
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate."
+      ],
+      "source_locations": [
+        "supabase/migrations/20250906140000_add_rate_limits.sql:21"
+      ]
+    },
+    {
+      "table": "real_time_events",
+      "domain": "analysis_execution",
+      "priority": "P2",
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "buyer_impact": "Analysis execution and public-beta intake tables can expose job state, feature outputs, abuse controls, and user workflow metadata.",
+      "recommended_policy_direction": "Route anonymous public-beta writes through edge functions, bind job reads/writes to owner or service-role, and expose only redacted public status.",
+      "required_tests": [
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows."
+      ],
+      "remediation_notes": [
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate."
+      ],
+      "source_locations": [
+        "supabase/migrations/20251006100000_realtime_features.sql:270"
+      ]
+    },
+    {
+      "table": "shadow_model_registry",
+      "domain": "forecasting_and_ml_evaluation",
+      "priority": "P2",
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "buyer_impact": "Prediction-science claims require protected evaluation data, shadow runs, and resolved-outcome ledgers.",
+      "recommended_policy_direction": "Restrict evaluation, shadow, and calibration tables to service-role jobs, owners, reviewers, and explicitly public published summaries.",
+      "required_tests": [
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows."
+      ],
+      "remediation_notes": [
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate."
+      ],
+      "source_locations": [
+        "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql:227"
+      ]
+    },
+    {
+      "table": "shadow_predictions",
+      "domain": "forecasting_and_ml_evaluation",
+      "priority": "P2",
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "buyer_impact": "Prediction-science claims require protected evaluation data, shadow runs, and resolved-outcome ledgers.",
+      "recommended_policy_direction": "Restrict evaluation, shadow, and calibration tables to service-role jobs, owners, reviewers, and explicitly public published summaries.",
+      "required_tests": [
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows."
+      ],
+      "remediation_notes": [
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate."
+      ],
+      "source_locations": [
+        "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql:230"
+      ]
+    },
+    {
+      "table": "signaling_recommendations",
+      "domain": "public_catalog_candidates",
+      "priority": "P2",
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "buyer_impact": "Some catalog rows may be intentionally public, but enterprise buyers need an exception register explaining why broad reads are safe.",
+      "recommended_policy_direction": "Classify each table as public catalog or private pilot data; retain public reads only for explicitly published catalog rows and block anonymous writes.",
+      "required_tests": [
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows."
+      ],
+      "remediation_notes": [
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate."
+      ],
+      "source_locations": [
+        "supabase/migrations/20251006100000_realtime_features.sql:302"
+      ]
+    },
+    {
+      "table": "temporal_forecasts",
+      "domain": "forecasting_and_ml_evaluation",
+      "priority": "P2",
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "buyer_impact": "Prediction-science claims require protected evaluation data, shadow runs, and resolved-outcome ledgers.",
+      "recommended_policy_direction": "Restrict evaluation, shadow, and calibration tables to service-role jobs, owners, reviewers, and explicitly public published summaries.",
+      "required_tests": [
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows."
+      ],
+      "remediation_notes": [
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate."
+      ],
+      "source_locations": [
+        "supabase/migrations/20251006100000_realtime_features.sql:297"
+      ]
+    },
+    {
+      "table": "domain_specific_patterns",
+      "domain": "public_catalog_candidates",
+      "priority": "P3",
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "buyer_impact": "Some catalog rows may be intentionally public, but enterprise buyers need an exception register explaining why broad reads are safe.",
+      "recommended_policy_direction": "Classify each table as public catalog or private pilot data; retain public reads only for explicitly published catalog rows and block anonymous writes.",
+      "required_tests": [
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows."
+      ],
+      "remediation_notes": [
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate."
+      ],
+      "source_locations": [
+        "supabase/migrations/20251006100000_realtime_features.sql:307"
+      ]
+    },
+    {
+      "table": "marketplace_scenarios",
+      "domain": "public_catalog_candidates",
+      "priority": "P3",
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "buyer_impact": "Some catalog rows may be intentionally public, but enterprise buyers need an exception register explaining why broad reads are safe.",
+      "recommended_policy_direction": "Classify each table as public catalog or private pilot data; retain public reads only for explicitly published catalog rows and block anonymous writes.",
+      "required_tests": [
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows."
+      ],
+      "remediation_notes": [
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate."
+      ],
+      "source_locations": [
+        "supabase/migrations/20251213000000_eliminate_mock_data.sql:145"
+      ]
+    },
+    {
+      "table": "tier_limits",
+      "domain": "public_catalog_candidates",
+      "priority": "P3",
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "buyer_impact": "Some catalog rows may be intentionally public, but enterprise buyers need an exception register explaining why broad reads are safe.",
+      "recommended_policy_direction": "Classify each table as public catalog or private pilot data; retain public reads only for explicitly published catalog rows and block anonymous writes.",
+      "required_tests": [
+        "Add a deny-by-default test proving an unrelated authenticated user and anon role cannot read private rows."
+      ],
+      "remediation_notes": [
+        "Replace USING (true) with an owner, membership, status, role, or published-public predicate."
+      ],
+      "source_locations": [
+        "supabase/migrations/20251212100000_subscription_tiers.sql:225"
+      ]
+    }
+  ],
+  "approval_gates": [
+    "Do not apply broad RLS migrations without owner approval and current hosted policy inspection.",
+    "Classify each affected table as public catalog, authenticated user data, team/collaboration data, service-job data, evaluation/shadow data, or observability data.",
+    "Draft one narrow migration per domain batch, starting with identity_and_review plus collaboration_and_warroom.",
+    "Run Supabase database tests for anon, unrelated authenticated, owner/member, reviewer, and service-role paths.",
+    "Run hosted smoke scripts after deployment and attach logs/screenshots to launch evidence.",
+    "Keep commercial decision at pilot-only until P1 policy findings are fixed or intentionally accepted with written buyer-facing caveats."
+  ],
+  "procurement_evidence_needed": [
+    "Table classification register with owner and sensitivity for each P1 table.",
+    "Policy diff showing broad public/anon predicates removed or explicitly justified.",
+    "Supabase test output proving negative and positive access cases.",
+    "Hosted smoke output for console, forecast, review, classroom/war-room where relevant, pricing/auth, and schema preflight.",
+    "Exception register for any public or anonymous policy retained for public beta intake."
+  ]
+}

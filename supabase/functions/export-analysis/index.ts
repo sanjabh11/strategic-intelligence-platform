@@ -2,11 +2,12 @@
 // Generates exportable formats (CSV, JSON, Python, R) from analysis results
 // Part of Monetization Strategy - Key researcher feature
 
-import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { createClient } from 'npm:@supabase/supabase-js@2'
+import { hydrateAnalysisJson } from '../_shared/analysis-artifacts.ts'
+import { getAuthenticatedUser, jsonResponse } from '../_shared/auth.ts'
 
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Origin': Deno.env.get('ALLOWED_ORIGIN') || Deno.env.get('APP_URL') || 'null',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 }
@@ -24,7 +25,12 @@ interface PayoffMatrix {
   payoffs: Record<string, Record<string, number[]>>;
 }
 
-serve(async (req: Request) => {
+Deno.serve(async (req: Request) => {
+  // Auth check
+  const _user = await getAuthenticatedUser(req)
+  if (!_user) return jsonResponse(401, { ok: false, error: 'authentication_required' })
+
+
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
   }
@@ -57,7 +63,7 @@ serve(async (req: Request) => {
       )
     }
 
-    const analysisJson = analysis.analysis_json || {}
+    const analysisJson = await hydrateAnalysisJson(supabase, analysis)
     let exportContent: string
     let contentType: string
     let filename: string
@@ -102,12 +108,15 @@ serve(async (req: Request) => {
     }
 
     // Log export for analytics
-    await supabase.from('export_logs').insert({
+    const { error: exportLogError } = await supabase.from('export_logs').insert({
       analysis_run_id: analysisRunId,
       format,
       user_id: analysis.user_id,
       exported_at: new Date().toISOString()
-    }).catch(() => {}) // Ignore if table doesn't exist
+    })
+    if (exportLogError) {
+      console.warn('export_logs insert skipped:', exportLogError.message)
+    }
 
     return new Response(
       JSON.stringify({
@@ -122,8 +131,9 @@ serve(async (req: Request) => {
 
   } catch (error) {
     console.error('Export error:', error)
+    const message = error instanceof Error ? error.message : String(error)
     return new Response(
-      JSON.stringify({ error: 'Export failed', details: error.message }),
+      JSON.stringify({ error: 'Export failed', details: message }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
   }
@@ -170,6 +180,15 @@ function generateCSV(analysis: any, includeMetadata: boolean): string {
     }
   }
 
+  if (analysis.simulation_results?.advanced_frameworks) {
+    lines.push('')
+    lines.push('# Advanced Frameworks')
+    lines.push('Framework,Status,Summary,Warnings')
+    for (const [framework, result] of Object.entries(analysis.simulation_results.advanced_frameworks)) {
+      lines.push(`"${framework}","${(result as any)?.status || ''}","${((result as any)?.summary || '').replace(/"/g, '""')}","${(((result as any)?.warnings || []) as string[]).join('; ').replace(/"/g, '""')}"`)
+    }
+  }
+
   return lines.join('\n')
 }
 
@@ -180,6 +199,7 @@ function generateJSON(analysis: any, fullRecord: any, includeMetadata: boolean, 
       decision_table: analysis.decision_table,
       expected_value_ranking: analysis.expected_value_ranking,
       simulation_results: analysis.simulation_results,
+      advanced_frameworks: analysis.simulation_results?.advanced_frameworks,
       sensitivity: analysis.sensitivity,
       provenance: analysis.provenance
     }

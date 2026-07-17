@@ -1,0 +1,132 @@
+- generic [ref=e3]:
+  - navigation [ref=e4]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - link "Strategy Console" [ref=e8] [cursor=pointer]:
+          - /url: /console
+          - img [ref=e9]
+          - generic [ref=e19]: Strategy Console
+        - 'button "Learning Mode: OFF" [ref=e21] [cursor=pointer]':
+          - img [ref=e22]
+          - text: "Learning Mode: OFF"
+      - generic [ref=e25]:
+        - link "Console" [ref=e26] [cursor=pointer]:
+          - /url: /console
+          - img [ref=e27]
+          - text: Console
+        - link "Insights" [ref=e29] [cursor=pointer]:
+          - /url: /insights
+          - img [ref=e30]
+          - text: Insights
+        - link "Labs" [ref=e33] [cursor=pointer]:
+          - /url: /labs
+          - img [ref=e34]
+          - text: Labs
+        - link "Templates" [ref=e36] [cursor=pointer]:
+          - /url: /templates
+          - img [ref=e37]
+          - text: Templates
+        - link "Forecasts" [ref=e40] [cursor=pointer]:
+          - /url: /forecasts
+          - img [ref=e41]
+          - text: Forecasts
+        - link "Pricing" [ref=e44] [cursor=pointer]:
+          - /url: /pricing
+          - img [ref=e45]
+          - text: Pricing
+  - main [ref=e47]:
+    - generic [ref=e48]:
+      - generic [ref=e50]:
+        - generic [ref=e51]:
+          - button [ref=e52] [cursor=pointer]:
+            - img [ref=e53]
+          - generic [ref=e56]:
+            - img [ref=e58]
+            - generic [ref=e68]:
+              - heading "Welcome to Strategy Console" [level=2] [ref=e69]
+              - paragraph [ref=e70]: Evidence-backed strategic analysis in seconds
+        - generic [ref=e71]:
+          - paragraph [ref=e73]: Turn complex strategic questions into clean, defensible insights with real citations and advanced game theory.
+          - generic [ref=e74]:
+            - generic [ref=e76]:
+              - img [ref=e78]
+              - generic [ref=e88]:
+                - heading "Evidence-Backed Analysis" [level=4] [ref=e89]
+                - paragraph [ref=e90]: Real citations from verified sources - no hallucinations
+            - generic [ref=e92]:
+              - img [ref=e94]
+              - generic [ref=e96]:
+                - heading "Multiple Analysis Engines" [level=4] [ref=e97]
+                - paragraph [ref=e98]: Recursive equilibrium, quantum strategies, forecasting & more
+            - generic [ref=e100]:
+              - img [ref=e102]
+              - generic [ref=e107]:
+                - heading "Audience-Tailored Views" [level=4] [ref=e108]
+                - paragraph [ref=e109]: Student, researcher, teacher - get explanations that fit you
+            - generic [ref=e111]:
+              - img [ref=e113]
+              - generic [ref=e117]:
+                - heading "Strategic Clarity" [level=4] [ref=e118]
+                - paragraph [ref=e119]: Turn complex questions into defensible, structured insights
+          - generic [ref=e120]:
+            - heading "How It Works" [level=3] [ref=e121]
+            - generic [ref=e122]:
+              - generic [ref=e123]:
+                - generic [ref=e124]: "1"
+                - heading "Describe Your Scenario" [level=4] [ref=e125]
+                - paragraph [ref=e126]: Enter a strategic situation with multiple actors and choices
+              - img [ref=e127]
+              - generic [ref=e129]:
+                - generic [ref=e130]: "2"
+                - heading "Select Analysis Engines" [level=4] [ref=e131]
+                - paragraph [ref=e132]: Choose from baseline to advanced quantum and forecasting
+              - img [ref=e133]
+              - generic [ref=e135]:
+                - generic [ref=e136]: "3"
+                - heading "Run Analysis" [level=4] [ref=e137]
+                - paragraph [ref=e138]: Get evidence-backed equilibria, strategies, and predictions
+        - generic [ref=e139]:
+          - button "Don't show again" [ref=e140] [cursor=pointer]
+          - button "Get Started" [ref=e141] [cursor=pointer]:
+            - text: Get Started
+            - img [ref=e142]
+      - generic [ref=e144]:
+        - generic [ref=e145]:
+          - heading "Strategy Console" [level=1] [ref=e146]
+          - paragraph [ref=e147]: Run evidence-backed strategic analysis in seconds. Real citations. Real simulations. Real clarity.
+        - generic [ref=e149]:
+          - button "Strategic Analysis" [ref=e150] [cursor=pointer]
+          - button "Strategist" [ref=e151] [cursor=pointer]
+        - generic [ref=e152]:
+          - generic [ref=e153]:
+            - generic [ref=e154]: Describe your strategic scenario
+            - textbox "e.g., Three tech companies must decide on AI safety standards. Each can lead with strict standards, follow consensus, or prioritize competitive advantage..." [ref=e155]
+            - generic [ref=e156]:
+              - generic [ref=e157]: "Try:"
+              - button "Tech Giants AI Safety Coordination..." [ref=e158] [cursor=pointer]
+              - button "Semiconductor Supply Chain Strategy..." [ref=e159] [cursor=pointer]
+              - button "Climate Policy Coordination..." [ref=e160] [cursor=pointer]
+          - generic [ref=e161]:
+            - generic [ref=e163]:
+              - generic [ref=e164]:
+                - img [ref=e166]
+                - generic [ref=e169]:
+                  - generic [ref=e170]:
+                    - text: Evidence Retrieval
+                    - generic [ref=e171]: Active
+                  - generic [ref=e172]: Real citations from Google CSE, Perplexity, Crossref, GDELT
+              - button [ref=e173] [cursor=pointer]
+            - button "Advanced analysis settings (1 selected) Keep the flagship path simple and open these only when needed" [ref=e176] [cursor=pointer]:
+              - generic [ref=e177]:
+                - img [ref=e178]
+                - generic [ref=e180]:
+                  - generic [ref=e181]: Advanced analysis settings (1 selected)
+                  - generic [ref=e182]: Keep the flagship path simple and open these only when needed
+              - img [ref=e183]
+          - button "Run Analysis" [disabled] [ref=e186]:
+            - img [ref=e187]
+            - text: Run Analysis
+  - contentinfo [ref=e189]:
+    - generic [ref=e191]:
+      - paragraph [ref=e192]: Strategy Console - Evidence-Backed Strategic Analysis
+      - paragraph [ref=e193]: Real citations. Real simulations. Real clarity.

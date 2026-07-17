@@ -1,4 +1,4 @@
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { createClient } from 'npm:@supabase/supabase-js@2'
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
@@ -7,7 +7,7 @@ const supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
 interface HealthMetrics {
   timestamp: string
   evidence_backed_rate: number
-  perplexity_success_rate: number
+  exa_success_rate: number
   schema_failure_rate: number
   total_analysis_runs: number
   period_hours: number
@@ -58,7 +58,7 @@ async function probeWorkerHealth(): Promise<WorkerHealthProbe[]> {
   }
 
   // Check retrieval services health
-  const services = ['perplexity', 'uncomtrade', 'worldbank', 'imf', 'gdelt']
+  const services = ['exa', 'uncomtrade', 'worldbank', 'imf', 'gdelt']
   for (const service of services) {
     try {
       const { data: breaker } = await supabaseAdmin
@@ -112,27 +112,22 @@ async function calculateHealthMetrics(hours: number = 24, includeHealthProbes: b
     throw new Error(`Database query failed: ${failuresError.message}`)
   }
 
-  // Get monitoring metrics for perplexity success rate
-  const { data: metrics, error: metricsError } = await supabaseAdmin
-    .from('monitoring_metrics')
-    .select('evidence_backed, perplexity_success_rate, model_used')
+  const { data: providerRuns, error: providerRunsError } = await supabaseAdmin
+    .from('retrieval_provider_runs')
+    .select('provider, status, http_status')
     .gte('created_at', startTime)
 
-  if (metricsError) {
-    console.error("Failed to fetch monitoring_metrics:", metricsError)
+  if (providerRunsError) {
+    console.error("Failed to fetch retrieval_provider_runs:", providerRunsError)
   }
 
   // Calculate real metrics from data
   const totalRuns = runs?.length || 0
   const evidenceBackedRuns = runs?.filter(run => run.evidence_backed)?.length || 0
   const totalFailures = failures?.length || 0
-  
-  // Calculate perplexity success rate from monitoring metrics
-  let perplexitySuccessRate = 0.85 // Default fallback
-  if (metrics && metrics.length > 0) {
-    const successfulPerplexityCalls = metrics.filter(m => m.evidence_backed).length
-    perplexitySuccessRate = successfulPerplexityCalls / metrics.length
-  }
+  const exaRuns = (providerRuns || []).filter((run) => run.provider === 'exa')
+  const successfulExaRuns = exaRuns.filter((run) => run.status === 'success')
+  const exaSuccessRate = exaRuns.length > 0 ? successfulExaRuns.length / exaRuns.length : 0
 
   // Calculate additional health metrics
   const underReviewRuns = runs?.filter(run => run.status === 'under_review')?.length || 0
@@ -158,7 +153,7 @@ async function calculateHealthMetrics(hours: number = 24, includeHealthProbes: b
   const result = {
     timestamp: new Date().toISOString(),
     evidence_backed_rate: totalRuns > 0 ? evidenceBackedRuns / totalRuns : 0,
-    perplexity_success_rate: perplexitySuccessRate,
+    exa_success_rate: exaSuccessRate,
     schema_failure_rate: totalRuns > 0 ? totalFailures / totalRuns : 0,
     total_analysis_runs: totalRuns,
     period_hours: hours,
@@ -179,13 +174,14 @@ async function calculateHealthMetrics(hours: number = 24, includeHealthProbes: b
 }
 
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Origin': Deno.env.get('ALLOWED_ORIGIN') || Deno.env.get('APP_URL') || 'null',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
 /**
  * Health check endpoint
  */
+// PUBLIC: No auth required
 Deno.serve(async (req: Request) => {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {

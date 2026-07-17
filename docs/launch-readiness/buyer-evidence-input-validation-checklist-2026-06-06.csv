@@ -1,0 +1,10 @@
+gate,status,evidence,proof_bucket
+crm_schema_present,passed,CRM schema includes 11 required columns.,repo_artifact
+call_sheet_schema_present,passed,Call-sheet schema includes 28 required columns.,repo_artifact
+real_interactions_present,open_no_real_interactions,0 real interaction rows loaded; 15 research/template rows ignored as proof.,owner_input
+row_quality_validation,open_no_real_interactions,0 row-level errors and 0 warnings across CRM/call-sheet inputs.,owner_input
+completed_discovery_calls,open_no_real_interactions,0 valid completed calls; required 10.,owner_input
+pilot_outcome_capture,open_no_real_interactions,"0 completed calls include baseline/current-workflow, pilot outcome or expected delta, quality signal, buyer decision event, and outcome evidence notes; required 10.",owner_input
+qualified_followups,open_no_real_interactions,0 valid qualified follow-up rows; required 3.,owner_input
+commitment_path_signal,open_no_real_interactions,"0 valid paid-pilot, LOI, or procurement-path rows; required 1.",owner_input
+claim_boundary_preserved,passed,"Rows are checked for prohibited claims such as world-class, commercial-ready, proven accuracy, buyer-validated, or enterprise-ready.",repo_artifact

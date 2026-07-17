@@ -4,7 +4,13 @@
 import React from 'react';
 import { Microscope, FileText, Grid3X3, Download, AlertCircle, ExternalLink, CheckCircle, XCircle, Notebook, Zap, Table, TrendingUp } from 'lucide-react';
 import { AudienceViewProps, ResearcherViewData, SourceCitation } from '../../types/audience-views';
+import { normalizeAdvancedGameOutputs } from '../../lib/strategistContract';
 import EVWidget from '../EVWidget';
+import CoalitionalGraph from '../game-theory/CoalitionalGraph';
+import BayesianTree from '../game-theory/BayesianTree';
+import CorrelatedEquilibriumPanel from '../game-theory/CorrelatedEquilibriumPanel';
+import EvolutionaryChart from '../game-theory/EvolutionaryChart';
+import QreSensitivityPanel from '../game-theory/QreSensitivityPanel';
 
 const ResearcherView: React.FC<AudienceViewProps> = ({
   analysisData,
@@ -57,6 +63,12 @@ const ResearcherView: React.FC<AudienceViewProps> = ({
   }
 
   const researcherData = analysisData.data as ResearcherViewData;
+  const summaryText = typeof researcherData.long_summary === 'string'
+    ? researcherData.long_summary
+    : researcherData.long_summary?.text || 'No research summary available.'
+  const payoffMatrixRows = Array.isArray(researcherData.payoff_matrix)
+    ? researcherData.payoff_matrix
+    : []
 
   const renderSummary = () => (
     <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
@@ -67,7 +79,7 @@ const ResearcherView: React.FC<AudienceViewProps> = ({
       <div className="bg-slate-700 rounded-lg p-6 border border-slate-600">
         <div className="prose prose-slate max-w-none">
           <div className="text-slate-300 leading-relaxed whitespace-pre-line">
-            {researcherData.long_summary}
+            {summaryText}
           </div>
         </div>
       </div>
@@ -143,9 +155,14 @@ const ResearcherView: React.FC<AudienceViewProps> = ({
       </div>
 
       <div className="overflow-x-auto">
-        <div className="inline-block min-w-full">
-          <div className="grid grid-cols-1 gap-4">
-            {researcherData.payoff_matrix.map((row, index) => (
+        {payoffMatrixRows.length === 0 ? (
+          <div className="rounded-lg border border-slate-700 bg-slate-900/70 p-4 text-sm text-slate-400">
+            Payoff matrix is unavailable or not in the row-oriented format this view expects.
+          </div>
+        ) : (
+          <div className="inline-block min-w-full">
+            <div className="grid grid-cols-1 gap-4">
+              {payoffMatrixRows.map((row, index) => (
               <div key={index} className="bg-slate-700 rounded-lg p-4 border border-slate-600">
                 <div className="flex items-center space-x-4">
                   <div className="flex-shrink-0">
@@ -174,9 +191,10 @@ const ResearcherView: React.FC<AudienceViewProps> = ({
                   </div>
                 </div>
               </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
@@ -315,6 +333,27 @@ const ResearcherView: React.FC<AudienceViewProps> = ({
     </div>
   );
 
+  const renderAdvancedFrameworks = () => {
+    const frameworks = normalizeAdvancedGameOutputs(researcherData.simulation_results?.advanced_frameworks);
+    if (!frameworks) return null;
+
+    return (
+      <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
+        <div className="flex items-center mb-6">
+          <TrendingUp className="w-6 h-6 mr-3 text-cyan-400" />
+          <h2 className="text-xl font-semibold text-slate-200">Advanced Deterministic Frameworks</h2>
+        </div>
+        <div className="space-y-4">
+          {frameworks.coalitional && <CoalitionalGraph output={frameworks.coalitional} />}
+          {frameworks.signaling && <BayesianTree output={frameworks.signaling} />}
+          {frameworks.correlated && <CorrelatedEquilibriumPanel output={frameworks.correlated} />}
+          {frameworks.evolutionary && <EvolutionaryChart output={frameworks.evolutionary} />}
+          {frameworks.bounded_rationality && <QreSensitivityPanel output={frameworks.bounded_rationality} />}
+        </div>
+      </div>
+    );
+  };
+
   const renderSources = () => {
     if (!researcherData.sources || researcherData.sources.length === 0) return null;
 
@@ -448,6 +487,7 @@ const ResearcherView: React.FC<AudienceViewProps> = ({
       {renderDecisionWidgets()}
       {renderDataExports()}
       {renderNotebookGenerator()}
+      {renderAdvancedFrameworks()}
       {renderSensitivitySuite()}
       {renderSources()}
     </div>

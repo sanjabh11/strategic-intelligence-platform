@@ -1,0 +1,377 @@
+{
+  "schema_version": "forecast-leakage-review-validation-v1",
+  "generated_at": "2026-06-06T16:58:10.834Z",
+  "status": "forecast_leakage_review_validation_ready_no_real_forecast_rows",
+  "proof_boundary": "This artifact validates the leakage and contamination review register for forecast accuracy claims. It is not prediction-accuracy proof, hosted proof, buyer validation, external benchmark superiority, or world-class forecasting evidence.",
+  "source": {
+    "register": "docs/launch-readiness/forecast-leakage-review-register-2026-06-06.csv",
+    "register_template_created": false,
+    "accuracy_input_validation": "docs/launch-readiness/accuracy-evidence-input-validation-2026-06-06.json",
+    "accuracy_input_validation_status": "accuracy_input_validation_ready_no_real_rows",
+    "forecast_claim_governance": "docs/launch-readiness/forecast-claim-governance-2026-06-06.json",
+    "forecast_claim_governance_status": "forecast_claim_governance_ready_not_accuracy_proof"
+  },
+  "summary": {
+    "register_row_count": 8,
+    "required_control_count": 8,
+    "reviewed_control_count": 0,
+    "passed_control_count": 0,
+    "owner_approved_control_count": 0,
+    "ready_control_count": 0,
+    "artifact_path_present_count": 0,
+    "artifact_path_exists_count": 0,
+    "valid_resolved_forecast_count": 0,
+    "valid_baseline_count": 0,
+    "accuracy_inputs_ready_for_scoring": false,
+    "unresolved_issue_total": 0,
+    "high_or_critical_risk_count": 0,
+    "row_issue_count": 0,
+    "row_error_count": 0,
+    "active_release_hold_count": 5,
+    "ready_for_accuracy_claim_review": false,
+    "leakage_review_passed": false,
+    "accuracy_claim_allowed": false,
+    "world_class_prediction_claim_allowed": false
+  },
+  "required_columns": [
+    "control_id",
+    "title",
+    "artifact_path",
+    "review_status",
+    "owner_approval_status",
+    "reviewer",
+    "reviewed_at",
+    "forecast_export_scope",
+    "baseline_scope",
+    "question_count",
+    "pre_resolution_timestamps_verified",
+    "resolution_sources_pre_resolution_or_allowed",
+    "post_resolution_sources_excluded",
+    "retrieval_cutoff_verified",
+    "baseline_timestamp_comparable",
+    "benchmark_contamination_checked",
+    "training_eval_overlap_checked",
+    "ambiguous_resolution_reviewed",
+    "unresolved_issue_count",
+    "risk_severity",
+    "contains_unsupported_claims",
+    "notes"
+  ],
+  "required_controls": [
+    {
+      "control_id": "pre_resolution_timestamp_boundary",
+      "title": "Pre-resolution timestamp boundary",
+      "required_fields": [
+        "forecast_export_scope"
+      ],
+      "required_boolean_fields": [
+        "pre_resolution_timestamps_verified"
+      ]
+    },
+    {
+      "control_id": "resolution_source_temporal_cutoff",
+      "title": "Resolution source temporal cutoff",
+      "required_fields": [
+        "forecast_export_scope"
+      ],
+      "required_boolean_fields": [
+        "resolution_sources_pre_resolution_or_allowed",
+        "post_resolution_sources_excluded"
+      ]
+    },
+    {
+      "control_id": "retrieval_source_cutoff_review",
+      "title": "Retrieval source cutoff review",
+      "required_fields": [
+        "forecast_export_scope"
+      ],
+      "required_boolean_fields": [
+        "retrieval_cutoff_verified"
+      ]
+    },
+    {
+      "control_id": "baseline_temporal_comparability",
+      "title": "Baseline temporal comparability",
+      "required_fields": [
+        "baseline_scope"
+      ],
+      "required_boolean_fields": [
+        "baseline_timestamp_comparable"
+      ]
+    },
+    {
+      "control_id": "benchmark_contamination_review",
+      "title": "Benchmark contamination review",
+      "required_fields": [
+        "forecast_export_scope",
+        "baseline_scope"
+      ],
+      "required_boolean_fields": [
+        "benchmark_contamination_checked"
+      ]
+    },
+    {
+      "control_id": "training_eval_overlap_review",
+      "title": "Training/evaluation overlap review",
+      "required_fields": [
+        "forecast_export_scope"
+      ],
+      "required_boolean_fields": [
+        "training_eval_overlap_checked"
+      ]
+    },
+    {
+      "control_id": "ambiguous_resolution_exclusion_review",
+      "title": "Ambiguous resolution and exclusion review",
+      "required_fields": [
+        "forecast_export_scope"
+      ],
+      "required_boolean_fields": [
+        "ambiguous_resolution_reviewed"
+      ]
+    },
+    {
+      "control_id": "claim_tier_copy_boundary",
+      "title": "Claim tier and copy boundary",
+      "required_fields": [
+        "notes"
+      ],
+      "required_boolean_fields": []
+    }
+  ],
+  "control_rows": [
+    {
+      "control_id": "pre_resolution_timestamp_boundary",
+      "title": "Pre-resolution timestamp boundary",
+      "review_status": "missing",
+      "owner_approval_status": "missing",
+      "reviewed": false,
+      "passed": false,
+      "owner_approved": false,
+      "artifact_path_present": false,
+      "artifact_path_exists": false,
+      "unresolved_issue_count": null,
+      "risk_severity": "missing",
+      "contains_unsupported_claims": false,
+      "row_error_count": 0,
+      "ready": false
+    },
+    {
+      "control_id": "resolution_source_temporal_cutoff",
+      "title": "Resolution source temporal cutoff",
+      "review_status": "missing",
+      "owner_approval_status": "missing",
+      "reviewed": false,
+      "passed": false,
+      "owner_approved": false,
+      "artifact_path_present": false,
+      "artifact_path_exists": false,
+      "unresolved_issue_count": null,
+      "risk_severity": "missing",
+      "contains_unsupported_claims": false,
+      "row_error_count": 0,
+      "ready": false
+    },
+    {
+      "control_id": "retrieval_source_cutoff_review",
+      "title": "Retrieval source cutoff review",
+      "review_status": "missing",
+      "owner_approval_status": "missing",
+      "reviewed": false,
+      "passed": false,
+      "owner_approved": false,
+      "artifact_path_present": false,
+      "artifact_path_exists": false,
+      "unresolved_issue_count": null,
+      "risk_severity": "missing",
+      "contains_unsupported_claims": false,
+      "row_error_count": 0,
+      "ready": false
+    },
+    {
+      "control_id": "baseline_temporal_comparability",
+      "title": "Baseline temporal comparability",
+      "review_status": "missing",
+      "owner_approval_status": "missing",
+      "reviewed": false,
+      "passed": false,
+      "owner_approved": false,
+      "artifact_path_present": false,
+      "artifact_path_exists": false,
+      "unresolved_issue_count": null,
+      "risk_severity": "missing",
+      "contains_unsupported_claims": false,
+      "row_error_count": 0,
+      "ready": false
+    },
+    {
+      "control_id": "benchmark_contamination_review",
+      "title": "Benchmark contamination review",
+      "review_status": "missing",
+      "owner_approval_status": "missing",
+      "reviewed": false,
+      "passed": false,
+      "owner_approved": false,
+      "artifact_path_present": false,
+      "artifact_path_exists": false,
+      "unresolved_issue_count": null,
+      "risk_severity": "missing",
+      "contains_unsupported_claims": false,
+      "row_error_count": 0,
+      "ready": false
+    },
+    {
+      "control_id": "training_eval_overlap_review",
+      "title": "Training/evaluation overlap review",
+      "review_status": "missing",
+      "owner_approval_status": "missing",
+      "reviewed": false,
+      "passed": false,
+      "owner_approved": false,
+      "artifact_path_present": false,
+      "artifact_path_exists": false,
+      "unresolved_issue_count": null,
+      "risk_severity": "missing",
+      "contains_unsupported_claims": false,
+      "row_error_count": 0,
+      "ready": false
+    },
+    {
+      "control_id": "ambiguous_resolution_exclusion_review",
+      "title": "Ambiguous resolution and exclusion review",
+      "review_status": "missing",
+      "owner_approval_status": "missing",
+      "reviewed": false,
+      "passed": false,
+      "owner_approved": false,
+      "artifact_path_present": false,
+      "artifact_path_exists": false,
+      "unresolved_issue_count": null,
+      "risk_severity": "missing",
+      "contains_unsupported_claims": false,
+      "row_error_count": 0,
+      "ready": false
+    },
+    {
+      "control_id": "claim_tier_copy_boundary",
+      "title": "Claim tier and copy boundary",
+      "review_status": "missing",
+      "owner_approval_status": "missing",
+      "reviewed": false,
+      "passed": false,
+      "owner_approved": false,
+      "artifact_path_present": false,
+      "artifact_path_exists": false,
+      "unresolved_issue_count": null,
+      "risk_severity": "missing",
+      "contains_unsupported_claims": false,
+      "row_error_count": 0,
+      "ready": false
+    }
+  ],
+  "acceptance_gates": [
+    {
+      "gate": "register_schema_present",
+      "status": "passed",
+      "evidence": "Register schema includes 22 required columns.",
+      "proof_bucket": "repo_artifact"
+    },
+    {
+      "gate": "all_required_control_rows_present",
+      "status": "passed",
+      "evidence": "8 register rows loaded for 8 required leakage controls.",
+      "proof_bucket": "repo_artifact"
+    },
+    {
+      "gate": "real_forecast_inputs_present",
+      "status": "open_no_real_forecast_rows",
+      "evidence": "0 valid resolved forecast rows and 0 valid baseline rows from docs/launch-readiness/accuracy-evidence-input-validation-2026-06-06.json.",
+      "proof_bucket": "owner_input"
+    },
+    {
+      "gate": "accuracy_inputs_ready_for_review",
+      "status": "open_no_real_forecast_rows",
+      "evidence": "accuracy_input_validation_status=accuracy_input_validation_ready_no_real_rows; ready_for_calibration_scoring=false.",
+      "proof_bucket": "owner_input"
+    },
+    {
+      "gate": "leakage_control_rows_passed_and_owner_approved",
+      "status": "open_no_real_forecast_rows",
+      "evidence": "0/8 required leakage controls are passed and owner-approved.",
+      "proof_bucket": "owner_input"
+    },
+    {
+      "gate": "row_quality_validation",
+      "status": "open_no_real_forecast_rows",
+      "evidence": "0 row-level errors and 0 warnings across leakage review register.",
+      "proof_bucket": "owner_input"
+    },
+    {
+      "gate": "unresolved_risk_absent",
+      "status": "open_no_real_forecast_rows",
+      "evidence": "0 unresolved issues and 0 high/critical risk rows remain.",
+      "proof_bucket": "owner_input"
+    },
+    {
+      "gate": "claim_boundary_preserved",
+      "status": "passed",
+      "evidence": "Rows are checked for unsupported accuracy, world-class, commercial-ready, leakage-free, and benchmark-superiority claim language.",
+      "proof_bucket": "repo_artifact"
+    }
+  ],
+  "row_issues": [],
+  "release_holds": [
+    {
+      "hold": "real_forecast_inputs_present",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "0 valid resolved forecast rows and 0 valid baseline rows from docs/launch-readiness/accuracy-evidence-input-validation-2026-06-06.json."
+    },
+    {
+      "hold": "accuracy_inputs_ready_for_review",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "accuracy_input_validation_status=accuracy_input_validation_ready_no_real_rows; ready_for_calibration_scoring=false."
+    },
+    {
+      "hold": "leakage_control_rows_passed_and_owner_approved",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "0/8 required leakage controls are passed and owner-approved."
+    },
+    {
+      "hold": "row_quality_validation",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "0 row-level errors and 0 warnings across leakage review register."
+    },
+    {
+      "hold": "unresolved_risk_absent",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "0 unresolved issues and 0 high/critical risk rows remain."
+    }
+  ],
+  "current_source_alignment": [
+    {
+      "source": "ForecastBench",
+      "url": "https://arxiv.org/abs/2409.19839",
+      "alignment": "World-class forecasting claims require future-event evaluation that avoids known answers and data leakage."
+    },
+    {
+      "source": "Metaculus FutureEval methodology",
+      "url": "https://www.metaculus.com/futureeval/methodology",
+      "alignment": "Dynamic forecasting evaluation should score real future questions as they resolve and compare against human/pro/bot baselines."
+    },
+    {
+      "source": "NIST AI Risk Management Framework",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "alignment": "Prediction claims should be managed as measured AI risk with documented uncertainty and residual limitations."
+    }
+  ],
+  "next_commands_after_owner_data": [
+    "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:forecast:leakage-review -- --register docs/launch-readiness/forecast-leakage-review-register-2026-06-06.csv --accuracy-input-validation docs/launch-readiness/accuracy-evidence-input-validation-2026-06-06.json --forecast-claim-governance docs/launch-readiness/forecast-claim-governance-2026-06-06.json --json-output docs/launch-readiness/forecast-leakage-review-validation-2026-06-06.json --md-output docs/launch-readiness/forecast-leakage-review-validation-2026-06-06.md --csv-output docs/launch-readiness/forecast-leakage-review-validation-checklist-2026-06-06.csv --update-evidence",
+    "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:forecast:claim-governance",
+    "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:commercial:confidence"
+  ]
+}

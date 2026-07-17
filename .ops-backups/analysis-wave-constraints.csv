@@ -1,0 +1,11 @@
+table_name,conname,constraint_def
+analysis_runs,analysis_runs_confidence_score_check,CHECK (((confidence_score >= (0)::numeric) AND (confidence_score <= (1)::numeric)))
+analysis_runs,analysis_runs_pkey,PRIMARY KEY (id)
+analysis_runs,analysis_runs_request_id_key,UNIQUE (request_id)
+analysis_runs,analysis_runs_scenario_id_fkey,FOREIGN KEY (scenario_id) REFERENCES scenarios(id) ON DELETE CASCADE
+analysis_runs,analysis_runs_status_check,"CHECK ((status = ANY (ARRAY['processing'::text, 'completed'::text, 'failed'::text])))"
+life_decisions,life_decisions_category_check,"CHECK ((category = ANY (ARRAY['career'::text, 'financial'::text, 'relationship'::text, 'health'::text, 'purchase'::text, 'conflict'::text, 'business'::text, 'other'::text])))"
+life_decisions,life_decisions_confidence_score_check,CHECK (((confidence_score >= (0)::numeric) AND (confidence_score <= (1)::numeric)))
+life_decisions,life_decisions_outcome_quality_rating_check,CHECK (((outcome_quality_rating >= 1) AND (outcome_quality_rating <= 5)))
+life_decisions,life_decisions_pkey,PRIMARY KEY (id)
+life_decisions,life_decisions_user_id_fkey,FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE

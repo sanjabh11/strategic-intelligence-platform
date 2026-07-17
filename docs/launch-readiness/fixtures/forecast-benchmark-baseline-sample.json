@@ -1,0 +1,62 @@
+{
+  "data_mode": "sample_fixture",
+  "purpose": "Small deterministic benchmark fixture for validating comparison mechanics. This is not a human/pro/community benchmark and must not be used as launch proof.",
+  "baselines": [
+    {
+      "baseline_id": "sample_base_rate",
+      "label": "Sample base-rate baseline",
+      "baseline_type": "base_rate",
+      "avg_brier": 0.25,
+      "sample_size": 6,
+      "source_url": null,
+      "notes": "Base-rate sanity baseline for the sample fixture only."
+    },
+    {
+      "baseline_id": "sample_external_reference",
+      "label": "Sample external reference",
+      "baseline_type": "synthetic_external",
+      "avg_brier": 0.17,
+      "sample_size": 6,
+      "source_url": null,
+      "notes": "Synthetic aggregate baseline used only to verify delta and skill calculations."
+    }
+  ],
+  "forecast_baselines": [
+    {
+      "baseline_id": "sample_forecast_mean",
+      "label": "Sample per-forecast baseline",
+      "forecast_id": "sample-forecast-001",
+      "probability": 0.66
+    },
+    {
+      "baseline_id": "sample_forecast_mean",
+      "label": "Sample per-forecast baseline",
+      "forecast_id": "sample-forecast-002",
+      "probability": 0.48
+    },
+    {
+      "baseline_id": "sample_forecast_mean",
+      "label": "Sample per-forecast baseline",
+      "forecast_id": "sample-forecast-003",
+      "probability": 0.72
+    },
+    {
+      "baseline_id": "sample_forecast_mean",
+      "label": "Sample per-forecast baseline",
+      "forecast_id": "sample-forecast-004",
+      "probability": 0.37
+    },
+    {
+      "baseline_id": "sample_forecast_mean",
+      "label": "Sample per-forecast baseline",
+      "forecast_id": "sample-forecast-005",
+      "probability": 0.51
+    },
+    {
+      "baseline_id": "sample_forecast_mean",
+      "label": "Sample per-forecast baseline",
+      "forecast_id": "sample-forecast-006",
+      "probability": 0.8
+    }
+  ]
+}

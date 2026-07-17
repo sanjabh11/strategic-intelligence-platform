@@ -1,7 +1,7 @@
 // Evidence Enforcement Test Suite
 // Tests that geopolitical scenarios without passage_excerpt trigger under_review status
 
-import { assertEquals } from "https://deno.land/std@0.208.0/assert/assert_equals.ts";
+import { assertEquals } from "jsr:@std/assert@1.0.19/assert-equals";
 
 Deno.test("Geopolitical scenario missing passage_excerpt triggers under_review", async () => {
   // Mock geopolitical scenario

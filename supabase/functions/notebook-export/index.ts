@@ -8,7 +8,8 @@
 //
 // Tables: analysis_runs, retrieval_cache
 
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { createClient } from 'npm:@supabase/supabase-js@2'
+import { getAuthenticatedUser, jsonResponse } from '../_shared/auth.ts'
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
@@ -23,6 +24,19 @@ interface NotebookRequest {
   analysis_id: string
   analysis_data: any
   retrievals: any[]
+}
+
+function encodeBase64Utf8(value: string) {
+  const bytes = new TextEncoder().encode(value)
+  let binary = ''
+  const chunkSize = 0x8000
+
+  for (let index = 0; index < bytes.length; index += chunkSize) {
+    const chunk = bytes.subarray(index, index + chunkSize)
+    binary += String.fromCharCode(...chunk)
+  }
+
+  return btoa(binary)
 }
 
 function generateNotebookContent(analysisData: any, retrievals: any[]): string {
@@ -101,10 +115,13 @@ print("Iterations:", solver_config['iterations'])`
       source: `# Simulation Results
 equilibria = ${JSON.stringify(analysisData.simulation_results.equilibria)}
 sensitivity = ${JSON.stringify(analysisData.simulation_results.sensitivity)}
+advanced_frameworks = ${JSON.stringify(analysisData.simulation_results.advanced_frameworks || {})}
 
 print("Number of equilibria found:", len(equilibria))
 for i, eq in enumerate(equilibria):
-    print(f"Equilibrium {i+1}: {eq['type']} - Stability: {eq['stability']:.3f}")`
+    print(f"Equilibrium {i+1}: {eq['type']} - Stability: {eq['stability']:.3f}")
+
+print("Advanced frameworks:", list(advanced_frameworks.keys()))`
     })
   }
 
@@ -163,11 +180,16 @@ for i, r in enumerate(retrievals):
 }
 
 Deno.serve(async (req) => {
+  // Auth check
+  const _user = await getAuthenticatedUser(req)
+  if (!_user) return jsonResponse(401, { ok: false, error: 'authentication_required' })
+
+
   // Handle CORS
   if (req.method === 'OPTIONS') {
     return new Response('ok', {
       headers: {
-        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Origin': Deno.env.get('ALLOWED_ORIGIN') || Deno.env.get('APP_URL') || 'null',
         'Access-Control-Allow-Methods': 'POST, OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type, Authorization, apikey, X-Client-Info'
       }
@@ -179,7 +201,7 @@ Deno.serve(async (req) => {
       status: 405,
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
+        'Access-Control-Allow-Origin': Deno.env.get('ALLOWED_ORIGIN') || Deno.env.get('APP_URL') || 'null'
       }
     })
   }
@@ -200,7 +222,7 @@ Deno.serve(async (req) => {
 
     // Store notebook in Supabase storage (simplified - in production use proper storage)
     const notebookBlob = new Blob([notebookContent], { type: 'application/json' })
-    const notebookUrl = `data:application/json;base64,${btoa(notebookContent)}`
+    const notebookUrl = `data:application/json;base64,${encodeBase64Utf8(notebookContent)}`
 
     // Update analysis_runs with notebook URL
     const { error: updateError } = await supabaseAdmin
@@ -226,7 +248,7 @@ Deno.serve(async (req) => {
       status: 200,
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
+        'Access-Control-Allow-Origin': Deno.env.get('ALLOWED_ORIGIN') || Deno.env.get('APP_URL') || 'null'
       }
     })
 
@@ -240,7 +262,7 @@ Deno.serve(async (req) => {
       status: 500,
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
+        'Access-Control-Allow-Origin': Deno.env.get('ALLOWED_ORIGIN') || Deno.env.get('APP_URL') || 'null'
       }
     })
   }

@@ -3,7 +3,8 @@
 // Deno runtime with Firecrawl API integration for advanced web research
 // Endpoint: POST /functions/v1/firecrawl-research
 
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { createClient } from 'npm:@supabase/supabase-js@2'
+import { getAuthenticatedUser, jsonResponse } from '../_shared/auth.ts'
 
 interface JsonResponse {
   status: number;
@@ -15,7 +16,7 @@ function jsonResponse(status: number, body: any): Response {
     status,
     headers: {
       'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Origin': Deno.env.get('ALLOWED_ORIGIN') || Deno.env.get('APP_URL') || 'null',
       'Access-Control-Allow-Methods': 'POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type, Authorization, apikey, X-Client-Info'
     }
@@ -517,10 +518,15 @@ async function performFirecrawlResearch(
 
 // Edge Function Handler
 Deno.serve(async (req) => {
+  // Auth check
+  const _user = await getAuthenticatedUser(req)
+  if (!_user) return jsonResponse(401, { ok: false, error: 'authentication_required' })
+
+
   // Handle CORS
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: {
-      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Origin': Deno.env.get('ALLOWED_ORIGIN') || Deno.env.get('APP_URL') || 'null',
       'Access-Control-Allow-Methods': 'POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type, Authorization, apikey, X-Client-Info'
     }});

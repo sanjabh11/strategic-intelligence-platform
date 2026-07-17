@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { ENDPOINTS, getAuthHeaders } from '../lib/supabase'
+import { ENDPOINTS, getUserAuthHeaders } from '../lib/supabase'
 
 export interface SharedStrategy {
   id: string
@@ -24,7 +24,7 @@ export function useSharedStrategies() {
       url.searchParams.set('select', 'id,run_id,title,scenario_summary,strategy,created_at')
       url.searchParams.set('order', 'created_at.desc')
       url.searchParams.set('limit', '50')
-      const resp = await fetch(url.toString(), { headers: { ...getAuthHeaders() } })
+      const resp = await fetch(url.toString(), { headers: await getUserAuthHeaders() })
       if (!resp.ok) throw new Error(await resp.text())
       const data = await resp.json()
       setItems(data)
@@ -38,7 +38,7 @@ export function useSharedStrategies() {
   const share = useCallback(async (payload: { run_id?: string; title: string; scenario_summary?: string; strategy: unknown }) => {
     const resp = await fetch(ENDPOINTS.SHARE_STRATEGY, {
       method: 'POST',
-      headers: { ...getAuthHeaders() },
+      headers: await getUserAuthHeaders(),
       body: JSON.stringify(payload)
     })
     if (!resp.ok) throw new Error(await resp.text())

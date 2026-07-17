@@ -146,6 +146,7 @@ const MonitoringDashboard: React.FC = () => {
         )}
 
         {/* Metrics Grid */}
+        {currentMetrics && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <MetricCard
             title="Schema Failure Rate"
@@ -183,6 +184,7 @@ const MonitoringDashboard: React.FC = () => {
             icon={<AlertTriangle className="w-6 h-6 text-yellow-400" />}
           />
         </div>
+        )}
 
         {/* Additional Status Info */}
         <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
@@ -192,7 +194,7 @@ const MonitoringDashboard: React.FC = () => {
             <div>
               <h3 className="text-sm font-medium text-slate-300 mb-2">Last Updated</h3>
               <p className="text-slate-200 font-mono">
-                {new Date(currentMetrics.last_updated).toLocaleString()}
+                {currentMetrics ? new Date(currentMetrics.last_updated).toLocaleString() : 'N/A'}
               </p>
             </div>
 

@@ -1,0 +1,3012 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-06-06T17:06:28.872Z",
+  "source": {
+    "remediation_plan": "docs/launch-readiness/rls-remediation-plan-2026-06-06.json",
+    "production_state_verified": false,
+    "owner_classification_verified": false
+  },
+  "proof_boundary": "This register is a static owner-approval artifact. It does not inspect hosted Supabase state, apply policy changes, or prove deployed RLS behavior.",
+  "classification_status": "pending_owner_approval",
+  "commercial_security_status": "classification_required_not_enterprise_ready",
+  "summary": {
+    "table_count": 70,
+    "p1_table_count": 44,
+    "pending_owner_classification_count": 70,
+    "first_fix_batch_candidate_count": 27,
+    "public_exception_review_count": 38,
+    "data_category_counts": {
+      "advanced_strategy_output_data": 11,
+      "evaluation_shadow_and_forecast_data": 15,
+      "team_collaboration_data": 7,
+      "retrieval_query_and_source_context": 6,
+      "authenticated_user_or_review_data": 5,
+      "education_classroom_data": 5,
+      "observability_and_operational_logs": 3,
+      "analysis_execution_and_public_beta_intake": 7,
+      "campaign_participant_data": 1,
+      "campaign_coordination_data": 1,
+      "public_catalog_candidate": 5,
+      "ontology_and_derived_graph_data": 4
+    },
+    "domain_counts": {
+      "advanced_services": 10,
+      "forecasting_and_ml_evaluation": 15,
+      "collaboration_and_warroom": 7,
+      "retrieval_and_evidence": 6,
+      "identity_and_review": 5,
+      "classroom": 4,
+      "observability": 3,
+      "analysis_execution": 7,
+      "public_catalog_candidates": 9,
+      "ontology_and_graph": 4
+    },
+    "priority_counts": {
+      "P1": 44,
+      "P2": 23,
+      "P3": 3
+    }
+  },
+  "approval_workflow": [
+    "Assign a business/security owner for every table.",
+    "Confirm the data category, row owner model, and whether any public/anonymous exception is intentionally required.",
+    "Reject broad public or anonymous policies for private tables before drafting migrations.",
+    "Draft one narrow RLS migration per approved domain batch.",
+    "Run Supabase database tests for anon, unrelated authenticated, owner/member/reviewer, and service-role paths.",
+    "Attach hosted smoke logs and policy-test output before upgrading from pilot-only."
+  ],
+  "register_columns": [
+    "table",
+    "domain",
+    "remediation_batch_order",
+    "batch_priority",
+    "table_priority",
+    "data_category",
+    "default_sensitivity",
+    "recommended_visibility",
+    "public_or_anon_exception_default",
+    "policy_exception_status",
+    "owner_model_to_confirm",
+    "owner_to_assign",
+    "approval_status",
+    "first_fix_batch_candidate",
+    "finding_count",
+    "p1_finding_count",
+    "issue_types",
+    "operations",
+    "recommended_policy_direction",
+    "required_persona_tests",
+    "owner_questions",
+    "source_locations"
+  ],
+  "rows": [
+    {
+      "table": "agent_beliefs",
+      "domain": "advanced_services",
+      "remediation_batch_order": 1,
+      "batch_priority": "P1",
+      "table_priority": "P1",
+      "data_category": "advanced_strategy_output_data",
+      "default_sensitivity": "high",
+      "recommended_visibility": "owner_analysis_service_role_only",
+      "public_or_anon_exception_default": "no",
+      "policy_exception_status": "not_allowed_by_default",
+      "owner_model_to_confirm": "analysis owner, strategy owner, authenticated creator, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": false,
+      "finding_count": 3,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "anonymous_write_check",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Require owner-bound inserts and reads, or service-role mediated writes from authenticated analysis jobs.",
+      "required_persona_tests": [
+        "anon_denied",
+        "unrelated_authenticated_denied",
+        "owner_allowed",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which actor owns generated strategic outputs?",
+        "Which service jobs can write advanced outputs?",
+        "Can any rows become public only through an explicit publish workflow?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20250902184559_0005_recursive.sql:33",
+        "supabase/migrations/20250902184559_0005_recursive.sql:43"
+      ]
+    },
+    {
+      "table": "analysis_trajectories",
+      "domain": "advanced_services",
+      "remediation_batch_order": 1,
+      "batch_priority": "P1",
+      "table_priority": "P1",
+      "data_category": "advanced_strategy_output_data",
+      "default_sensitivity": "high",
+      "recommended_visibility": "owner_analysis_service_role_only",
+      "public_or_anon_exception_default": "no",
+      "policy_exception_status": "not_allowed_by_default",
+      "owner_model_to_confirm": "analysis owner, strategy owner, authenticated creator, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": false,
+      "finding_count": 3,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "anonymous_write_check",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Require owner-bound inserts and reads, or service-role mediated writes from authenticated analysis jobs.",
+      "required_persona_tests": [
+        "anon_denied",
+        "unrelated_authenticated_denied",
+        "owner_allowed",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which actor owns generated strategic outputs?",
+        "Which service jobs can write advanced outputs?",
+        "Can any rows become public only through an explicit publish workflow?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20250902184559_0005_recursive.sql:28",
+        "supabase/migrations/20250902184559_0005_recursive.sql:38"
+      ]
+    },
+    {
+      "table": "belief_networks",
+      "domain": "advanced_services",
+      "remediation_batch_order": 1,
+      "batch_priority": "P1",
+      "table_priority": "P1",
+      "data_category": "advanced_strategy_output_data",
+      "default_sensitivity": "high",
+      "recommended_visibility": "owner_analysis_service_role_only",
+      "public_or_anon_exception_default": "no",
+      "policy_exception_status": "not_allowed_by_default",
+      "owner_model_to_confirm": "analysis owner, strategy owner, authenticated creator, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": false,
+      "finding_count": 3,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "anonymous_write_check",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Require owner-bound inserts and reads, or service-role mediated writes from authenticated analysis jobs.",
+      "required_persona_tests": [
+        "anon_denied",
+        "unrelated_authenticated_denied",
+        "owner_allowed",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which actor owns generated strategic outputs?",
+        "Which service jobs can write advanced outputs?",
+        "Can any rows become public only through an explicit publish workflow?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20250102184613_0007_quantum_table_schema.sql:81",
+        "supabase/migrations/20250102184613_0007_quantum_table_schema.sql:86"
+      ]
+    },
+    {
+      "table": "collective_insights",
+      "domain": "advanced_services",
+      "remediation_batch_order": 1,
+      "batch_priority": "P1",
+      "table_priority": "P1",
+      "data_category": "advanced_strategy_output_data",
+      "default_sensitivity": "high",
+      "recommended_visibility": "owner_analysis_service_role_only",
+      "public_or_anon_exception_default": "no",
+      "policy_exception_status": "not_allowed_by_default",
+      "owner_model_to_confirm": "analysis owner, strategy owner, authenticated creator, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": false,
+      "finding_count": 3,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "anonymous_write_check",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Require owner-bound inserts and reads, or service-role mediated writes from authenticated analysis jobs.",
+      "required_persona_tests": [
+        "anon_denied",
+        "unrelated_authenticated_denied",
+        "owner_allowed",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which actor owns generated strategic outputs?",
+        "Which service jobs can write advanced outputs?",
+        "Can any rows become public only through an explicit publish workflow?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20250102184612_0008_evidence_collective.sql:141",
+        "supabase/migrations/20250102184612_0008_evidence_collective.sql:158"
+      ]
+    },
+    {
+      "table": "information_value_analysis",
+      "domain": "advanced_services",
+      "remediation_batch_order": 1,
+      "batch_priority": "P1",
+      "table_priority": "P1",
+      "data_category": "advanced_strategy_output_data",
+      "default_sensitivity": "high",
+      "recommended_visibility": "owner_analysis_service_role_only",
+      "public_or_anon_exception_default": "no",
+      "policy_exception_status": "not_allowed_by_default",
+      "owner_model_to_confirm": "analysis owner, strategy owner, authenticated creator, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": false,
+      "finding_count": 3,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "anonymous_write_check",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Require owner-bound inserts and reads, or service-role mediated writes from authenticated analysis jobs.",
+      "required_persona_tests": [
+        "anon_denied",
+        "unrelated_authenticated_denied",
+        "owner_allowed",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which actor owns generated strategic outputs?",
+        "Which service jobs can write advanced outputs?",
+        "Can any rows become public only through an explicit publish workflow?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20250918100000_information_value_analysis.sql:18",
+        "supabase/migrations/20250918100000_information_value_analysis.sql:19"
+      ]
+    },
+    {
+      "table": "insight_reactions",
+      "domain": "advanced_services",
+      "remediation_batch_order": 1,
+      "batch_priority": "P1",
+      "table_priority": "P1",
+      "data_category": "advanced_strategy_output_data",
+      "default_sensitivity": "high",
+      "recommended_visibility": "owner_analysis_service_role_only",
+      "public_or_anon_exception_default": "no",
+      "policy_exception_status": "not_allowed_by_default",
+      "owner_model_to_confirm": "analysis owner, strategy owner, authenticated creator, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": false,
+      "finding_count": 3,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "anonymous_write_check",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Require owner-bound inserts and reads, or service-role mediated writes from authenticated analysis jobs.",
+      "required_persona_tests": [
+        "anon_denied",
+        "unrelated_authenticated_denied",
+        "owner_allowed",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which actor owns generated strategic outputs?",
+        "Which service jobs can write advanced outputs?",
+        "Can any rows become public only through an explicit publish workflow?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20250102184612_0008_evidence_collective.sql:144",
+        "supabase/migrations/20250102184612_0008_evidence_collective.sql:159"
+      ]
+    },
+    {
+      "table": "quantum_strategic_states",
+      "domain": "advanced_services",
+      "remediation_batch_order": 1,
+      "batch_priority": "P1",
+      "table_priority": "P1",
+      "data_category": "advanced_strategy_output_data",
+      "default_sensitivity": "high",
+      "recommended_visibility": "owner_analysis_service_role_only",
+      "public_or_anon_exception_default": "no",
+      "policy_exception_status": "not_allowed_by_default",
+      "owner_model_to_confirm": "analysis owner, strategy owner, authenticated creator, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": false,
+      "finding_count": 3,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "anonymous_write_check",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Require owner-bound inserts and reads, or service-role mediated writes from authenticated analysis jobs.",
+      "required_persona_tests": [
+        "anon_denied",
+        "unrelated_authenticated_denied",
+        "owner_allowed",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which actor owns generated strategic outputs?",
+        "Which service jobs can write advanced outputs?",
+        "Can any rows become public only through an explicit publish workflow?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20250102184613_0007_quantum_table_schema.sql:57",
+        "supabase/migrations/20250102184613_0007_quantum_table_schema.sql:62"
+      ]
+    },
+    {
+      "table": "scale_invariant_adaptations",
+      "domain": "advanced_services",
+      "remediation_batch_order": 1,
+      "batch_priority": "P1",
+      "table_priority": "P1",
+      "data_category": "advanced_strategy_output_data",
+      "default_sensitivity": "high",
+      "recommended_visibility": "owner_analysis_service_role_only",
+      "public_or_anon_exception_default": "no",
+      "policy_exception_status": "not_allowed_by_default",
+      "owner_model_to_confirm": "analysis owner, strategy owner, authenticated creator, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": false,
+      "finding_count": 3,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "anonymous_write_check",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Require owner-bound inserts and reads, or service-role mediated writes from authenticated analysis jobs.",
+      "required_persona_tests": [
+        "anon_denied",
+        "unrelated_authenticated_denied",
+        "owner_allowed",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which actor owns generated strategic outputs?",
+        "Which service jobs can write advanced outputs?",
+        "Can any rows become public only through an explicit publish workflow?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20250918110000_advanced_services_tables.sql:122",
+        "supabase/migrations/20250918110000_advanced_services_tables.sql:125"
+      ]
+    },
+    {
+      "table": "shared_strategies",
+      "domain": "advanced_services",
+      "remediation_batch_order": 1,
+      "batch_priority": "P1",
+      "table_priority": "P1",
+      "data_category": "advanced_strategy_output_data",
+      "default_sensitivity": "high",
+      "recommended_visibility": "owner_analysis_service_role_only",
+      "public_or_anon_exception_default": "no",
+      "policy_exception_status": "not_allowed_by_default",
+      "owner_model_to_confirm": "analysis owner, strategy owner, authenticated creator, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": false,
+      "finding_count": 3,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "anonymous_write_check",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Require owner-bound inserts and reads, or service-role mediated writes from authenticated analysis jobs.",
+      "required_persona_tests": [
+        "anon_denied",
+        "unrelated_authenticated_denied",
+        "owner_allowed",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which actor owns generated strategic outputs?",
+        "Which service jobs can write advanced outputs?",
+        "Can any rows become public only through an explicit publish workflow?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20250902184600_0006_collective.sql:28",
+        "supabase/migrations/20250902184600_0006_collective.sql:38"
+      ]
+    },
+    {
+      "table": "strategic_patterns",
+      "domain": "advanced_services",
+      "remediation_batch_order": 1,
+      "batch_priority": "P1",
+      "table_priority": "P1",
+      "data_category": "advanced_strategy_output_data",
+      "default_sensitivity": "high",
+      "recommended_visibility": "owner_analysis_service_role_only",
+      "public_or_anon_exception_default": "no",
+      "policy_exception_status": "not_allowed_by_default",
+      "owner_model_to_confirm": "analysis owner, strategy owner, authenticated creator, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": false,
+      "finding_count": 3,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "anonymous_write_check",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Require owner-bound inserts and reads, or service-role mediated writes from authenticated analysis jobs.",
+      "required_persona_tests": [
+        "anon_denied",
+        "unrelated_authenticated_denied",
+        "owner_allowed",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which actor owns generated strategic outputs?",
+        "Which service jobs can write advanced outputs?",
+        "Can any rows become public only through an explicit publish workflow?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20250102184613_0007_quantum_table_schema.sql:69",
+        "supabase/migrations/20250102184613_0007_quantum_table_schema.sql:74"
+      ]
+    },
+    {
+      "table": "whitebox_experiment_evaluations",
+      "domain": "forecasting_and_ml_evaluation",
+      "remediation_batch_order": 2,
+      "batch_priority": "P1",
+      "table_priority": "P1",
+      "data_category": "evaluation_shadow_and_forecast_data",
+      "default_sensitivity": "high",
+      "recommended_visibility": "owner_reviewer_service_role_only_with_published_summary_exceptions",
+      "public_or_anon_exception_default": "only_if_published_summary",
+      "policy_exception_status": "pending_public_exception_review",
+      "owner_model_to_confirm": "forecast owner, analysis owner, reviewer, release job, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": true,
+      "finding_count": 2,
+      "p1_finding_count": 2,
+      "issue_types": [
+        "sensitive_table_read_without_identity_predicate",
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Restrict evaluation, shadow, and calibration tables to service-role jobs, owners, reviewers, and explicitly public published summaries.",
+      "required_persona_tests": [
+        "anon_denied_private_evaluation",
+        "unrelated_authenticated_denied",
+        "owner_or_reviewer_allowed",
+        "published_summary_allowed_if_classified",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which metrics are private evaluation rows versus public summaries?",
+        "Which release or calibration jobs need service-role writes?",
+        "How are resolved outcomes approved before publication?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql:224"
+      ]
+    },
+    {
+      "table": "whitebox_experiment_state",
+      "domain": "forecasting_and_ml_evaluation",
+      "remediation_batch_order": 2,
+      "batch_priority": "P1",
+      "table_priority": "P1",
+      "data_category": "evaluation_shadow_and_forecast_data",
+      "default_sensitivity": "high",
+      "recommended_visibility": "owner_reviewer_service_role_only_with_published_summary_exceptions",
+      "public_or_anon_exception_default": "only_if_published_summary",
+      "policy_exception_status": "pending_public_exception_review",
+      "owner_model_to_confirm": "forecast owner, analysis owner, reviewer, release job, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": true,
+      "finding_count": 2,
+      "p1_finding_count": 2,
+      "issue_types": [
+        "sensitive_table_read_without_identity_predicate",
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Restrict evaluation, shadow, and calibration tables to service-role jobs, owners, reviewers, and explicitly public published summaries.",
+      "required_persona_tests": [
+        "anon_denied_private_evaluation",
+        "unrelated_authenticated_denied",
+        "owner_or_reviewer_allowed",
+        "published_summary_allowed_if_classified",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which metrics are private evaluation rows versus public summaries?",
+        "Which release or calibration jobs need service-role writes?",
+        "How are resolved outcomes approved before publication?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql:221"
+      ]
+    },
+    {
+      "table": "strategy_outcomes",
+      "domain": "forecasting_and_ml_evaluation",
+      "remediation_batch_order": 2,
+      "batch_priority": "P1",
+      "table_priority": "P1",
+      "data_category": "evaluation_shadow_and_forecast_data",
+      "default_sensitivity": "high",
+      "recommended_visibility": "owner_reviewer_service_role_only_with_published_summary_exceptions",
+      "public_or_anon_exception_default": "only_if_published_summary",
+      "policy_exception_status": "pending_public_exception_review",
+      "owner_model_to_confirm": "forecast owner, analysis owner, reviewer, release job, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": true,
+      "finding_count": 6,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "anonymous_write_check",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Restrict evaluation, shadow, and calibration tables to service-role jobs, owners, reviewers, and explicitly public published summaries.",
+      "required_persona_tests": [
+        "anon_denied_private_evaluation",
+        "unrelated_authenticated_denied",
+        "owner_or_reviewer_allowed",
+        "published_summary_allowed_if_classified",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which metrics are private evaluation rows versus public summaries?",
+        "Which release or calibration jobs need service-role writes?",
+        "How are resolved outcomes approved before publication?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20250918110000_advanced_services_tables.sql:114",
+        "supabase/migrations/20250918110000_advanced_services_tables.sql:117",
+        "supabase/migrations/20251006100000_realtime_features.sql:275",
+        "supabase/migrations/20251213000000_eliminate_mock_data.sql:38",
+        "supabase/migrations/20251213000000_eliminate_mock_data.sql:49"
+      ]
+    },
+    {
+      "table": "cross_domain_transfer_results",
+      "domain": "forecasting_and_ml_evaluation",
+      "remediation_batch_order": 2,
+      "batch_priority": "P1",
+      "table_priority": "P1",
+      "data_category": "evaluation_shadow_and_forecast_data",
+      "default_sensitivity": "high",
+      "recommended_visibility": "owner_reviewer_service_role_only_with_published_summary_exceptions",
+      "public_or_anon_exception_default": "only_if_published_summary",
+      "policy_exception_status": "pending_public_exception_review",
+      "owner_model_to_confirm": "forecast owner, analysis owner, reviewer, release job, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": true,
+      "finding_count": 3,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "anonymous_write_check",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Restrict evaluation, shadow, and calibration tables to service-role jobs, owners, reviewers, and explicitly public published summaries.",
+      "required_persona_tests": [
+        "anon_denied_private_evaluation",
+        "unrelated_authenticated_denied",
+        "owner_or_reviewer_allowed",
+        "published_summary_allowed_if_classified",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which metrics are private evaluation rows versus public summaries?",
+        "Which release or calibration jobs need service-role writes?",
+        "How are resolved outcomes approved before publication?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20250918110000_advanced_services_tables.sql:154",
+        "supabase/migrations/20250918110000_advanced_services_tables.sql:157"
+      ]
+    },
+    {
+      "table": "dynamic_recalibration_results",
+      "domain": "forecasting_and_ml_evaluation",
+      "remediation_batch_order": 2,
+      "batch_priority": "P1",
+      "table_priority": "P1",
+      "data_category": "evaluation_shadow_and_forecast_data",
+      "default_sensitivity": "high",
+      "recommended_visibility": "owner_reviewer_service_role_only_with_published_summary_exceptions",
+      "public_or_anon_exception_default": "only_if_published_summary",
+      "policy_exception_status": "pending_public_exception_review",
+      "owner_model_to_confirm": "forecast owner, analysis owner, reviewer, release job, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": true,
+      "finding_count": 3,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "anonymous_write_check",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Restrict evaluation, shadow, and calibration tables to service-role jobs, owners, reviewers, and explicitly public published summaries.",
+      "required_persona_tests": [
+        "anon_denied_private_evaluation",
+        "unrelated_authenticated_denied",
+        "owner_or_reviewer_allowed",
+        "published_summary_allowed_if_classified",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which metrics are private evaluation rows versus public summaries?",
+        "Which release or calibration jobs need service-role writes?",
+        "How are resolved outcomes approved before publication?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20250918110000_advanced_services_tables.sql:146",
+        "supabase/migrations/20250918110000_advanced_services_tables.sql:149"
+      ]
+    },
+    {
+      "table": "outcome_forecasting_results",
+      "domain": "forecasting_and_ml_evaluation",
+      "remediation_batch_order": 2,
+      "batch_priority": "P1",
+      "table_priority": "P1",
+      "data_category": "evaluation_shadow_and_forecast_data",
+      "default_sensitivity": "high",
+      "recommended_visibility": "owner_reviewer_service_role_only_with_published_summary_exceptions",
+      "public_or_anon_exception_default": "only_if_published_summary",
+      "policy_exception_status": "pending_public_exception_review",
+      "owner_model_to_confirm": "forecast owner, analysis owner, reviewer, release job, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": true,
+      "finding_count": 3,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "anonymous_write_check",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Restrict evaluation, shadow, and calibration tables to service-role jobs, owners, reviewers, and explicitly public published summaries.",
+      "required_persona_tests": [
+        "anon_denied_private_evaluation",
+        "unrelated_authenticated_denied",
+        "owner_or_reviewer_allowed",
+        "published_summary_allowed_if_classified",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which metrics are private evaluation rows versus public summaries?",
+        "Which release or calibration jobs need service-role writes?",
+        "How are resolved outcomes approved before publication?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20250918110000_advanced_services_tables.sql:138",
+        "supabase/migrations/20250918110000_advanced_services_tables.sql:141"
+      ]
+    },
+    {
+      "table": "strategy_success_analysis",
+      "domain": "forecasting_and_ml_evaluation",
+      "remediation_batch_order": 2,
+      "batch_priority": "P1",
+      "table_priority": "P1",
+      "data_category": "evaluation_shadow_and_forecast_data",
+      "default_sensitivity": "high",
+      "recommended_visibility": "owner_reviewer_service_role_only_with_published_summary_exceptions",
+      "public_or_anon_exception_default": "only_if_published_summary",
+      "policy_exception_status": "pending_public_exception_review",
+      "owner_model_to_confirm": "forecast owner, analysis owner, reviewer, release job, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": true,
+      "finding_count": 3,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "anonymous_write_check",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Restrict evaluation, shadow, and calibration tables to service-role jobs, owners, reviewers, and explicitly public published summaries.",
+      "required_persona_tests": [
+        "anon_denied_private_evaluation",
+        "unrelated_authenticated_denied",
+        "owner_or_reviewer_allowed",
+        "published_summary_allowed_if_classified",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which metrics are private evaluation rows versus public summaries?",
+        "Which release or calibration jobs need service-role writes?",
+        "How are resolved outcomes approved before publication?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20250918110000_advanced_services_tables.sql:106",
+        "supabase/migrations/20250918110000_advanced_services_tables.sql:109"
+      ]
+    },
+    {
+      "table": "temporal_optimization_results",
+      "domain": "forecasting_and_ml_evaluation",
+      "remediation_batch_order": 2,
+      "batch_priority": "P1",
+      "table_priority": "P1",
+      "data_category": "evaluation_shadow_and_forecast_data",
+      "default_sensitivity": "high",
+      "recommended_visibility": "owner_reviewer_service_role_only_with_published_summary_exceptions",
+      "public_or_anon_exception_default": "only_if_published_summary",
+      "policy_exception_status": "pending_public_exception_review",
+      "owner_model_to_confirm": "forecast owner, analysis owner, reviewer, release job, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": true,
+      "finding_count": 3,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "anonymous_write_check",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Restrict evaluation, shadow, and calibration tables to service-role jobs, owners, reviewers, and explicitly public published summaries.",
+      "required_persona_tests": [
+        "anon_denied_private_evaluation",
+        "unrelated_authenticated_denied",
+        "owner_or_reviewer_allowed",
+        "published_summary_allowed_if_classified",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which metrics are private evaluation rows versus public summaries?",
+        "Which release or calibration jobs need service-role writes?",
+        "How are resolved outcomes approved before publication?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20250918110000_advanced_services_tables.sql:130",
+        "supabase/migrations/20250918110000_advanced_services_tables.sql:133"
+      ]
+    },
+    {
+      "table": "calibration_models",
+      "domain": "forecasting_and_ml_evaluation",
+      "remediation_batch_order": 2,
+      "batch_priority": "P1",
+      "table_priority": "P2",
+      "data_category": "evaluation_shadow_and_forecast_data",
+      "default_sensitivity": "high",
+      "recommended_visibility": "owner_reviewer_service_role_only_with_published_summary_exceptions",
+      "public_or_anon_exception_default": "only_if_published_summary",
+      "policy_exception_status": "pending_public_exception_review",
+      "owner_model_to_confirm": "forecast owner, analysis owner, reviewer, release job, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": true,
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Restrict evaluation, shadow, and calibration tables to service-role jobs, owners, reviewers, and explicitly public published summaries.",
+      "required_persona_tests": [
+        "anon_denied_private_evaluation",
+        "unrelated_authenticated_denied",
+        "owner_or_reviewer_allowed",
+        "published_summary_allowed_if_classified",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which metrics are private evaluation rows versus public summaries?",
+        "Which release or calibration jobs need service-role writes?",
+        "How are resolved outcomes approved before publication?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql:203"
+      ]
+    },
+    {
+      "table": "community_metrics",
+      "domain": "forecasting_and_ml_evaluation",
+      "remediation_batch_order": 2,
+      "batch_priority": "P1",
+      "table_priority": "P2",
+      "data_category": "evaluation_shadow_and_forecast_data",
+      "default_sensitivity": "high",
+      "recommended_visibility": "owner_reviewer_service_role_only_with_published_summary_exceptions",
+      "public_or_anon_exception_default": "only_if_published_summary",
+      "policy_exception_status": "pending_public_exception_review",
+      "owner_model_to_confirm": "forecast owner, analysis owner, reviewer, release job, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": true,
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Restrict evaluation, shadow, and calibration tables to service-role jobs, owners, reviewers, and explicitly public published summaries.",
+      "required_persona_tests": [
+        "anon_denied_private_evaluation",
+        "unrelated_authenticated_denied",
+        "owner_or_reviewer_allowed",
+        "published_summary_allowed_if_classified",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which metrics are private evaluation rows versus public summaries?",
+        "Which release or calibration jobs need service-role writes?",
+        "How are resolved outcomes approved before publication?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20250902184600_0006_collective.sql:33"
+      ]
+    },
+    {
+      "table": "drift_signals",
+      "domain": "forecasting_and_ml_evaluation",
+      "remediation_batch_order": 2,
+      "batch_priority": "P1",
+      "table_priority": "P2",
+      "data_category": "evaluation_shadow_and_forecast_data",
+      "default_sensitivity": "high",
+      "recommended_visibility": "owner_reviewer_service_role_only_with_published_summary_exceptions",
+      "public_or_anon_exception_default": "only_if_published_summary",
+      "policy_exception_status": "pending_public_exception_review",
+      "owner_model_to_confirm": "forecast owner, analysis owner, reviewer, release job, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": true,
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Restrict evaluation, shadow, and calibration tables to service-role jobs, owners, reviewers, and explicitly public published summaries.",
+      "required_persona_tests": [
+        "anon_denied_private_evaluation",
+        "unrelated_authenticated_denied",
+        "owner_or_reviewer_allowed",
+        "published_summary_allowed_if_classified",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which metrics are private evaluation rows versus public summaries?",
+        "Which release or calibration jobs need service-role writes?",
+        "How are resolved outcomes approved before publication?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql:218"
+      ]
+    },
+    {
+      "table": "forecast_scores",
+      "domain": "forecasting_and_ml_evaluation",
+      "remediation_batch_order": 2,
+      "batch_priority": "P1",
+      "table_priority": "P2",
+      "data_category": "evaluation_shadow_and_forecast_data",
+      "default_sensitivity": "high",
+      "recommended_visibility": "owner_reviewer_service_role_only_with_published_summary_exceptions",
+      "public_or_anon_exception_default": "only_if_published_summary",
+      "policy_exception_status": "pending_public_exception_review",
+      "owner_model_to_confirm": "forecast owner, analysis owner, reviewer, release job, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": true,
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Restrict evaluation, shadow, and calibration tables to service-role jobs, owners, reviewers, and explicitly public published summaries.",
+      "required_persona_tests": [
+        "anon_denied_private_evaluation",
+        "unrelated_authenticated_denied",
+        "owner_or_reviewer_allowed",
+        "published_summary_allowed_if_classified",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which metrics are private evaluation rows versus public summaries?",
+        "Which release or calibration jobs need service-role writes?",
+        "How are resolved outcomes approved before publication?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20251212120000_enterprise_sso.sql:341"
+      ]
+    },
+    {
+      "table": "shadow_model_registry",
+      "domain": "forecasting_and_ml_evaluation",
+      "remediation_batch_order": 2,
+      "batch_priority": "P1",
+      "table_priority": "P2",
+      "data_category": "evaluation_shadow_and_forecast_data",
+      "default_sensitivity": "high",
+      "recommended_visibility": "owner_reviewer_service_role_only_with_published_summary_exceptions",
+      "public_or_anon_exception_default": "only_if_published_summary",
+      "policy_exception_status": "pending_public_exception_review",
+      "owner_model_to_confirm": "forecast owner, analysis owner, reviewer, release job, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": true,
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Restrict evaluation, shadow, and calibration tables to service-role jobs, owners, reviewers, and explicitly public published summaries.",
+      "required_persona_tests": [
+        "anon_denied_private_evaluation",
+        "unrelated_authenticated_denied",
+        "owner_or_reviewer_allowed",
+        "published_summary_allowed_if_classified",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which metrics are private evaluation rows versus public summaries?",
+        "Which release or calibration jobs need service-role writes?",
+        "How are resolved outcomes approved before publication?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql:227"
+      ]
+    },
+    {
+      "table": "shadow_predictions",
+      "domain": "forecasting_and_ml_evaluation",
+      "remediation_batch_order": 2,
+      "batch_priority": "P1",
+      "table_priority": "P2",
+      "data_category": "evaluation_shadow_and_forecast_data",
+      "default_sensitivity": "high",
+      "recommended_visibility": "owner_reviewer_service_role_only_with_published_summary_exceptions",
+      "public_or_anon_exception_default": "only_if_published_summary",
+      "policy_exception_status": "pending_public_exception_review",
+      "owner_model_to_confirm": "forecast owner, analysis owner, reviewer, release job, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": true,
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Restrict evaluation, shadow, and calibration tables to service-role jobs, owners, reviewers, and explicitly public published summaries.",
+      "required_persona_tests": [
+        "anon_denied_private_evaluation",
+        "unrelated_authenticated_denied",
+        "owner_or_reviewer_allowed",
+        "published_summary_allowed_if_classified",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which metrics are private evaluation rows versus public summaries?",
+        "Which release or calibration jobs need service-role writes?",
+        "How are resolved outcomes approved before publication?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql:230"
+      ]
+    },
+    {
+      "table": "temporal_forecasts",
+      "domain": "forecasting_and_ml_evaluation",
+      "remediation_batch_order": 2,
+      "batch_priority": "P1",
+      "table_priority": "P2",
+      "data_category": "evaluation_shadow_and_forecast_data",
+      "default_sensitivity": "high",
+      "recommended_visibility": "owner_reviewer_service_role_only_with_published_summary_exceptions",
+      "public_or_anon_exception_default": "only_if_published_summary",
+      "policy_exception_status": "pending_public_exception_review",
+      "owner_model_to_confirm": "forecast owner, analysis owner, reviewer, release job, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": true,
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Restrict evaluation, shadow, and calibration tables to service-role jobs, owners, reviewers, and explicitly public published summaries.",
+      "required_persona_tests": [
+        "anon_denied_private_evaluation",
+        "unrelated_authenticated_denied",
+        "owner_or_reviewer_allowed",
+        "published_summary_allowed_if_classified",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which metrics are private evaluation rows versus public summaries?",
+        "Which release or calibration jobs need service-role writes?",
+        "How are resolved outcomes approved before publication?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20251006100000_realtime_features.sql:297"
+      ]
+    },
+    {
+      "table": "collaborative_messages",
+      "domain": "collaboration_and_warroom",
+      "remediation_batch_order": 3,
+      "batch_priority": "P1",
+      "table_priority": "P1",
+      "data_category": "team_collaboration_data",
+      "default_sensitivity": "high",
+      "recommended_visibility": "member_creator_reviewer_service_role_only",
+      "public_or_anon_exception_default": "no",
+      "policy_exception_status": "not_allowed_by_default",
+      "owner_model_to_confirm": "room/session membership, creator, reviewer, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": true,
+      "finding_count": 4,
+      "p1_finding_count": 3,
+      "issue_types": [
+        "anonymous_write_check",
+        "sensitive_table_read_without_identity_predicate",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Scope reads and writes to room/session membership, creator ownership, explicit reviewer roles, or service-role jobs.",
+      "required_persona_tests": [
+        "anon_denied",
+        "non_member_denied",
+        "member_allowed",
+        "creator_allowed",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which membership table authorizes reads and writes?",
+        "Can creators invite members without exposing private rows?",
+        "Are any published summaries intentionally public?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20250102184612_0008_evidence_collective.sql:147",
+        "supabase/migrations/20250102184612_0008_evidence_collective.sql:160"
+      ]
+    },
+    {
+      "table": "collaborative_sessions",
+      "domain": "collaboration_and_warroom",
+      "remediation_batch_order": 3,
+      "batch_priority": "P1",
+      "table_priority": "P1",
+      "data_category": "team_collaboration_data",
+      "default_sensitivity": "high",
+      "recommended_visibility": "member_creator_reviewer_service_role_only",
+      "public_or_anon_exception_default": "no",
+      "policy_exception_status": "not_allowed_by_default",
+      "owner_model_to_confirm": "room/session membership, creator, reviewer, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": true,
+      "finding_count": 4,
+      "p1_finding_count": 3,
+      "issue_types": [
+        "anonymous_write_check",
+        "sensitive_table_read_without_identity_predicate",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Scope reads and writes to room/session membership, creator ownership, explicit reviewer roles, or service-role jobs.",
+      "required_persona_tests": [
+        "anon_denied",
+        "non_member_denied",
+        "member_allowed",
+        "creator_allowed",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which membership table authorizes reads and writes?",
+        "Can creators invite members without exposing private rows?",
+        "Are any published summaries intentionally public?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20250102184612_0008_evidence_collective.sql:135",
+        "supabase/migrations/20250102184612_0008_evidence_collective.sql:156"
+      ]
+    },
+    {
+      "table": "session_participants",
+      "domain": "collaboration_and_warroom",
+      "remediation_batch_order": 3,
+      "batch_priority": "P1",
+      "table_priority": "P1",
+      "data_category": "team_collaboration_data",
+      "default_sensitivity": "high",
+      "recommended_visibility": "member_creator_reviewer_service_role_only",
+      "public_or_anon_exception_default": "no",
+      "policy_exception_status": "not_allowed_by_default",
+      "owner_model_to_confirm": "room/session membership, creator, reviewer, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": true,
+      "finding_count": 4,
+      "p1_finding_count": 3,
+      "issue_types": [
+        "anonymous_write_check",
+        "sensitive_table_read_without_identity_predicate",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Scope reads and writes to room/session membership, creator ownership, explicit reviewer roles, or service-role jobs.",
+      "required_persona_tests": [
+        "anon_denied",
+        "non_member_denied",
+        "member_allowed",
+        "creator_allowed",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which membership table authorizes reads and writes?",
+        "Can creators invite members without exposing private rows?",
+        "Are any published summaries intentionally public?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20250102184612_0008_evidence_collective.sql:138",
+        "supabase/migrations/20250102184612_0008_evidence_collective.sql:157"
+      ]
+    },
+    {
+      "table": "warroom_assumptions",
+      "domain": "collaboration_and_warroom",
+      "remediation_batch_order": 3,
+      "batch_priority": "P1",
+      "table_priority": "P1",
+      "data_category": "team_collaboration_data",
+      "default_sensitivity": "high",
+      "recommended_visibility": "member_creator_reviewer_service_role_only",
+      "public_or_anon_exception_default": "no",
+      "policy_exception_status": "not_allowed_by_default",
+      "owner_model_to_confirm": "room/session membership, creator, reviewer, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": true,
+      "finding_count": 1,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "sensitive_table_read_without_identity_predicate"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Scope reads and writes to room/session membership, creator ownership, explicit reviewer roles, or service-role jobs.",
+      "required_persona_tests": [
+        "anon_denied",
+        "non_member_denied",
+        "member_allowed",
+        "creator_allowed",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which membership table authorizes reads and writes?",
+        "Can creators invite members without exposing private rows?",
+        "Are any published summaries intentionally public?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20260430000100_warroom_memory.sql:101"
+      ]
+    },
+    {
+      "table": "warroom_comments",
+      "domain": "collaboration_and_warroom",
+      "remediation_batch_order": 3,
+      "batch_priority": "P1",
+      "table_priority": "P1",
+      "data_category": "team_collaboration_data",
+      "default_sensitivity": "high",
+      "recommended_visibility": "member_creator_reviewer_service_role_only",
+      "public_or_anon_exception_default": "no",
+      "policy_exception_status": "not_allowed_by_default",
+      "owner_model_to_confirm": "room/session membership, creator, reviewer, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": true,
+      "finding_count": 1,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "sensitive_table_read_without_identity_predicate"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Scope reads and writes to room/session membership, creator ownership, explicit reviewer roles, or service-role jobs.",
+      "required_persona_tests": [
+        "anon_denied",
+        "non_member_denied",
+        "member_allowed",
+        "creator_allowed",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which membership table authorizes reads and writes?",
+        "Can creators invite members without exposing private rows?",
+        "Are any published summaries intentionally public?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20260430000100_warroom_memory.sql:135"
+      ]
+    },
+    {
+      "table": "warroom_decision_logs",
+      "domain": "collaboration_and_warroom",
+      "remediation_batch_order": 3,
+      "batch_priority": "P1",
+      "table_priority": "P1",
+      "data_category": "team_collaboration_data",
+      "default_sensitivity": "high",
+      "recommended_visibility": "member_creator_reviewer_service_role_only",
+      "public_or_anon_exception_default": "no",
+      "policy_exception_status": "not_allowed_by_default",
+      "owner_model_to_confirm": "room/session membership, creator, reviewer, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": true,
+      "finding_count": 1,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "sensitive_table_read_without_identity_predicate"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Scope reads and writes to room/session membership, creator ownership, explicit reviewer roles, or service-role jobs.",
+      "required_persona_tests": [
+        "anon_denied",
+        "non_member_denied",
+        "member_allowed",
+        "creator_allowed",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which membership table authorizes reads and writes?",
+        "Can creators invite members without exposing private rows?",
+        "Are any published summaries intentionally public?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20260430000100_warroom_memory.sql:84"
+      ]
+    },
+    {
+      "table": "warroom_scenario_versions",
+      "domain": "collaboration_and_warroom",
+      "remediation_batch_order": 3,
+      "batch_priority": "P1",
+      "table_priority": "P1",
+      "data_category": "team_collaboration_data",
+      "default_sensitivity": "high",
+      "recommended_visibility": "member_creator_reviewer_service_role_only",
+      "public_or_anon_exception_default": "no",
+      "policy_exception_status": "not_allowed_by_default",
+      "owner_model_to_confirm": "room/session membership, creator, reviewer, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": true,
+      "finding_count": 1,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "sensitive_table_read_without_identity_predicate"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Scope reads and writes to room/session membership, creator ownership, explicit reviewer roles, or service-role jobs.",
+      "required_persona_tests": [
+        "anon_denied",
+        "non_member_denied",
+        "member_allowed",
+        "creator_allowed",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which membership table authorizes reads and writes?",
+        "Can creators invite members without exposing private rows?",
+        "Are any published summaries intentionally public?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20260430000100_warroom_memory.sql:118"
+      ]
+    },
+    {
+      "table": "retrievals",
+      "domain": "retrieval_and_evidence",
+      "remediation_batch_order": 4,
+      "batch_priority": "P1",
+      "table_priority": "P1",
+      "data_category": "retrieval_query_and_source_context",
+      "default_sensitivity": "high",
+      "recommended_visibility": "owner_analysis_service_role_only_with_published_citation_exceptions",
+      "public_or_anon_exception_default": "only_if_published_citation",
+      "policy_exception_status": "pending_public_exception_review",
+      "owner_model_to_confirm": "analysis owner, source publication status, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": false,
+      "finding_count": 4,
+      "p1_finding_count": 4,
+      "issue_types": [
+        "sensitive_table_read_without_identity_predicate",
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Separate public citation reads from private retrieval logs; route anonymous evidence writes through edge functions with rate limits and provenance metadata.",
+      "required_persona_tests": [
+        "anon_denied_private_rows",
+        "unrelated_authenticated_denied",
+        "owner_allowed",
+        "published_citation_allowed_if_classified",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which rows are private retrieval logs versus public citations?",
+        "What publication flag makes a source safe to expose?",
+        "Which intake paths require anonymous writes behind an edge function?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20250904_0010_extend_analysis_runs_for_audience.sql:136",
+        "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql:212"
+      ]
+    },
+    {
+      "table": "retrieval_cache",
+      "domain": "retrieval_and_evidence",
+      "remediation_batch_order": 4,
+      "batch_priority": "P1",
+      "table_priority": "P1",
+      "data_category": "retrieval_query_and_source_context",
+      "default_sensitivity": "high",
+      "recommended_visibility": "owner_analysis_service_role_only_with_published_citation_exceptions",
+      "public_or_anon_exception_default": "only_if_published_citation",
+      "policy_exception_status": "pending_public_exception_review",
+      "owner_model_to_confirm": "analysis owner, source publication status, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": false,
+      "finding_count": 2,
+      "p1_finding_count": 2,
+      "issue_types": [
+        "sensitive_table_read_without_identity_predicate",
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Separate public citation reads from private retrieval logs; route anonymous evidence writes through edge functions with rate limits and provenance metadata.",
+      "required_persona_tests": [
+        "anon_denied_private_rows",
+        "unrelated_authenticated_denied",
+        "owner_allowed",
+        "published_citation_allowed_if_classified",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which rows are private retrieval logs versus public citations?",
+        "What publication flag makes a source safe to expose?",
+        "Which intake paths require anonymous writes behind an edge function?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20250906110000_add_retrieval_cache_ph4.sql:30"
+      ]
+    },
+    {
+      "table": "retrieval_entity_links",
+      "domain": "retrieval_and_evidence",
+      "remediation_batch_order": 4,
+      "batch_priority": "P1",
+      "table_priority": "P1",
+      "data_category": "retrieval_query_and_source_context",
+      "default_sensitivity": "high",
+      "recommended_visibility": "owner_analysis_service_role_only_with_published_citation_exceptions",
+      "public_or_anon_exception_default": "only_if_published_citation",
+      "policy_exception_status": "pending_public_exception_review",
+      "owner_model_to_confirm": "analysis owner, source publication status, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": false,
+      "finding_count": 2,
+      "p1_finding_count": 2,
+      "issue_types": [
+        "sensitive_table_read_without_identity_predicate",
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Separate public citation reads from private retrieval logs; route anonymous evidence writes through edge functions with rate limits and provenance metadata.",
+      "required_persona_tests": [
+        "anon_denied_private_rows",
+        "unrelated_authenticated_denied",
+        "owner_allowed",
+        "published_citation_allowed_if_classified",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which rows are private retrieval logs versus public citations?",
+        "What publication flag makes a source safe to expose?",
+        "Which intake paths require anonymous writes behind an edge function?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql:215"
+      ]
+    },
+    {
+      "table": "retrieval_provider_runs",
+      "domain": "retrieval_and_evidence",
+      "remediation_batch_order": 4,
+      "batch_priority": "P1",
+      "table_priority": "P1",
+      "data_category": "retrieval_query_and_source_context",
+      "default_sensitivity": "high",
+      "recommended_visibility": "owner_analysis_service_role_only_with_published_citation_exceptions",
+      "public_or_anon_exception_default": "only_if_published_citation",
+      "policy_exception_status": "pending_public_exception_review",
+      "owner_model_to_confirm": "analysis owner, source publication status, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": false,
+      "finding_count": 2,
+      "p1_finding_count": 2,
+      "issue_types": [
+        "sensitive_table_read_without_identity_predicate",
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Separate public citation reads from private retrieval logs; route anonymous evidence writes through edge functions with rate limits and provenance metadata.",
+      "required_persona_tests": [
+        "anon_denied_private_rows",
+        "unrelated_authenticated_denied",
+        "owner_allowed",
+        "published_citation_allowed_if_classified",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which rows are private retrieval logs versus public citations?",
+        "What publication flag makes a source safe to expose?",
+        "Which intake paths require anonymous writes behind an edge function?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20260502000200_retrieval_provider_recovery.sql:37"
+      ]
+    },
+    {
+      "table": "evidence_citations",
+      "domain": "retrieval_and_evidence",
+      "remediation_batch_order": 4,
+      "batch_priority": "P1",
+      "table_priority": "P1",
+      "data_category": "retrieval_query_and_source_context",
+      "default_sensitivity": "high",
+      "recommended_visibility": "owner_analysis_service_role_only_with_published_citation_exceptions",
+      "public_or_anon_exception_default": "only_if_published_citation",
+      "policy_exception_status": "pending_public_exception_review",
+      "owner_model_to_confirm": "analysis owner, source publication status, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": false,
+      "finding_count": 3,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "anonymous_write_check",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Separate public citation reads from private retrieval logs; route anonymous evidence writes through edge functions with rate limits and provenance metadata.",
+      "required_persona_tests": [
+        "anon_denied_private_rows",
+        "unrelated_authenticated_denied",
+        "owner_allowed",
+        "published_citation_allowed_if_classified",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which rows are private retrieval logs versus public citations?",
+        "What publication flag makes a source safe to expose?",
+        "Which intake paths require anonymous writes behind an edge function?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20250102184612_0008_evidence_collective.sql:130",
+        "supabase/migrations/20250102184612_0008_evidence_collective.sql:155"
+      ]
+    },
+    {
+      "table": "evidence_sources",
+      "domain": "retrieval_and_evidence",
+      "remediation_batch_order": 4,
+      "batch_priority": "P1",
+      "table_priority": "P1",
+      "data_category": "retrieval_query_and_source_context",
+      "default_sensitivity": "high",
+      "recommended_visibility": "owner_analysis_service_role_only_with_published_citation_exceptions",
+      "public_or_anon_exception_default": "only_if_published_citation",
+      "policy_exception_status": "pending_public_exception_review",
+      "owner_model_to_confirm": "analysis owner, source publication status, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": false,
+      "finding_count": 3,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "anonymous_write_check",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Separate public citation reads from private retrieval logs; route anonymous evidence writes through edge functions with rate limits and provenance metadata.",
+      "required_persona_tests": [
+        "anon_denied_private_rows",
+        "unrelated_authenticated_denied",
+        "owner_allowed",
+        "published_citation_allowed_if_classified",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which rows are private retrieval logs versus public citations?",
+        "What publication flag makes a source safe to expose?",
+        "Which intake paths require anonymous writes behind an edge function?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20250102184612_0008_evidence_collective.sql:127",
+        "supabase/migrations/20250102184612_0008_evidence_collective.sql:154"
+      ]
+    },
+    {
+      "table": "analysis_runs",
+      "domain": "identity_and_review",
+      "remediation_batch_order": 5,
+      "batch_priority": "P1",
+      "table_priority": "P1",
+      "data_category": "authenticated_user_or_review_data",
+      "default_sensitivity": "high",
+      "recommended_visibility": "owner_reviewer_service_role_only",
+      "public_or_anon_exception_default": "no",
+      "policy_exception_status": "not_allowed_by_default",
+      "owner_model_to_confirm": "user_id, created_by, reviewer assignment, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": true,
+      "finding_count": 7,
+      "p1_finding_count": 6,
+      "issue_types": [
+        "anonymous_write_check",
+        "policy_grants_to_public_role",
+        "sensitive_table_read_without_identity_predicate",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Require authenticated owner, reviewer, or service-role access; remove unconditional public reads and anonymous writes except through audited edge functions.",
+      "required_persona_tests": [
+        "anon_denied",
+        "unrelated_authenticated_denied",
+        "owner_allowed",
+        "reviewer_allowed",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which user or reviewer owns each row?",
+        "Should any review metadata be published after redaction?",
+        "Which edge functions need service-role write access?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20250304_0001_create_users_table.sql:54",
+        "supabase/migrations/20250826_0001_init.sql:43",
+        "supabase/migrations/20250902184556_0002_write_policies.sql:9",
+        "supabase/migrations/20250902184557_0003_mvp_anon_insert.sql:10"
+      ]
+    },
+    {
+      "table": "human_reviews",
+      "domain": "identity_and_review",
+      "remediation_batch_order": 5,
+      "batch_priority": "P1",
+      "table_priority": "P1",
+      "data_category": "authenticated_user_or_review_data",
+      "default_sensitivity": "high",
+      "recommended_visibility": "owner_reviewer_service_role_only",
+      "public_or_anon_exception_default": "no",
+      "policy_exception_status": "not_allowed_by_default",
+      "owner_model_to_confirm": "user_id, created_by, reviewer assignment, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": true,
+      "finding_count": 4,
+      "p1_finding_count": 4,
+      "issue_types": [
+        "sensitive_table_read_without_identity_predicate",
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Require authenticated owner, reviewer, or service-role access; remove unconditional public reads and anonymous writes except through audited edge functions.",
+      "required_persona_tests": [
+        "anon_denied",
+        "unrelated_authenticated_denied",
+        "owner_allowed",
+        "reviewer_allowed",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which user or reviewer owns each row?",
+        "Should any review metadata be published after redaction?",
+        "Which edge functions need service-role write access?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20250304_0001_create_users_table.sql:62",
+        "supabase/migrations/20250904_0010_extend_analysis_runs_for_audience.sql:99"
+      ]
+    },
+    {
+      "table": "users",
+      "domain": "identity_and_review",
+      "remediation_batch_order": 5,
+      "batch_priority": "P1",
+      "table_priority": "P1",
+      "data_category": "authenticated_user_or_review_data",
+      "default_sensitivity": "high",
+      "recommended_visibility": "owner_reviewer_service_role_only",
+      "public_or_anon_exception_default": "no",
+      "policy_exception_status": "not_allowed_by_default",
+      "owner_model_to_confirm": "user_id, created_by, reviewer assignment, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": true,
+      "finding_count": 4,
+      "p1_finding_count": 4,
+      "issue_types": [
+        "sensitive_table_read_without_identity_predicate",
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Require authenticated owner, reviewer, or service-role access; remove unconditional public reads and anonymous writes except through audited edge functions.",
+      "required_persona_tests": [
+        "anon_denied",
+        "unrelated_authenticated_denied",
+        "owner_allowed",
+        "reviewer_allowed",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which user or reviewer owns each row?",
+        "Should any review metadata be published after redaction?",
+        "Which edge functions need service-role write access?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20250304_0001_create_users_table.sql:58",
+        "supabase/migrations/20250904_0010_extend_analysis_runs_for_audience.sql:105"
+      ]
+    },
+    {
+      "table": "asset_storage",
+      "domain": "identity_and_review",
+      "remediation_batch_order": 5,
+      "batch_priority": "P1",
+      "table_priority": "P1",
+      "data_category": "authenticated_user_or_review_data",
+      "default_sensitivity": "high",
+      "recommended_visibility": "owner_reviewer_service_role_only",
+      "public_or_anon_exception_default": "no",
+      "policy_exception_status": "not_allowed_by_default",
+      "owner_model_to_confirm": "user_id, created_by, reviewer assignment, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": true,
+      "finding_count": 2,
+      "p1_finding_count": 2,
+      "issue_types": [
+        "sensitive_table_read_without_identity_predicate",
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Require authenticated owner, reviewer, or service-role access; remove unconditional public reads and anonymous writes except through audited edge functions.",
+      "required_persona_tests": [
+        "anon_denied",
+        "unrelated_authenticated_denied",
+        "owner_allowed",
+        "reviewer_allowed",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which user or reviewer owns each row?",
+        "Should any review metadata be published after redaction?",
+        "Which edge functions need service-role write access?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20250904_0010_extend_analysis_runs_for_audience.sql:102"
+      ]
+    },
+    {
+      "table": "schema_failures",
+      "domain": "identity_and_review",
+      "remediation_batch_order": 5,
+      "batch_priority": "P1",
+      "table_priority": "P1",
+      "data_category": "authenticated_user_or_review_data",
+      "default_sensitivity": "high",
+      "recommended_visibility": "owner_reviewer_service_role_only",
+      "public_or_anon_exception_default": "no",
+      "policy_exception_status": "not_allowed_by_default",
+      "owner_model_to_confirm": "user_id, created_by, reviewer assignment, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": true,
+      "finding_count": 2,
+      "p1_finding_count": 2,
+      "issue_types": [
+        "sensitive_table_read_without_identity_predicate",
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Require authenticated owner, reviewer, or service-role access; remove unconditional public reads and anonymous writes except through audited edge functions.",
+      "required_persona_tests": [
+        "anon_denied",
+        "unrelated_authenticated_denied",
+        "owner_allowed",
+        "reviewer_allowed",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which user or reviewer owns each row?",
+        "Should any review metadata be published after redaction?",
+        "Which edge functions need service-role write access?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20250904_0010_extend_analysis_runs_for_audience.sql:128"
+      ]
+    },
+    {
+      "table": "classroom_assignments",
+      "domain": "classroom",
+      "remediation_batch_order": 6,
+      "batch_priority": "P1",
+      "table_priority": "P1",
+      "data_category": "education_classroom_data",
+      "default_sensitivity": "high",
+      "recommended_visibility": "teacher_student_membership_service_role_only",
+      "public_or_anon_exception_default": "no",
+      "policy_exception_status": "not_allowed_by_default",
+      "owner_model_to_confirm": "classroom membership, teacher role, student owner, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": false,
+      "finding_count": 4,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "sensitive_table_read_without_identity_predicate",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "DELETE",
+        "INSERT",
+        "SELECT",
+        "UPDATE"
+      ],
+      "recommended_policy_direction": "Restrict access by classroom membership and teacher role; prove non-members cannot read or write classroom artifacts.",
+      "required_persona_tests": [
+        "anon_denied",
+        "non_member_denied",
+        "student_or_teacher_allowed",
+        "teacher_admin_allowed",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which actor can see student submissions?",
+        "Which teacher/admin role can manage the classroom?",
+        "Are any course catalog rows separate from student data?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20260430123000_fix_classroom_policy_recursion.sql:149",
+        "supabase/migrations/20260430123000_fix_classroom_policy_recursion.sql:153",
+        "supabase/migrations/20260430123000_fix_classroom_policy_recursion.sql:158",
+        "supabase/migrations/20260430123000_fix_classroom_policy_recursion.sql:164"
+      ]
+    },
+    {
+      "table": "classroom_activity",
+      "domain": "classroom",
+      "remediation_batch_order": 6,
+      "batch_priority": "P1",
+      "table_priority": "P1",
+      "data_category": "education_classroom_data",
+      "default_sensitivity": "high",
+      "recommended_visibility": "teacher_student_membership_service_role_only",
+      "public_or_anon_exception_default": "no",
+      "policy_exception_status": "not_allowed_by_default",
+      "owner_model_to_confirm": "classroom membership, teacher role, student owner, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": false,
+      "finding_count": 1,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "sensitive_table_read_without_identity_predicate"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Restrict access by classroom membership and teacher role; prove non-members cannot read or write classroom artifacts.",
+      "required_persona_tests": [
+        "anon_denied",
+        "non_member_denied",
+        "student_or_teacher_allowed",
+        "teacher_admin_allowed",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which actor can see student submissions?",
+        "Which teacher/admin role can manage the classroom?",
+        "Are any course catalog rows separate from student data?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20260430123000_fix_classroom_policy_recursion.sql:197"
+      ]
+    },
+    {
+      "table": "classrooms",
+      "domain": "classroom",
+      "remediation_batch_order": 6,
+      "batch_priority": "P1",
+      "table_priority": "P1",
+      "data_category": "education_classroom_data",
+      "default_sensitivity": "high",
+      "recommended_visibility": "teacher_student_membership_service_role_only",
+      "public_or_anon_exception_default": "no",
+      "policy_exception_status": "not_allowed_by_default",
+      "owner_model_to_confirm": "classroom membership, teacher role, student owner, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": false,
+      "finding_count": 1,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "sensitive_table_read_without_identity_predicate"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Restrict access by classroom membership and teacher role; prove non-members cannot read or write classroom artifacts.",
+      "required_persona_tests": [
+        "anon_denied",
+        "non_member_denied",
+        "student_or_teacher_allowed",
+        "teacher_admin_allowed",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which actor can see student submissions?",
+        "Which teacher/admin role can manage the classroom?",
+        "Are any course catalog rows separate from student data?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20260430123000_fix_classroom_policy_recursion.sql:102"
+      ]
+    },
+    {
+      "table": "classroom_members",
+      "domain": "classroom",
+      "remediation_batch_order": 6,
+      "batch_priority": "P1",
+      "table_priority": "P2",
+      "data_category": "education_classroom_data",
+      "default_sensitivity": "high",
+      "recommended_visibility": "teacher_student_membership_service_role_only",
+      "public_or_anon_exception_default": "no",
+      "policy_exception_status": "not_allowed_by_default",
+      "owner_model_to_confirm": "classroom membership, teacher role, student owner, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": false,
+      "finding_count": 2,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "UPDATE"
+      ],
+      "recommended_policy_direction": "Restrict access by classroom membership and teacher role; prove non-members cannot read or write classroom artifacts.",
+      "required_persona_tests": [
+        "anon_denied",
+        "non_member_denied",
+        "student_or_teacher_allowed",
+        "teacher_admin_allowed",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which actor can see student submissions?",
+        "Which teacher/admin role can manage the classroom?",
+        "Are any course catalog rows separate from student data?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20260430123000_fix_classroom_policy_recursion.sql:133",
+        "supabase/migrations/20260430123000_fix_classroom_policy_recursion.sql:138"
+      ]
+    },
+    {
+      "table": "monitoring_alerts",
+      "domain": "observability",
+      "remediation_batch_order": 7,
+      "batch_priority": "P1",
+      "table_priority": "P1",
+      "data_category": "observability_and_operational_logs",
+      "default_sensitivity": "high",
+      "recommended_visibility": "admin_reviewer_service_role_only",
+      "public_or_anon_exception_default": "no",
+      "policy_exception_status": "not_allowed_by_default",
+      "owner_model_to_confirm": "admin/reviewer role or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": false,
+      "finding_count": 6,
+      "p1_finding_count": 5,
+      "issue_types": [
+        "anonymous_write_check",
+        "sensitive_table_read_without_identity_predicate",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Restrict observability records to service-role/admin/reviewer roles; expose only redacted health summaries.",
+      "required_persona_tests": [
+        "anon_denied",
+        "authenticated_non_admin_denied",
+        "admin_or_reviewer_allowed",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which operators or reviewers can inspect logs?",
+        "What redacted health summary can be public?",
+        "Which provider failure fields must never be public?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20250907110000_observability_tables.sql:36",
+        "supabase/migrations/20250918110000_advanced_services_tables.sql:170",
+        "supabase/migrations/20250918110000_advanced_services_tables.sql:173"
+      ]
+    },
+    {
+      "table": "rpc_errors",
+      "domain": "observability",
+      "remediation_batch_order": 7,
+      "batch_priority": "P1",
+      "table_priority": "P1",
+      "data_category": "observability_and_operational_logs",
+      "default_sensitivity": "high",
+      "recommended_visibility": "admin_reviewer_service_role_only",
+      "public_or_anon_exception_default": "no",
+      "policy_exception_status": "not_allowed_by_default",
+      "owner_model_to_confirm": "admin/reviewer role or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": false,
+      "finding_count": 2,
+      "p1_finding_count": 2,
+      "issue_types": [
+        "sensitive_table_read_without_identity_predicate",
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Restrict observability records to service-role/admin/reviewer roles; expose only redacted health summaries.",
+      "required_persona_tests": [
+        "anon_denied",
+        "authenticated_non_admin_denied",
+        "admin_or_reviewer_allowed",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which operators or reviewers can inspect logs?",
+        "What redacted health summary can be public?",
+        "Which provider failure fields must never be public?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20250907110000_observability_tables.sql:56"
+      ]
+    },
+    {
+      "table": "third_party_noise",
+      "domain": "observability",
+      "remediation_batch_order": 7,
+      "batch_priority": "P1",
+      "table_priority": "P1",
+      "data_category": "observability_and_operational_logs",
+      "default_sensitivity": "high",
+      "recommended_visibility": "admin_reviewer_service_role_only",
+      "public_or_anon_exception_default": "no",
+      "policy_exception_status": "not_allowed_by_default",
+      "owner_model_to_confirm": "admin/reviewer role or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": false,
+      "finding_count": 4,
+      "p1_finding_count": 1,
+      "issue_types": [
+        "anonymous_write_check",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Restrict observability records to service-role/admin/reviewer roles; expose only redacted health summaries.",
+      "required_persona_tests": [
+        "anon_denied",
+        "authenticated_non_admin_denied",
+        "admin_or_reviewer_allowed",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which operators or reviewers can inspect logs?",
+        "What redacted health summary can be public?",
+        "Which provider failure fields must never be public?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20250907110000_observability_tables.sql:17",
+        "supabase/migrations/20250918110000_advanced_services_tables.sql:162",
+        "supabase/migrations/20250918110000_advanced_services_tables.sql:165"
+      ]
+    },
+    {
+      "table": "analysis_jobs",
+      "domain": "analysis_execution",
+      "remediation_batch_order": 8,
+      "batch_priority": "P1",
+      "table_priority": "P1",
+      "data_category": "analysis_execution_and_public_beta_intake",
+      "default_sensitivity": "medium_high",
+      "recommended_visibility": "owner_service_role_only_with_public_status_exceptions",
+      "public_or_anon_exception_default": "only_if_public_intake_or_redacted_status",
+      "policy_exception_status": "pending_public_exception_review",
+      "owner_model_to_confirm": "job owner, analysis owner, public status flag, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": false,
+      "finding_count": 5,
+      "p1_finding_count": 2,
+      "issue_types": [
+        "anonymous_write_check",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT",
+        "UPDATE"
+      ],
+      "recommended_policy_direction": "Route anonymous public-beta writes through edge functions, bind job reads/writes to owner or service-role, and expose only redacted public status.",
+      "required_persona_tests": [
+        "anon_denied_private_jobs",
+        "public_intake_allowed_if_classified",
+        "unrelated_authenticated_denied",
+        "owner_allowed",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which public beta intake writes must remain anonymous?",
+        "What abuse controls and rate limits protect public intake?",
+        "Which job status fields can be safely exposed?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20250902184558_0004_jobs.sql:22",
+        "supabase/migrations/20250902184558_0004_jobs.sql:28",
+        "supabase/migrations/20250902184558_0004_jobs.sql:36"
+      ]
+    },
+    {
+      "table": "analysis_features",
+      "domain": "analysis_execution",
+      "remediation_batch_order": 8,
+      "batch_priority": "P1",
+      "table_priority": "P1",
+      "data_category": "analysis_execution_and_public_beta_intake",
+      "default_sensitivity": "medium_high",
+      "recommended_visibility": "owner_service_role_only_with_public_status_exceptions",
+      "public_or_anon_exception_default": "only_if_public_intake_or_redacted_status",
+      "policy_exception_status": "pending_public_exception_review",
+      "owner_model_to_confirm": "job owner, analysis owner, public status flag, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": false,
+      "finding_count": 4,
+      "p1_finding_count": 2,
+      "issue_types": [
+        "anonymous_write_check",
+        "policy_grants_to_public_role",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Route anonymous public-beta writes through edge functions, bind job reads/writes to owner or service-role, and expose only redacted public status.",
+      "required_persona_tests": [
+        "anon_denied_private_jobs",
+        "public_intake_allowed_if_classified",
+        "unrelated_authenticated_denied",
+        "owner_allowed",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which public beta intake writes must remain anonymous?",
+        "What abuse controls and rate limits protect public intake?",
+        "Which job status fields can be safely exposed?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20250826_0001_init.sql:49",
+        "supabase/migrations/20250902184556_0002_write_policies.sql:17",
+        "supabase/migrations/20250902184557_0003_mvp_anon_insert.sql:18"
+      ]
+    },
+    {
+      "table": "multiplayer_participants",
+      "domain": "analysis_execution",
+      "remediation_batch_order": 8,
+      "batch_priority": "P1",
+      "table_priority": "P2",
+      "data_category": "analysis_execution_and_public_beta_intake",
+      "default_sensitivity": "medium_high",
+      "recommended_visibility": "owner_service_role_only_with_public_status_exceptions",
+      "public_or_anon_exception_default": "only_if_public_intake_or_redacted_status",
+      "policy_exception_status": "pending_public_exception_review",
+      "owner_model_to_confirm": "job owner, analysis owner, public status flag, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": false,
+      "finding_count": 2,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Route anonymous public-beta writes through edge functions, bind job reads/writes to owner or service-role, and expose only redacted public status.",
+      "required_persona_tests": [
+        "anon_denied_private_jobs",
+        "public_intake_allowed_if_classified",
+        "unrelated_authenticated_denied",
+        "owner_allowed",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which public beta intake writes must remain anonymous?",
+        "What abuse controls and rate limits protect public intake?",
+        "Which job status fields can be safely exposed?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20251006100000_realtime_features.sql:288",
+        "supabase/migrations/20251006100000_realtime_features.sql:292"
+      ]
+    },
+    {
+      "table": "multiplayer_sessions",
+      "domain": "analysis_execution",
+      "remediation_batch_order": 8,
+      "batch_priority": "P1",
+      "table_priority": "P2",
+      "data_category": "analysis_execution_and_public_beta_intake",
+      "default_sensitivity": "medium_high",
+      "recommended_visibility": "owner_service_role_only_with_public_status_exceptions",
+      "public_or_anon_exception_default": "only_if_public_intake_or_redacted_status",
+      "policy_exception_status": "pending_public_exception_review",
+      "owner_model_to_confirm": "job owner, analysis owner, public status flag, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": false,
+      "finding_count": 2,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Route anonymous public-beta writes through edge functions, bind job reads/writes to owner or service-role, and expose only redacted public status.",
+      "required_persona_tests": [
+        "anon_denied_private_jobs",
+        "public_intake_allowed_if_classified",
+        "unrelated_authenticated_denied",
+        "owner_allowed",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which public beta intake writes must remain anonymous?",
+        "What abuse controls and rate limits protect public intake?",
+        "Which job status fields can be safely exposed?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20251006100000_realtime_features.sql:280",
+        "supabase/migrations/20251006100000_realtime_features.sql:284"
+      ]
+    },
+    {
+      "table": "circuit_breaker",
+      "domain": "analysis_execution",
+      "remediation_batch_order": 8,
+      "batch_priority": "P1",
+      "table_priority": "P2",
+      "data_category": "analysis_execution_and_public_beta_intake",
+      "default_sensitivity": "medium_high",
+      "recommended_visibility": "owner_service_role_only_with_public_status_exceptions",
+      "public_or_anon_exception_default": "only_if_public_intake_or_redacted_status",
+      "policy_exception_status": "pending_public_exception_review",
+      "owner_model_to_confirm": "job owner, analysis owner, public status flag, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": false,
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Route anonymous public-beta writes through edge functions, bind job reads/writes to owner or service-role, and expose only redacted public status.",
+      "required_persona_tests": [
+        "anon_denied_private_jobs",
+        "public_intake_allowed_if_classified",
+        "unrelated_authenticated_denied",
+        "owner_allowed",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which public beta intake writes must remain anonymous?",
+        "What abuse controls and rate limits protect public intake?",
+        "Which job status fields can be safely exposed?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20250906110000_add_retrieval_cache_ph4.sql:31"
+      ]
+    },
+    {
+      "table": "rate_limit_tracking",
+      "domain": "analysis_execution",
+      "remediation_batch_order": 8,
+      "batch_priority": "P1",
+      "table_priority": "P2",
+      "data_category": "analysis_execution_and_public_beta_intake",
+      "default_sensitivity": "medium_high",
+      "recommended_visibility": "owner_service_role_only_with_public_status_exceptions",
+      "public_or_anon_exception_default": "only_if_public_intake_or_redacted_status",
+      "policy_exception_status": "pending_public_exception_review",
+      "owner_model_to_confirm": "job owner, analysis owner, public status flag, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": false,
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Route anonymous public-beta writes through edge functions, bind job reads/writes to owner or service-role, and expose only redacted public status.",
+      "required_persona_tests": [
+        "anon_denied_private_jobs",
+        "public_intake_allowed_if_classified",
+        "unrelated_authenticated_denied",
+        "owner_allowed",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which public beta intake writes must remain anonymous?",
+        "What abuse controls and rate limits protect public intake?",
+        "Which job status fields can be safely exposed?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20250906140000_add_rate_limits.sql:21"
+      ]
+    },
+    {
+      "table": "real_time_events",
+      "domain": "analysis_execution",
+      "remediation_batch_order": 8,
+      "batch_priority": "P1",
+      "table_priority": "P2",
+      "data_category": "analysis_execution_and_public_beta_intake",
+      "default_sensitivity": "medium_high",
+      "recommended_visibility": "owner_service_role_only_with_public_status_exceptions",
+      "public_or_anon_exception_default": "only_if_public_intake_or_redacted_status",
+      "policy_exception_status": "pending_public_exception_review",
+      "owner_model_to_confirm": "job owner, analysis owner, public status flag, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": false,
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Route anonymous public-beta writes through edge functions, bind job reads/writes to owner or service-role, and expose only redacted public status.",
+      "required_persona_tests": [
+        "anon_denied_private_jobs",
+        "public_intake_allowed_if_classified",
+        "unrelated_authenticated_denied",
+        "owner_allowed",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which public beta intake writes must remain anonymous?",
+        "What abuse controls and rate limits protect public intake?",
+        "Which job status fields can be safely exposed?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20251006100000_realtime_features.sql:270"
+      ]
+    },
+    {
+      "table": "assignment_submissions",
+      "domain": "public_catalog_candidates",
+      "remediation_batch_order": 9,
+      "batch_priority": "P2",
+      "table_priority": "P2",
+      "data_category": "education_classroom_data",
+      "default_sensitivity": "high",
+      "recommended_visibility": "teacher_student_membership_service_role_only",
+      "public_or_anon_exception_default": "no",
+      "policy_exception_status": "not_allowed_by_default",
+      "owner_model_to_confirm": "assignment owner, classroom membership, teacher role, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": false,
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "UPDATE"
+      ],
+      "recommended_policy_direction": "Classify each table as public catalog or private pilot data; retain public reads only for explicitly published catalog rows and block anonymous writes.",
+      "required_persona_tests": [
+        "anon_read_allowed_only_if_published",
+        "anon_write_denied",
+        "authenticated_write_denied_unless_owner",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which teacher and student roles can see each submission?",
+        "Can submissions ever be shared outside the classroom?",
+        "Which service-role path grades or exports submissions?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20260430123000_fix_classroom_policy_recursion.sql:188"
+      ]
+    },
+    {
+      "table": "campaign_participants",
+      "domain": "public_catalog_candidates",
+      "remediation_batch_order": 9,
+      "batch_priority": "P2",
+      "table_priority": "P2",
+      "data_category": "campaign_participant_data",
+      "default_sensitivity": "medium_high",
+      "recommended_visibility": "campaign_member_owner_service_role_only",
+      "public_or_anon_exception_default": "no",
+      "policy_exception_status": "not_allowed_by_default",
+      "owner_model_to_confirm": "campaign membership, participant owner, campaign owner, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": false,
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT"
+      ],
+      "recommended_policy_direction": "Classify each table as public catalog or private pilot data; retain public reads only for explicitly published catalog rows and block anonymous writes.",
+      "required_persona_tests": [
+        "anon_read_allowed_only_if_published",
+        "anon_write_denied",
+        "authenticated_write_denied_unless_owner",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which campaign members can see participant records?",
+        "Can participant rows contain personal or organizational identifiers?",
+        "Which service path manages campaign membership changes?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20251005120000_competition_innovations.sql:425"
+      ]
+    },
+    {
+      "table": "cooperation_campaigns",
+      "domain": "public_catalog_candidates",
+      "remediation_batch_order": 9,
+      "batch_priority": "P2",
+      "table_priority": "P2",
+      "data_category": "campaign_coordination_data",
+      "default_sensitivity": "medium_high",
+      "recommended_visibility": "campaign_owner_member_service_role_with_published_summary_exception",
+      "public_or_anon_exception_default": "only_if_explicitly_published_summary",
+      "policy_exception_status": "pending_public_exception_review",
+      "owner_model_to_confirm": "campaign owner, member role, publication status, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": false,
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Classify each table as public catalog or private pilot data; retain public reads only for explicitly published catalog rows and block anonymous writes.",
+      "required_persona_tests": [
+        "anon_read_allowed_only_if_published",
+        "anon_write_denied",
+        "authenticated_write_denied_unless_owner",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Are campaign records customer-private or public templates?",
+        "What publication flag makes a campaign summary public?",
+        "Which members can update campaign state?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20251005120000_competition_innovations.sql:421"
+      ]
+    },
+    {
+      "table": "domain_specific_patterns",
+      "domain": "public_catalog_candidates",
+      "remediation_batch_order": 9,
+      "batch_priority": "P2",
+      "table_priority": "P3",
+      "data_category": "public_catalog_candidate",
+      "default_sensitivity": "medium",
+      "recommended_visibility": "published_public_read_only_or_private_by_default",
+      "public_or_anon_exception_default": "only_if_explicitly_published_read_only",
+      "policy_exception_status": "pending_public_exception_review",
+      "owner_model_to_confirm": "published flag, catalog owner, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": false,
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Classify each table as public catalog or private pilot data; retain public reads only for explicitly published catalog rows and block anonymous writes.",
+      "required_persona_tests": [
+        "anon_read_allowed_only_if_published",
+        "anon_write_denied",
+        "authenticated_write_denied_unless_owner",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Is this truly public catalog data or pilot/customer data?",
+        "What published flag authorizes public reads?",
+        "Should anonymous writes always be blocked?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20251006100000_realtime_features.sql:307"
+      ]
+    },
+    {
+      "table": "game_definitions",
+      "domain": "public_catalog_candidates",
+      "remediation_batch_order": 9,
+      "batch_priority": "P2",
+      "table_priority": "P2",
+      "data_category": "public_catalog_candidate",
+      "default_sensitivity": "medium",
+      "recommended_visibility": "published_public_read_only_or_private_by_default",
+      "public_or_anon_exception_default": "only_if_explicitly_published_read_only",
+      "policy_exception_status": "pending_public_exception_review",
+      "owner_model_to_confirm": "published flag, catalog owner, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": false,
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Classify each table as public catalog or private pilot data; retain public reads only for explicitly published catalog rows and block anonymous writes.",
+      "required_persona_tests": [
+        "anon_read_allowed_only_if_published",
+        "anon_write_denied",
+        "authenticated_write_denied_unless_owner",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Is this truly public catalog data or pilot/customer data?",
+        "What published flag authorizes public reads?",
+        "Should anonymous writes always be blocked?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20250904_0010_extend_analysis_runs_for_audience.sql:108"
+      ]
+    },
+    {
+      "table": "marketplace_scenarios",
+      "domain": "public_catalog_candidates",
+      "remediation_batch_order": 9,
+      "batch_priority": "P2",
+      "table_priority": "P3",
+      "data_category": "public_catalog_candidate",
+      "default_sensitivity": "medium",
+      "recommended_visibility": "published_public_read_only_or_private_by_default",
+      "public_or_anon_exception_default": "only_if_explicitly_published_read_only",
+      "policy_exception_status": "pending_public_exception_review",
+      "owner_model_to_confirm": "published flag, catalog owner, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": false,
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Classify each table as public catalog or private pilot data; retain public reads only for explicitly published catalog rows and block anonymous writes.",
+      "required_persona_tests": [
+        "anon_read_allowed_only_if_published",
+        "anon_write_denied",
+        "authenticated_write_denied_unless_owner",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Is this truly public catalog data or pilot/customer data?",
+        "What published flag authorizes public reads?",
+        "Should anonymous writes always be blocked?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20251213000000_eliminate_mock_data.sql:145"
+      ]
+    },
+    {
+      "table": "patterns",
+      "domain": "public_catalog_candidates",
+      "remediation_batch_order": 9,
+      "batch_priority": "P2",
+      "table_priority": "P2",
+      "data_category": "public_catalog_candidate",
+      "default_sensitivity": "medium",
+      "recommended_visibility": "published_public_read_only_or_private_by_default",
+      "public_or_anon_exception_default": "only_if_explicitly_published_read_only",
+      "policy_exception_status": "pending_public_exception_review",
+      "owner_model_to_confirm": "published flag, catalog owner, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": false,
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Classify each table as public catalog or private pilot data; retain public reads only for explicitly published catalog rows and block anonymous writes.",
+      "required_persona_tests": [
+        "anon_read_allowed_only_if_published",
+        "anon_write_denied",
+        "authenticated_write_denied_unless_owner",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Is this truly public catalog data or pilot/customer data?",
+        "What published flag authorizes public reads?",
+        "Should anonymous writes always be blocked?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20250826_0001_init.sql:55"
+      ]
+    },
+    {
+      "table": "signaling_recommendations",
+      "domain": "public_catalog_candidates",
+      "remediation_batch_order": 9,
+      "batch_priority": "P2",
+      "table_priority": "P2",
+      "data_category": "advanced_strategy_output_data",
+      "default_sensitivity": "high",
+      "recommended_visibility": "owner_analysis_service_role_only",
+      "public_or_anon_exception_default": "no",
+      "policy_exception_status": "not_allowed_by_default",
+      "owner_model_to_confirm": "analysis owner, strategy owner, authenticated creator, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": false,
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Classify each table as public catalog or private pilot data; retain public reads only for explicitly published catalog rows and block anonymous writes.",
+      "required_persona_tests": [
+        "anon_read_allowed_only_if_published",
+        "anon_write_denied",
+        "authenticated_write_denied_unless_owner",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which strategic analysis owns each recommendation?",
+        "Can recommendations become public only through a publish workflow?",
+        "Which service path generates recommendation rows?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20251006100000_realtime_features.sql:302"
+      ]
+    },
+    {
+      "table": "tier_limits",
+      "domain": "public_catalog_candidates",
+      "remediation_batch_order": 9,
+      "batch_priority": "P2",
+      "table_priority": "P3",
+      "data_category": "public_catalog_candidate",
+      "default_sensitivity": "medium",
+      "recommended_visibility": "published_public_read_only_or_private_by_default",
+      "public_or_anon_exception_default": "only_if_explicitly_published_read_only",
+      "policy_exception_status": "pending_public_exception_review",
+      "owner_model_to_confirm": "published flag, catalog owner, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": false,
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Classify each table as public catalog or private pilot data; retain public reads only for explicitly published catalog rows and block anonymous writes.",
+      "required_persona_tests": [
+        "anon_read_allowed_only_if_published",
+        "anon_write_denied",
+        "authenticated_write_denied_unless_owner",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Is this truly public catalog data or pilot/customer data?",
+        "What published flag authorizes public reads?",
+        "Should anonymous writes always be blocked?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20251212100000_subscription_tiers.sql:225"
+      ]
+    },
+    {
+      "table": "entity_graph_edges",
+      "domain": "ontology_and_graph",
+      "remediation_batch_order": 10,
+      "batch_priority": "P2",
+      "table_priority": "P2",
+      "data_category": "ontology_and_derived_graph_data",
+      "default_sensitivity": "medium_high",
+      "recommended_visibility": "service_role_owner_or_published_reference_only",
+      "public_or_anon_exception_default": "only_if_global_reference",
+      "policy_exception_status": "pending_public_exception_review",
+      "owner_model_to_confirm": "global reference status, customer-derived edge owner, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": false,
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Separate globally public ontology references from customer-derived graph edges; require owner/service-role access for derived graph records.",
+      "required_persona_tests": [
+        "anon_denied_private_graph",
+        "unrelated_authenticated_denied",
+        "owner_allowed_for_customer_edges",
+        "global_reference_allowed_if_classified",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which ontology rows are global reference data?",
+        "Which graph edges are customer-derived and private?",
+        "What publication state separates public references from private derived data?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql:236"
+      ]
+    },
+    {
+      "table": "entity_graph_nodes",
+      "domain": "ontology_and_graph",
+      "remediation_batch_order": 10,
+      "batch_priority": "P2",
+      "table_priority": "P2",
+      "data_category": "ontology_and_derived_graph_data",
+      "default_sensitivity": "medium_high",
+      "recommended_visibility": "service_role_owner_or_published_reference_only",
+      "public_or_anon_exception_default": "only_if_global_reference",
+      "policy_exception_status": "pending_public_exception_review",
+      "owner_model_to_confirm": "global reference status, customer-derived edge owner, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": false,
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Separate globally public ontology references from customer-derived graph edges; require owner/service-role access for derived graph records.",
+      "required_persona_tests": [
+        "anon_denied_private_graph",
+        "unrelated_authenticated_denied",
+        "owner_allowed_for_customer_edges",
+        "global_reference_allowed_if_classified",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which ontology rows are global reference data?",
+        "Which graph edges are customer-derived and private?",
+        "What publication state separates public references from private derived data?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql:233"
+      ]
+    },
+    {
+      "table": "ontology_aliases",
+      "domain": "ontology_and_graph",
+      "remediation_batch_order": 10,
+      "batch_priority": "P2",
+      "table_priority": "P2",
+      "data_category": "ontology_and_derived_graph_data",
+      "default_sensitivity": "medium_high",
+      "recommended_visibility": "service_role_owner_or_published_reference_only",
+      "public_or_anon_exception_default": "only_if_global_reference",
+      "policy_exception_status": "pending_public_exception_review",
+      "owner_model_to_confirm": "global reference status, customer-derived edge owner, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": false,
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Separate globally public ontology references from customer-derived graph edges; require owner/service-role access for derived graph records.",
+      "required_persona_tests": [
+        "anon_denied_private_graph",
+        "unrelated_authenticated_denied",
+        "owner_allowed_for_customer_edges",
+        "global_reference_allowed_if_classified",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which ontology rows are global reference data?",
+        "Which graph edges are customer-derived and private?",
+        "What publication state separates public references from private derived data?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql:209"
+      ]
+    },
+    {
+      "table": "ontology_entities",
+      "domain": "ontology_and_graph",
+      "remediation_batch_order": 10,
+      "batch_priority": "P2",
+      "table_priority": "P2",
+      "data_category": "ontology_and_derived_graph_data",
+      "default_sensitivity": "medium_high",
+      "recommended_visibility": "service_role_owner_or_published_reference_only",
+      "public_or_anon_exception_default": "only_if_global_reference",
+      "policy_exception_status": "pending_public_exception_review",
+      "owner_model_to_confirm": "global reference status, customer-derived edge owner, or service role",
+      "owner_to_assign": "TBD",
+      "approval_status": "pending_owner_classification",
+      "first_fix_batch_candidate": false,
+      "finding_count": 1,
+      "p1_finding_count": 0,
+      "issue_types": [
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "recommended_policy_direction": "Separate globally public ontology references from customer-derived graph edges; require owner/service-role access for derived graph records.",
+      "required_persona_tests": [
+        "anon_denied_private_graph",
+        "unrelated_authenticated_denied",
+        "owner_allowed_for_customer_edges",
+        "global_reference_allowed_if_classified",
+        "service_role_allowed"
+      ],
+      "owner_questions": [
+        "Which ontology rows are global reference data?",
+        "Which graph edges are customer-derived and private?",
+        "What publication state separates public references from private derived data?"
+      ],
+      "source_locations": [
+        "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql:206"
+      ]
+    }
+  ]
+}

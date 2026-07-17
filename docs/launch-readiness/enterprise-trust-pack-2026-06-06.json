@@ -1,0 +1,502 @@
+{
+  "schema_version": "enterprise-trust-pack-v1",
+  "generated_at": "2026-06-06T17:08:54.456Z",
+  "generated_for_date": "2026-06-06",
+  "status": "enterprise_trust_pack_ready_not_security_proof",
+  "source": {
+    "evidence": "docs/launch-readiness/launch-evidence-2026-06-06.json",
+    "confidenceGate": "docs/launch-readiness/commercial-confidence-gate-2026-06-06.json",
+    "rlsClassification": "docs/launch-readiness/rls-table-classification-register-2026-06-06.json",
+    "rlsTestPlan": "docs/launch-readiness/rls-identity-and-review-test-plan-2026-06-06.json",
+    "rlsDraft": "docs/launch-readiness/rls-identity-and-review-policy-draft-2026-06-06.json",
+    "hostedProofKit": "docs/launch-readiness/hosted-operational-proof-kit-2026-06-06.json",
+    "forecastProtocol": "docs/launch-readiness/forecast-evaluation-protocol-2026-06-06.json",
+    "accuracyIntake": "docs/launch-readiness/accuracy-evidence-intake-kit-2026-06-06.json",
+    "pilotOffer": "docs/launch-readiness/pilot-offer-pack-2026-06-06.json",
+    "llmSecurityAudit": "docs/launch-readiness/llm-security-readiness-audit-2026-06-06.json",
+    "aiActionInventory": "docs/launch-readiness/ai-action-inventory-2026-06-06.json",
+    "aiActionPolicy": "docs/launch-readiness/ai-high-impact-action-policy-2026-06-06.json",
+    "local_proof_count": 70,
+    "repo_proof_count": 108,
+    "hosted_proof_count": 0,
+    "hosted_smoke_plan_count": 12,
+    "hosted_smoke_present_count": 12,
+    "llm_security_audit_status": "llm_security_local_red_team_passed_not_hosted_proof",
+    "llm_static_control_count": 10,
+    "llm_required_control_count": 10,
+    "llm_red_team_fixture_count": 10,
+    "llm_local_red_team_executed_count": 10,
+    "llm_local_red_team_passed_count": 10,
+    "llm_local_red_team_proof_score_percent": 100,
+    "llm_runtime_red_team_executed_count": 0,
+    "llm_runtime_red_team_proof_score_percent": 0,
+    "ai_action_inventory_status": "ai_action_inventory_ready_high_impact_gates_partial_not_hosted_proof",
+    "ai_action_surface_count": 10,
+    "ai_high_impact_product_action_count": 7,
+    "ai_direct_llm_to_irreversible_action_count": 0,
+    "ai_static_gate_complete_hosted_unverified_count": 6,
+    "ai_partial_static_gate_count": 2,
+    "ai_hosted_verified_count": 0,
+    "ai_action_policy_status": "draft_high_impact_action_policy_ready_not_owner_approved_or_hosted_tested",
+    "ai_policy_surface_count": 10,
+    "ai_approval_required_surface_count": 9,
+    "ai_hosted_boundary_test_count": 9,
+    "ai_static_boundary_test_count": 4,
+    "ai_hosted_verified_test_count": 0,
+    "ai_owner_approved_policy_count": 0,
+    "questionnaire_row_count": 19,
+    "trust_domain_count": 10,
+    "acceptance_gate_count": 8,
+    "production_state_verified": false,
+    "owner_classification_verified": false,
+    "rls_migration_applied": false,
+    "rls_test_execution_verified": false,
+    "hosted_state_verified": false
+  },
+  "proof_boundary": {
+    "allowed_use": "Internal and buyer-prep procurement readiness map for a guided pilot.",
+    "not_proof_of": [
+      "SOC 2, ISO/IEC 42001, ISO/IEC 27001, FedRAMP, or formal security certification",
+      "production Supabase policy state",
+      "completed RLS remediation",
+      "hosted runtime behavior",
+      "buyer approval or willingness to pay",
+      "world-class prediction accuracy"
+    ],
+    "buyer_safe_positioning": "Security and AI-governance proof path is explicit, but enterprise security proof remains pending owner approvals and hosted/testing evidence."
+  },
+  "current_source_alignment": [
+    {
+      "framework": "NIST AI RMF",
+      "source_url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "current_basis": "Voluntary AI risk management for trustworthy AI systems, including design, development, use, and evaluation.",
+      "trust_pack_implication": "Treat governance, measurement, lifecycle risk, and critical-infrastructure trust as procurement evidence gates."
+    },
+    {
+      "framework": "NIST AI RMF Core",
+      "source_url": "https://airc.nist.gov/airmf-resources/airmf/5-sec-core/",
+      "current_basis": "The core functions are govern, map, measure, and manage, with governance cross-cutting the lifecycle.",
+      "trust_pack_implication": "Map the app to govern/map/measure/manage evidence instead of relying on generic responsible-AI copy."
+    },
+    {
+      "framework": "NIST SSDF SP 800-218",
+      "source_url": "https://csrc.nist.gov/pubs/sp/800/218/final",
+      "current_basis": "SSDF gives producers and purchasers a common secure-development vocabulary for acquisition conversations.",
+      "trust_pack_implication": "Use repeatable tests, dependency scans, least-privilege RLS, and release evidence as buyer-facing proof."
+    },
+    {
+      "framework": "CISA Secure by Design",
+      "source_url": "https://www.cisa.gov/resources-tools/resources/secure-by-design",
+      "current_basis": "Secure by Design emphasizes ownership of customer security outcomes, transparency, accountability, and leadership commitment.",
+      "trust_pack_implication": "Do not transfer verification burden to buyers; show explicit owner gates and redacted proof paths."
+    },
+    {
+      "framework": "CISA Secure by Demand Guide",
+      "source_url": "https://www.cisa.gov/resources-tools/resources/secure-demand-guide",
+      "current_basis": "Buyer-side procurement should ask software suppliers direct questions about secure-by-design practices.",
+      "trust_pack_implication": "Provide a procurement questionnaire that separates current proof, missing proof, and allowed claims."
+    },
+    {
+      "framework": "OWASP GenAI/LLM Top 10 2025",
+      "source_url": "https://genai.owasp.org/llm-top-10/",
+      "current_basis": "The 2025 risks include prompt injection, sensitive information disclosure, supply chain, output handling, excessive agency, misinformation, and unbounded consumption.",
+      "trust_pack_implication": "Add LLM threat questions before any enterprise or public-sector AI claim is upgraded."
+    },
+    {
+      "framework": "ISO/IEC 42001:2023",
+      "source_url": "https://www.iso.org/standard/42001",
+      "current_basis": "ISO/IEC 42001 defines requirements for an AI management system and is applicable across public and private sectors.",
+      "trust_pack_implication": "Position this pack as pre-certification evidence mapping, not ISO certification or an audited AI management system."
+    }
+  ],
+  "trust_domains": [
+    {
+      "id": "access_and_entitlements",
+      "domain": "Authentication, accounts, and entitlements",
+      "current_evidence": [
+        "docs/launch-readiness/hosted-operational-proof-kit-2026-06-06.json",
+        "12/12 hosted proof-kit scripts are present",
+        "Hosted auth and entitlement proof remains unexecuted in this evidence set"
+      ],
+      "proof_status": "proof_kit_ready_not_hosted_proof",
+      "buyer_risk": "Paid pilots can stall if account creation, gated access, and entitlement behavior are not demonstrated on the hosted environment.",
+      "next_gate": "Run hosted auth and entitlement smoke after owner-approved hosted URL, deployed release, secrets, and smoke-user policy."
+    },
+    {
+      "id": "rls_object_authorization",
+      "domain": "RLS, tenant isolation, and object authorization",
+      "current_evidence": [
+        "docs/launch-readiness/rls-table-classification-register-2026-06-06.json: 70 pending owner classifications",
+        "docs/launch-readiness/rls-identity-and-review-policy-draft-2026-06-06.json: 14 broad policies to drop and 15 least-privilege policies to create",
+        "docs/launch-readiness/rls-identity-and-review-test-plan-2026-06-06.json: 27 planned pgTAP cases"
+      ],
+      "proof_status": "policy_draft_not_applied",
+      "buyer_risk": "Enterprise and public-sector procurement will block if public, anonymous, tenant, and reviewer boundaries are not tested.",
+      "next_gate": "Owner approves classifications and draft, then one narrow migration plus pgTAP and hosted smoke proof."
+    },
+    {
+      "id": "hosted_runtime_binding",
+      "domain": "Hosted deployment and runtime binding",
+      "current_evidence": [
+        "0 hosted/live proof entries in docs/launch-readiness/launch-evidence-2026-06-06.json",
+        "docs/launch-readiness/hosted-operational-proof-kit-2026-06-06.json defines 12 hosted smoke checks"
+      ],
+      "proof_status": "hosted_proof_absent",
+      "buyer_risk": "Local proof and generated kits do not prove the buyer-visible hosted app.",
+      "next_gate": "Attach deploy id, hosted URL, redacted logs, screenshots, and smoke outputs."
+    },
+    {
+      "id": "llm_and_genai_security",
+      "domain": "LLM and GenAI application security",
+      "current_evidence": [
+        "Prompt, evidence, and review workflow exists in repo artifacts",
+        "docs/launch-readiness/llm-security-readiness-audit-2026-06-06.json: 10/10 OWASP LLM control areas have static evidence, 10/10 local fixtures passed, and hosted runtime proof remains 0%",
+        "docs/launch-readiness/ai-action-inventory-2026-06-06.json: 10 action surfaces, 7 high-impact product actions, 0 direct LLM-to-irreversible actions found, 0 hosted-verified surfaces",
+        "docs/launch-readiness/ai-high-impact-action-policy-2026-06-06.json: 10 policy surfaces, 9 approval-required surfaces, 9 hosted boundary tests specified, 0 hosted tests verified",
+        "10 local red-team fixtures executed; 0 hosted runtime red-team fixtures executed",
+        "Unsafe eval was removed from outcome forecasting in an earlier safe-fix phase"
+      ],
+      "proof_status": "local_redteam_passed_hosted_redteam_missing",
+      "buyer_risk": "LLM prompt injection, sensitive-data disclosure, output handling, and excessive agency risks can undermine public-sector trust.",
+      "next_gate": "Run the same non-secret fixture set against owner-approved hosted LLM flows with redacted logs and screenshots."
+    },
+    {
+      "id": "forecast_evaluation_governance",
+      "domain": "Forecast evaluation and claim governance",
+      "current_evidence": [
+        "docs/launch-readiness/forecast-evaluation-protocol-2026-06-06.json: 8 protocol stages",
+        "docs/launch-readiness/accuracy-evidence-intake-kit-2026-06-06.json: 6 acceptance gates",
+        "Prediction accuracy score: 35%"
+      ],
+      "proof_status": "evaluation_protocol_ready_not_accuracy_proof",
+      "buyer_risk": "Accuracy and world-class language will create reputational and legal risk unless it is backed by resolved outcomes and comparable baselines.",
+      "next_gate": "Score owner-approved resolved forecasts with Brier/reliability metrics and real human/community/pro/external baselines."
+    },
+    {
+      "id": "source_provenance_reliability",
+      "domain": "Data source provenance, freshness, and reliability",
+      "current_evidence": [
+        "Market/feed reliability remains mixed in the launch gaps",
+        "Hosted non-simulated feed proof is not attached",
+        "Pilot offer keeps source and forecast language scoped"
+      ],
+      "proof_status": "provenance_controls_partial_feed_sla_missing",
+      "buyer_risk": "Strategic-intelligence buyers need source labels, recency, degraded-feed warnings, and explicit non-simulation proof.",
+      "next_gate": "Run hosted data-provider smoke and add source freshness/SLA labels before operational monitoring claims."
+    },
+    {
+      "id": "dependency_and_supply_chain",
+      "domain": "Dependency and software supply chain",
+      "current_evidence": [
+        "npm audit --audit-level=moderate --json",
+        "No new dependency is added by this trust-pack generator"
+      ],
+      "proof_status": "local_audit_clean",
+      "buyer_risk": "Buyers may ask for dependency audit, update policy, SBOM, and release provenance.",
+      "next_gate": "Keep npm audit clean, add SBOM/release provenance if procurement asks, and avoid new dependencies without evidence."
+    },
+    {
+      "id": "observability_and_redaction",
+      "domain": "Monitoring, incident evidence, and log redaction",
+      "current_evidence": [
+        "Hosted proof kit requires redacted evidence fields",
+        "No production incident/monitoring runbook is attached",
+        "No live log export is attached"
+      ],
+      "proof_status": "redaction_plan_ready_monitoring_proof_missing",
+      "buyer_risk": "Public-sector and enterprise buyers will ask how issues are detected, triaged, and communicated without leaking sensitive data.",
+      "next_gate": "Attach owner-approved monitoring, alerting, incident-response, and log-redaction evidence."
+    },
+    {
+      "id": "privacy_retention_contracts",
+      "domain": "Privacy, retention, DPA, support, and SLA",
+      "current_evidence": [
+        "Not resolved in repository artifacts",
+        "Pilot offer keeps scope narrow and buyer-specific",
+        "No DPA, retention schedule, support policy, or SLA is attached"
+      ],
+      "proof_status": "owner_documents_missing",
+      "buyer_risk": "Procurement can block even when the app is technically strong if privacy, retention, and support terms are missing.",
+      "next_gate": "Owner supplies or approves DPA/privacy/retention/support/SLA terms before enterprise procurement claims."
+    },
+    {
+      "id": "ai_governance_management_system",
+      "domain": "AI governance management system",
+      "current_evidence": [
+        "NIST AI RMF and ISO/IEC 42001 mapped as source anchors",
+        "Forecast protocol and confidence gate define evidence thresholds",
+        "No ISO/IEC 42001 certification or audited AI management system exists in this evidence set"
+      ],
+      "proof_status": "framework_mapping_ready_not_certification",
+      "buyer_risk": "Governance buyers may require policy owners, risk register, model/system inventory, periodic review, and audit trail.",
+      "next_gate": "Create owner-approved AI system inventory, risk register, review cadence, and certification/audit stance if selling to regulated buyers."
+    }
+  ],
+  "procurement_questionnaire": [
+    {
+      "domain": "Commercial claim boundary",
+      "buyer_question": "Can this be represented as enterprise-ready or world-class accurate today?",
+      "current_answer": "No. The current decision remains pilot-only and market language must stay buyer-safe.",
+      "evidence_artifact": "docs/launch-readiness/commercial-confidence-gate-2026-06-06.json",
+      "proof_status": "not_95_confident",
+      "missing_proof": "Hosted proof, buyer validation, RLS test evidence, and real accuracy baselines.",
+      "owner_action": "Approve pilot-only positioning and prohibit world-class prediction claims until evidence gates pass.",
+      "allowed_claim": "Governed strategic-intelligence pilot with calibration-aware decision support."
+    },
+    {
+      "domain": "RLS and object authorization",
+      "buyer_question": "Are tenant, user, reviewer, and public/private boundaries enforced and tested?",
+      "current_answer": "A first-batch draft and test plan exist, but they are not applied or executed.",
+      "evidence_artifact": "docs/launch-readiness/rls-table-classification-register-2026-06-06.json; docs/launch-readiness/rls-identity-and-review-test-plan-2026-06-06.json; docs/launch-readiness/rls-identity-and-review-policy-draft-2026-06-06.json",
+      "proof_status": "policy_draft_not_applied",
+      "missing_proof": "Owner classification, migration, pgTAP pass, linked Supabase verification, and hosted smoke.",
+      "owner_action": "Review classifications, resolve open owner decisions, and approve one narrow RLS migration.",
+      "allowed_claim": "RLS remediation path is drafted; enterprise isolation proof is not complete."
+    },
+    {
+      "domain": "Public and anonymous exceptions",
+      "buyer_question": "Which tables are intentionally public or anonymous, and why?",
+      "current_answer": "The classification register identifies public/anonymous exception reviews, but owner decisions are pending.",
+      "evidence_artifact": "docs/launch-readiness/rls-table-classification-register-2026-06-06.json",
+      "proof_status": "owner_classification_pending",
+      "missing_proof": "Approved data category, privacy impact, buyer-safe rationale, and tests for each exception.",
+      "owner_action": "Mark every public/anonymous exception as approved, removed, or narrowed.",
+      "allowed_claim": "Public/anonymous access is under review."
+    },
+    {
+      "domain": "Hosted runtime proof",
+      "buyer_question": "Does the hosted app match the repo-backed launch surface?",
+      "current_answer": "No hosted/live proof is attached; the proof kit defines checks to run after owner-approved access.",
+      "evidence_artifact": "docs/launch-readiness/hosted-operational-proof-kit-2026-06-06.json",
+      "proof_status": "hosted_proof_absent",
+      "missing_proof": "Hosted URL, deploy id, access preflight, auth/schema/function drift, screenshots, and redacted logs.",
+      "owner_action": "Provide hosted URL, deployment state, secrets policy, and smoke-user policy, then run hosted proof kit.",
+      "allowed_claim": "Hosted proof plan exists; hosted behavior is not proven in this artifact."
+    },
+    {
+      "domain": "Auth and entitlement controls",
+      "buyer_question": "Can paid/premium access and account boundaries be demonstrated?",
+      "current_answer": "Scripts exist for hosted diagnostics; no hosted entitlement proof is attached.",
+      "evidence_artifact": "docs/launch-readiness/hosted-operational-proof-kit-2026-06-06.json",
+      "proof_status": "proof_kit_ready_not_hosted_proof",
+      "missing_proof": "Hosted auth diagnostics, invalid webhook rejection proof, and entitlement table evidence.",
+      "owner_action": "Run hosted auth/payment proof after owner-approved secrets and payment test policy.",
+      "allowed_claim": "Auth and entitlement proof path is defined."
+    },
+    {
+      "domain": "LLM prompt injection",
+      "buyer_question": "Has the app been tested against prompt injection and instruction override attacks?",
+      "current_answer": "Static prompt-injection controls are inventoried and the local non-secret red-team fixtures passed; hosted model-path testing remains pending.",
+      "evidence_artifact": "docs/launch-readiness/llm-security-readiness-audit-2026-06-06.json",
+      "proof_status": "local_redteam_passed_hosted_missing",
+      "missing_proof": "Hosted prompt-injection regression tests with redacted logs and buyer-visible evidence.",
+      "owner_action": "Approve hosted fixture execution policy, redacted evidence paths, and smoke-user scope.",
+      "allowed_claim": "Local prompt-injection regression coverage exists; hosted resistance is not proven."
+    },
+    {
+      "domain": "Sensitive information disclosure",
+      "buyer_question": "Can the app prevent or flag sensitive data leakage through LLM output or logs?",
+      "current_answer": "Static diagnostics/redaction controls are inventoried and local canary fixtures passed; hosted output/log redaction proof is pending.",
+      "evidence_artifact": "docs/launch-readiness/llm-security-readiness-audit-2026-06-06.json; docs/launch-readiness/hosted-operational-proof-kit-2026-06-06.json",
+      "proof_status": "local_redaction_fixture_passed_hosted_missing",
+      "missing_proof": "Hosted sensitive-data fixtures, log-redaction inspection, and hosted output proof.",
+      "owner_action": "Run hosted redaction and sensitive-output checks with non-secret fixtures after approval.",
+      "allowed_claim": "Local sensitive-disclosure fixture coverage exists; hosted redaction proof is pending."
+    },
+    {
+      "domain": "LLM output handling",
+      "buyer_question": "Are LLM outputs validated before downstream use?",
+      "current_answer": "Static audit confirms structured schemas, sanitizers, evidence-reference filtering, provenance downgrade, and local adversarial fixture execution.",
+      "evidence_artifact": "docs/launch-readiness/llm-security-readiness-audit-2026-06-06.json; docs/launch-readiness/launch-evidence-2026-06-06.json",
+      "proof_status": "local_output_handling_fixtures_passed_hosted_missing",
+      "missing_proof": "Hosted adversarial output fixtures for buyer-critical flows.",
+      "owner_action": "Run hosted output-handling fixtures with redacted evidence.",
+      "allowed_claim": "Local output-handling red-team fixtures passed; hosted model-path coverage is pending."
+    },
+    {
+      "domain": "Excessive agency and tool use",
+      "buyer_question": "Can the AI take irreversible or high-impact actions automatically?",
+      "current_answer": "The AI action inventory maps 10 action surfaces and 7 high-impact product actions. The draft high-impact action policy defines 10 policy surfaces, 9 approval-required surfaces, 9 hosted boundary tests, and 4 static boundary tests. It found 0 direct LLM-to-irreversible-action surfaces, but owner approval count is 0 and hosted verified test count is 0.",
+      "evidence_artifact": "docs/launch-readiness/ai-high-impact-action-policy-2026-06-06.json; docs/launch-readiness/ai-action-inventory-2026-06-06.json; docs/launch-readiness/llm-security-readiness-audit-2026-06-06.json; docs/launch-readiness/launch-evidence-2026-06-06.json",
+      "proof_status": "draft_action_policy_ready_owner_approval_and_hosted_tests_missing",
+      "missing_proof": "Owner-approved high-impact action policy, hosted no-autonomous-action test execution, RLS proof, payment/webhook invalid-signature proof, and redacted hosted evidence.",
+      "owner_action": "Review the draft high-impact action policy, approve or edit every approval-required surface, then run hosted action-boundary smoke tests with redacted evidence.",
+      "allowed_claim": "Decision support, not autonomous execution."
+    },
+    {
+      "domain": "Forecast accuracy and calibration",
+      "buyer_question": "What evidence supports prediction accuracy?",
+      "current_answer": "Calibration primitives, sample ledger mechanics, and a protocol exist; no real owner-approved resolved-outcome proof exists.",
+      "evidence_artifact": "docs/launch-readiness/forecast-evaluation-protocol-2026-06-06.json; docs/launch-readiness/accuracy-evidence-intake-kit-2026-06-06.json",
+      "proof_status": "evaluation_protocol_ready_not_accuracy_proof",
+      "missing_proof": "Owner-approved resolved forecast export, real comparable baselines, leakage review, and hosted calibration proof.",
+      "owner_action": "Supply approved forecast/baseline data and run calibration plus benchmark scripts under protocol gates.",
+      "allowed_claim": "Calibration-aware workflow only."
+    },
+    {
+      "domain": "Source provenance and data freshness",
+      "buyer_question": "Are external data sources fresh, non-simulated, and labeled?",
+      "current_answer": "Some source/provenance mechanics exist; hosted non-simulated proof and SLA labels are missing.",
+      "evidence_artifact": "docs/launch-readiness/hosted-operational-proof-kit-2026-06-06.json",
+      "proof_status": "feed_proof_missing",
+      "missing_proof": "Hosted provider smoke, freshness timestamps, degraded-feed handling, and source SLA labels.",
+      "owner_action": "Run hosted feed checks and add buyer-facing source reliability labels.",
+      "allowed_claim": "Evidence-aware workflow with source caveats."
+    },
+    {
+      "domain": "Dependency and supply chain",
+      "buyer_question": "Is there current vulnerability and supply-chain evidence?",
+      "current_answer": "Local dependency audit evidence is present and clean.",
+      "evidence_artifact": "docs/launch-readiness/launch-evidence-2026-06-06.json",
+      "proof_status": "local_audit_clean",
+      "missing_proof": "Optional SBOM, release provenance, and signed/deployed commit evidence for procurement.",
+      "owner_action": "Refresh npm audit before procurement and add SBOM if required.",
+      "allowed_claim": "Local dependency audit was clean when last run; release provenance is separate."
+    },
+    {
+      "domain": "Secure development lifecycle",
+      "buyer_question": "Which secure-development controls are repeatable?",
+      "current_answer": "Local TypeScript/build/test/audit scripts exist; procurement policy artifacts are not complete.",
+      "evidence_artifact": "docs/launch-readiness/launch-evidence-2026-06-06.json",
+      "proof_status": "local_checks_present",
+      "missing_proof": "Secure SDLC policy, change review cadence, vulnerability response SLA, and release checklist owner approval.",
+      "owner_action": "Approve a lightweight secure-development and release checklist tied to existing commands.",
+      "allowed_claim": "Repeatable local verification exists."
+    },
+    {
+      "domain": "Monitoring and incident response",
+      "buyer_question": "How are incidents detected, triaged, and communicated?",
+      "current_answer": "No production incident response or monitoring evidence is attached.",
+      "evidence_artifact": "not attached",
+      "proof_status": "owner_documents_missing",
+      "missing_proof": "Monitoring dashboard, alert routing, incident response process, and breach/support communication stance.",
+      "owner_action": "Supply or approve incident, monitoring, and support runbooks.",
+      "allowed_claim": "Not ready for incident-response claims."
+    },
+    {
+      "domain": "Privacy and retention",
+      "buyer_question": "What data is stored, retained, deleted, and shared?",
+      "current_answer": "This repo evidence does not include an owner-approved privacy, retention, or DPA packet.",
+      "evidence_artifact": "not attached",
+      "proof_status": "owner_documents_missing",
+      "missing_proof": "Data inventory, retention policy, deletion workflow, DPA, subprocessors, and cross-border handling.",
+      "owner_action": "Create buyer-specific data/privacy packet before procurement.",
+      "allowed_claim": "Pilot data terms must be negotiated or explicitly scoped."
+    },
+    {
+      "domain": "AI governance management system",
+      "buyer_question": "Does the organization have ISO/IEC 42001 certification or equivalent AI governance system?",
+      "current_answer": "No certification or audited management system is attached; only framework-aligned evidence mapping exists.",
+      "evidence_artifact": "this enterprise trust pack",
+      "proof_status": "framework_mapping_ready_not_certification",
+      "missing_proof": "AI system inventory, risk register, policy owners, review cadence, audit evidence, and certification decision.",
+      "owner_action": "Decide whether pilot sales need ISO/IEC 42001 alignment only or a formal certification path.",
+      "allowed_claim": "NIST/ISO-aligned pre-certification evidence mapping."
+    },
+    {
+      "domain": "Buyer proof and willingness to pay",
+      "buyer_question": "Has a buyer accepted the trust posture for a paid pilot?",
+      "current_answer": "No real buyer acceptance or paid-pilot signal is attached in this evidence set.",
+      "evidence_artifact": "docs/launch-readiness/pilot-offer-pack-2026-06-06.json",
+      "proof_status": "pilot_offer_pack_ready_not_buyer_proof",
+      "missing_proof": "Discovery call outcomes, buyer objections, security-questionnaire feedback, and paid/LOI signal.",
+      "owner_action": "Use this questionnaire in approved discovery calls and record security objections.",
+      "allowed_claim": "Pilot offer is packaged, not buyer validated."
+    },
+    {
+      "domain": "Support and SLA",
+      "buyer_question": "What uptime, support, escalation, and response commitments are available?",
+      "current_answer": "No support or SLA document is attached.",
+      "evidence_artifact": "not attached",
+      "proof_status": "owner_documents_missing",
+      "missing_proof": "Pilot support model, escalation owner, uptime boundary, response times, and maintenance window.",
+      "owner_action": "Define narrow pilot support terms before paid procurement.",
+      "allowed_claim": "Support/SLA terms are pending owner approval."
+    },
+    {
+      "domain": "Procurement evidence packet",
+      "buyer_question": "What can be shared with a security/procurement reviewer today?",
+      "current_answer": "This packet can be shared internally as a structured readiness map, not as final proof.",
+      "evidence_artifact": "docs/launch-readiness/enterprise-trust-pack-2026-06-06.json; docs/launch-readiness/enterprise-trust-pack-2026-06-06.md; docs/launch-readiness/enterprise-security-questionnaire-2026-06-06.csv",
+      "proof_status": "enterprise_trust_pack_ready_not_security_proof",
+      "missing_proof": "Owner-approved answers, completed security tests, hosted proof, and legal/privacy attachments.",
+      "owner_action": "Owner reviews answers and marks which rows can be shared externally.",
+      "allowed_claim": "Procurement-readiness questionnaire draft."
+    }
+  ],
+  "acceptance_gates": [
+    {
+      "gate": "owner_table_classification",
+      "required_evidence": "docs/launch-readiness/rls-table-classification-register-2026-06-06.json",
+      "current_status": "blocked_owner_approval",
+      "command_after_approval": "review docs/launch-readiness/rls-table-classification-register-2026-06-06.csv and mark owner decisions",
+      "unlocks": "narrow RLS migration drafting"
+    },
+    {
+      "gate": "rls_migration_and_pgtap",
+      "required_evidence": "docs/launch-readiness/rls-identity-and-review-policy-draft-2026-06-06.json; docs/launch-readiness/rls-identity-and-review-test-plan-2026-06-06.json",
+      "current_status": "blocked_not_applied_or_tested",
+      "command_after_approval": "convert approved draft into supabase/migrations plus supabase test db",
+      "unlocks": "enterprise isolation proof"
+    },
+    {
+      "gate": "hosted_smoke_and_deploy_binding",
+      "required_evidence": "docs/launch-readiness/hosted-operational-proof-kit-2026-06-06.json",
+      "current_status": "blocked_no_hosted_proof",
+      "command_after_approval": "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run diag:hosted:access && npm run smoke:strategist:hosted",
+      "unlocks": "buyer-safe hosted demo claims"
+    },
+    {
+      "gate": "llm_security_regression",
+      "required_evidence": "docs/launch-readiness/llm-security-readiness-audit-2026-06-06.json",
+      "current_status": "local_tests_passed_hosted_tests_missing",
+      "command_after_approval": "Run owner-approved hosted LLM security smoke with non-secret fixtures and redacted logs.",
+      "unlocks": "public-sector AI trust claims"
+    },
+    {
+      "gate": "ai_action_inventory_and_high_impact_policy",
+      "required_evidence": "docs/launch-readiness/ai-high-impact-action-policy-2026-06-06.json; docs/launch-readiness/ai-action-inventory-2026-06-06.json",
+      "current_status": "draft_policy_ready_owner_approval_and_hosted_tests_missing",
+      "command_after_approval": "Review the draft high-impact action policy, approve or edit every approval-required surface, then run hosted no-autonomous-action smoke for publication, review, payment/webhook, and post-analysis fanout boundaries.",
+      "unlocks": "excessive-agency and no-autonomous-action procurement answers"
+    },
+    {
+      "gate": "forecast_claim_tier",
+      "required_evidence": "docs/launch-readiness/forecast-evaluation-protocol-2026-06-06.json; docs/launch-readiness/accuracy-evidence-intake-kit-2026-06-06.json",
+      "current_status": "blocked_real_data_missing",
+      "command_after_approval": "run audit:calibration:ledger and audit:forecast:benchmark on owner-approved resolved data and baselines",
+      "unlocks": "accuracy claim upgrade, if results support it"
+    },
+    {
+      "gate": "privacy_retention_dpa",
+      "required_evidence": "owner-supplied legal/privacy packet",
+      "current_status": "blocked_owner_documents_missing",
+      "command_after_approval": "attach data inventory, retention, deletion, subprocessors, DPA, support, and SLA terms",
+      "unlocks": "enterprise procurement packet"
+    },
+    {
+      "gate": "secure_sdlc_packet",
+      "required_evidence": "docs/launch-readiness/launch-evidence-2026-06-06.json",
+      "current_status": "partial_local_checks_present",
+      "command_after_approval": "refresh npm audit, build, focused tests, and release checklist before external procurement review",
+      "unlocks": "secure-development questionnaire answers"
+    }
+  ],
+  "recommended_external_sharing_gate": [
+    "Owner reviews every questionnaire answer and marks rows approved for external sharing.",
+    "Remove internal script names, logs, or sensitive architecture details for public-sector procurement where needed.",
+    "Attach only redacted hosted smoke evidence and never include secrets.",
+    "Keep the prohibited claims list visible in any buyer-facing security packet."
+  ],
+  "next_commands_after_owner_approval": [
+    "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:enterprise:trust-pack",
+    "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:ai:actions",
+    "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:ai:action-policy",
+    "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:llm:security",
+    "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:rls:policy-draft",
+    "supabase test db",
+    "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run diag:hosted:access",
+    "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run smoke:strategist:hosted",
+    "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:commercial:confidence"
+  ]
+}

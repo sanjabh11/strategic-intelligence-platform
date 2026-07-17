@@ -1,0 +1,93 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - navigation [ref=e4]:
+      - generic [ref=e6]:
+        - generic [ref=e7]:
+          - link "Strategy Console" [ref=e8] [cursor=pointer]:
+            - /url: /console
+            - img [ref=e9]
+            - generic [ref=e19]: Strategy Console
+          - 'button "Learning Mode: OFF" [ref=e21] [cursor=pointer]':
+            - img [ref=e22]
+            - text: "Learning Mode: OFF"
+        - generic [ref=e25]:
+          - link "Console" [ref=e26] [cursor=pointer]:
+            - /url: /console
+            - img [ref=e27]
+            - text: Console
+          - link "Insights" [ref=e29] [cursor=pointer]:
+            - /url: /insights
+            - img [ref=e30]
+            - text: Insights
+          - link "Commodities" [ref=e33] [cursor=pointer]:
+            - /url: /commodities
+            - img [ref=e34]
+            - text: Commodities
+          - link "Labs" [ref=e36] [cursor=pointer]:
+            - /url: /labs
+            - img [ref=e37]
+            - text: Labs
+          - link "Templates" [ref=e39] [cursor=pointer]:
+            - /url: /templates
+            - img [ref=e40]
+            - text: Templates
+          - link "Forecasts" [ref=e43] [cursor=pointer]:
+            - /url: /forecasts
+            - img [ref=e44]
+            - text: Forecasts
+          - link "Pricing" [ref=e47] [cursor=pointer]:
+            - /url: /pricing
+            - img [ref=e48]
+            - text: Pricing
+    - main [ref=e50]:
+      - generic [ref=e53]:
+        - generic [ref=e55]:
+          - generic [ref=e56]:
+            - img [ref=e57]
+            - generic [ref=e61]:
+              - heading "Forecast Registry" [level=2] [ref=e62]
+              - paragraph [ref=e63]: Public predictions powered by game theory
+          - button "Leaderboard" [ref=e65] [cursor=pointer]:
+            - img [ref=e66]
+            - text: Leaderboard
+        - generic [ref=e69]:
+          - generic [ref=e70]:
+            - img [ref=e71]
+            - textbox "Search forecasts..." [ref=e74]
+          - generic [ref=e75]:
+            - button "All" [ref=e76] [cursor=pointer]:
+              - img [ref=e77]
+              - text: All
+            - button "Geopolitical" [ref=e80] [cursor=pointer]:
+              - img [ref=e81]
+              - text: Geopolitical
+            - button "Financial" [ref=e84] [cursor=pointer]:
+              - img [ref=e85]
+              - text: Financial
+            - button "Technology" [ref=e88] [cursor=pointer]:
+              - img [ref=e89]
+              - text: Technology
+            - button "Economic" [ref=e91] [cursor=pointer]:
+              - img [ref=e92]
+              - text: Economic
+            - button "Social" [ref=e94] [cursor=pointer]:
+              - img [ref=e95]
+              - text: Social
+          - generic [ref=e100] [cursor=pointer]:
+            - checkbox "Show Resolved" [ref=e101]
+            - text: Show Resolved
+    - contentinfo [ref=e104]:
+      - generic [ref=e106]:
+        - paragraph [ref=e107]: Strategy Console - Evidence-Backed Strategic Analysis
+        - paragraph [ref=e108]: Real citations. Real simulations. Real clarity.
+  - generic [ref=e111]:
+    - generic [ref=e112]: 👋
+    - heading "Welcome to Strategic Intelligence!" [level=3] [ref=e113]
+    - paragraph [ref=e114]:
+      - text: This platform uses advanced game theory to analyze strategic situations. Would you like to enable
+      - strong [ref=e115]: Learning Mode
+      - text: to see helpful explanations for all charts and concepts?
+    - generic [ref=e116]:
+      - button "Yes, help me learn!" [ref=e117] [cursor=pointer]
+      - button "Skip for now" [ref=e118] [cursor=pointer]
+    - paragraph [ref=e119]: You can always toggle Learning Mode later using the button in the header.

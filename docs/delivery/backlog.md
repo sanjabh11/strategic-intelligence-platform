@@ -10,6 +10,7 @@
 | PBI-05 | Analyst | As a user, I want evidence retrieval and citations for analyses. | Proposed | retrievals populated; provenance.evidence_backed and retrieval_count accurate. |
 | PBI-07 | Operator | As an operator, I need system-status and health observability. | InReview | Endpoint reports DB/edge/worker/external APIs statuses and metrics. |
 | PBI-08 | Analyst | As an analyst, I want a canonical multi-agent prediction engine so the platform can turn evidence-backed scenarios into explicit, adversarially reviewed forecasts. | InProgress | Multi-agent forecast orchestration returns question specification, specialist-agent outputs, adversarial review, challenger comparisons, and consensus in the current analysis flow without new schema migrations. |
+| PBI-09 | Analyst | As an analyst, I want IPD strategy tournaments, LSTM+GT bias-adjusted forecasting, and adversarial counterfactual scenarios to enhance the platform's game-theoretic prediction capabilities. | Proposed | Axelrod IPD tournament solver returns ranked strategies + evolutionary trajectory; StrategyArena UI renders tournament results; multi-agent-forecast includes worst-case counterfactual; bias-adjusted forecast endpoint runs in shadow mode with Brier score ≤ heuristic baseline. |
 
 
 

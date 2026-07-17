@@ -1,0 +1,178 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - navigation [ref=e4]:
+      - generic [ref=e6]:
+        - generic [ref=e7]:
+          - link "Strategy Console" [ref=e8] [cursor=pointer]:
+            - /url: /console
+            - img [ref=e9]
+            - generic [ref=e19]: Strategy Console
+          - 'button "Learning Mode: OFF" [ref=e21] [cursor=pointer]':
+            - img [ref=e22]
+            - text: "Learning Mode: OFF"
+        - generic [ref=e25]:
+          - link "Console" [ref=e26] [cursor=pointer]:
+            - /url: /console
+            - img [ref=e27]
+            - text: Console
+          - link "Insights" [ref=e29] [cursor=pointer]:
+            - /url: /insights
+            - img [ref=e30]
+            - text: Insights
+          - link "Commodities" [ref=e33] [cursor=pointer]:
+            - /url: /commodities
+            - img [ref=e34]
+            - text: Commodities
+          - link "Labs" [ref=e36] [cursor=pointer]:
+            - /url: /labs
+            - img [ref=e37]
+            - text: Labs
+          - link "Templates" [ref=e39] [cursor=pointer]:
+            - /url: /templates
+            - img [ref=e40]
+            - text: Templates
+          - link "Forecasts" [ref=e43] [cursor=pointer]:
+            - /url: /forecasts
+            - img [ref=e44]
+            - text: Forecasts
+          - link "Pricing" [ref=e47] [cursor=pointer]:
+            - /url: /pricing
+            - img [ref=e48]
+            - text: Pricing
+    - main [ref=e50]:
+      - generic [ref=e144]:
+        - generic [ref=e145]:
+          - heading "Strategy Console" [level=1] [ref=e146]
+          - paragraph [ref=e147]: Run evidence-backed strategic analysis in seconds. Real citations. Real simulations. Real clarity.
+        - generic [ref=e149]:
+          - button "Strategic Analysis" [ref=e150] [cursor=pointer]
+          - button "Strategist" [ref=e151] [cursor=pointer]
+        - generic [ref=e152]:
+          - generic [ref=e153]:
+            - generic [ref=e154]: Describe your strategic scenario
+            - textbox "e.g., Three tech companies must decide on AI safety standards. Each can lead with strict standards, follow consensus, or prioritize competitive advantage..." [ref=e155]: US, EU, and China are deciding on semiconductor supply chain policies amid geopolitical tensions. Each region can choose 'aggressive domestic production', 'selective partnerships', or 'maintain global integration'. The decisions affect technological sovereignty, economic efficiency, innovation networks, and international trade relationships.
+            - generic [ref=e156]:
+              - generic [ref=e157]: "Try:"
+              - button "Tech Giants AI Safety Coordination..." [ref=e158] [cursor=pointer]
+              - button "Semiconductor Supply Chain Strategy..." [ref=e159] [cursor=pointer]
+              - button "Climate Policy Coordination..." [ref=e160] [cursor=pointer]
+          - generic [ref=e161]:
+            - generic [ref=e163]:
+              - generic [ref=e164]:
+                - img [ref=e166]
+                - generic [ref=e169]:
+                  - generic [ref=e170]:
+                    - text: Evidence Retrieval
+                    - generic [ref=e171]: Active
+                  - generic [ref=e172]: Real citations from Exa, Crossref, GDELT, Firecrawl, and official data providers
+              - button [ref=e173] [cursor=pointer]
+            - button "Advanced analysis settings (1 selected) Keep the flagship path simple and open these only when needed" [ref=e176] [cursor=pointer]:
+              - generic [ref=e177]:
+                - img [ref=e178]
+                - generic [ref=e180]:
+                  - generic [ref=e181]: Advanced analysis settings (1 selected)
+                  - generic [ref=e182]: Keep the flagship path simple and open these only when needed
+              - img [ref=e183]
+          - generic [ref=e185]:
+            - button "Run Analysis" [ref=e186] [cursor=pointer]:
+              - img [ref=e205]
+              - text: Run Analysis
+            - generic [ref=e207]:
+              - img [ref=e208]
+              - generic [ref=e211]: Complete
+            - paragraph [ref=e213]: Analysis service timeout. Using local fallback...
+        - generic [ref=e214]:
+          - generic [ref=e215]:
+            - generic [ref=e216]:
+              - generic [ref=e217]:
+                - generic [ref=e218]: Decision Workspace
+                - generic [ref=e219]: "Best current call: 58.7%"
+                - paragraph [ref=e220]: Use the evidence and forecast workflow below to tighten this decision before publication.
+                - paragraph [ref=e221]: "Forecast package: US, EU, and China are deciding on semiconductor supply chain policies amid geopolitical tensions"
+                - generic [ref=e222]:
+                  - generic [ref=e223]: 3 players
+                  - generic [ref=e224]: 78% stability
+                  - generic [ref=e225]: 0 sources
+                  - generic [ref=e226]: 0.1s processing
+              - generic [ref=e227]:
+                - generic [ref=e228]: Next step
+                - generic [ref=e229]: Generate strategist brief
+                - generic [ref=e230]: The flagship workflow needs the strategist brief before review and forecast handoff.
+                - button "Generate strategist brief" [disabled] [ref=e231]
+            - generic [ref=e232]:
+              - generic [ref=e233]:
+                - generic [ref=e234]: Why should I trust this?
+                - generic [ref=e235]:
+                  - button "Evidence not verified" [ref=e236] [cursor=pointer]
+                  - button "Review not requested" [ref=e297] [cursor=pointer]
+                  - button "1 governance blocker" [ref=e238] [cursor=pointer]
+                  - button "Contested engine view" [ref=e239] [cursor=pointer]
+                  - button "Advisory uncalibrated" [ref=e240] [cursor=pointer]
+                  - button "Supporting views" [ref=e241] [cursor=pointer]
+                - generic [ref=e242]: No completed human review is recorded for the linked analysis.
+              - generic [ref=e243]:
+                - generic [ref=e244]: What could change this call?
+                - generic [ref=e245]: Specialist agents disagree materially on immediate impact magnitude.
+                - generic [ref=e246]: Treat this as an analyst-assist forecast until live evidence or human review strengthens provenance.
+          - generic [ref=e247]:
+            - generic [ref=e249]:
+              - generic [ref=e250]:
+                - generic [ref=e251]: Governance & Deep Review
+                - generic [ref=e252]: Go deeper when needed. The answer stays upfront; evidence, governance, and renderings remain one click away.
+              - generic [ref=e253]:
+                - button "Evidence not verified" [ref=e254] [cursor=pointer]
+                - button "Review not requested" [ref=e298] [cursor=pointer]
+                - button "1 governance blocker" [ref=e256] [cursor=pointer]
+                - button "Contested engine view" [ref=e257] [cursor=pointer]
+                - button "Advisory uncalibrated" [ref=e258] [cursor=pointer]
+                - button "Supporting views" [ref=e259] [cursor=pointer]
+            - generic [ref=e261]:
+              - generic [ref=e262]:
+                - generic [ref=e263]:
+                  - generic [ref=e264]:
+                    - generic [ref=e265]: Governed workflow status
+                    - generic [ref=e266]: Enterprise governance stays intact, but it no longer needs to dominate the first screen.
+                  - generic [ref=e267]: Generate strategist brief
+                - generic [ref=e268]:
+                  - generic [ref=e269]:
+                    - generic [ref=e270]: Analysis
+                    - generic [ref=e271]: Complete
+                    - generic [ref=e272]: Analysis completed and ready for packaging.
+                  - generic [ref=e273]:
+                    - generic [ref=e274]: Strategist brief
+                    - generic [ref=e275]: Available
+                    - generic [ref=e276]: Generate or refresh the strategist brief before handoff.
+                  - generic [ref=e277]:
+                    - generic [ref=e278]: Human review
+                    - generic [ref=e279]: Available
+                    - generic [ref=e280]: No completed human review is recorded yet.
+                  - generic [ref=e281]:
+                    - generic [ref=e282]: Forecast draft
+                    - generic [ref=e283]: In progress
+                    - generic [ref=e284]: Linked analysis remains contested, so reviewer confirmation is required before publish.
+              - generic [ref=e286]:
+                - img [ref=e287]
+                - generic [ref=e289]:
+                  - generic [ref=e290]: Strategist brief available after sign-in
+                  - generic [ref=e291]: Doctrine-backed brief generation, persistence, war-room handoff, and governed collaboration require account context.
+                  - generic [ref=e292]:
+                    - button "Sign in to unlock strategist brief" [ref=e293] [cursor=pointer]:
+                      - text: Sign in to unlock strategist brief
+                      - img [ref=e294]
+                    - button "Continue with analysis only" [ref=e296] [cursor=pointer]
+    - contentinfo [ref=e189]:
+      - generic [ref=e191]:
+        - paragraph [ref=e192]: Strategy Console - Evidence-Backed Strategic Analysis
+        - paragraph [ref=e193]: Real citations. Real simulations. Real clarity.
+  - generic [ref=e195]:
+    - generic [ref=e196]: 👋
+    - generic [ref=e197]:
+      - heading "Welcome to Strategic Intelligence" [level=3] [ref=e198]
+      - paragraph [ref=e199]:
+        - text: Turn on
+        - strong [ref=e200]: Learning Mode
+        - text: if you want chart and concept explanations while you explore. This prompt stays out of the way so you can keep navigating the product.
+      - generic [ref=e201]:
+        - button "Enable Learning Mode" [ref=e202] [cursor=pointer]
+        - button "Dismiss" [ref=e203] [cursor=pointer]
+      - paragraph [ref=e204]: You can toggle Learning Mode later from the header at any time.

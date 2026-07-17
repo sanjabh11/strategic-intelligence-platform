@@ -1,0 +1,864 @@
+{
+  "schema_version": "buyer-discovery-execution-kit-v1",
+  "generated_at": "2026-06-07T03:13:55.358Z",
+  "status": "discovery_kit_ready_not_buyer_proof",
+  "proof_boundary": "This kit prepares approved discovery calls. It is not buyer feedback, willingness-to-pay proof, LOI evidence, paid-pilot evidence, or procurement proof.",
+  "source": {
+    "buyer_validation_targets": "docs/launch-readiness/buyer-validation-targets-2026-06-06.json",
+    "market_niche_validation": "docs/launch-readiness/market-niche-evidence-validation-2026-06-06.json",
+    "pilot_outcome_measurement_kit": "docs/launch-readiness/pilot-outcome-measurement-kit-2026-06-06.json",
+    "pilot_outcome_measurement_kit_status": "pilot_outcome_measurement_kit_ready_not_outcome_proof",
+    "target_pack_status": "target_pack_not_buyer_proof",
+    "selected_count": 10,
+    "candidate_pool": 20,
+    "selection_rule": "Cover each validated top-five niche with its first available target, then fill 10 slots by rank from the first 20 source-backed rows.",
+    "priority_niche_count": 5,
+    "selected_priority_niche_count": 5,
+    "selected_niches": [
+      "Enterprise/public-sector strategic decision intelligence",
+      "Executive and analyst briefing layer",
+      "Geopolitical risk radar and scenario monitor",
+      "Governed forecasting and research workflow",
+      "Negotiation and strategic reasoning training"
+    ],
+    "missing_priority_niches": [],
+    "out_of_pool_coverage_ranks": []
+  },
+  "success_gate_for_confidence_upgrade": {
+    "minimum_calls": 10,
+    "qualified_followups": 3,
+    "paid_pilot_or_loi_discussions": 1,
+    "required_fields_to_record": [
+      "buyer_role",
+      "proof_shown",
+      "objection",
+      "next_action",
+      "willingness_to_pay_signal",
+      "baseline_value_or_current_workflow",
+      "pilot_outcome_value_or_expected_delta",
+      "quality_signal",
+      "buyer_decision_event",
+      "outcome_evidence_notes"
+    ]
+  },
+  "evidence_capture_schema": [
+    {
+      "field": "call_status",
+      "required": true,
+      "allowed_values": [
+        "not_contacted",
+        "contacted",
+        "replied",
+        "scheduled",
+        "completed",
+        "rejected"
+      ]
+    },
+    {
+      "field": "buyer_name_or_redacted_id",
+      "required": true,
+      "proof_note": "Use a redacted identifier if the buyer name should not be stored."
+    },
+    {
+      "field": "buyer_role",
+      "required": true,
+      "proof_note": "Decision maker, champion, evaluator, or disqualified."
+    },
+    {
+      "field": "proof_shown",
+      "required": true,
+      "proof_note": "Specific demo, report, screenshot, or artifact shown."
+    },
+    {
+      "field": "objection",
+      "required": true,
+      "proof_note": "Quote or concise paraphrase of the strongest buyer objection."
+    },
+    {
+      "field": "next_action",
+      "required": true,
+      "proof_note": "Concrete next step and date, or no-fit reason."
+    },
+    {
+      "field": "willingness_to_pay_signal",
+      "required": true,
+      "allowed_values": [
+        "none",
+        "curiosity_only",
+        "qualified_followup",
+        "paid_pilot_discussion",
+        "loi_discussion",
+        "procurement_path"
+      ]
+    },
+    {
+      "field": "pilot_case_unit",
+      "required": true,
+      "proof_note": "Outcome unit from the pilot outcome measurement kit for this niche."
+    },
+    {
+      "field": "baseline_measure",
+      "required": true,
+      "proof_note": "Baseline metric definition from the pilot outcome measurement kit."
+    },
+    {
+      "field": "baseline_value_or_current_workflow",
+      "required": true,
+      "proof_note": "Observed current workflow value, or a precise current-workflow description if numeric measurement is not possible yet."
+    },
+    {
+      "field": "target_outcome_measure",
+      "required": true,
+      "proof_note": "Target outcome metric definition from the pilot outcome measurement kit."
+    },
+    {
+      "field": "pilot_outcome_value_or_expected_delta",
+      "required": true,
+      "proof_note": "Observed pilot value, buyer-accepted expected delta, or explicit not-run-yet blocker."
+    },
+    {
+      "field": "quality_measure",
+      "required": true,
+      "proof_note": "Quality metric definition from the pilot outcome measurement kit."
+    },
+    {
+      "field": "quality_signal",
+      "required": true,
+      "proof_note": "Buyer review signal, rubric result, or specific quality blocker."
+    },
+    {
+      "field": "buyer_decision_event",
+      "required": true,
+      "proof_note": "No fit, internal follow-up, paid pilot discussion, LOI/procurement path, or explicit blocker."
+    },
+    {
+      "field": "outcome_evidence_notes",
+      "required": true,
+      "proof_note": "What evidence supports the before/after or expected-delta claim; keep this redacted if needed."
+    },
+    {
+      "field": "security_or_procurement_blocker",
+      "required": false,
+      "proof_note": "SOC2, RLS, DPA, SSO, procurement, hosted proof, or data-boundary blocker."
+    },
+    {
+      "field": "accuracy_or_benchmark_blocker",
+      "required": false,
+      "proof_note": "Resolved outcomes, benchmark protocol, human baseline, or calibration blocker."
+    },
+    {
+      "field": "evidence_quality",
+      "required": true,
+      "allowed_values": [
+        "low",
+        "medium",
+        "high",
+        "owner_verified",
+        "external_share_approved"
+      ]
+    }
+  ],
+  "objection_handling": [
+    {
+      "objection": "We already use another intelligence or foresight platform.",
+      "response": "Position this as a governed handoff layer from evidence and actor reasoning into review and scoreable forecast drafts, not a replacement for their source platform."
+    },
+    {
+      "objection": "Is this secure enough for enterprise or public-sector data?",
+      "response": "Do not overclaim. Show the RLS draft and state that production security proof requires owner-approved migration, pgTAP, and hosted smoke evidence before sensitive pilots."
+    },
+    {
+      "objection": "What proof do you have that predictions are accurate?",
+      "response": "State that prediction superiority is not claimed. Show calibration and benchmark mechanics, then ask what resolved-outcome and baseline protocol they would accept."
+    },
+    {
+      "objection": "Can procurement approve this?",
+      "response": "Ask which documents are mandatory first: security summary, data boundary, pilot SOW, DPA, hosted proof, support model, and price threshold."
+    },
+    {
+      "objection": "How fast can this produce value?",
+      "response": "Offer one constrained pilot decision workflow with a before/after measure: time from source pack to reviewed decision brief and forecast-draft readiness."
+    }
+  ],
+  "selected_targets": [
+    {
+      "rank": 1,
+      "account_name": "GAO Center for Strategic Foresight",
+      "account_type": "public_sector_foresight",
+      "niche": "Enterprise/public-sector strategic decision intelligence",
+      "website": "https://www.gao.gov/about/what-gao-does/audit-role/csf/",
+      "buyer_role": "Strategic foresight director or federal program-analysis lead",
+      "validation_question": "Would a governed evidence-to-forecast workflow improve federal trend-analysis or audit-planning exercises?",
+      "proof_asset": "Console to strategist brief to human-review and forecast-draft handoff.",
+      "proof_to_show": [
+        "Console to strategist brief to human-review and forecast-draft handoff.",
+        "commercial-confidence-gate-2026-06-06.md",
+        "commercial-launch-readiness-2026-06-06.md",
+        "rls-identity-and-review-policy-draft-2026-06-06.md",
+        "buyer-validation-targets-2026-06-06.md"
+      ],
+      "source_title": "GAO Center for Strategic Foresight",
+      "source_note": "Analyzes trends that affect federal agencies and programs now and in the future.",
+      "why_this_target": "Clear mandate around trends affecting federal agencies and programs.",
+      "discovery_goal": "Determine whether this account has a real workflow pain, a credible champion, a proof requirement, and a paid-pilot or LOI path.",
+      "call_agenda": [
+        "Confirm current workflow and owner.",
+        "Show one narrow evidence-to-brief-to-review-to-forecast path.",
+        "Ask where the workflow is wrong, risky, or insufficient.",
+        "Ask what proof would justify an internal follow-up.",
+        "Record next action and willingness-to-pay signal exactly."
+      ],
+      "discovery_questions": [
+        "Where does GAO Center for Strategic Foresight currently lose time or confidence moving from source material to a decision-ready brief?",
+        "Which evidence, review, or governance step is mandatory before a forecast or scenario recommendation is trusted?",
+        "What proof would you need from a guided pilot before sponsoring a broader evaluation?",
+        "Which existing tool, analyst workflow, consultancy, or spreadsheet would this need to complement or replace?",
+        "If the workflow helped, what concrete next step would be credible: second review, internal demo, paid pilot, LOI, or no action?"
+      ],
+      "disqualifiers": [
+        "No current owner for foresight, forecasting, risk, strategy, or analyst-workflow improvement.",
+        "Cannot review any hosted demo or artifact until security/RLS proof is complete.",
+        "Needs proven world-class prediction accuracy before any pilot discussion."
+      ],
+      "email_subject": "Relevance check: Enterprise/public-sector strategic decision intelligence",
+      "email_body": "Hi - I am validating a narrow guided pilot for Strategic foresight director or federal program-analysis lead.\n\nThe pain we are testing: Would a governed evidence-to-forecast workflow improve federal trend-analysis or audit-planning exercises?\n\nThe current proof asset is Console to strategist brief to human-review and forecast-draft handoff. It is explicitly pilot-only: no world-class prediction claim, no buyer-proof claim, and accuracy remains gated on resolved outcomes.\n\nCould I get 20 minutes for a relevance check? The only goal is to learn whether this workflow fits a real decision process, what proof is missing, and whether a paid pilot or internal follow-up would ever be credible.\n\nIf this is not your area, a pointer to the right foresight, risk, forecasting, or strategy-workflow owner would be useful.",
+      "linkedin_message": "I am validating a pilot for enterprise/public-sector strategic decision intelligence. The workflow turns source evidence into actor reasoning, review state, and forecast-draft governance for Strategic foresight director or federal program-analysis lead. Would you be open to a 15-20 minute relevance check? I am looking for objections and proof requirements, not making a production-readiness claim.",
+      "demo_opener": "For GAO Center for Strategic Foresight, I would not position this as a prediction oracle. The workflow starts with one ambiguous decision, builds console to strategist brief to human-review and forecast-draft handoff, flags review/uncertainty gates, and ends with what evidence would make the forecast scoreable. The ask for this call is whether that workflow maps to a real job-to-be-done, what would block adoption, and whether the next step is a second review, paid pilot discussion, or no fit.",
+      "required_capture_fields": [
+        "buyer_role",
+        "proof_shown",
+        "objection",
+        "next_action",
+        "willingness_to_pay_signal",
+        "baseline_value_or_current_workflow",
+        "pilot_outcome_value_or_expected_delta",
+        "quality_signal",
+        "buyer_decision_event",
+        "outcome_evidence_notes"
+      ],
+      "pilot_case_unit": "one high-stakes strategy, policy, geopolitical, supplier, or operational-risk question",
+      "baseline_measure": "current hours from source pack or analyst intake to buyer-reviewed decision brief",
+      "baseline_value_or_current_workflow": "",
+      "target_outcome_measure": "pilot hours from source pack to evidence-linked brief with actor reasoning, countermoves, review state, and forecast-draft handoff",
+      "pilot_outcome_value_or_expected_delta": "",
+      "quality_measure": "buyer reviewer rates evidence coverage, assumption clarity, option clarity, and next-action usefulness against the current workflow",
+      "quality_signal": "",
+      "buyer_decision_event": "internal follow-up, paid pilot discussion, LOI/procurement path, or no-fit decision",
+      "outcome_evidence_notes": "",
+      "call_status": "not_contacted",
+      "validation_status": "not_contacted_not_buyer_proof"
+    },
+    {
+      "rank": 2,
+      "account_name": "UK Government Office for Science Futures and Foresight",
+      "account_type": "public_sector_foresight",
+      "niche": "Enterprise/public-sector strategic decision intelligence",
+      "website": "https://www.gov.uk/government/groups/futures-and-foresight",
+      "buyer_role": "Futures, foresight, or horizon-scanning team lead",
+      "validation_question": "Could this pilot accelerate a cross-cutting futures workshop without weakening evidence quality?",
+      "proof_asset": "Actor/countermove brief plus review state and forecast-governance caveats.",
+      "proof_to_show": [
+        "Actor/countermove brief plus review state and forecast-governance caveats.",
+        "commercial-confidence-gate-2026-06-06.md",
+        "commercial-launch-readiness-2026-06-06.md",
+        "rls-identity-and-review-policy-draft-2026-06-06.md",
+        "buyer-validation-targets-2026-06-06.md"
+      ],
+      "source_title": "UK Government Office for Science Futures and Foresight",
+      "source_note": "Supports civil servants with futures resources, training, advisory services, networks, reports, and horizon scanning.",
+      "why_this_target": "Publishes an active offer for futures support, training, advisory services, and horizon scanning.",
+      "discovery_goal": "Determine whether this account has a real workflow pain, a credible champion, a proof requirement, and a paid-pilot or LOI path.",
+      "call_agenda": [
+        "Confirm current workflow and owner.",
+        "Show one narrow evidence-to-brief-to-review-to-forecast path.",
+        "Ask where the workflow is wrong, risky, or insufficient.",
+        "Ask what proof would justify an internal follow-up.",
+        "Record next action and willingness-to-pay signal exactly."
+      ],
+      "discovery_questions": [
+        "Where does UK Government Office for Science Futures and Foresight currently lose time or confidence moving from source material to a decision-ready brief?",
+        "Which evidence, review, or governance step is mandatory before a forecast or scenario recommendation is trusted?",
+        "What proof would you need from a guided pilot before sponsoring a broader evaluation?",
+        "Which existing tool, analyst workflow, consultancy, or spreadsheet would this need to complement or replace?",
+        "If the workflow helped, what concrete next step would be credible: second review, internal demo, paid pilot, LOI, or no action?"
+      ],
+      "disqualifiers": [
+        "No current owner for foresight, forecasting, risk, strategy, or analyst-workflow improvement.",
+        "Cannot review any hosted demo or artifact until security/RLS proof is complete.",
+        "Needs proven world-class prediction accuracy before any pilot discussion."
+      ],
+      "email_subject": "Relevance check: Enterprise/public-sector strategic decision intelligence",
+      "email_body": "Hi - I am validating a narrow guided pilot for Futures, foresight, or horizon-scanning team lead.\n\nThe pain we are testing: Could this pilot accelerate a cross-cutting futures workshop without weakening evidence quality?\n\nThe current proof asset is Actor/countermove brief plus review state and forecast-governance caveats. It is explicitly pilot-only: no world-class prediction claim, no buyer-proof claim, and accuracy remains gated on resolved outcomes.\n\nCould I get 20 minutes for a relevance check? The only goal is to learn whether this workflow fits a real decision process, what proof is missing, and whether a paid pilot or internal follow-up would ever be credible.\n\nIf this is not your area, a pointer to the right foresight, risk, forecasting, or strategy-workflow owner would be useful.",
+      "linkedin_message": "I am validating a pilot for enterprise/public-sector strategic decision intelligence. The workflow turns source evidence into actor reasoning, review state, and forecast-draft governance for Futures, foresight, or horizon-scanning team lead. Would you be open to a 15-20 minute relevance check? I am looking for objections and proof requirements, not making a production-readiness claim.",
+      "demo_opener": "For UK Government Office for Science Futures and Foresight, I would not position this as a prediction oracle. The workflow starts with one ambiguous decision, builds actor/countermove brief plus review state and forecast-governance caveats, flags review/uncertainty gates, and ends with what evidence would make the forecast scoreable. The ask for this call is whether that workflow maps to a real job-to-be-done, what would block adoption, and whether the next step is a second review, paid pilot discussion, or no fit.",
+      "required_capture_fields": [
+        "buyer_role",
+        "proof_shown",
+        "objection",
+        "next_action",
+        "willingness_to_pay_signal",
+        "baseline_value_or_current_workflow",
+        "pilot_outcome_value_or_expected_delta",
+        "quality_signal",
+        "buyer_decision_event",
+        "outcome_evidence_notes"
+      ],
+      "pilot_case_unit": "one high-stakes strategy, policy, geopolitical, supplier, or operational-risk question",
+      "baseline_measure": "current hours from source pack or analyst intake to buyer-reviewed decision brief",
+      "baseline_value_or_current_workflow": "",
+      "target_outcome_measure": "pilot hours from source pack to evidence-linked brief with actor reasoning, countermoves, review state, and forecast-draft handoff",
+      "pilot_outcome_value_or_expected_delta": "",
+      "quality_measure": "buyer reviewer rates evidence coverage, assumption clarity, option clarity, and next-action usefulness against the current workflow",
+      "quality_signal": "",
+      "buyer_decision_event": "internal follow-up, paid pilot discussion, LOI/procurement path, or no-fit decision",
+      "outcome_evidence_notes": "",
+      "call_status": "not_contacted",
+      "validation_status": "not_contacted_not_buyer_proof"
+    },
+    {
+      "rank": 3,
+      "account_name": "OECD Strategic Foresight Unit / Government Foresight Community",
+      "account_type": "public_sector_network",
+      "niche": "Enterprise/public-sector strategic decision intelligence",
+      "website": "https://www.oecd.org/strategic-foresight/",
+      "buyer_role": "Strategic foresight unit lead or GFC program contact",
+      "validation_question": "Which evidence, capability, and feedback-loop requirements would make this credible for government foresight practitioners?",
+      "proof_asset": "Public-sector scenario brief with transparent uncertainty and policy trade-off questions.",
+      "proof_to_show": [
+        "Public-sector scenario brief with transparent uncertainty and policy trade-off questions.",
+        "commercial-confidence-gate-2026-06-06.md",
+        "commercial-launch-readiness-2026-06-06.md",
+        "rls-identity-and-review-policy-draft-2026-06-06.md",
+        "buyer-validation-targets-2026-06-06.md"
+      ],
+      "source_title": "OECD Strategic Foresight",
+      "source_note": "Supports anticipatory policy making through the Strategic Foresight Unit and Government Foresight Community.",
+      "why_this_target": "OECD explicitly frames strategic foresight as modern evidence-based and anticipatory policymaking.",
+      "discovery_goal": "Determine whether this account has a real workflow pain, a credible champion, a proof requirement, and a paid-pilot or LOI path.",
+      "call_agenda": [
+        "Confirm current workflow and owner.",
+        "Show one narrow evidence-to-brief-to-review-to-forecast path.",
+        "Ask where the workflow is wrong, risky, or insufficient.",
+        "Ask what proof would justify an internal follow-up.",
+        "Record next action and willingness-to-pay signal exactly."
+      ],
+      "discovery_questions": [
+        "Where does OECD Strategic Foresight Unit / Government Foresight Community currently lose time or confidence moving from source material to a decision-ready brief?",
+        "Which evidence, review, or governance step is mandatory before a forecast or scenario recommendation is trusted?",
+        "What proof would you need from a guided pilot before sponsoring a broader evaluation?",
+        "Which existing tool, analyst workflow, consultancy, or spreadsheet would this need to complement or replace?",
+        "If the workflow helped, what concrete next step would be credible: second review, internal demo, paid pilot, LOI, or no action?"
+      ],
+      "disqualifiers": [
+        "No current owner for foresight, forecasting, risk, strategy, or analyst-workflow improvement.",
+        "Cannot review any hosted demo or artifact until security/RLS proof is complete.",
+        "Needs proven world-class prediction accuracy before any pilot discussion."
+      ],
+      "email_subject": "Relevance check: Enterprise/public-sector strategic decision intelligence",
+      "email_body": "Hi - I am validating a narrow guided pilot for Strategic foresight unit lead or GFC program contact.\n\nThe pain we are testing: Which evidence, capability, and feedback-loop requirements would make this credible for government foresight practitioners?\n\nThe current proof asset is Public-sector scenario brief with transparent uncertainty and policy trade-off questions. It is explicitly pilot-only: no world-class prediction claim, no buyer-proof claim, and accuracy remains gated on resolved outcomes.\n\nCould I get 20 minutes for a relevance check? The only goal is to learn whether this workflow fits a real decision process, what proof is missing, and whether a paid pilot or internal follow-up would ever be credible.\n\nIf this is not your area, a pointer to the right foresight, risk, forecasting, or strategy-workflow owner would be useful.",
+      "linkedin_message": "I am validating a pilot for enterprise/public-sector strategic decision intelligence. The workflow turns source evidence into actor reasoning, review state, and forecast-draft governance for Strategic foresight unit lead or GFC program contact. Would you be open to a 15-20 minute relevance check? I am looking for objections and proof requirements, not making a production-readiness claim.",
+      "demo_opener": "For OECD Strategic Foresight Unit / Government Foresight Community, I would not position this as a prediction oracle. The workflow starts with one ambiguous decision, builds public-sector scenario brief with transparent uncertainty and policy trade-off questions, flags review/uncertainty gates, and ends with what evidence would make the forecast scoreable. The ask for this call is whether that workflow maps to a real job-to-be-done, what would block adoption, and whether the next step is a second review, paid pilot discussion, or no fit.",
+      "required_capture_fields": [
+        "buyer_role",
+        "proof_shown",
+        "objection",
+        "next_action",
+        "willingness_to_pay_signal",
+        "baseline_value_or_current_workflow",
+        "pilot_outcome_value_or_expected_delta",
+        "quality_signal",
+        "buyer_decision_event",
+        "outcome_evidence_notes"
+      ],
+      "pilot_case_unit": "one high-stakes strategy, policy, geopolitical, supplier, or operational-risk question",
+      "baseline_measure": "current hours from source pack or analyst intake to buyer-reviewed decision brief",
+      "baseline_value_or_current_workflow": "",
+      "target_outcome_measure": "pilot hours from source pack to evidence-linked brief with actor reasoning, countermoves, review state, and forecast-draft handoff",
+      "pilot_outcome_value_or_expected_delta": "",
+      "quality_measure": "buyer reviewer rates evidence coverage, assumption clarity, option clarity, and next-action usefulness against the current workflow",
+      "quality_signal": "",
+      "buyer_decision_event": "internal follow-up, paid pilot discussion, LOI/procurement path, or no-fit decision",
+      "outcome_evidence_notes": "",
+      "call_status": "not_contacted",
+      "validation_status": "not_contacted_not_buyer_proof"
+    },
+    {
+      "rank": 4,
+      "account_name": "Policy Horizons Canada",
+      "account_type": "public_sector_foresight",
+      "niche": "Enterprise/public-sector strategic decision intelligence",
+      "website": "https://horizons.service.canada.ca/en/home/index.shtml",
+      "buyer_role": "Foresight analyst or policy innovation lead",
+      "validation_question": "Would the workflow help structure a foresight brief from sources into scoreable assumptions?",
+      "proof_asset": "Evidence bundle and audience-specific briefing for a policy uncertainty.",
+      "proof_to_show": [
+        "Evidence bundle and audience-specific briefing for a policy uncertainty.",
+        "commercial-confidence-gate-2026-06-06.md",
+        "commercial-launch-readiness-2026-06-06.md",
+        "rls-identity-and-review-policy-draft-2026-06-06.md",
+        "buyer-validation-targets-2026-06-06.md"
+      ],
+      "source_title": "Policy Horizons Canada",
+      "source_note": "Uses foresight to help the federal government build stronger policies and programs under uncertainty.",
+      "why_this_target": "Uses foresight to help federal policy and programs operate under uncertainty.",
+      "discovery_goal": "Determine whether this account has a real workflow pain, a credible champion, a proof requirement, and a paid-pilot or LOI path.",
+      "call_agenda": [
+        "Confirm current workflow and owner.",
+        "Show one narrow evidence-to-brief-to-review-to-forecast path.",
+        "Ask where the workflow is wrong, risky, or insufficient.",
+        "Ask what proof would justify an internal follow-up.",
+        "Record next action and willingness-to-pay signal exactly."
+      ],
+      "discovery_questions": [
+        "Where does Policy Horizons Canada currently lose time or confidence moving from source material to a decision-ready brief?",
+        "Which evidence, review, or governance step is mandatory before a forecast or scenario recommendation is trusted?",
+        "What proof would you need from a guided pilot before sponsoring a broader evaluation?",
+        "Which existing tool, analyst workflow, consultancy, or spreadsheet would this need to complement or replace?",
+        "If the workflow helped, what concrete next step would be credible: second review, internal demo, paid pilot, LOI, or no action?"
+      ],
+      "disqualifiers": [
+        "No current owner for foresight, forecasting, risk, strategy, or analyst-workflow improvement.",
+        "Cannot review any hosted demo or artifact until security/RLS proof is complete.",
+        "Needs proven world-class prediction accuracy before any pilot discussion."
+      ],
+      "email_subject": "Relevance check: Enterprise/public-sector strategic decision intelligence",
+      "email_body": "Hi - I am validating a narrow guided pilot for Foresight analyst or policy innovation lead.\n\nThe pain we are testing: Would the workflow help structure a foresight brief from sources into scoreable assumptions?\n\nThe current proof asset is Evidence bundle and audience-specific briefing for a policy uncertainty. It is explicitly pilot-only: no world-class prediction claim, no buyer-proof claim, and accuracy remains gated on resolved outcomes.\n\nCould I get 20 minutes for a relevance check? The only goal is to learn whether this workflow fits a real decision process, what proof is missing, and whether a paid pilot or internal follow-up would ever be credible.\n\nIf this is not your area, a pointer to the right foresight, risk, forecasting, or strategy-workflow owner would be useful.",
+      "linkedin_message": "I am validating a pilot for enterprise/public-sector strategic decision intelligence. The workflow turns source evidence into actor reasoning, review state, and forecast-draft governance for Foresight analyst or policy innovation lead. Would you be open to a 15-20 minute relevance check? I am looking for objections and proof requirements, not making a production-readiness claim.",
+      "demo_opener": "For Policy Horizons Canada, I would not position this as a prediction oracle. The workflow starts with one ambiguous decision, builds evidence bundle and audience-specific briefing for a policy uncertainty, flags review/uncertainty gates, and ends with what evidence would make the forecast scoreable. The ask for this call is whether that workflow maps to a real job-to-be-done, what would block adoption, and whether the next step is a second review, paid pilot discussion, or no fit.",
+      "required_capture_fields": [
+        "buyer_role",
+        "proof_shown",
+        "objection",
+        "next_action",
+        "willingness_to_pay_signal",
+        "baseline_value_or_current_workflow",
+        "pilot_outcome_value_or_expected_delta",
+        "quality_signal",
+        "buyer_decision_event",
+        "outcome_evidence_notes"
+      ],
+      "pilot_case_unit": "one high-stakes strategy, policy, geopolitical, supplier, or operational-risk question",
+      "baseline_measure": "current hours from source pack or analyst intake to buyer-reviewed decision brief",
+      "baseline_value_or_current_workflow": "",
+      "target_outcome_measure": "pilot hours from source pack to evidence-linked brief with actor reasoning, countermoves, review state, and forecast-draft handoff",
+      "pilot_outcome_value_or_expected_delta": "",
+      "quality_measure": "buyer reviewer rates evidence coverage, assumption clarity, option clarity, and next-action usefulness against the current workflow",
+      "quality_signal": "",
+      "buyer_decision_event": "internal follow-up, paid pilot discussion, LOI/procurement path, or no-fit decision",
+      "outcome_evidence_notes": "",
+      "call_status": "not_contacted",
+      "validation_status": "not_contacted_not_buyer_proof"
+    },
+    {
+      "rank": 5,
+      "account_name": "Atlantic Council GeoStrategy Initiative",
+      "account_type": "think_tank_foresight",
+      "niche": "Executive and analyst briefing layer",
+      "website": "https://www.atlanticcouncil.org/our-programs/foresight-strategy-and-risks-initiative/",
+      "buyer_role": "Foresight, strategy, or program lead",
+      "validation_question": "Would the product reduce time from source pack to scenario memo while preserving analyst review?",
+      "proof_asset": "Analyst briefing layer plus forecast-draft governance for a Global Foresight scenario.",
+      "proof_to_show": [
+        "Analyst briefing layer plus forecast-draft governance for a Global Foresight scenario.",
+        "commercial-confidence-gate-2026-06-06.md",
+        "commercial-launch-readiness-2026-06-06.md",
+        "rls-identity-and-review-policy-draft-2026-06-06.md",
+        "buyer-validation-targets-2026-06-06.md"
+      ],
+      "source_title": "Atlantic Council GeoStrategy Initiative",
+      "source_note": "Uses strategy development and long-range foresight for policy-relevant analysis and solutions.",
+      "why_this_target": "Produces global foresight and long-range strategy work for complex international issues.",
+      "discovery_goal": "Determine whether this account has a real workflow pain, a credible champion, a proof requirement, and a paid-pilot or LOI path.",
+      "call_agenda": [
+        "Confirm current workflow and owner.",
+        "Show one narrow evidence-to-brief-to-review-to-forecast path.",
+        "Ask where the workflow is wrong, risky, or insufficient.",
+        "Ask what proof would justify an internal follow-up.",
+        "Record next action and willingness-to-pay signal exactly."
+      ],
+      "discovery_questions": [
+        "Where does Atlantic Council GeoStrategy Initiative currently lose time or confidence moving from source material to a decision-ready brief?",
+        "Which evidence, review, or governance step is mandatory before a forecast or scenario recommendation is trusted?",
+        "What proof would you need from a guided pilot before sponsoring a broader evaluation?",
+        "Which existing tool, analyst workflow, consultancy, or spreadsheet would this need to complement or replace?",
+        "If the workflow helped, what concrete next step would be credible: second review, internal demo, paid pilot, LOI, or no action?"
+      ],
+      "disqualifiers": [
+        "No current owner for foresight, forecasting, risk, strategy, or analyst-workflow improvement.",
+        "Cannot review any hosted demo or artifact until security/RLS proof is complete.",
+        "Needs proven world-class prediction accuracy before any pilot discussion."
+      ],
+      "email_subject": "Relevance check: Executive and analyst briefing layer",
+      "email_body": "Hi - I am validating a narrow guided pilot for Foresight, strategy, or program lead.\n\nThe pain we are testing: Would the product reduce time from source pack to scenario memo while preserving analyst review?\n\nThe current proof asset is Analyst briefing layer plus forecast-draft governance for a Global Foresight scenario. It is explicitly pilot-only: no world-class prediction claim, no buyer-proof claim, and accuracy remains gated on resolved outcomes.\n\nCould I get 20 minutes for a relevance check? The only goal is to learn whether this workflow fits a real decision process, what proof is missing, and whether a paid pilot or internal follow-up would ever be credible.\n\nIf this is not your area, a pointer to the right foresight, risk, forecasting, or strategy-workflow owner would be useful.",
+      "linkedin_message": "I am validating a pilot for executive and analyst briefing layer. The workflow turns source evidence into actor reasoning, review state, and forecast-draft governance for Foresight, strategy, or program lead. Would you be open to a 15-20 minute relevance check? I am looking for objections and proof requirements, not making a production-readiness claim.",
+      "demo_opener": "For Atlantic Council GeoStrategy Initiative, I would not position this as a prediction oracle. The workflow starts with one ambiguous decision, builds analyst briefing layer plus forecast-draft governance for a global foresight scenario, flags review/uncertainty gates, and ends with what evidence would make the forecast scoreable. The ask for this call is whether that workflow maps to a real job-to-be-done, what would block adoption, and whether the next step is a second review, paid pilot discussion, or no fit.",
+      "required_capture_fields": [
+        "buyer_role",
+        "proof_shown",
+        "objection",
+        "next_action",
+        "willingness_to_pay_signal",
+        "baseline_value_or_current_workflow",
+        "pilot_outcome_value_or_expected_delta",
+        "quality_signal",
+        "buyer_decision_event",
+        "outcome_evidence_notes"
+      ],
+      "pilot_case_unit": "one executive or analyst decision brief generated from the same reviewed evidence bundle",
+      "baseline_measure": "current number of review cycles or hours from analyst draft to executive-ready brief",
+      "baseline_value_or_current_workflow": "",
+      "target_outcome_measure": "pilot review cycles or hours from evidence bundle to executive-ready brief with assumptions, options, and decision asks preserved",
+      "pilot_outcome_value_or_expected_delta": "",
+      "quality_measure": "executive clarity rating, analyst correction count, and governance reviewer signoff status",
+      "quality_signal": "",
+      "buyer_decision_event": "buyer approves internal follow-up, asks for governance changes, or rejects the briefing format",
+      "outcome_evidence_notes": "",
+      "call_status": "not_contacted",
+      "validation_status": "not_contacted_not_buyer_proof"
+    },
+    {
+      "rank": 6,
+      "account_name": "CSIS Futures Lab",
+      "account_type": "think_tank_foresight",
+      "niche": "Executive and analyst briefing layer",
+      "website": "https://www.csis.org/programs/futures-lab?f%5B0%5D=topics%3A845",
+      "buyer_role": "Futures Lab or computational social science lead",
+      "validation_question": "Where would the workflow need stronger empirical rigor before it could support policy analysis?",
+      "proof_asset": "Game-tree or countermove reasoning path with analyst review and forecast handoff.",
+      "proof_to_show": [
+        "Game-tree or countermove reasoning path with analyst review and forecast handoff.",
+        "commercial-confidence-gate-2026-06-06.md",
+        "commercial-launch-readiness-2026-06-06.md",
+        "rls-identity-and-review-policy-draft-2026-06-06.md",
+        "buyer-validation-targets-2026-06-06.md"
+      ],
+      "source_title": "CSIS Futures Lab",
+      "source_note": "Adds empirical rigor to foresight and policy analysis using computational social science, red teaming, and wargaming.",
+      "why_this_target": "Uses red teaming, wargaming, computational social science, and decision support.",
+      "discovery_goal": "Determine whether this account has a real workflow pain, a credible champion, a proof requirement, and a paid-pilot or LOI path.",
+      "call_agenda": [
+        "Confirm current workflow and owner.",
+        "Show one narrow evidence-to-brief-to-review-to-forecast path.",
+        "Ask where the workflow is wrong, risky, or insufficient.",
+        "Ask what proof would justify an internal follow-up.",
+        "Record next action and willingness-to-pay signal exactly."
+      ],
+      "discovery_questions": [
+        "Where does CSIS Futures Lab currently lose time or confidence moving from source material to a decision-ready brief?",
+        "Which evidence, review, or governance step is mandatory before a forecast or scenario recommendation is trusted?",
+        "What proof would you need from a guided pilot before sponsoring a broader evaluation?",
+        "Which existing tool, analyst workflow, consultancy, or spreadsheet would this need to complement or replace?",
+        "If the workflow helped, what concrete next step would be credible: second review, internal demo, paid pilot, LOI, or no action?"
+      ],
+      "disqualifiers": [
+        "No current owner for foresight, forecasting, risk, strategy, or analyst-workflow improvement.",
+        "Cannot review any hosted demo or artifact until security/RLS proof is complete.",
+        "Needs proven world-class prediction accuracy before any pilot discussion."
+      ],
+      "email_subject": "Relevance check: Executive and analyst briefing layer",
+      "email_body": "Hi - I am validating a narrow guided pilot for Futures Lab or computational social science lead.\n\nThe pain we are testing: Where would the workflow need stronger empirical rigor before it could support policy analysis?\n\nThe current proof asset is Game-tree or countermove reasoning path with analyst review and forecast handoff. It is explicitly pilot-only: no world-class prediction claim, no buyer-proof claim, and accuracy remains gated on resolved outcomes.\n\nCould I get 20 minutes for a relevance check? The only goal is to learn whether this workflow fits a real decision process, what proof is missing, and whether a paid pilot or internal follow-up would ever be credible.\n\nIf this is not your area, a pointer to the right foresight, risk, forecasting, or strategy-workflow owner would be useful.",
+      "linkedin_message": "I am validating a pilot for executive and analyst briefing layer. The workflow turns source evidence into actor reasoning, review state, and forecast-draft governance for Futures Lab or computational social science lead. Would you be open to a 15-20 minute relevance check? I am looking for objections and proof requirements, not making a production-readiness claim.",
+      "demo_opener": "For CSIS Futures Lab, I would not position this as a prediction oracle. The workflow starts with one ambiguous decision, builds game-tree or countermove reasoning path with analyst review and forecast handoff, flags review/uncertainty gates, and ends with what evidence would make the forecast scoreable. The ask for this call is whether that workflow maps to a real job-to-be-done, what would block adoption, and whether the next step is a second review, paid pilot discussion, or no fit.",
+      "required_capture_fields": [
+        "buyer_role",
+        "proof_shown",
+        "objection",
+        "next_action",
+        "willingness_to_pay_signal",
+        "baseline_value_or_current_workflow",
+        "pilot_outcome_value_or_expected_delta",
+        "quality_signal",
+        "buyer_decision_event",
+        "outcome_evidence_notes"
+      ],
+      "pilot_case_unit": "one executive or analyst decision brief generated from the same reviewed evidence bundle",
+      "baseline_measure": "current number of review cycles or hours from analyst draft to executive-ready brief",
+      "baseline_value_or_current_workflow": "",
+      "target_outcome_measure": "pilot review cycles or hours from evidence bundle to executive-ready brief with assumptions, options, and decision asks preserved",
+      "pilot_outcome_value_or_expected_delta": "",
+      "quality_measure": "executive clarity rating, analyst correction count, and governance reviewer signoff status",
+      "quality_signal": "",
+      "buyer_decision_event": "buyer approves internal follow-up, asks for governance changes, or rejects the briefing format",
+      "outcome_evidence_notes": "",
+      "call_status": "not_contacted",
+      "validation_status": "not_contacted_not_buyer_proof"
+    },
+    {
+      "rank": 7,
+      "account_name": "World Economic Forum Strategic Intelligence",
+      "account_type": "strategic_intelligence_platform",
+      "niche": "Enterprise/public-sector strategic decision intelligence",
+      "website": "https://www.weforum.org/focus/strategic-intelligence/",
+      "buyer_role": "Strategic Intelligence partnerships or content lead",
+      "validation_question": "Is the governed forecast handoff a complementary layer to strategic-intelligence maps?",
+      "proof_asset": "Differentiated layer: evidence-to-actor-reasoning-to-forecast draft, not trend-map replacement.",
+      "proof_to_show": [
+        "Differentiated layer: evidence-to-actor-reasoning-to-forecast draft, not trend-map replacement.",
+        "commercial-confidence-gate-2026-06-06.md",
+        "commercial-launch-readiness-2026-06-06.md",
+        "rls-identity-and-review-policy-draft-2026-06-06.md",
+        "buyer-validation-targets-2026-06-06.md"
+      ],
+      "source_title": "World Economic Forum Strategic Intelligence",
+      "source_note": "Strategic Intelligence is positioned around complexity, shared factual context, and foresight.",
+      "why_this_target": "Strategic Intelligence is a direct conceptual reference point for shared factual context and foresight.",
+      "discovery_goal": "Determine whether this account has a real workflow pain, a credible champion, a proof requirement, and a paid-pilot or LOI path.",
+      "call_agenda": [
+        "Confirm current workflow and owner.",
+        "Show one narrow evidence-to-brief-to-review-to-forecast path.",
+        "Ask where the workflow is wrong, risky, or insufficient.",
+        "Ask what proof would justify an internal follow-up.",
+        "Record next action and willingness-to-pay signal exactly."
+      ],
+      "discovery_questions": [
+        "Where does World Economic Forum Strategic Intelligence currently lose time or confidence moving from source material to a decision-ready brief?",
+        "Which evidence, review, or governance step is mandatory before a forecast or scenario recommendation is trusted?",
+        "What proof would you need from a guided pilot before sponsoring a broader evaluation?",
+        "Which existing tool, analyst workflow, consultancy, or spreadsheet would this need to complement or replace?",
+        "If the workflow helped, what concrete next step would be credible: second review, internal demo, paid pilot, LOI, or no action?"
+      ],
+      "disqualifiers": [
+        "No current owner for foresight, forecasting, risk, strategy, or analyst-workflow improvement.",
+        "Cannot review any hosted demo or artifact until security/RLS proof is complete.",
+        "Needs proven world-class prediction accuracy before any pilot discussion."
+      ],
+      "email_subject": "Relevance check: Enterprise/public-sector strategic decision intelligence",
+      "email_body": "Hi - I am validating a narrow guided pilot for Strategic Intelligence partnerships or content lead.\n\nThe pain we are testing: Is the governed forecast handoff a complementary layer to strategic-intelligence maps?\n\nThe current proof asset is Differentiated layer: evidence-to-actor-reasoning-to-forecast draft, not trend-map replacement. It is explicitly pilot-only: no world-class prediction claim, no buyer-proof claim, and accuracy remains gated on resolved outcomes.\n\nCould I get 20 minutes for a relevance check? The only goal is to learn whether this workflow fits a real decision process, what proof is missing, and whether a paid pilot or internal follow-up would ever be credible.\n\nIf this is not your area, a pointer to the right foresight, risk, forecasting, or strategy-workflow owner would be useful.",
+      "linkedin_message": "I am validating a pilot for enterprise/public-sector strategic decision intelligence. The workflow turns source evidence into actor reasoning, review state, and forecast-draft governance for Strategic Intelligence partnerships or content lead. Would you be open to a 15-20 minute relevance check? I am looking for objections and proof requirements, not making a production-readiness claim.",
+      "demo_opener": "For World Economic Forum Strategic Intelligence, I would not position this as a prediction oracle. The workflow starts with one ambiguous decision, builds differentiated layer: evidence-to-actor-reasoning-to-forecast draft, not trend-map replacement, flags review/uncertainty gates, and ends with what evidence would make the forecast scoreable. The ask for this call is whether that workflow maps to a real job-to-be-done, what would block adoption, and whether the next step is a second review, paid pilot discussion, or no fit.",
+      "required_capture_fields": [
+        "buyer_role",
+        "proof_shown",
+        "objection",
+        "next_action",
+        "willingness_to_pay_signal",
+        "baseline_value_or_current_workflow",
+        "pilot_outcome_value_or_expected_delta",
+        "quality_signal",
+        "buyer_decision_event",
+        "outcome_evidence_notes"
+      ],
+      "pilot_case_unit": "one high-stakes strategy, policy, geopolitical, supplier, or operational-risk question",
+      "baseline_measure": "current hours from source pack or analyst intake to buyer-reviewed decision brief",
+      "baseline_value_or_current_workflow": "",
+      "target_outcome_measure": "pilot hours from source pack to evidence-linked brief with actor reasoning, countermoves, review state, and forecast-draft handoff",
+      "pilot_outcome_value_or_expected_delta": "",
+      "quality_measure": "buyer reviewer rates evidence coverage, assumption clarity, option clarity, and next-action usefulness against the current workflow",
+      "quality_signal": "",
+      "buyer_decision_event": "internal follow-up, paid pilot discussion, LOI/procurement path, or no-fit decision",
+      "outcome_evidence_notes": "",
+      "call_status": "not_contacted",
+      "validation_status": "not_contacted_not_buyer_proof"
+    },
+    {
+      "rank": 8,
+      "account_name": "World Economic Forum Global Risks Initiative",
+      "account_type": "risk_network",
+      "niche": "Geopolitical risk radar and scenario monitor",
+      "website": "https://initiatives.weforum.org/global-risks/home",
+      "buyer_role": "Global risks program, community, or report team",
+      "validation_question": "What proof would make this useful for risk survey follow-up or scenario workshop prep?",
+      "proof_asset": "Global-risk issue brief with source provenance, actor map, and forecast-draft scoring plan.",
+      "proof_to_show": [
+        "Global-risk issue brief with source provenance, actor map, and forecast-draft scoring plan.",
+        "commercial-confidence-gate-2026-06-06.md",
+        "commercial-launch-readiness-2026-06-06.md",
+        "buyer-validation-targets-2026-06-06.md"
+      ],
+      "source_title": "World Economic Forum Global Risks Initiative",
+      "source_note": "Global Risks Report 2026 is a benchmark for risks at the forefront of strategic decision-making.",
+      "why_this_target": "Global Risks Report 2026 is a high-visibility benchmark for strategic risk decision-making.",
+      "discovery_goal": "Determine whether this account has a real workflow pain, a credible champion, a proof requirement, and a paid-pilot or LOI path.",
+      "call_agenda": [
+        "Confirm current workflow and owner.",
+        "Show one narrow evidence-to-brief-to-review-to-forecast path.",
+        "Ask where the workflow is wrong, risky, or insufficient.",
+        "Ask what proof would justify an internal follow-up.",
+        "Record next action and willingness-to-pay signal exactly."
+      ],
+      "discovery_questions": [
+        "Where does World Economic Forum Global Risks Initiative currently lose time or confidence moving from source material to a decision-ready brief?",
+        "Which evidence, review, or governance step is mandatory before a forecast or scenario recommendation is trusted?",
+        "What proof would you need from a guided pilot before sponsoring a broader evaluation?",
+        "Which existing tool, analyst workflow, consultancy, or spreadsheet would this need to complement or replace?",
+        "If the workflow helped, what concrete next step would be credible: second review, internal demo, paid pilot, LOI, or no action?"
+      ],
+      "disqualifiers": [
+        "No current owner for foresight, forecasting, risk, strategy, or analyst-workflow improvement.",
+        "Cannot review any hosted demo or artifact until security/RLS proof is complete.",
+        "Needs proven world-class prediction accuracy before any pilot discussion.",
+        "Requires paid-feed SLAs or production freshness proof before evaluating radar use."
+      ],
+      "email_subject": "Relevance check: Geopolitical risk radar and scenario monitor",
+      "email_body": "Hi - I am validating a narrow guided pilot for Global risks program, community, or report team.\n\nThe pain we are testing: What proof would make this useful for risk survey follow-up or scenario workshop prep?\n\nThe current proof asset is Global-risk issue brief with source provenance, actor map, and forecast-draft scoring plan. It is explicitly pilot-only: no world-class prediction claim, no buyer-proof claim, and accuracy remains gated on resolved outcomes.\n\nCould I get 20 minutes for a relevance check? The only goal is to learn whether this workflow fits a real decision process, what proof is missing, and whether a paid pilot or internal follow-up would ever be credible.\n\nIf this is not your area, a pointer to the right foresight, risk, forecasting, or strategy-workflow owner would be useful.",
+      "linkedin_message": "I am validating a pilot for geopolitical risk radar and scenario monitor. The workflow turns source evidence into actor reasoning, review state, and forecast-draft governance for Global risks program, community, or report team. Would you be open to a 15-20 minute relevance check? I am looking for objections and proof requirements, not making a production-readiness claim.",
+      "demo_opener": "For World Economic Forum Global Risks Initiative, I would not position this as a prediction oracle. The workflow starts with one ambiguous decision, builds global-risk issue brief with source provenance, actor map, and forecast-draft scoring plan, flags review/uncertainty gates, and ends with what evidence would make the forecast scoreable. The ask for this call is whether that workflow maps to a real job-to-be-done, what would block adoption, and whether the next step is a second review, paid pilot discussion, or no fit.",
+      "required_capture_fields": [
+        "buyer_role",
+        "proof_shown",
+        "objection",
+        "next_action",
+        "willingness_to_pay_signal",
+        "baseline_value_or_current_workflow",
+        "pilot_outcome_value_or_expected_delta",
+        "quality_signal",
+        "buyer_decision_event",
+        "outcome_evidence_notes"
+      ],
+      "pilot_case_unit": "one live or buyer-approved geopolitical risk signal converted into scenario and decision prompts",
+      "baseline_measure": "current time from external signal detection to scenario brief and stakeholder action recommendation",
+      "baseline_value_or_current_workflow": "",
+      "target_outcome_measure": "pilot time from source signal to actor-aware scenario, countermeasure prompt, provenance label, and review decision",
+      "pilot_outcome_value_or_expected_delta": "",
+      "quality_measure": "source freshness, provenance completeness, actionability, and false-positive/escalation review",
+      "quality_signal": "",
+      "buyer_decision_event": "buyer asks for monitoring follow-up, rejects freshness/provenance, or requests hosted proof before continuing",
+      "outcome_evidence_notes": "",
+      "call_status": "not_contacted",
+      "validation_status": "not_contacted_not_buyer_proof"
+    },
+    {
+      "rank": 13,
+      "account_name": "Metaculus FutureEval",
+      "account_type": "forecasting_benchmark",
+      "niche": "Governed forecasting and research workflow",
+      "website": "https://www.metaculus.com/futureeval/",
+      "buyer_role": "Forecasting evaluation or services lead",
+      "validation_question": "What comparable baseline protocol would be acceptable before accuracy claims?",
+      "proof_asset": "Calibration ledger plus benchmark-comparison artifact, clearly marked sample-only until real data exists.",
+      "proof_to_show": [
+        "Calibration ledger plus benchmark-comparison artifact, clearly marked sample-only until real data exists.",
+        "commercial-confidence-gate-2026-06-06.md",
+        "commercial-launch-readiness-2026-06-06.md",
+        "resolved-forecast-calibration-ledger-2026-06-06.json",
+        "forecast-benchmark-comparison-2026-06-06.json"
+      ],
+      "source_title": "Metaculus FutureEval",
+      "source_note": "Provides an AI forecasting evaluation context that requires resolved forecasts and baselines.",
+      "why_this_target": "Directly relevant to benchmark discipline and AI forecast evaluation.",
+      "discovery_goal": "Determine whether this account has a real workflow pain, a credible champion, a proof requirement, and a paid-pilot or LOI path.",
+      "call_agenda": [
+        "Confirm current workflow and owner.",
+        "Show one narrow evidence-to-brief-to-review-to-forecast path.",
+        "Ask where the workflow is wrong, risky, or insufficient.",
+        "Ask what proof would justify an internal follow-up.",
+        "Record next action and willingness-to-pay signal exactly."
+      ],
+      "discovery_questions": [
+        "Where does Metaculus FutureEval currently lose time or confidence moving from source material to a decision-ready brief?",
+        "Which evidence, review, or governance step is mandatory before a forecast or scenario recommendation is trusted?",
+        "What proof would you need from a guided pilot before sponsoring a broader evaluation?",
+        "Which existing tool, analyst workflow, consultancy, or spreadsheet would this need to complement or replace?",
+        "If the workflow helped, what concrete next step would be credible: second review, internal demo, paid pilot, LOI, or no action?"
+      ],
+      "disqualifiers": [
+        "No current owner for foresight, forecasting, risk, strategy, or analyst-workflow improvement.",
+        "Cannot review any hosted demo or artifact until security/RLS proof is complete.",
+        "Needs proven world-class prediction accuracy before any pilot discussion.",
+        "Requires a shared-question benchmark or resolved-outcome corpus before validating workflow value."
+      ],
+      "email_subject": "Relevance check: Governed forecasting and research workflow",
+      "email_body": "Hi - I am validating a narrow guided pilot for Forecasting evaluation or services lead.\n\nThe pain we are testing: What comparable baseline protocol would be acceptable before accuracy claims?\n\nThe current proof asset is Calibration ledger plus benchmark-comparison artifact, clearly marked sample-only until real data exists. It is explicitly pilot-only: no world-class prediction claim, no buyer-proof claim, and accuracy remains gated on resolved outcomes.\n\nCould I get 20 minutes for a relevance check? The only goal is to learn whether this workflow fits a real decision process, what proof is missing, and whether a paid pilot or internal follow-up would ever be credible.\n\nIf this is not your area, a pointer to the right foresight, risk, forecasting, or strategy-workflow owner would be useful.",
+      "linkedin_message": "I am validating a pilot for governed forecasting and research workflow. The workflow turns source evidence into actor reasoning, review state, and forecast-draft governance for Forecasting evaluation or services lead. Would you be open to a 15-20 minute relevance check? I am looking for objections and proof requirements, not making a production-readiness claim.",
+      "demo_opener": "For Metaculus FutureEval, I would not position this as a prediction oracle. The workflow starts with one ambiguous decision, builds calibration ledger plus benchmark-comparison artifact, clearly marked sample-only until real data exists, flags review/uncertainty gates, and ends with what evidence would make the forecast scoreable. The ask for this call is whether that workflow maps to a real job-to-be-done, what would block adoption, and whether the next step is a second review, paid pilot discussion, or no fit.",
+      "required_capture_fields": [
+        "buyer_role",
+        "proof_shown",
+        "objection",
+        "next_action",
+        "willingness_to_pay_signal",
+        "baseline_value_or_current_workflow",
+        "pilot_outcome_value_or_expected_delta",
+        "quality_signal",
+        "buyer_decision_event",
+        "outcome_evidence_notes"
+      ],
+      "pilot_case_unit": "one scoreable forecast question or research question that can become a forecast",
+      "baseline_measure": "current forecast or decision-confidence baseline with source, timestamp, probability method, and resolution criteria",
+      "baseline_value_or_current_workflow": "",
+      "target_outcome_measure": "complete pre-resolution forecast packet with evidence cutoff, human review, comparable baseline, and planned Brier/log scoring",
+      "pilot_outcome_value_or_expected_delta": "",
+      "quality_measure": "forecastability, leakage risk, baseline comparability, and reviewer approval status",
+      "quality_signal": "",
+      "buyer_decision_event": "buyer accepts the scoring protocol, supplies baseline rows, requests paid scoring pilot, or rejects the protocol",
+      "outcome_evidence_notes": "",
+      "call_status": "not_contacted",
+      "validation_status": "not_contacted_not_buyer_proof"
+    },
+    {
+      "rank": 20,
+      "account_name": "Michigan Ross Executive Education strategic decision-making program",
+      "account_type": "executive_education",
+      "niche": "Negotiation and strategic reasoning training",
+      "website": "https://michiganross.umich.edu/sites/default/files/media/documents/2025/07/Michigan%20Ross%20Strategic%20Decision%20Making_07142025.pdf",
+      "buyer_role": "Executive education program director or corporate learning lead",
+      "validation_question": "Would an applied AI decision-workshop module be valuable if claims stay training-focused rather than predictive?",
+      "proof_asset": "Negotiation Dojo and game-tree module with manager-ready debriefs.",
+      "proof_to_show": [
+        "Negotiation Dojo and game-tree module with manager-ready debriefs.",
+        "commercial-confidence-gate-2026-06-06.md",
+        "commercial-launch-readiness-2026-06-06.md",
+        "buyer-validation-targets-2026-06-06.md"
+      ],
+      "source_title": "Michigan Ross Strategic Decision Making executive education",
+      "source_note": "Executive education demand for strategic decision-making training.",
+      "why_this_target": "Executive decision-making training validates the adjacent training revenue lane.",
+      "discovery_goal": "Determine whether this account has a real workflow pain, a credible champion, a proof requirement, and a paid-pilot or LOI path.",
+      "call_agenda": [
+        "Confirm current workflow and owner.",
+        "Show one narrow evidence-to-brief-to-review-to-forecast path.",
+        "Ask where the workflow is wrong, risky, or insufficient.",
+        "Ask what proof would justify an internal follow-up.",
+        "Record next action and willingness-to-pay signal exactly."
+      ],
+      "discovery_questions": [
+        "Where does Michigan Ross Executive Education strategic decision-making program currently lose time or confidence moving from source material to a decision-ready brief?",
+        "Which evidence, review, or governance step is mandatory before a forecast or scenario recommendation is trusted?",
+        "What proof would you need from a guided pilot before sponsoring a broader evaluation?",
+        "Which existing tool, analyst workflow, consultancy, or spreadsheet would this need to complement or replace?",
+        "If the workflow helped, what concrete next step would be credible: second review, internal demo, paid pilot, LOI, or no action?"
+      ],
+      "disqualifiers": [
+        "No current owner for foresight, forecasting, risk, strategy, or analyst-workflow improvement.",
+        "Cannot review any hosted demo or artifact until security/RLS proof is complete.",
+        "Needs proven world-class prediction accuracy before any pilot discussion."
+      ],
+      "email_subject": "Relevance check: Negotiation and strategic reasoning training",
+      "email_body": "Hi - I am validating a narrow guided pilot for Executive education program director or corporate learning lead.\n\nThe pain we are testing: Would an applied AI decision-workshop module be valuable if claims stay training-focused rather than predictive?\n\nThe current proof asset is Negotiation Dojo and game-tree module with manager-ready debriefs. It is explicitly pilot-only: no world-class prediction claim, no buyer-proof claim, and accuracy remains gated on resolved outcomes.\n\nCould I get 20 minutes for a relevance check? The only goal is to learn whether this workflow fits a real decision process, what proof is missing, and whether a paid pilot or internal follow-up would ever be credible.\n\nIf this is not your area, a pointer to the right foresight, risk, forecasting, or strategy-workflow owner would be useful.",
+      "linkedin_message": "I am validating a pilot for negotiation and strategic reasoning training. The workflow turns source evidence into actor reasoning, review state, and forecast-draft governance for Executive education program director or corporate learning lead. Would you be open to a 15-20 minute relevance check? I am looking for objections and proof requirements, not making a production-readiness claim.",
+      "demo_opener": "For Michigan Ross Executive Education strategic decision-making program, I would not position this as a prediction oracle. The workflow starts with one ambiguous decision, builds negotiation dojo and game-tree module with manager-ready debriefs, flags review/uncertainty gates, and ends with what evidence would make the forecast scoreable. The ask for this call is whether that workflow maps to a real job-to-be-done, what would block adoption, and whether the next step is a second review, paid pilot discussion, or no fit.",
+      "required_capture_fields": [
+        "buyer_role",
+        "proof_shown",
+        "objection",
+        "next_action",
+        "willingness_to_pay_signal",
+        "baseline_value_or_current_workflow",
+        "pilot_outcome_value_or_expected_delta",
+        "quality_signal",
+        "buyer_decision_event",
+        "outcome_evidence_notes"
+      ],
+      "pilot_case_unit": "one cohort exercise using negotiation, game tree, or forecasting discipline on an applied organizational case",
+      "baseline_measure": "pre-exercise rubric score for structured reasoning, assumption testing, and decision communication",
+      "baseline_value_or_current_workflow": "",
+      "target_outcome_measure": "post-exercise rubric score plus debrief quality and transfer-to-work signal",
+      "pilot_outcome_value_or_expected_delta": "",
+      "quality_measure": "rubric delta, facilitator notes, learner self-assessment, and buyer manager relevance rating",
+      "quality_signal": "",
+      "buyer_decision_event": "cohort follow-up, paid training pilot discussion, curriculum revision request, or no fit",
+      "outcome_evidence_notes": "",
+      "call_status": "not_contacted",
+      "validation_status": "not_contacted_not_buyer_proof"
+    }
+  ],
+  "use_rules": [
+    "Do not send messages or run discovery calls without owner approval.",
+    "Do not count a target as buyer proof until a real completed interaction records the required fields.",
+    "Keep world-class prediction language prohibited until resolved-outcome calibration and real baseline proof exist.",
+    "Use no-fit and rejection outcomes as evidence; do not discard them."
+  ],
+  "superseded": true,
+  "superseded_by": ".positioning-audit/comparative-5plus5-discovery-pack-2026-07-17.json",
+  "superseded_reason": "Enterprise-only pack superseded by unified 5+5 (education + enterprise) discovery pack with 10 named targets."
+}

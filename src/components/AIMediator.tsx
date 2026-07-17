@@ -3,7 +3,7 @@ import { Button } from './ui/button'
 import { Textarea } from './ui/textarea'
 import { Card } from './ui/card'
 import { Scale, Users, DollarSign, CheckCircle } from 'lucide-react'
-import { supabase, API_BASE, getAuthHeaders } from '../lib/supabase'
+import { supabase, API_BASE, getUserAuthHeaders } from '../lib/supabase'
 
 export function AIMediator() {
   const [category, setCategory] = useState('other')
@@ -18,7 +18,7 @@ export function AIMediator() {
     try {
       const response = await fetch(`${API_BASE}/ai-mediator`, {
         method: 'POST',
-        headers: getAuthHeaders(),
+        headers: await getUserAuthHeaders(),
         body: JSON.stringify({
           category,
           description_a: descriptionA,

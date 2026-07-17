@@ -1,0 +1,20 @@
+{
+  "articles": [
+    {
+      "url": "https://example.com/geopolitics/us-china-talks",
+      "seendate": "20260426T102500Z",
+      "sourcecountry": "USA",
+      "sourcecommonname": "China",
+      "title": "US and China resume trade talks ahead of summit",
+      "tone": 1.8
+    },
+    {
+      "url": "https://example.com/geopolitics/eu-sanctions",
+      "seendate": "20260425T090000Z",
+      "sourcecountry": "EU",
+      "sourcecommonname": "Russia",
+      "title": "EU considers new sanctions package after regional escalation",
+      "tone": -4.2
+    }
+  ]
+}

@@ -1,0 +1,213 @@
+{
+  "schema_version": "buyer-validation-execution-readiness-v1",
+  "generated_at": "2026-06-07T03:14:19.653Z",
+  "status": "buyer_validation_execution_ready_no_real_calls",
+  "source": {
+    "buyer_validation_targets": "docs/launch-readiness/buyer-validation-targets-2026-06-06.json",
+    "buyer_discovery_kit": "docs/launch-readiness/buyer-discovery-kit-2026-06-06.json",
+    "buyer_validation_crm": "docs/launch-readiness/buyer-validation-crm-template-2026-06-06.csv",
+    "buyer_discovery_call_sheet": "docs/launch-readiness/buyer-discovery-call-sheet-2026-06-06.csv",
+    "buyer_evidence_validation": "docs/launch-readiness/buyer-evidence-input-validation-2026-06-06.json",
+    "buyer_proof_gate": "docs/launch-readiness/buyer-proof-gate-2026-06-06.json",
+    "market_niche_validation": "docs/launch-readiness/market-niche-evidence-validation-2026-06-06.json",
+    "competitive_positioning_validation": "docs/launch-readiness/competitive-positioning-evidence-validation-2026-06-06.json",
+    "claim_consistency_validation": "docs/launch-readiness/claim-consistency-validation-2026-06-06.json",
+    "local_browser_route_proof": "docs/launch-readiness/local-browser-route-proof-2026-06-06.json",
+    "commercial_confidence_gate": "docs/launch-readiness/commercial-confidence-gate-2026-06-06.json",
+    "launch_evidence": "docs/launch-readiness/launch-evidence-2026-06-06.json",
+    "buyer_validation_dimension_status": "buyer_execution_ready_substitution_evidence_gate_no_real_calls",
+    "buyer_validation_dimension_score_percent": 25
+  },
+  "proof_boundary": {
+    "proves": [
+      "The 10-call discovery slate, recording schema, local-demo proof, and claim-boundary gates are ready for owner review.",
+      "The selected slate covers the validated top-five niche thesis before external buyer calls.",
+      "Research/template rows are still excluded from buyer proof."
+    ],
+    "does_not_prove": [
+      "Buyer demand, willingness to pay, paid-pilot, LOI, procurement-path, or referenceable buyer proof.",
+      "Hosted operational proof, enterprise procurement proof, or world-class prediction accuracy."
+    ]
+  },
+  "summary": {
+    "target_count": 20,
+    "selected_target_count": 10,
+    "call_sheet_row_count": 10,
+    "crm_row_count": 5,
+    "priority_niche_count": 5,
+    "target_priority_niche_covered_count": 5,
+    "selected_priority_niche_covered_count": 5,
+    "call_sheet_priority_niche_covered_count": 5,
+    "call_sheet_required_column_count": 28,
+    "call_sheet_present_required_column_count": 28,
+    "crm_required_column_count": 11,
+    "crm_present_required_column_count": 11,
+    "schema_vocabulary_ready": true,
+    "real_interaction_count": 0,
+    "completed_call_count": 0,
+    "qualified_followup_count": 0,
+    "paid_pilot_loi_or_procurement_signal_count": 0,
+    "valid_completed_call_count_after_input_validation": 0,
+    "valid_outcome_capture_count_after_input_validation": 0,
+    "valid_qualified_followup_count_after_input_validation": 0,
+    "valid_commitment_signal_count_after_input_validation": 0,
+    "execution_ready_for_owner_outreach": true,
+    "buyer_validation_verified": false,
+    "buyer_validated_claim_allowed": false,
+    "active_release_hold_count": 6
+  },
+  "priority_niches": [
+    "Enterprise/public-sector strategic decision intelligence",
+    "Governed forecasting and research workflow",
+    "Geopolitical risk radar and scenario monitor",
+    "Executive and analyst briefing layer",
+    "Negotiation and strategic reasoning training"
+  ],
+  "selected_niches": [
+    "Enterprise/public-sector strategic decision intelligence",
+    "Executive and analyst briefing layer",
+    "Geopolitical risk radar and scenario monitor",
+    "Governed forecasting and research workflow",
+    "Negotiation and strategic reasoning training"
+  ],
+  "missing_selected_priority_niches": [],
+  "missing_call_sheet_priority_niches": [],
+  "vocabulary_checks": [
+    {
+      "field": "evidence_quality",
+      "expected_values": [
+        "low",
+        "medium",
+        "high",
+        "owner_verified",
+        "external_share_approved"
+      ],
+      "actual_values": [
+        "low",
+        "medium",
+        "high",
+        "owner_verified",
+        "external_share_approved"
+      ],
+      "missing_values": [],
+      "ready": true
+    },
+    {
+      "field": "willingness_to_pay_signal",
+      "expected_values": [
+        "none",
+        "curiosity_only",
+        "qualified_followup",
+        "paid_pilot_discussion",
+        "loi_discussion",
+        "procurement_path"
+      ],
+      "actual_values": [
+        "none",
+        "curiosity_only",
+        "qualified_followup",
+        "paid_pilot_discussion",
+        "loi_discussion",
+        "procurement_path"
+      ],
+      "missing_values": [],
+      "ready": true
+    }
+  ],
+  "acceptance_gates": [
+    {
+      "gate": "named_target_pack_covers_top_five",
+      "status": "passed",
+      "proof_bucket": "repo_artifact",
+      "evidence": "20 named targets; 5/5 priority niches covered.",
+      "next_action": "No target-pack action needed before owner slate review."
+    },
+    {
+      "gate": "selected_10_call_slate_covers_top_five",
+      "status": "passed",
+      "proof_bucket": "repo_artifact",
+      "evidence": "10 selected targets; 5/5 priority niches covered.",
+      "next_action": "Owner can approve or edit the balanced slate."
+    },
+    {
+      "gate": "call_sheet_matches_selected_slate",
+      "status": "passed",
+      "proof_bucket": "repo_artifact",
+      "evidence": "10 call-sheet rows; 5/5 priority niches covered.",
+      "next_action": "Use the call sheet as the discovery recording surface."
+    },
+    {
+      "gate": "capture_schema_ready",
+      "status": "passed",
+      "proof_bucket": "repo_artifact",
+      "evidence": "28/28 call-sheet columns and 11/11 CRM columns present; schema vocabulary ready=true.",
+      "next_action": "No schema repair needed before calls."
+    },
+    {
+      "gate": "market_and_competitive_claim_boundaries_ready",
+      "status": "passed",
+      "proof_bucket": "repo_artifact",
+      "evidence": "market_buyer_safe=true; competitive_wedge=true; claim_consistency_ready=true; buyer_proof_claimed=false.",
+      "next_action": "Use pilot-only language and keep buyer-validated, commercial-ready, replacement/parity, and world-class prediction claims blocked."
+    },
+    {
+      "gate": "local_demo_route_proof_available",
+      "status": "passed",
+      "proof_bucket": "local",
+      "evidence": "Local route proof status=local_route_proof_ready_not_hosted_proof; ready routes=7; runtime errors=0.",
+      "next_action": "Use local proof only; do not claim hosted proof."
+    },
+    {
+      "gate": "real_interaction_boundary_preserved",
+      "status": "passed",
+      "proof_bucket": "repo_artifact",
+      "evidence": "0 real interactions, 0 completed calls, 0 qualified follow-ups, 0 commitment-path signals.",
+      "next_action": "After owner-approved calls, rerun buyer input validation, buyer proof gate, this readiness validator, and commercial confidence gate."
+    }
+  ],
+  "release_holds": [
+    {
+      "hold": "owner_approves_discovery_slate",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "Owner approves or edits the balanced 10-target discovery slate before outreach."
+    },
+    {
+      "hold": "completed_calls_missing",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "10 completed buyer discovery calls with buyer role, proof shown, objection, next action, willingness-to-pay signal, and evidence quality."
+    },
+    {
+      "hold": "pilot_outcome_capture_missing",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "10 completed calls with baseline/current-workflow value, pilot outcome or expected delta, quality signal, buyer decision event, and outcome evidence notes."
+    },
+    {
+      "hold": "qualified_followups_missing",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "Three qualified follow-ups beyond curiosity-only interest."
+    },
+    {
+      "hold": "paid_pilot_or_loi_signal_missing",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "One paid-pilot, LOI, or procurement-path signal."
+    },
+    {
+      "hold": "owner_external_claim_language_missing",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "Owner-approved external-share wording that preserves pilot-only, no buyer-proof, no hosted-live, no enterprise-ready, and no world-class prediction boundaries."
+    }
+  ],
+  "owner_action_order": [
+    "Review the selected 10-call slate for conflicts, sensitivity, and target-order changes.",
+    "Approve the pilot-only outbound language and proof assets before any external contact.",
+    "Run discovery calls manually; do not automate outreach from this repo.",
+    "Record every outcome, including no-fit and objections, in the call sheet and CRM.",
+    "Rerun buyer evidence validation, buyer proof gate, this execution-readiness gate, claim consistency, and commercial confidence after real rows are added."
+  ]
+}

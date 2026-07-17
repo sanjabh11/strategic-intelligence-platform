@@ -1,0 +1,488 @@
+{
+  "project_ref": "jxdihzqoaxtydolmltdr",
+  "counts": {
+    "local_functions": 55,
+    "remote_functions": 66,
+    "repo_backed_remote": 48,
+    "remote_only_legacy": 18,
+    "local_only": 7,
+    "quarantine_candidates": 11
+  },
+  "repo_backed_remote": [
+    {
+      "name": "ai-mediator",
+      "status": "ACTIVE",
+      "version": 27,
+      "updated_at": 1759729524539
+    },
+    {
+      "name": "analyze-engine",
+      "status": "ACTIVE",
+      "version": 121,
+      "updated_at": 1759821945565
+    },
+    {
+      "name": "bayes-belief-updating",
+      "status": "ACTIVE",
+      "version": 28,
+      "updated_at": 1759659437319
+    },
+    {
+      "name": "brier-weighted-consensus",
+      "status": "ACTIVE",
+      "version": 25,
+      "updated_at": 1765608396479
+    },
+    {
+      "name": "collective-aggregation",
+      "status": "ACTIVE",
+      "version": 28,
+      "updated_at": 1759659430171
+    },
+    {
+      "name": "collective-intelligence",
+      "status": "ACTIVE",
+      "version": 28,
+      "updated_at": 1759659431544
+    },
+    {
+      "name": "collective-intelligence-aggregator",
+      "status": "ACTIVE",
+      "version": 29,
+      "updated_at": 1759730449433
+    },
+    {
+      "name": "collective-stats",
+      "status": "ACTIVE",
+      "version": 28,
+      "updated_at": 1759659433032
+    },
+    {
+      "name": "cross-domain-transfer",
+      "status": "ACTIVE",
+      "version": 28,
+      "updated_at": 1759659418584
+    },
+    {
+      "name": "dynamic-recalibration",
+      "status": "ACTIVE",
+      "version": 28,
+      "updated_at": 1759659416728
+    },
+    {
+      "name": "evidence-retrieval",
+      "status": "ACTIVE",
+      "version": 48,
+      "updated_at": 1759754482274
+    },
+    {
+      "name": "firecrawl-research",
+      "status": "ACTIVE",
+      "version": 43,
+      "updated_at": 1759754514359
+    },
+    {
+      "name": "game-monitoring",
+      "status": "ACTIVE",
+      "version": 28,
+      "updated_at": 1759659435701
+    },
+    {
+      "name": "gdelt-stream",
+      "status": "ACTIVE",
+      "version": 29,
+      "updated_at": 1777288614834
+    },
+    {
+      "name": "get-analysis-status",
+      "status": "ACTIVE",
+      "version": 53,
+      "updated_at": 1759659395954
+    },
+    {
+      "name": "health",
+      "status": "ACTIVE",
+      "version": 54,
+      "updated_at": 1759831910112
+    },
+    {
+      "name": "human-review",
+      "status": "ACTIVE",
+      "version": 30,
+      "updated_at": 1774444885139
+    },
+    {
+      "name": "information-value-assessment",
+      "status": "ACTIVE",
+      "version": 28,
+      "updated_at": 1759659407722
+    },
+    {
+      "name": "market-stream",
+      "status": "ACTIVE",
+      "version": 27,
+      "updated_at": 1759730447834
+    },
+    {
+      "name": "matching-markets",
+      "status": "ACTIVE",
+      "version": 27,
+      "updated_at": 1759729526133
+    },
+    {
+      "name": "monte-carlo-simulator",
+      "status": "ACTIVE",
+      "version": 25,
+      "updated_at": 1765608292523
+    },
+    {
+      "name": "notebook-export",
+      "status": "ACTIVE",
+      "version": 28,
+      "updated_at": 1759659424013
+    },
+    {
+      "name": "outcome-forecasting",
+      "status": "ACTIVE",
+      "version": 28,
+      "updated_at": 1759659409528
+    },
+    {
+      "name": "pattern-symmetry-mining",
+      "status": "ACTIVE",
+      "version": 28,
+      "updated_at": 1759659422251
+    },
+    {
+      "name": "personal-life-coach",
+      "status": "ACTIVE",
+      "version": 29,
+      "updated_at": 1777281490526
+    },
+    {
+      "name": "process-queue",
+      "status": "ACTIVE",
+      "version": 28,
+      "updated_at": 1759659440560
+    },
+    {
+      "name": "quantum-strategy-service",
+      "status": "ACTIVE",
+      "version": 28,
+      "updated_at": 1759659405931
+    },
+    {
+      "name": "recursive-equilibrium",
+      "status": "ACTIVE",
+      "version": 42,
+      "updated_at": 1759659402276
+    },
+    {
+      "name": "retrieval",
+      "status": "ACTIVE",
+      "version": 28,
+      "updated_at": 1759659400367
+    },
+    {
+      "name": "scale-invariant-templates",
+      "status": "ACTIVE",
+      "version": 28,
+      "updated_at": 1759659412760
+    },
+    {
+      "name": "sensitivity-analysis",
+      "status": "ACTIVE",
+      "version": 28,
+      "updated_at": 1759659428776
+    },
+    {
+      "name": "share-strategy",
+      "status": "ACTIVE",
+      "version": 28,
+      "updated_at": 1759659434195
+    },
+    {
+      "name": "strategic-dna",
+      "status": "ACTIVE",
+      "version": 27,
+      "updated_at": 1759729527341
+    },
+    {
+      "name": "strategic-playbook",
+      "status": "ACTIVE",
+      "version": 28,
+      "updated_at": 1759659427297
+    },
+    {
+      "name": "strategy-cross-pollination",
+      "status": "ACTIVE",
+      "version": 28,
+      "updated_at": 1759659442375
+    },
+    {
+      "name": "strategy-success-analysis",
+      "status": "ACTIVE",
+      "version": 28,
+      "updated_at": 1759659410806
+    },
+    {
+      "name": "stripe-checkout",
+      "status": "ACTIVE",
+      "version": 25,
+      "updated_at": 1765611010262
+    },
+    {
+      "name": "stripe-verify",
+      "status": "ACTIVE",
+      "version": 25,
+      "updated_at": 1765611017913
+    },
+    {
+      "name": "stripe-webhook",
+      "status": "ACTIVE",
+      "version": 17,
+      "updated_at": 1777270439833
+    },
+    {
+      "name": "symmetry-mining",
+      "status": "ACTIVE",
+      "version": 42,
+      "updated_at": 1759659404154
+    },
+    {
+      "name": "system-status",
+      "status": "ACTIVE",
+      "version": 61,
+      "updated_at": 1759659397436
+    },
+    {
+      "name": "teacher-packet",
+      "status": "ACTIVE",
+      "version": 28,
+      "updated_at": 1759659425596
+    },
+    {
+      "name": "temporal-strategy-optimization",
+      "status": "ACTIVE",
+      "version": 28,
+      "updated_at": 1759659414966
+    },
+    {
+      "name": "test-perplexity",
+      "status": "ACTIVE",
+      "version": 25,
+      "updated_at": 1759755055994
+    },
+    {
+      "name": "test-secrets",
+      "status": "ACTIVE",
+      "version": 25,
+      "updated_at": 1759754976599
+    },
+    {
+      "name": "trading-signals",
+      "status": "ACTIVE",
+      "version": 25,
+      "updated_at": 1765608392887
+    },
+    {
+      "name": "whop-webhook",
+      "status": "ACTIVE",
+      "version": 25,
+      "updated_at": 1765611004355
+    },
+    {
+      "name": "worldbank-sync",
+      "status": "ACTIVE",
+      "version": 28,
+      "updated_at": 1759821947146
+    }
+  ],
+  "remote_only_legacy": [
+    {
+      "name": "alert_ingest",
+      "status": "ACTIVE",
+      "version": 67,
+      "updated_at": 1755953506764
+    },
+    {
+      "name": "alert_ingest_cron",
+      "status": "ACTIVE",
+      "version": 66,
+      "updated_at": 1755953528868
+    },
+    {
+      "name": "alert-ingest",
+      "status": "ACTIVE",
+      "version": 66,
+      "updated_at": 1755949411846
+    },
+    {
+      "name": "analysis-status",
+      "status": "ACTIVE",
+      "version": 50,
+      "updated_at": 1756116752733
+    },
+    {
+      "name": "analyze-with-rag",
+      "status": "ACTIVE",
+      "version": 50,
+      "updated_at": 1756112798734
+    },
+    {
+      "name": "anomaly_check",
+      "status": "ACTIVE",
+      "version": 52,
+      "updated_at": 1755968799636
+    },
+    {
+      "name": "ask-strategy",
+      "status": "ACTIVE",
+      "version": 68,
+      "updated_at": 1756060595591
+    },
+    {
+      "name": "baseline",
+      "status": "ACTIVE",
+      "version": 52,
+      "updated_at": 1755968798051
+    },
+    {
+      "name": "create-admin-user",
+      "status": "ACTIVE",
+      "version": 51,
+      "updated_at": 1756022162903
+    },
+    {
+      "name": "energy_adapter",
+      "status": "ACTIVE",
+      "version": 70,
+      "updated_at": 1755959446293
+    },
+    {
+      "name": "energy_adapter_cron",
+      "status": "ACTIVE",
+      "version": 66,
+      "updated_at": 1755954458999
+    },
+    {
+      "name": "enhanced-analysis",
+      "status": "ACTIVE",
+      "version": 51,
+      "updated_at": 1756101018095
+    },
+    {
+      "name": "forecast",
+      "status": "ACTIVE",
+      "version": 52,
+      "updated_at": 1755969077263
+    },
+    {
+      "name": "hydrate-analysis",
+      "status": "ACTIVE",
+      "version": 51,
+      "updated_at": 1756095547717
+    },
+    {
+      "name": "multi-search",
+      "status": "ACTIVE",
+      "version": 34,
+      "updated_at": 1757598096394
+    },
+    {
+      "name": "quantum-strategy-analysis",
+      "status": "ACTIVE",
+      "version": 54,
+      "updated_at": 1756035090379
+    },
+    {
+      "name": "validate-schema",
+      "status": "ACTIVE",
+      "version": 51,
+      "updated_at": 1756095599620
+    },
+    {
+      "name": "write-full-analysis",
+      "status": "ACTIVE",
+      "version": 59,
+      "updated_at": 1756106176766
+    }
+  ],
+  "local_only": [
+    "analyze-stream",
+    "export-analysis",
+    "forecast-create",
+    "lti-launch",
+    "multi-agent-forecast",
+    "sso-auth",
+    "symmetry-mining-service"
+  ],
+  "quarantine_candidates": [
+    {
+      "name": "alert_ingest",
+      "status": "ACTIVE",
+      "version": 67,
+      "updated_at": 1755953506764
+    },
+    {
+      "name": "alert_ingest_cron",
+      "status": "ACTIVE",
+      "version": 66,
+      "updated_at": 1755953528868
+    },
+    {
+      "name": "alert-ingest",
+      "status": "ACTIVE",
+      "version": 66,
+      "updated_at": 1755949411846
+    },
+    {
+      "name": "analysis-status",
+      "status": "ACTIVE",
+      "version": 50,
+      "updated_at": 1756116752733
+    },
+    {
+      "name": "energy_adapter",
+      "status": "ACTIVE",
+      "version": 70,
+      "updated_at": 1755959446293
+    },
+    {
+      "name": "energy_adapter_cron",
+      "status": "ACTIVE",
+      "version": 66,
+      "updated_at": 1755954458999
+    },
+    {
+      "name": "enhanced-analysis",
+      "status": "ACTIVE",
+      "version": 51,
+      "updated_at": 1756101018095
+    },
+    {
+      "name": "forecast",
+      "status": "ACTIVE",
+      "version": 52,
+      "updated_at": 1755969077263
+    },
+    {
+      "name": "hydrate-analysis",
+      "status": "ACTIVE",
+      "version": 51,
+      "updated_at": 1756095547717
+    },
+    {
+      "name": "validate-schema",
+      "status": "ACTIVE",
+      "version": 51,
+      "updated_at": 1756095599620
+    },
+    {
+      "name": "write-full-analysis",
+      "status": "ACTIVE",
+      "version": 59,
+      "updated_at": 1756106176766
+    }
+  ]
+}

@@ -1,0 +1,324 @@
+{
+  "schema_version": "pilot-outcome-measurement-kit-v1",
+  "generated_at": "2026-06-07T03:19:01.995Z",
+  "status": "pilot_outcome_measurement_kit_ready_not_outcome_proof",
+  "proof_boundary": "This kit makes the five-niche pilot measurable for owner review. It is not buyer validation, willingness-to-pay proof, hosted proof, enterprise readiness, prediction accuracy proof, or commercial-ready proof.",
+  "source": {
+    "launch_evidence": "docs/launch-readiness/launch-evidence-2026-06-06.json",
+    "pilot_offer_pack": "docs/launch-readiness/pilot-offer-pack-2026-06-06.json",
+    "buyer_discovery_kit": "docs/launch-readiness/buyer-discovery-kit-2026-06-06.json",
+    "market_niche_validation": "docs/launch-readiness/market-niche-evidence-validation-2026-06-06.json",
+    "owner_approval_validation": "docs/launch-readiness/owner-approval-register-validation-2026-06-06.json",
+    "commercial_confidence_gate": "docs/launch-readiness/commercial-confidence-gate-2026-06-06.json",
+    "launch_decision": "pilot-only",
+    "pilot_strategy_confidence_percent": 77.7,
+    "commercial_world_class_confidence_percent": 53.7
+  },
+  "summary": {
+    "outcome_measurement_ready_for_owner_review": true,
+    "outcome_proof_claimed": false,
+    "required_niche_count": 5,
+    "top_five_niche_coverage_count": 5,
+    "selected_target_coverage_count": 5,
+    "rows_with_baseline_measure": 5,
+    "rows_with_target_measure": 5,
+    "rows_with_quality_measure": 5,
+    "rows_with_buyer_decision_event": 5,
+    "rows_with_minimum_evidence_capture": 5,
+    "forbidden_claim_mention_count": 0,
+    "offer_ready": true,
+    "market_buyer_safe_pilot_claim_allowed": true,
+    "owner_approval_ready": false,
+    "owner_approved_count": 0,
+    "owner_required_count": 14,
+    "buyer_validated_claim_allowed": false,
+    "hosted_live_claim_allowed": false,
+    "enterprise_ready_claim_allowed": false,
+    "accuracy_claim_allowed": false,
+    "commercial_ready_claim_allowed": false,
+    "world_class_prediction_claim_allowed": false
+  },
+  "current_source_alignment": [
+    {
+      "source": "NIST AI Risk Management Framework",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "implication": "Pilot claims should be tied to measured and governed risk-management evidence before any broader AI trust claim is upgraded."
+    },
+    {
+      "source": "NIST Secure Software Development Framework SP 800-218",
+      "url": "https://csrc.nist.gov/pubs/sp/800/218/final",
+      "implication": "Launch evidence should separate planned controls, implemented controls, and verified outcomes."
+    },
+    {
+      "source": "ForecastBench",
+      "url": "https://www.forecastbench.org/about/",
+      "implication": "Forecasting claims need dynamic, resolved-outcome evaluation with comparable baselines rather than fixture-only demonstrations."
+    },
+    {
+      "source": "OECD Strategic Foresight",
+      "url": "https://www.oecd.org/strategic-foresight/",
+      "implication": "Foresight value should be measured as better structured exploration and decision preparation, not as single-future prediction."
+    },
+    {
+      "source": "OWASP Top 10 for Large Language Model Applications",
+      "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/",
+      "implication": "LLM-enabled pilot evidence should preserve human review, provenance, prompt/input boundaries, and no-autonomous-action guardrails."
+    }
+  ],
+  "outcome_rows": [
+    {
+      "rank": 1,
+      "niche": "Enterprise/public-sector strategic decision intelligence",
+      "sellability_role": "primary_offer",
+      "buyer_job": "Turn ambiguous geopolitical, policy, supplier, or operational risk questions into evidence-backed briefs, countermove maps, review states, and scoreable forecast drafts.",
+      "pilot_case_unit": "one high-stakes strategy, policy, geopolitical, supplier, or operational-risk question",
+      "baseline_measure": "current hours from source pack or analyst intake to buyer-reviewed decision brief",
+      "target_outcome_measure": "pilot hours from source pack to evidence-linked brief with actor reasoning, countermoves, review state, and forecast-draft handoff",
+      "quality_measure": "buyer reviewer rates evidence coverage, assumption clarity, option clarity, and next-action usefulness against the current workflow",
+      "buyer_decision_event": "internal follow-up, paid pilot discussion, LOI/procurement path, or no-fit decision",
+      "minimum_valid_pilot_evidence": [
+        "3 to 5 representative cases from one buyer team",
+        "before and after time-to-reviewed-brief records",
+        "one named reviewer note per case",
+        "proof shown and objection captured for each case"
+      ],
+      "success_threshold_for_owner_review": "At least 3 cases completed with a credible time or clarity improvement signal and no unsupported prediction claim.",
+      "selected_target_count": 5,
+      "sale_boundary": "guided pilot only; no commercial-ready or prediction-superiority claim",
+      "proof_assets": [
+        "Strategist/enterprise workflow route and function evidence",
+        "commercial-confidence-gate-2026-06-06.json",
+        "buyer-discovery-kit-2026-06-06.json"
+      ],
+      "owner_input_needed": [
+        "owner-approved pilot case or cohort",
+        "baseline capture before demo or pilot",
+        "buyer reviewer note after pilot run",
+        "decision event and next action"
+      ],
+      "blocked_claims": [
+        "world-class accurate predictions",
+        "commercial-ready enterprise platform",
+        "buyer-validated demand",
+        "fully proven hosted runtime"
+      ]
+    },
+    {
+      "rank": 2,
+      "niche": "Governed forecasting and research workflow",
+      "sellability_role": "second_offer_after_data",
+      "buyer_job": "Link research evidence, human review, forecast governance, Brier scoring, and resolved-outcome learning.",
+      "pilot_case_unit": "one scoreable forecast question or research question that can become a forecast",
+      "baseline_measure": "current forecast or decision-confidence baseline with source, timestamp, probability method, and resolution criteria",
+      "target_outcome_measure": "complete pre-resolution forecast packet with evidence cutoff, human review, comparable baseline, and planned Brier/log scoring",
+      "quality_measure": "forecastability, leakage risk, baseline comparability, and reviewer approval status",
+      "buyer_decision_event": "buyer accepts the scoring protocol, supplies baseline rows, requests paid scoring pilot, or rejects the protocol",
+      "minimum_valid_pilot_evidence": [
+        "3 to 5 pre-resolution candidate questions for workflow review",
+        "25 or more owner-approved resolved rows before accuracy claims",
+        "comparable baseline source and timestamp for every scored row",
+        "leakage and ambiguity review before scoring"
+      ],
+      "success_threshold_for_owner_review": "Protocol is accepted by the buyer and at least one real baseline source is available; accuracy claims remain blocked until resolved rows score.",
+      "selected_target_count": 1,
+      "sale_boundary": "do not sell accuracy until owner-approved resolved outcomes and real baselines are scored",
+      "proof_assets": [
+        "accuracy-evidence-intake-kit-2026-06-06.json",
+        "forecast-benchmark-comparison-2026-06-06.json",
+        "whitebox-release function evidence"
+      ],
+      "owner_input_needed": [
+        "owner-approved pilot case or cohort",
+        "baseline capture before demo or pilot",
+        "buyer reviewer note after pilot run",
+        "decision event and next action"
+      ],
+      "blocked_claims": [
+        "world-class accurate predictions",
+        "commercial-ready enterprise platform",
+        "buyer-validated demand",
+        "fully proven hosted runtime"
+      ]
+    },
+    {
+      "rank": 3,
+      "niche": "Geopolitical risk radar and scenario monitor",
+      "sellability_role": "demo_lane_with_feed_caveats",
+      "buyer_job": "Monitor external risk signals and convert them into actor-aware strategic prompts and scenarios.",
+      "pilot_case_unit": "one live or buyer-approved geopolitical risk signal converted into scenario and decision prompts",
+      "baseline_measure": "current time from external signal detection to scenario brief and stakeholder action recommendation",
+      "target_outcome_measure": "pilot time from source signal to actor-aware scenario, countermeasure prompt, provenance label, and review decision",
+      "quality_measure": "source freshness, provenance completeness, actionability, and false-positive/escalation review",
+      "buyer_decision_event": "buyer asks for monitoring follow-up, rejects freshness/provenance, or requests hosted proof before continuing",
+      "minimum_valid_pilot_evidence": [
+        "non-simulated source or buyer-approved scenario input",
+        "freshness timestamp and source provenance",
+        "reviewer escalation or no-action decision",
+        "hosted smoke evidence before production-live claims"
+      ],
+      "success_threshold_for_owner_review": "Buyer confirms the radar-to-scenario workflow is useful for triage; hosted-live and feed SLA claims remain blocked.",
+      "selected_target_count": 1,
+      "sale_boundary": "requires hosted non-simulated feed proof and freshness/SLA labels before production claims",
+      "proof_assets": [
+        "hosted-operational-proof-kit-2026-06-06.json",
+        "live-data-providers function evidence",
+        "geopolitical-radar tests"
+      ],
+      "owner_input_needed": [
+        "owner-approved pilot case or cohort",
+        "baseline capture before demo or pilot",
+        "buyer reviewer note after pilot run",
+        "decision event and next action"
+      ],
+      "blocked_claims": [
+        "world-class accurate predictions",
+        "commercial-ready enterprise platform",
+        "buyer-validated demand",
+        "fully proven hosted runtime"
+      ]
+    },
+    {
+      "rank": 4,
+      "niche": "Executive and analyst briefing layer",
+      "sellability_role": "proof_of_depth_for_primary_offer",
+      "buyer_job": "Package the same evidence/review/forecast workflow for executives, analysts, and governance reviewers.",
+      "pilot_case_unit": "one executive or analyst decision brief generated from the same reviewed evidence bundle",
+      "baseline_measure": "current number of review cycles or hours from analyst draft to executive-ready brief",
+      "target_outcome_measure": "pilot review cycles or hours from evidence bundle to executive-ready brief with assumptions, options, and decision asks preserved",
+      "quality_measure": "executive clarity rating, analyst correction count, and governance reviewer signoff status",
+      "buyer_decision_event": "buyer approves internal follow-up, asks for governance changes, or rejects the briefing format",
+      "minimum_valid_pilot_evidence": [
+        "3 buyer-reviewable briefing cases",
+        "before and after draft cycle count or preparation time",
+        "analyst correction notes",
+        "reviewer signoff or blocker notes"
+      ],
+      "success_threshold_for_owner_review": "At least one buyer reviewer says the briefing format improves review speed or decision clarity without losing caveats.",
+      "selected_target_count": 2,
+      "sale_boundary": "use as demo narrative, not standalone enterprise platform claim",
+      "proof_assets": [
+        "EnterpriseBriefingPanel route/component evidence",
+        "market-differentiation-validation-2026-06-06.md"
+      ],
+      "owner_input_needed": [
+        "owner-approved pilot case or cohort",
+        "baseline capture before demo or pilot",
+        "buyer reviewer note after pilot run",
+        "decision event and next action"
+      ],
+      "blocked_claims": [
+        "world-class accurate predictions",
+        "commercial-ready enterprise platform",
+        "buyer-validated demand",
+        "fully proven hosted runtime"
+      ]
+    },
+    {
+      "rank": 5,
+      "niche": "Negotiation and strategic reasoning training",
+      "sellability_role": "adjacent_revenue_lane",
+      "buyer_job": "Train managers, students, and analysts on negotiation, game trees, and forecasting discipline with structured debriefs.",
+      "pilot_case_unit": "one cohort exercise using negotiation, game tree, or forecasting discipline on an applied organizational case",
+      "baseline_measure": "pre-exercise rubric score for structured reasoning, assumption testing, and decision communication",
+      "target_outcome_measure": "post-exercise rubric score plus debrief quality and transfer-to-work signal",
+      "quality_measure": "rubric delta, facilitator notes, learner self-assessment, and buyer manager relevance rating",
+      "buyer_decision_event": "cohort follow-up, paid training pilot discussion, curriculum revision request, or no fit",
+      "minimum_valid_pilot_evidence": [
+        "one owner-approved cohort and rubric",
+        "pre and post rubric results",
+        "facilitator debrief notes",
+        "buyer manager relevance rating"
+      ],
+      "success_threshold_for_owner_review": "Cohort shows a measurable rubric delta or manager-approved relevance signal; training remains an adjacent lane until buyer proof exists.",
+      "selected_target_count": 1,
+      "sale_boundary": "requires classroom hosted smoke and buyer-specific curriculum proof before packaging as training product",
+      "proof_assets": [
+        "NegotiationDojo/Classroom route evidence",
+        "hosted-operational-proof-kit-2026-06-06.json"
+      ],
+      "owner_input_needed": [
+        "owner-approved pilot case or cohort",
+        "baseline capture before demo or pilot",
+        "buyer reviewer note after pilot run",
+        "decision event and next action"
+      ],
+      "blocked_claims": [
+        "world-class accurate predictions",
+        "commercial-ready enterprise platform",
+        "buyer-validated demand",
+        "fully proven hosted runtime"
+      ]
+    }
+  ],
+  "forbidden_claim_mentions": [],
+  "acceptance_gates": [
+    {
+      "gate": "top_five_outcome_coverage",
+      "status": "passed",
+      "proof_bucket": "repo_artifact",
+      "evidence": "5/5 top-five niches have outcome rows; selected_target_coverage=5/5.",
+      "next_action": "Keep this measurement contract attached to the five-niche pilot package until buyer evidence changes the ranking."
+    },
+    {
+      "gate": "baseline_target_quality_metrics_present",
+      "status": "passed",
+      "proof_bucket": "repo_artifact",
+      "evidence": "baseline=5/5; target=5/5; quality=5/5.",
+      "next_action": "Capture baseline before any buyer pilot run so value can be measured instead of inferred."
+    },
+    {
+      "gate": "buyer_decision_event_capture",
+      "status": "passed",
+      "proof_bucket": "repo_artifact",
+      "evidence": "decision_event_rows=5/5; evidence_capture_rows=5/5.",
+      "next_action": "Record no-fit, follow-up, paid-pilot, LOI, and procurement-path outcomes exactly after owner-approved calls."
+    },
+    {
+      "gate": "current_framework_alignment",
+      "status": "passed",
+      "proof_bucket": "repo_artifact_and_external_research",
+      "evidence": "5 current source anchors map the kit to AI risk management, software security, forecast evaluation, foresight, and LLM risk boundaries.",
+      "next_action": "Refresh source anchors when AI evaluation, forecasting, or public-sector foresight standards change."
+    },
+    {
+      "gate": "outcome_claim_guardrail",
+      "status": "passed_blocking_upgrades",
+      "proof_bucket": "repo_artifact",
+      "evidence": "0 forbidden claim mentions in measurement rows and proof boundary.",
+      "next_action": "Keep outcome-measurement language separate from buyer-validation, hosted-live, enterprise-ready, and prediction-accuracy claims."
+    },
+    {
+      "gate": "owner_and_buyer_outcome_proof_absent",
+      "status": "blocked_owner_buyer_proof_missing",
+      "proof_bucket": "owner_input",
+      "evidence": "owner_approved=0/14; real_outcome_rows=0; buyer_validated_claim_allowed=false.",
+      "next_action": "Owner approves pilot case collection, then records real before/after and buyer decision events."
+    }
+  ],
+  "release_holds": [
+    {
+      "hold": "real_pilot_outcomes_missing",
+      "severity": "P0",
+      "status": "active",
+      "evidence_needed": "Owner-approved real pilot rows with baseline values, pilot outcome values, reviewer notes, and buyer decision events."
+    },
+    {
+      "hold": "buyer_commitment_signal_missing",
+      "severity": "P0",
+      "status": "active",
+      "evidence_needed": "At least three qualified follow-ups and one paid-pilot, LOI, or procurement-path signal from real calls."
+    },
+    {
+      "hold": "forecast_accuracy_outcomes_missing",
+      "severity": "P0",
+      "status": "forecast_execution_ready_owner_export_missing_real_rows",
+      "evidence_needed": "Owner-approved resolved forecast rows, comparable baselines, leakage review, and scoring evidence."
+    }
+  ],
+  "next_actions": [
+    "Attach this kit to the owner review packet before buyer calls so each pilot has a baseline and target outcome.",
+    "Do not run buyer calls without baseline capture fields; otherwise sellability cannot be measured after the call.",
+    "After owner-approved pilot rows exist, rerun buyer input validation, substitution evidence validation, buyer proof gate, and commercial confidence gate.",
+    "Keep launch decision at pilot-only until owner, buyer, hosted, enterprise, and prediction evidence gates pass."
+  ]
+}

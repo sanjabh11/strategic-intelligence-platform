@@ -1,0 +1,124 @@
+{
+  "note": "Preserved name and evidence_type_produced fields removed from experiments.json per v8 schema. These are descriptive metadata, not schema-required fields.",
+  "experiments": {
+    "EXP-001": {
+      "name": "Educator Need Validation Survey",
+      "evidence_type_produced": [
+        "customer_outcome",
+        "user_quote"
+      ]
+    },
+    "EXP-002": {
+      "name": "Landing Page Smoke Test",
+      "evidence_type_produced": [
+        "pricing_signal",
+        "behavioral_observation"
+      ]
+    },
+    "EXP-003": {
+      "name": "Professor Interview (5 interviews)",
+      "evidence_type_produced": [
+        "user_quote",
+        "customer_outcome"
+      ]
+    },
+    "EXP-004": {
+      "name": "Pilot Course Deployment",
+      "evidence_type_produced": [
+        "customer_outcome",
+        "behavioral_observation",
+        "user_quote",
+        "analytics_data"
+      ]
+    },
+    "EXP-005": {
+      "name": "Academic Conference Presentation",
+      "evidence_type_produced": [
+        "pricing_signal",
+        "user_quote"
+      ]
+    },
+    "EXP-006": {
+      "name": "Competitive Feature Audit vs Feynn.ai",
+      "evidence_type_produced": [
+        "competitor_intel"
+      ]
+    },
+    "EXP-007": {
+      "name": "Education-Complement Discovery Calls (5)",
+      "evidence_type_produced": [
+        "user_quote",
+        "customer_outcome",
+        "pricing_signal"
+      ]
+    },
+    "EXP-008": {
+      "name": "Enterprise/Public-Sector Discovery Calls (5)",
+      "evidence_type_produced": [
+        "user_quote",
+        "customer_outcome",
+        "pricing_signal"
+      ]
+    }
+  },
+  "execution_order": [
+    "EXP-006",
+    "EXP-007",
+    "EXP-008",
+    "EXP-001",
+    "EXP-003",
+    "EXP-002",
+    "EXP-004",
+    "EXP-005"
+  ],
+  "gates": [
+    {
+      "after": [
+        "EXP-006"
+      ],
+      "condition": "Feynn covers all differentiators",
+      "action": "STOP, recycle to Phase 3 for new segment or niche"
+    },
+    {
+      "after": [
+        "EXP-001",
+        "EXP-003"
+      ],
+      "condition": "EXP-001 <20% need OR EXP-003 0/5 willingness",
+      "action": "STOP, recycle to Phase 3 for new segment"
+    },
+    {
+      "after": [
+        "EXP-004"
+      ],
+      "condition": "<50% student satisfaction OR professor would not continue",
+      "action": "STOP, recycle to Phase 4 for product gap remediation"
+    },
+    {
+      "after": [
+        "EXP-005"
+      ],
+      "condition": "0 signups",
+      "action": "Reassess distribution strategy, not product"
+    }
+  ],
+  "total_cost": "$650-$2,850",
+  "total_timeline": "~8 months",
+  "legacy_execution_order": [
+    "EXP-006",
+    "EXP-001",
+    "EXP-003",
+    "EXP-002",
+    "EXP-004",
+    "EXP-005"
+  ],
+  "legacy_total_cost": "$650-$2,850",
+  "legacy_total_timeline": "~8 months",
+  "comparative_discovery_execution_order": [
+    "EXP-006",
+    "EXP-007",
+    "EXP-008"
+  ],
+  "comparative_discovery_cost": "$0-$1,000",
+  "comparative_discovery_timeline": "4-6 weeks"
+}

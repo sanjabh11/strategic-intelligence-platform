@@ -2,7 +2,7 @@
 // Comprehensive test suite for game theory algorithms
 // Compatible with Deno testing framework
 
-import { assertEquals, assertGreater, assertLess } from "https://deno.land/std@0.204.0/assert/mod.ts"
+import { assertEquals, assertGreater, assertLess } from "jsr:@std/assert@1.0.19"
 
 // Mock implementation of game theory functions for testing
 class GameTheoryAlgorithms {

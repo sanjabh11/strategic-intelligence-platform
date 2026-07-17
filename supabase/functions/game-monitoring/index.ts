@@ -4,7 +4,7 @@
 // Endpoint: POST /functions/v1/game-monitoring
 // GET /functions/v1/game-monitoring (for retrieving canonical games and metrics)
 
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { createClient } from 'npm:@supabase/supabase-js@2'
 
 // Environment setup
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!
@@ -375,6 +375,7 @@ class PerformanceMonitor {
 
 // --- Main Function ---
 
+// INTERNAL: Called server-side, relies on RLS for auth
 Deno.serve(async (req: Request): Promise<Response> => {
   const startTime = performance.now()
 
@@ -404,7 +405,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
         status: 200,
         headers: {
           'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Origin': Deno.env.get('ALLOWED_ORIGIN') || Deno.env.get('APP_URL') || 'null',
           'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
           'Access-Control-Allow-Headers': 'Content-Type, Authorization, apikey, X-Client-Info'
         }
@@ -461,7 +462,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
         status: monitoringResults.status === 'needs_attention' ? 207 : 200,
         headers: {
           'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Origin': Deno.env.get('ALLOWED_ORIGIN') || Deno.env.get('APP_URL') || 'null',
           'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
           'Access-Control-Allow-Headers': 'Content-Type, Authorization, apikey, X-Client-Info'
         }
@@ -495,7 +496,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
       status: 500,
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
+        'Access-Control-Allow-Origin': Deno.env.get('ALLOWED_ORIGIN') || Deno.env.get('APP_URL') || 'null'
       }
     })
   }

@@ -2,11 +2,10 @@
 // Supports SAML 2.0 and OIDC for enterprise customers
 // Part of Monetization Strategy Phase 2 - Enterprise Market
 
-import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { createClient } from 'npm:@supabase/supabase-js@2'
 
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Origin': Deno.env.get('ALLOWED_ORIGIN') || Deno.env.get('APP_URL') || 'null',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
 }
@@ -28,7 +27,8 @@ interface SSOProvider {
   attribute_mapping: Record<string, string>;
 }
 
-serve(async (req: Request) => {
+// PUBLIC: No auth required
+Deno.serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
   }
@@ -154,7 +154,7 @@ async function handleSSOInit(req: Request, supabase: any): Promise<Response> {
 
 // Build SAML AuthnRequest URL
 function buildSAMLRequest(provider: SSOProvider, state: string): string {
-  const appUrl = Deno.env.get('APP_URL') || 'https://strategic-intelligence.netlify.app'
+  const appUrl = Deno.env.get('APP_URL') || 'https://strategy-intelligence-platform.netlify.app'
   const supabaseUrl = Deno.env.get('SUPABASE_URL')!
   
   // Simplified SAML request - in production use proper SAML library
@@ -514,7 +514,7 @@ async function findOrCreateSSOUser(
 
 // Helper: Redirect to app
 function redirectToApp(path: string): Response {
-  const appUrl = Deno.env.get('APP_URL') || 'https://strategic-intelligence.netlify.app'
+  const appUrl = Deno.env.get('APP_URL') || 'https://strategy-intelligence-platform.netlify.app'
   return new Response(null, {
     status: 302,
     headers: {

@@ -1,0 +1,158 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - navigation [ref=e4]:
+      - generic [ref=e6]:
+        - generic [ref=e7]:
+          - link "Strategy Console" [ref=e8] [cursor=pointer]:
+            - /url: /console
+            - img [ref=e9]
+            - generic [ref=e19]: Strategy Console
+          - 'button "Learning Mode: OFF" [ref=e21] [cursor=pointer]':
+            - img [ref=e22]
+            - text: "Learning Mode: OFF"
+        - generic [ref=e25]:
+          - link "Console" [ref=e26] [cursor=pointer]:
+            - /url: /console
+            - img [ref=e27]
+            - text: Console
+          - link "Insights" [ref=e29] [cursor=pointer]:
+            - /url: /insights
+            - img [ref=e30]
+            - text: Insights
+          - link "Labs" [ref=e33] [cursor=pointer]:
+            - /url: /labs
+            - img [ref=e34]
+            - text: Labs
+          - link "Templates" [ref=e36] [cursor=pointer]:
+            - /url: /templates
+            - img [ref=e37]
+            - text: Templates
+          - link "Forecasts" [ref=e40] [cursor=pointer]:
+            - /url: /forecasts
+            - img [ref=e41]
+            - text: Forecasts
+          - link "Pricing" [ref=e44] [cursor=pointer]:
+            - /url: /pricing
+            - img [ref=e45]
+            - text: Pricing
+    - main [ref=e47]:
+      - generic [ref=e49]:
+        - generic [ref=e50]: Testing override active. This lab is temporarily unlocked in the UI without changing live entitlements.
+        - generic [ref=e52]:
+          - generic [ref=e53]:
+            - link "Back to Labs" [ref=e54] [cursor=pointer]:
+              - /url: /labs
+            - heading "Negotiation Dojo" [level=1] [ref=e55]
+            - paragraph [ref=e56]: Practice offer strategy, BATNA discipline, and concession timing in guided bargaining scenarios.
+          - generic [ref=e57]:
+            - img [ref=e58]
+            - text: PRO Lab
+        - generic [ref=e61]:
+          - generic [ref=e63]:
+            - img [ref=e65]
+            - generic [ref=e67]:
+              - heading "Negotiation Dojo" [level=2] [ref=e68]
+              - paragraph [ref=e69]: Procurement and enterprise-software negotiation drills with structured coaching artifacts.
+          - generic [ref=e71]:
+            - img [ref=e72]
+            - generic [ref=e74]:
+              - heading "What this module trains" [level=4] [ref=e75]
+              - paragraph [ref=e76]: Run realistic commercial negotiations, pressure-test BATNA usage, then review a manager-ready debrief covering concession discipline, ZOPA capture, and missed value.
+          - generic [ref=e77]:
+            - generic [ref=e78]:
+              - generic [ref=e79]:
+                - img [ref=e80]
+                - heading "Corporate Procurement" [level=3] [ref=e84]
+              - generic [ref=e85]:
+                - generic [ref=e86] [cursor=pointer]:
+                  - generic [ref=e87]:
+                    - generic [ref=e88]: Vendor Annual Price Increase Pushback
+                    - generic [ref=e89]: medium
+                  - paragraph [ref=e90]: A critical supplier announced a 12% price increase. You need to contain the increase and trade for service or volume commitments only if necessary.
+                  - generic [ref=e91]:
+                    - generic [ref=e92]: Primary goal
+                    - generic [ref=e93]: Limit the increase and avoid giving away terms for free.
+                  - generic [ref=e94]:
+                    - generic [ref=e95]: "You: Procurement Category Manager"
+                    - generic [ref=e96]: "Counterparty: Vendor Account Manager"
+                    - generic [ref=e97]: "BATNA: You can shift 35% of volume to a secondary supplier within 90 days."
+                - generic [ref=e98] [cursor=pointer]:
+                  - generic [ref=e99]:
+                    - generic [ref=e100]: Implementation Services Scope and Rate Negotiation
+                    - generic [ref=e101]: hard
+                  - paragraph [ref=e102]: A consulting vendor is quoting premium implementation rates. You need to narrow scope, secure training support, and avoid runaway change-order risk.
+                  - generic [ref=e103]:
+                    - generic [ref=e104]: Primary goal
+                    - generic [ref=e105]: Reduce scope cost while protecting training and implementation quality.
+                  - generic [ref=e106]:
+                    - generic [ref=e107]: "You: Transformation Program Manager"
+                    - generic [ref=e108]: "Counterparty: Implementation Director"
+                    - generic [ref=e109]: "BATNA: An internal delivery partner can absorb phase two if the vendor will not narrow scope."
+                - generic [ref=e110] [cursor=pointer]:
+                  - generic [ref=e111]:
+                    - generic [ref=e112]: Strategic Sourcing in a Constrained Supply Market
+                    - generic [ref=e113]: hard
+                  - paragraph [ref=e114]: Supply is tight and the supplier knows it. You need to secure allocation while negotiating lead times, payment terms, and service-level commitments.
+                  - generic [ref=e115]:
+                    - generic [ref=e116]: Primary goal
+                    - generic [ref=e117]: Protect allocation and timing while containing price escalation.
+                  - generic [ref=e118]:
+                    - generic [ref=e119]: "You: Head of Strategic Sourcing"
+                    - generic [ref=e120]: "Counterparty: Supplier Commercial Lead"
+                    - generic [ref=e121]: "BATNA: Secondary suppliers cover only half your demand and carry worse lead times."
+                - generic [ref=e122] [cursor=pointer]:
+                  - generic [ref=e123]:
+                    - generic [ref=e124]: Vendor Consolidation and Migration Leverage
+                    - generic [ref=e125]: medium
+                  - paragraph [ref=e126]: You are consolidating vendors and can move spend to a preferred provider. Use that leverage to push for price, exit flexibility, and transition support.
+                  - generic [ref=e127]:
+                    - generic [ref=e128]: Primary goal
+                    - generic [ref=e129]: Use consolidation leverage to improve pricing and migration terms simultaneously.
+                  - generic [ref=e130]:
+                    - generic [ref=e131]: "You: Vendor Management Director"
+                    - generic [ref=e132]: "Counterparty: Regional Sales Director"
+                    - generic [ref=e133]: "BATNA: A preferred vendor is prepared to absorb the workload if terms are not improved."
+            - generic [ref=e134]:
+              - generic [ref=e135]:
+                - img [ref=e136]
+                - heading "Enterprise Software" [level=3] [ref=e140]
+              - generic [ref=e141]:
+                - generic [ref=e142] [cursor=pointer]:
+                  - generic [ref=e143]:
+                    - generic [ref=e144]: Enterprise SaaS Renewal Under Budget Pressure
+                    - generic [ref=e145]: hard
+                  - paragraph [ref=e146]: Your team must renew a platform contract, but finance cut the budget. You need a lower annual commit plus better renewal flexibility.
+                  - generic [ref=e147]:
+                    - generic [ref=e148]: Primary goal
+                    - generic [ref=e149]: Reduce annual spend without losing core functionality or renewal flexibility.
+                  - generic [ref=e150]:
+                    - generic [ref=e151]: "You: Procurement Lead"
+                    - generic [ref=e152]: "Counterparty: Account Executive"
+                    - generic [ref=e153]: "BATNA: Two smaller vendors can cover 80% of requirements with a slower migration path."
+                - generic [ref=e154] [cursor=pointer]:
+                  - generic [ref=e155]:
+                    - generic [ref=e156]: New 100-Seat Software Procurement
+                    - generic [ref=e157]: medium
+                  - paragraph [ref=e158]: You are buying 100 seats of a new SaaS tool. The vendor is pushing list pricing, but you can trade contract length and rollout speed.
+                  - generic [ref=e159]:
+                    - generic [ref=e160]: Primary goal
+                    - generic [ref=e161]: Win a meaningful discount while trading non-price terms selectively.
+                  - generic [ref=e162]:
+                    - generic [ref=e163]: "You: Strategic Sourcing Manager"
+                    - generic [ref=e164]: "Counterparty: Sales Representative"
+                    - generic [ref=e165]: "BATNA: A competing tool is feature-light but materially cheaper and can be deployed faster."
+    - contentinfo [ref=e166]:
+      - generic [ref=e168]:
+        - paragraph [ref=e169]: Strategy Console - Evidence-Backed Strategic Analysis
+        - paragraph [ref=e170]: Real citations. Real simulations. Real clarity.
+  - generic [ref=e173]:
+    - generic [ref=e174]: 👋
+    - heading "Welcome to Strategic Intelligence!" [level=3] [ref=e175]
+    - paragraph [ref=e176]:
+      - text: This platform uses advanced game theory to analyze strategic situations. Would you like to enable
+      - strong [ref=e177]: Learning Mode
+      - text: to see helpful explanations for all charts and concepts?
+    - generic [ref=e178]:
+      - button "Yes, help me learn!" [ref=e179] [cursor=pointer]
+      - button "Skip for now" [ref=e180] [cursor=pointer]
+    - paragraph [ref=e181]: You can always toggle Learning Mode later using the button in the header.

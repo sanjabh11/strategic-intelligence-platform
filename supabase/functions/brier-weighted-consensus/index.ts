@@ -3,7 +3,10 @@
 // Monetization Feature F2: Consensus Oracle with Reputation-Weighted Feeds
 // Aggregates forecasts using Brier score weighting to surface "Superforecaster" consensus
 
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { createClient } from 'npm:@supabase/supabase-js@2'
+import { annotateCalibration } from '../_shared/ml-platform.ts'
+import type { CalibrationStatusLike } from '../../../shared/mlAdvisory.ts'
+import { getAuthenticatedUser, jsonResponse } from '../_shared/auth.ts'
 
 interface Prediction {
     user_id: string;
@@ -28,6 +31,7 @@ interface WeightedConsensusResult {
     superforecasterCount: number;
     brierWeightedMean: number;
     confidenceWeightedMean: number;
+    extremizationFactor: number;
     topForecasters: Array<{
         user_id: string;
         probability: number;
@@ -39,6 +43,11 @@ interface WeightedConsensusResult {
         sampleSize: string;
         expertAgreement: number;
     };
+    rawProbability: number;
+    calibratedProbability: number;
+    calibrationStatus: CalibrationStatusLike;
+    calibrationVersion: string | null;
+    calibrationSampleSize: number;
 }
 
 async function getForecasterScores(
@@ -56,6 +65,16 @@ async function getForecasterScores(
     }
 
     return scoreMap;
+}
+
+function extremizeProbability(p: number, n: number): number {
+    if (n <= 1) return p
+    if (p <= 0.001 || p >= 0.999) return p
+    const d = n > 50 ? Math.sqrt(3) : (n * (Math.sqrt(3 * n * n - 3 * n + 1) - 2)) / (n * n - n - 1)
+    if (d <= 1) return p
+    const logit = Math.log(p / (1 - p))
+    const extremized = d * logit
+    return 1 / (1 + Math.exp(-extremized))
 }
 
 function calculateBrierWeight(brierScore: number | null, resolvedPredictions: number): number {
@@ -97,8 +116,14 @@ async function calculateWeightedConsensus(
             superforecasterCount: 0,
             brierWeightedMean: 0.5,
             confidenceWeightedMean: 0.5,
+            extremizationFactor: 1.0,
             topForecasters: [],
-            reliability: { score: 0, sampleSize: 'none', expertAgreement: 0 }
+            reliability: { score: 0, sampleSize: 'none', expertAgreement: 0 },
+            rawProbability: 0.5,
+            calibratedProbability: 0.5,
+            calibrationStatus: 'uncalibrated',
+            calibrationVersion: null,
+            calibrationSampleSize: 0
         };
     }
 
@@ -130,11 +155,12 @@ async function calculateWeightedConsensus(
         (sum: number, p: Prediction) => sum + p.probability, 0
     ) / predictions.length;
 
-    // Brier-weighted average
+    // Brier-weighted average with log-odds extremization (Satopää et al. 2014, Neyman & Roughgarden 2021)
     const totalBrierWeight = weightedPredictions.reduce((sum, p) => sum + p.brier_weight, 0);
-    const brierWeightedMean = weightedPredictions.reduce(
+    const rawBrierWeightedMean = weightedPredictions.reduce(
         (sum, p) => sum + p.probability * p.brier_weight, 0
     ) / totalBrierWeight;
+    const brierWeightedMean = extremizeProbability(rawBrierWeightedMean, predictions.length);
 
     // Confidence-weighted average
     const totalConfidenceWeight = weightedPredictions.reduce(
@@ -144,16 +170,17 @@ async function calculateWeightedConsensus(
         (sum, p) => sum + p.probability * p.confidence_weight, 0
     ) / totalConfidenceWeight;
 
-    // Identify superforecasters (top 10% by Brier weight)
+    // Identify superforecasters (top 2% by Brier weight — GJP standard, Mellers et al. 2015)
     const sortedByWeight = [...weightedPredictions].sort((a, b) => b.brier_weight - a.brier_weight);
-    const superforecasterCutoff = Math.max(1, Math.ceil(sortedByWeight.length * 0.1));
+    const superforecasterCutoff = Math.max(1, Math.ceil(sortedByWeight.length * 0.02));
     const superforecasters = sortedByWeight.slice(0, superforecasterCutoff);
 
-    // Superforecaster consensus (only top 10%)
+    // Superforecaster consensus (only top 2%) with extremization
     const superTotal = superforecasters.reduce((sum, p) => sum + p.brier_weight, 0);
-    const superforecasterConsensus = superforecasters.reduce(
+    const rawSuperforecasterConsensus = superforecasters.reduce(
         (sum, p) => sum + p.probability * p.brier_weight, 0
     ) / superTotal;
+    const superforecasterConsensus = extremizeProbability(rawSuperforecasterConsensus, superforecasters.length);
 
     // Calculate consensus gap (difference between community and superforecasters)
     const consensusGap = Math.abs(superforecasterConsensus - communityConsensus);
@@ -189,6 +216,8 @@ async function calculateWeightedConsensus(
     // Adjust reliability by expert agreement
     reliabilityScore *= (0.5 + expertAgreement * 0.5);
 
+    const calibration = await annotateCalibration(supabase, 'registry_binary', brierWeightedMean)
+
     return {
         communityConsensus: Math.round(communityConsensus * 1000) / 1000,
         superforecasterConsensus: Math.round(superforecasterConsensus * 1000) / 1000,
@@ -197,6 +226,7 @@ async function calculateWeightedConsensus(
         superforecasterCount: superforecasters.length,
         brierWeightedMean: Math.round(brierWeightedMean * 1000) / 1000,
         confidenceWeightedMean: Math.round(confidenceWeightedMean * 1000) / 1000,
+        extremizationFactor: predictions.length > 50 ? Math.sqrt(3) : (predictions.length * (Math.sqrt(3 * predictions.length * predictions.length - 3 * predictions.length + 1) - 2)) / (predictions.length * predictions.length - predictions.length - 1),
         topForecasters: superforecasters.slice(0, 5).map(p => ({
             user_id: p.user_id,
             probability: p.probability,
@@ -207,7 +237,12 @@ async function calculateWeightedConsensus(
             score: Math.round(reliabilityScore * 100) / 100,
             sampleSize,
             expertAgreement: Math.round(expertAgreement * 100) / 100
-        }
+        },
+        rawProbability: calibration.rawProbability,
+        calibratedProbability: calibration.calibratedProbability,
+        calibrationStatus: calibration.calibrationStatus,
+        calibrationVersion: calibration.calibrationVersion,
+        calibrationSampleSize: calibration.calibrationSampleSize
     };
 }
 
@@ -216,7 +251,7 @@ function jsonResponse(status: number, body: unknown) {
         status,
         headers: {
             'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Origin': Deno.env.get('ALLOWED_ORIGIN') || Deno.env.get('APP_URL') || 'null',
             'Access-Control-Allow-Methods': 'POST, OPTIONS',
             'Access-Control-Allow-Headers': 'Content-Type, Authorization, apikey, X-Client-Info'
         },
@@ -224,6 +259,11 @@ function jsonResponse(status: number, body: unknown) {
 }
 
 Deno.serve(async (req) => {
+  // Auth check
+  const _user = await getAuthenticatedUser(req)
+  if (!_user) return jsonResponse(401, { ok: false, error: 'authentication_required' })
+
+
     if (req.method === 'OPTIONS') return jsonResponse(200, { ok: true });
     if (req.method !== 'POST') return jsonResponse(405, { ok: false, message: 'Method Not Allowed' });
 
@@ -253,7 +293,7 @@ Deno.serve(async (req) => {
             await supabase
                 .from('forecasts')
                 .update({
-                    current_probability: result.brierWeightedMean,
+                    current_probability: result.rawProbability,
                     prediction_count: result.participantCount
                 })
                 .eq('id', body.forecastId)

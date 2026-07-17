@@ -1,0 +1,405 @@
+{
+  "schema_version": "commercial-loophole-remediation-v1",
+  "generated_at": "2026-06-07T03:51:28.101Z",
+  "status": "commercial_loophole_remediation_open_pilot_only",
+  "source": {
+    "evidence": "docs/launch-readiness/launch-evidence-2026-06-06.json",
+    "commercial_confidence_gate": "docs/launch-readiness/commercial-confidence-gate-2026-06-06.json",
+    "goal_completion_audit": "docs/launch-readiness/commercial-goal-completion-audit-2026-06-06.json",
+    "market_niche_validation": "docs/launch-readiness/market-niche-evidence-validation-2026-06-06.json",
+    "competitive_positioning_validation": "docs/launch-readiness/competitive-positioning-evidence-validation-2026-06-06.json",
+    "buyer_execution_readiness": "docs/launch-readiness/buyer-validation-execution-readiness-2026-06-06.json",
+    "buyer_substitution_kit": "docs/launch-readiness/buyer-substitution-proof-kit-2026-06-06.json",
+    "buyer_substitution_evidence_validation": "docs/launch-readiness/buyer-substitution-evidence-validation-2026-06-06.json",
+    "forecast_execution_readiness": "docs/launch-readiness/forecast-evaluation-execution-readiness-2026-06-06.json",
+    "prediction_science_validation": "docs/launch-readiness/prediction-science-evidence-validation-2026-06-06.json",
+    "forecast_scoring_validation": "docs/launch-readiness/forecast-scoring-evidence-validation-2026-06-06.json",
+    "forecast_leakage_validation": "docs/launch-readiness/forecast-leakage-review-validation-2026-06-06.json",
+    "enterprise_execution_readiness": "docs/launch-readiness/enterprise-trust-execution-readiness-2026-06-06.json",
+    "hosted_smoke_execution_readiness": "docs/launch-readiness/hosted-smoke-execution-readiness-2026-06-06.json",
+    "claim_consistency_validation": "docs/launch-readiness/claim-consistency-validation-2026-06-06.json",
+    "owner_approval_validation": "docs/launch-readiness/owner-approval-register-validation-2026-06-06.json",
+    "local_browser_route_proof": "docs/launch-readiness/local-browser-route-proof-2026-06-06.json"
+  },
+  "summary": {
+    "launch_decision": "pilot-only",
+    "commercial_world_class_confidence_percent": 53.7,
+    "target_confidence_percent": 95,
+    "confidence_gap_percent": 41.3,
+    "pilot_claim_allowed": true,
+    "world_class_claim_allowed": false,
+    "completion_ready": false,
+    "loophole_count": 10,
+    "open_loophole_count": 8,
+    "p0_open_count": 5,
+    "owner_gated_open_count": 8,
+    "repo_actionable_open_count": 0,
+    "source_anchor_count": 14,
+    "buyer_validated": false,
+    "buyer_substitution_protocol_ready": true,
+    "buyer_substitution_evidence_ready": false,
+    "buyer_substitution_real_interaction_count": 0,
+    "forecast_claim_ready": false,
+    "hosted_proof_complete": false,
+    "enterprise_proof_ready": false,
+    "claim_consistency_ready": true,
+    "top_five_niches_ready": true,
+    "owner_approval_validation_status": "owner_approval_register_ready_no_owner_approvals",
+    "owner_approval_required_count": 14,
+    "owner_approval_approved_count": 0,
+    "owner_approval_reviewed_count": 0,
+    "owner_approval_claim_boundary_acknowledged_count": 0,
+    "owner_approval_row_error_count": 0,
+    "owner_approval_ready_for_downstream_evidence": false,
+    "owner_approval_commercial_ready_claim_allowed": false,
+    "owner_approval_world_class_prediction_claim_allowed": false,
+    "owner_approval_hosted_live_claim_allowed": false,
+    "owner_approval_buyer_validated_claim_allowed": false,
+    "owner_approval_enterprise_ready_claim_allowed": false
+  },
+  "current_source_anchors": [
+    {
+      "id": "nist_ai_rmf",
+      "source": "NIST AI Risk Management Framework",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "implication": "Trustworthy AI posture needs governed risk management, measurement, and claim controls."
+    },
+    {
+      "id": "nist_genai_profile",
+      "source": "NIST AI 600-1 Generative AI Profile",
+      "url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf",
+      "implication": "Generative-AI decision support needs explicit controls for hallucination, misuse, transparency, and security risks."
+    },
+    {
+      "id": "oecd_ai_principles_2024",
+      "source": "OECD AI Principles, updated 2024",
+      "url": "https://www.oecd.org/en/topics/ai-principles.html",
+      "implication": "AI systems should be robust, secure, safe, accountable, transparent, and human-centered."
+    },
+    {
+      "id": "iarpa_ace",
+      "source": "IARPA ACE forecasting program",
+      "url": "https://www.iarpa.gov/research-programs/ace",
+      "implication": "Forecasting accuracy claims need probabilistic judgment, aggregation, and empirical testing against real events."
+    },
+    {
+      "id": "metaculus_track_record",
+      "source": "Metaculus track record and calibration evidence",
+      "url": "https://www.metaculus.com/questions/track-record/",
+      "implication": "Forecast platforms compete on scored resolved questions, calibration curves, and transparent track records."
+    },
+    {
+      "id": "forecastbench_dynamic_benchmark",
+      "source": "ForecastBench dynamic forecasting benchmark",
+      "url": "https://www.forecastbench.org/about/",
+      "implication": "AI forecasting claims need dynamic, continuously updated benchmark comparisons rather than static fixtures alone."
+    },
+    {
+      "id": "metaculus_futureeval",
+      "source": "Metaculus FutureEval",
+      "url": "https://www.metaculus.com/futureeval/",
+      "implication": "AI forecasting agents should be evaluated on real future outcomes and compared against human, community, pro-forecaster, and model baselines."
+    },
+    {
+      "id": "good_judgment_services",
+      "source": "Good Judgment professional forecasting services",
+      "url": "https://goodjudgment.com/services/",
+      "implication": "Buyer-facing forecasting services sell strategic uncertainty reduction, custom forecasts, monitoring, and training."
+    },
+    {
+      "id": "palantir_aip",
+      "source": "Palantir AIP",
+      "url": "https://www.palantir.com/platforms/aip/",
+      "implication": "Enterprise substitutes emphasize operational decision workflows, ontology grounding, automations, and human approval."
+    },
+    {
+      "id": "dataminr_risk_intelligence",
+      "source": "Dataminr real-time risk intelligence",
+      "url": "https://www.dataminr.com/",
+      "implication": "Risk-intelligence buyers expect real-time signal detection, alerting, public-data coverage, and operational response workflows."
+    },
+    {
+      "id": "wef_global_risks_2026",
+      "source": "World Economic Forum Global Risks Report 2026",
+      "url": "https://www.weforum.org/publications/global-risks-report-2026/in-full/",
+      "implication": "Geoeconomic confrontation, conflict, polarization, misinformation, and AI risk provide current buyer-pain context."
+    },
+    {
+      "id": "nist_csf_2",
+      "source": "NIST Cybersecurity Framework 2.0",
+      "url": "https://csrc.nist.gov/news/2024/the-nist-csf-20-is-here",
+      "implication": "Enterprise/public-sector trust claims need current cybersecurity governance, risk, and control evidence."
+    },
+    {
+      "id": "owasp_llm_top_10",
+      "source": "OWASP Top 10 for Large Language Model Applications",
+      "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications",
+      "implication": "LLM apps need prompt-injection, output-handling, data, supply-chain, and agent/tool security proof."
+    },
+    {
+      "id": "cisa_secure_by_design",
+      "source": "CISA Secure by Design",
+      "url": "https://www.cisa.gov/news-events/news/building-secure-design-ecosystem",
+      "implication": "Security posture should shift customer risk back to the software maker through secure defaults and evidence."
+    }
+  ],
+  "loopholes": [
+    {
+      "id": "owner_approval_register_not_cleared",
+      "severity": "P0",
+      "status": "open_owner_evidence_required",
+      "category": "approval_governance",
+      "loophole": "Downstream prediction, buyer, enterprise, hosted, payment, AI-action, and claim-language evidence cannot be upgraded until the owner approval register is reviewed and approved.",
+      "evidence": "owner_approval_register_ready_no_owner_approvals; approved=0/14; reviewed=0/14; claim_boundary_acknowledged=0/14; row_errors=0; ready_for_downstream_evidence=false.",
+      "external_anchor_ids": [
+        "nist_ai_rmf",
+        "oecd_ai_principles_2024",
+        "cisa_secure_by_design"
+      ],
+      "buyer_impact": "Without explicit owner approvals, the product can accidentally convert templates, local checks, or unreviewed rows into buyer-facing claims.",
+      "remediation": "Owner reviews every required approval row, acknowledges claim boundaries, approves or rejects downstream evidence execution, and reruns the owner approval register validator before downstream gates.",
+      "proof_to_close": "Owner approval validation reports all required approvals ready for downstream evidence and zero row errors.",
+      "owner_action_required": true,
+      "repo_action_available": false,
+      "claim_boundary": "approval-gated proof only"
+    },
+    {
+      "id": "prediction_accuracy_without_resolved_outcomes",
+      "severity": "P0",
+      "status": "open_owner_evidence_required",
+      "category": "prediction_science",
+      "loophole": "The product can describe forecasting mechanics, but it cannot claim accurate or world-class predictions without real resolved forecast rows, comparable baselines, leakage review, and scoring review.",
+      "evidence": "forecast_evaluation_execution_ready_for_owner_export_no_real_outcomes; valid_resolved_forecasts=0; valid_baselines=0; scoring_chain_ready=false; leakage_real_rows=false; scoring_sample_only=true.",
+      "external_anchor_ids": [
+        "iarpa_ace",
+        "metaculus_track_record",
+        "forecastbench_dynamic_benchmark",
+        "metaculus_futureeval",
+        "good_judgment_services"
+      ],
+      "buyer_impact": "Strategic buyers will reject prediction-superiority claims unless the track record is scored, calibrated, and benchmarked.",
+      "remediation": "Run the resolved-forecast export, validate baselines, complete leakage review, compare Brier/log-loss/calibration metrics, and keep claims at mechanics-only until the gate passes.",
+      "proof_to_close": "Forecast execution readiness reports real resolved outcomes and baselines; leakage and scoring validators allow accuracy claims.",
+      "owner_action_required": true,
+      "repo_action_available": false,
+      "claim_boundary": "mechanics-only forecasting language allowed"
+    },
+    {
+      "id": "buyer_validation_without_completed_calls",
+      "severity": "P0",
+      "status": "open_owner_evidence_required",
+      "category": "sellability",
+      "loophole": "Market research identifies plausible buyer pain, but willingness-to-pay is still unproven without completed discovery calls, qualified follow-ups, paid pilots, LOIs, or procurement signals.",
+      "evidence": "buyer_validation_execution_ready_no_real_calls; completed_calls=0; qualified_followups=0; paid_loi_procurement=0; execution_ready=true.",
+      "external_anchor_ids": [
+        "wef_global_risks_2026",
+        "dataminr_risk_intelligence",
+        "palantir_aip"
+      ],
+      "buyer_impact": "Without buyer evidence, the strategy is desk-validated rather than sellability-validated.",
+      "remediation": "Execute the 10-call buyer validation slate across the five niches and rerun buyer evidence/proof gates.",
+      "proof_to_close": "Buyer proof gate allows buyer-validated and willingness-to-pay claims.",
+      "owner_action_required": true,
+      "repo_action_available": false,
+      "claim_boundary": "buyer-safe pilot claim only"
+    },
+    {
+      "id": "competitive_wedge_without_buyer_substitution_proof",
+      "severity": "P1",
+      "status": "open_owner_evidence_required_protocol_ready",
+      "category": "positioning",
+      "loophole": "The differentiated wedge is plausible, but it has not yet beaten substitutes in buyer conversations or procurement comparison.",
+      "evidence": "competitive_positioning_validation_ready_pilot_only_not_buyer_validated; defensible_wedge=true; substitution_protocol_ready=true; substitution_test_rows=30; substitution_evidence_ready=false; real_substitution_interactions=0; buyer_validated=false; substitute_categories=0/0.",
+      "external_anchor_ids": [
+        "palantir_aip",
+        "dataminr_risk_intelligence",
+        "good_judgment_services",
+        "metaculus_track_record"
+      ],
+      "buyer_impact": "Buyers may view the app as a lightweight substitute for Palantir-style decision workflows, Dataminr-style risk alerting, Metaculus/Good Judgment forecasting, or internal analyst workflows.",
+      "remediation": "Execute the buyer substitution test sheet and record current tool, budget owner, replacement barrier, must-have proof, and paid pilot threshold.",
+      "proof_to_close": "Buyer evidence shows the app wins a specific pilot wedge against named substitutes.",
+      "owner_action_required": true,
+      "repo_action_available": false,
+      "claim_boundary": "defensible competitive wedge allowed; replacement/parity claims blocked"
+    },
+    {
+      "id": "hosted_proof_blocked_before_browser_smoke",
+      "severity": "P0",
+      "status": "open_runtime_access_required",
+      "category": "runtime_readiness",
+      "loophole": "Local route proof is useful, but hosted-live claims and Browser-verified production behavior remain blocked by hosted access and smoke execution.",
+      "evidence": "hosted_smoke_execution_blocked_project_privileges_owner_unblock_ready; local_route_proof=true; owner_unblock_ready=true; hosted_smoke_ready=false; hosted_proof_complete=false.",
+      "external_anchor_ids": [
+        "cisa_secure_by_design",
+        "nist_csf_2"
+      ],
+      "buyer_impact": "Enterprise buyers and pilot sponsors need proof that the live system works in the actual deployed environment.",
+      "remediation": "Resolve project visibility/management access, Stripe proof values, and deploy binding, then run hosted Browser/Playwright smoke tests.",
+      "proof_to_close": "Hosted smoke execution readiness and hosted operational proof validators both pass with live evidence.",
+      "owner_action_required": true,
+      "repo_action_available": false,
+      "claim_boundary": "local proof only"
+    },
+    {
+      "id": "enterprise_trust_pack_not_approved_or_executed",
+      "severity": "P0",
+      "status": "open_owner_evidence_required",
+      "category": "enterprise_trust",
+      "loophole": "Enterprise/public-sector positioning is attractive, but trust proof is incomplete without procurement documents, RLS execution, hosted access proof, and approved AI action controls.",
+      "evidence": "enterprise_trust_execution_ready_for_owner_review_no_approved_docs; procurement_docs=0/8; rls_rows=0/54; local_llm_red_team=true; hosted_access=false.",
+      "external_anchor_ids": [
+        "nist_ai_rmf",
+        "nist_genai_profile",
+        "oecd_ai_principles_2024",
+        "owasp_llm_top_10",
+        "nist_csf_2",
+        "cisa_secure_by_design"
+      ],
+      "buyer_impact": "Procurement teams will treat the product as an interesting pilot, not enterprise-ready infrastructure.",
+      "remediation": "Approve trust documents, run RLS proof cases, finish hosted security proof, and keep high-impact AI actions under human review.",
+      "proof_to_close": "Enterprise trust execution readiness allows enterprise/public-sector trust claims.",
+      "owner_action_required": true,
+      "repo_action_available": false,
+      "claim_boundary": "enterprise pilot language only"
+    },
+    {
+      "id": "llm_governance_local_only",
+      "severity": "P1",
+      "status": "open_runtime_evidence_gap",
+      "category": "ai_governance",
+      "loophole": "Local LLM red-team and policy artifacts are not enough for hosted AI governance claims.",
+      "evidence": "claim_consistency_ready=true; enterprise_proof_ready=false; hosted_proof_complete=false; local_llm_red_team=true.",
+      "external_anchor_ids": [
+        "nist_genai_profile",
+        "owasp_llm_top_10",
+        "oecd_ai_principles_2024"
+      ],
+      "buyer_impact": "AI governance buyers will ask whether prompt/tool risks are controlled in the deployed product, not only in local fixtures.",
+      "remediation": "Run hosted LLM security smoke checks and keep refusal, provenance, tool/action, and human-review gates documented.",
+      "proof_to_close": "Hosted LLM/security evidence is present and claim consistency remains clean.",
+      "owner_action_required": true,
+      "repo_action_available": false,
+      "claim_boundary": "local red-team proof only"
+    },
+    {
+      "id": "broad_worldwide_sector_claim_too_large",
+      "severity": "P1",
+      "status": "contained_by_claim_gate",
+      "category": "market_scope",
+      "loophole": "The original worldwide/world-class ambition is too broad for the current evidence; the sellable scope should stay focused on five pilot niches.",
+      "evidence": "top_five_niches_ready=true; launch_decision=pilot-only; confidence=53.7; unsupported_claims=0.",
+      "external_anchor_ids": [
+        "wef_global_risks_2026",
+        "palantir_aip",
+        "dataminr_risk_intelligence"
+      ],
+      "buyer_impact": "Over-broad claims weaken credibility versus mature enterprise intelligence and forecasting vendors.",
+      "remediation": "Use the five-niche pilot narrative and prohibit world-class/accurate-prediction copy until evidence gates pass.",
+      "proof_to_close": "95 percent confidence and goal-completion audit pass with no unsupported claims.",
+      "owner_action_required": false,
+      "repo_action_available": true,
+      "claim_boundary": "pilot-only positioning"
+    },
+    {
+      "id": "sample_fixture_score_risk",
+      "severity": "P1",
+      "status": "open_evaluation_gap",
+      "category": "evaluation_integrity",
+      "loophole": "Sample fixture scoring can prove validator mechanics, but it cannot prove predictive accuracy.",
+      "evidence": "forecast_scoring_evidence_validation_sample_only_not_claim_proof; sample_fixture_only=true; valid_resolved_forecasts=0; valid_baselines=0.",
+      "external_anchor_ids": [
+        "iarpa_ace",
+        "metaculus_track_record",
+        "forecastbench_dynamic_benchmark",
+        "metaculus_futureeval"
+      ],
+      "buyer_impact": "A technically sophisticated buyer will distinguish fixture correctness from real forecasting skill.",
+      "remediation": "Use sample fixtures only for harness checks; require real resolved events before score claims.",
+      "proof_to_close": "Scoring validation uses real rows and benchmark comparisons.",
+      "owner_action_required": true,
+      "repo_action_available": false,
+      "claim_boundary": "fixture proof is not accuracy proof"
+    },
+    {
+      "id": "claim_consistency_is_clean_but_fragile",
+      "severity": "P2",
+      "status": "contained_by_claim_gate",
+      "category": "claims",
+      "loophole": "The claim surface is currently clean, but every generated artifact or landing copy change can reintroduce unsupported world-class, hosted-live, buyer-validated, or accuracy claims.",
+      "evidence": "claim_consistency_validation_passed_pilot_only_boundaries; scanned_files=153; high_risk_mentions=0; unsupported=0.",
+      "external_anchor_ids": [
+        "nist_ai_rmf",
+        "oecd_ai_principles_2024"
+      ],
+      "buyer_impact": "Clean language protects credibility while evidence is still pilot-only.",
+      "remediation": "Rerun claim consistency after every launch-readiness, pricing, landing, or outreach language change.",
+      "proof_to_close": "Claim consistency remains clean after final buyer-facing copy is generated.",
+      "owner_action_required": false,
+      "repo_action_available": true,
+      "claim_boundary": "safe if validator keeps passing"
+    }
+  ],
+  "remediation_loop": [
+    {
+      "rank": 1,
+      "lane": "owner_approval_gate",
+      "action": "Owner reviews and approves the consolidated approval register before downstream prediction, buyer, enterprise, hosted, payment, AI-action, and claim-language proof runs.",
+      "closes": [
+        "owner_approval_register_not_cleared"
+      ],
+      "proof_bucket": "owner_input"
+    },
+    {
+      "rank": 2,
+      "lane": "prediction_accuracy",
+      "action": "Collect owner-approved resolved forecasts and baselines, then rerun leakage, scoring, science, confidence, and completion gates.",
+      "closes": [
+        "prediction_accuracy_without_resolved_outcomes",
+        "sample_fixture_score_risk"
+      ],
+      "proof_bucket": "owner_input"
+    },
+    {
+      "rank": 3,
+      "lane": "buyer_validation",
+      "action": "Execute the 10-call buyer validation slate and record willingness-to-pay/substitution evidence.",
+      "closes": [
+        "buyer_validation_without_completed_calls",
+        "competitive_wedge_without_buyer_substitution_proof"
+      ],
+      "proof_bucket": "owner_input"
+    },
+    {
+      "rank": 4,
+      "lane": "enterprise_trust",
+      "action": "Approve procurement documents, run RLS proof, and complete hosted LLM/security evidence.",
+      "closes": [
+        "enterprise_trust_pack_not_approved_or_executed",
+        "llm_governance_local_only"
+      ],
+      "proof_bucket": "owner_input"
+    },
+    {
+      "rank": 5,
+      "lane": "hosted_browser_runtime",
+      "action": "Unblock project privileges and execute hosted Browser/Playwright smoke tests.",
+      "closes": [
+        "hosted_proof_blocked_before_browser_smoke"
+      ],
+      "proof_bucket": "hosted_live"
+    },
+    {
+      "rank": 6,
+      "lane": "claim_and_positioning_control",
+      "action": "Keep all public copy constrained to pilot-only governed decision support until the completion audit passes.",
+      "closes": [
+        "broad_worldwide_sector_claim_too_large",
+        "claim_consistency_is_clean_but_fragile"
+      ],
+      "proof_bucket": "repo_artifact"
+    }
+  ],
+  "decision": "Keep the strategy at pilot-only. The strongest current marketable wedge is governed strategic-intelligence decision support with calibration-aware forecasting mechanics, not proven world-class prediction accuracy.",
+  "proof_boundary": "This validator consolidates loopholes and fixes. It does not create buyer calls, hosted proof, enterprise approvals, or real prediction outcomes."
+}

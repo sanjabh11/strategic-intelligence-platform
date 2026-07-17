@@ -1,23 +1,35 @@
 // Canonical Games Test Suite - Phase 2
 // Tests that the platform returns expected structured outputs for key game theory scenarios
-// Run with: npm test tests/canonical-games.test.ts
+// Run with: RUN_CANONICAL_INTEGRATION_TESTS=true npm test tests/canonical-games.test.ts
+//
+// NOTE: These tests are skipped by default because they require a live Supabase instance
+// with the analyze-engine edge function deployed. Set RUN_CANONICAL_INTEGRATION_TESTS=true
+// and provide VITE_SUPABASE_URL + VITE_SUPABASE_ANON_KEY to run them.
 
 import { expect, describe, it, beforeAll, afterAll } from 'vitest';
 import { createClient } from '@supabase/supabase-js';
 
+const runCanonicalIntegration = process.env.RUN_CANONICAL_INTEGRATION_TESTS === 'true';
+const integrationDescribe = runCanonicalIntegration ? describe : describe.skip;
+
 // Assume Supabase client for testing
 const supabaseUrl = process.env.VITE_SUPABASE_URL || '';
 const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY || '';
+const supabase = runCanonicalIntegration && supabaseUrl && supabaseKey
+  ? createClient(supabaseUrl, supabaseKey)
+  : null;
+const REMOTE_TEST_TIMEOUT_MS = 60000;
 
-if (!supabaseUrl || !supabaseKey) {
-  throw new Error('Missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY in environment for tests.');
-}
-const supabase = createClient(supabaseUrl, supabaseKey);
-
-describe('Canonical Games Test Suite', () => {
+integrationDescribe('Canonical Games Test Suite', () => {
   // Test environment setup
   beforeAll(async () => {
-    // Ensure our functions are deployed/available
+    if (!runCanonicalIntegration) {
+      return;
+    }
+
+    if (!supabaseUrl || !supabaseKey || !supabase) {
+      throw new Error('Missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY for canonical integration tests.');
+    }
   });
 
   afterAll(async () => {
@@ -79,7 +91,7 @@ describe('Canonical Games Test Suite', () => {
       // Assert provenance exists
       expect(result.analysis.provenance).toBeDefined();
       expect(result.analysis.provenance.retrieval_count).toBeGreaterThanOrEqual(0);
-    });
+    }, REMOTE_TEST_TIMEOUT_MS);
   });
 
   describe('Stag Hunt', () => {
@@ -120,7 +132,7 @@ describe('Canonical Games Test Suite', () => {
         expect(ranking.ev).toBeGreaterThanOrEqual(0);
         expect(typeof ranking.ev).toBe('number');
       });
-    });
+    }, REMOTE_TEST_TIMEOUT_MS);
   });
 
   describe('Matching Pennies', () => {
@@ -154,7 +166,7 @@ describe('Canonical Games Test Suite', () => {
           expect(mixedEq.profile.reduce((sum: number, p: number) => sum + p, 0)).toBeCloseTo(1, 2);
         }
       }
-    });
+    }, REMOTE_TEST_TIMEOUT_MS);
   });
 
   describe('AI-Safety Smoke Test', () => {
@@ -203,7 +215,61 @@ describe('Canonical Games Test Suite', () => {
         expect(result.analysis.sensitivity.most_sensitive_parameters).toBeDefined();
         expect(Array.isArray(result.analysis.sensitivity.most_sensitive_parameters)).toBe(true);
       }
-    });
+    }, REMOTE_TEST_TIMEOUT_MS);
+  });
+
+  describe('Advanced Frameworks', () => {
+    it('should return deterministic coalitional outputs for coalition scenarios', async () => {
+      const scenario = {
+        scenario_text: 'Three parliamentary blocs can form binding coalitions and divide rewards. Model every coalition worth and compute a fair payoff split.',
+        mode: 'standard',
+        audience: 'researcher'
+      };
+
+      const response = await fetch(`${supabaseUrl}/functions/v1/analyze-engine`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${supabaseKey}`
+        },
+        body: JSON.stringify(scenario)
+      });
+
+      expect(response.ok).toBe(true);
+      const result = await response.json();
+      const envelope = result.analysis?.simulation_results?.advanced_frameworks?.coalitional;
+
+      expect(envelope).toBeDefined();
+      expect(envelope.framework).toBe('coalitional');
+      expect(envelope.status).toBe('deterministic');
+      expect(Object.keys(envelope.normalized_inputs || {}).length).toBeGreaterThan(0);
+    }, REMOTE_TEST_TIMEOUT_MS);
+
+    it('should return deterministic signaling outputs for private-type scenarios', async () => {
+      const scenario = {
+        scenario_text: 'An incumbent firm may be strong or weak, knows its type privately, and can signal before an entrant chooses whether to enter.',
+        mode: 'standard',
+        audience: 'researcher'
+      };
+
+      const response = await fetch(`${supabaseUrl}/functions/v1/analyze-engine`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${supabaseKey}`
+        },
+        body: JSON.stringify(scenario)
+      });
+
+      expect(response.ok).toBe(true);
+      const result = await response.json();
+      const envelope = result.analysis?.simulation_results?.advanced_frameworks?.signaling;
+
+      expect(envelope).toBeDefined();
+      expect(envelope.framework).toBe('signaling');
+      expect(envelope.status).toBe('deterministic');
+      expect(Object.keys(envelope.normalized_inputs || {}).length).toBeGreaterThan(0);
+    }, REMOTE_TEST_TIMEOUT_MS);
   });
 
   describe('Schema Validation Tests', () => {

@@ -1,0 +1,130 @@
+{
+  "schema_version": "hosted-access-preflight-validation-v1",
+  "generated_at": "2026-06-06T17:13:24.379Z",
+  "status": "hosted_access_preflight_blocked_project_privileges",
+  "source": {
+    "project_ref": "jxdihzqoaxtydolmltdr",
+    "env_file": ".env",
+    "supabase_cli_source": "npm_exec_supabase@2.105.0",
+    "supabase_cli_version": "2.105.0",
+    "supabase_access_token_source": "active_cli_login_or_none",
+    "launch_evidence": "docs/launch-readiness/launch-evidence-2026-06-06.json"
+  },
+  "summary": {
+    "cli_available": true,
+    "core_env_present": true,
+    "missing_core_env_key_count": 0,
+    "strategist_provider_key_present": true,
+    "missing_provider_key_option_count": 5,
+    "stripe_proof_ready": false,
+    "missing_stripe_proof_key_count": 3,
+    "projects_list_access": "visible",
+    "listed_project_count": 7,
+    "target_project_visible": false,
+    "functions_list_access": "access_denied_403",
+    "secrets_list_access": "access_denied_403",
+    "management_access_ready": false,
+    "hosted_access_ready_for_smoke": false,
+    "hosted_claim_allowed": false,
+    "active_release_hold_count": 4
+  },
+  "missing_keys_by_name_only": {
+    "core_env": [],
+    "provider_options": [
+      "OPENAI_API_KEY",
+      "XAI_API_KEY",
+      "GROK_API_KEY",
+      "GOOGLE_AI_API_KEY",
+      "VITE_GEMINI_API_KEY"
+    ],
+    "stripe_proof": [
+      "STRIPE_SECRET_KEY",
+      "STRIPE_WEBHOOK_SECRET",
+      "STRIPE_ACADEMIC_PRICE_ID"
+    ]
+  },
+  "command_exit_summary": {
+    "version_exit_code": 0,
+    "projects_list_exit_code": 0,
+    "functions_list_exit_code": 1,
+    "secrets_list_exit_code": 1
+  },
+  "acceptance_gates": [
+    {
+      "gate": "supabase_cli_available",
+      "status": "passed",
+      "proof_bucket": "local",
+      "evidence": "Supabase CLI source npm_exec_supabase@2.105.0; version 2.105.0.",
+      "next_action": "No CLI install action needed for access preflight."
+    },
+    {
+      "gate": "core_hosted_env_present",
+      "status": "passed",
+      "proof_bucket": "local",
+      "evidence": "All required core hosted env keys are present by name.",
+      "next_action": "Keep values redacted; do not store secrets in artifacts."
+    },
+    {
+      "gate": "strategist_provider_key_present",
+      "status": "passed",
+      "proof_bucket": "local",
+      "evidence": "At least one strategist provider key is present by name.",
+      "next_action": "Run hosted strategist smoke only after owner approval."
+    },
+    {
+      "gate": "project_visibility_checked",
+      "status": "passed",
+      "proof_bucket": "hosted_live_access_check",
+      "evidence": "projects list access=visible; listed_project_count=7; target_project_visible=false.",
+      "next_action": "Confirm project ref or grant access to the intended Supabase project."
+    },
+    {
+      "gate": "function_management_access",
+      "status": "blocked",
+      "proof_bucket": "hosted_live_access_check",
+      "evidence": "functions list access=access_denied_403.",
+      "next_action": "Grant Supabase function-management visibility for the target project or correct the project ref."
+    },
+    {
+      "gate": "secret_management_access",
+      "status": "blocked",
+      "proof_bucket": "hosted_live_access_check",
+      "evidence": "secrets list access=access_denied_403.",
+      "next_action": "Grant secret-management visibility for the target project or use an owner-generated redacted manifest."
+    },
+    {
+      "gate": "payment_proof_values_present",
+      "status": "blocked",
+      "proof_bucket": "local",
+      "evidence": "Missing STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, STRIPE_ACADEMIC_PRICE_ID.",
+      "next_action": "Provide Stripe proof values before pricing/payment hosted proof."
+    }
+  ],
+  "release_holds": [
+    {
+      "hold": "target_project_management_access_missing",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "Supabase functions and secrets list commands succeed for the intended project ref without exposing values."
+    },
+    {
+      "hold": "hosted_url_and_deploy_binding_missing",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "Owner-approved hosted URL plus deploy id, release id, or commit SHA for browser and smoke evidence."
+    },
+    {
+      "hold": "stripe_payment_proof_values_missing",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, STRIPE_ACADEMIC_PRICE_ID, and APP_URL are present for owner-approved payment proof."
+    },
+    {
+      "hold": "hosted_browser_screenshots_missing",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "Browser screenshots or externally supplied evidence for buyer-visible hosted routes after deploy binding."
+    }
+  ],
+  "proof_boundary": "This artifact validates local/management access readiness only. It does not prove hosted route behavior, browser rendering, buyer-safe hosted claims, payment readiness, enterprise readiness, or prediction accuracy."
+}

@@ -5,12 +5,12 @@ import { useStrategyAnalysis, getExampleScenarios } from '../hooks/useStrategyAn
 import { useQueryHistoryCache } from '../hooks/useQueryHistoryCache';
 import type { AnalysisOptions } from '../types/strategic-analysis';
 import { Loader2, AlertCircle, CheckCircle2, Clock, Zap, Brain, Target, TrendingUp, Globe } from 'lucide-react';
-import PerplexityDashboard from './PerplexityDashboard';
+import EvidenceSourcesDashboard from './EvidenceSourcesDashboard';
 import FirecrawlDashboard from './FirecrawlDashboard';
 import { ChartHeader, useLearningMode, explanationContent } from './explanations';
 import type { ExplanationSection } from './explanations';
 import { AudienceViewRouter } from './audience-views';
-import { supabase } from '../lib/supabase';
+import { ENDPOINTS, getUserAuthHeaders, supabase } from '../lib/supabase';
 import type { AudienceAnalysisData } from '../types/audience-views';
 
 const StrategySimulator: React.FC = () => {
@@ -49,16 +49,17 @@ const StrategySimulator: React.FC = () => {
         // analysisRunId is managed by the hook
         // We only fetch after completion when id is present
         if (status === 'completed' && analysis && analysisRunId) {
-          const { data, error: qErr } = await supabase
-            .from('analysis_runs')
-            .select('analysis_json')
-            .eq('id', analysisRunId)
-            .maybeSingle();
-          if (qErr) {
-            setAudienceError(qErr.message);
+          const headers = await getUserAuthHeaders();
+          const response = await fetch(`${ENDPOINTS.HYDRATE_ANALYSIS}?analysis_run_id=${encodeURIComponent(analysisRunId)}`, {
+            method: 'GET',
+            headers,
+          });
+          const payload = await response.json().catch(() => ({}));
+          if (!response.ok || !payload?.ok) {
+            setAudienceError(payload?.message || `Hydration failed with HTTP ${response.status}`);
             return;
           }
-          const aj = (data as any)?.analysis_json;
+          const aj = payload?.analysis;
           if (aj && typeof aj === 'object') {
             setAudienceData(aj as AudienceAnalysisData);
           } else {
@@ -775,7 +776,7 @@ const StrategySimulator: React.FC = () => {
         {/* Results Section */}
         {analysis && (
           <div className="space-y-8">
-            <PerplexityDashboard analysis={analysis} />
+            <EvidenceSourcesDashboard analysis={analysis} />
             <EquilibriumChart />
             <ActionSets />
             <ForecastChart />

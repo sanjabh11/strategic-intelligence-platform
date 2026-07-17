@@ -1,145 +1,103 @@
+# Top 20 Features to Lead With
+
+Updated: 2026-05-03
 
+## What This Ranking Is For
 
-I’ll do a structured “codebase tour”: first identify the framework/entry points and build/deploy setup, then map major modules (pages/routes/APIs/data), then cross‑cutting concerns (auth, security, observability), and finally synthesize the **top 20 highlights** with a step‑by‑step mental model of how the app works end‑to‑end. I’m going to scan the repo now.
+This document is a current-state positioning artifact for the actual routed and implemented product, not a roadmap or a wishlist. It reflects the live product shape in code today:
 
-I’m going to inventory the repo structure and read the key “entry point” files (build config, `package.json`, app bootstrap, router/pages, and Supabase edge functions + DB schema). Then I’ll synthesize **20 concrete highlights** backed by what’s actually in the code.
+- public beta is centered on `Console`, `Templates`, and `Forecasts`
+- public analysis is now intentionally `evidence-backed or withheld`
+- several stronger analyst, review, and training surfaces still exist, but remain private or gated during the broad external beta
 
+The current wedge is no longer “every module for every buyer.” It is:
 
+- public evidence-backed strategic analysis
+- adaptive question sharpening before prediction
+- curated public forecasts with trust and governance signals
 
+## Top 3 Implemented Features
 
+These are the three strongest features currently implemented in the website.
 
+1. **Evidence-Backed Strategy Console with Adaptive Clarification**
+   The console now asks relevant context questions before analysis, routes citizen questions into the right domain pack, and only releases a public-facing answer when the hosted run is actually evidence-backed.
 
+2. **Curated Public Forecast Registry**
+   The forecast registry is now a real public reading surface with human-readable questions, curated forecast records, linked analysis state, consensus handling, and governance-aware detail views.
 
+3. **Trust, Governance, and Honest Degraded Mode**
+   The product now fails much more honestly: weak or unverified outputs are withheld, provider failures are surfaced as degraded states, and review/evidence signals are visible instead of hidden behind generic copy.
 
+## New Since The Last Top20 Update
 
-I’m going to dig deeper into the repo’s “operational” pieces (CI/CD workflows, tests, deploy config) and then the major feature modules + Supabase edge functions so the final **top 20 highlights** are grounded in actual code (not just README claims).
+This update includes the newer feature work that did not exist in the previous ranking:
 
+- public `analysis_only` beta mode with route-level hold surfaces
+- adaptive clarification gate with `1-4` context questions before prediction
+- hosted `question-intake` path and domain-specific citizen-question routing
+- direct-answer contract for public analysis output
+- evidence-backed public answer release gate with explicit withheld states
+- anonymous context caching for country, location, horizon, and risk-profile inputs
+- refreshed `Decision Workspace` plus compact `Trust & Governance` console layout
+- curated public forecast set with sharper citizen-facing question phrasing
+- stronger forecast trust alignment between card, detail, and linked analysis state
+- structured hosted provider-failure metadata and safer public diagnostics exposure
 
+## Scoring Method
 
+Each feature is scored on a `1-5` scale for each criterion, then converted into a weighted total out of `100`.
 
+| Criterion | Weight |
+| --- | ---: |
+| Pain urgency and immediacy | 35% |
+| Budget clarity and budget owner | 20% |
+| Procurement speed / friction | 10% |
+| Financial or compliance ROI | 15% |
+| Proof burden inverse | 15% |
+| Implemented proof-fit | 10% |
 
+Interpretation:
 
+- `5` = strongest commercial fit on that criterion
+- `3` = credible but mixed
+- `1` = weak or highly constrained
 
+## Top 20 Features to Lead With
 
+| Rank | Feature | Surface | Primary Segment | Why Buyers Care | Weighted Score | Proof Fit Note |
+| ---: | --- | --- | --- | --- | ---: | --- |
+| 1 | Evidence-Backed Strategy Console with Adaptive Clarification | Public | Strategy & Risk | Gives users one flagship surface that sharpens vague questions, collects missing context, and only presents a public answer when the hosted run is evidence-backed. | 93 | Main routed product surface with clarification intake, public answer rendering, and hosted evidence gating. |
+| 2 | Curated Public Forecast Registry | Public | Forecasting & Research | Gives analysts, researchers, and curious end users a durable place to read curated forecasts instead of ephemeral chatbot-style outputs. | 90 | Routed `/forecasts` surface with seeded public forecasts, sharper question phrasing, consensus handling, and linked governance signals. |
+| 3 | Trust, Governance, and Honest Degraded Mode | Public + Analyst | Strategy & Risk | Makes the platform more trustworthy by showing evidence state, review posture, provider degradation, and withholding unverified answers instead of pretending confidence. | 88 | Implemented across the console, forecast detail, and hosted analysis path with explicit withheld states and failure metadata. |
+| 4 | Structured Evidence Retrieval and Provider Diversity Gating | Public + Analyst | Forecasting & Research | Grounds outputs in retrieved evidence and helps separate real analytical support from generic narrative generation. | 86 | Retrieval sufficiency, provider diversity, and evidence-backed release conditions are enforced in the current hosted flow. |
+| 5 | Scenario Template Library with Console Prefill | Public | Strategy & Risk | Reduces friction for first-time users by turning abstract use cases into structured prompts that drop directly into the console. | 83 | Routed `/templates` library is wired into `/console` prefill and is part of the current public beta surface. |
+| 6 | Direct-Answer Layer for Citizen Questions | Public | Strategy & Risk | Helps ordinary users understand the call, why it matters, what could change it, and what to do next without parsing internal analyst scaffolding. | 81 | The console now renders direct answer, trust state, watch factors, and next-step guidance from the public answer contract. |
+| 7 | Strategist Briefing Layer | Analyst / Private | Strategy & Risk | Produces a more structured doctrine-shaped brief for internal or analyst-grade use when a higher-touch explanation is needed. | 78 | Implemented and rendered, but intentionally kept behind analyst access during the external beta. |
+| 8 | Human Review Queue and Publication Governance | Analyst / Private | Forecasting & Research | Supports institutional trust by routing higher-stakes outputs through review discipline instead of publishing everything automatically. | 77 | Review queue, review states, and governance summaries are implemented and surfaced in the current app. |
+| 9 | Multi-Agent Forecast Drafting Workflow | Public Reading + Analyst Authoring | Forecasting & Research | Connects analysis work to governed forecast records rather than leaving forecasting as an isolated or manual activity. | 75 | Console-to-forecast and linked forecast model paths exist; public authoring is private during the current beta. |
+| 10 | Hosted Question Intake Service and Domain Routing | Public + Analyst | Strategy & Risk | Increases relevance by asking only the minimum high-value questions needed to avoid shallow or mismatched predictions. | 73 | Hosted `question-intake` plus shared routing logic now covers geopolitics, macro, markets, country politics, inflation, climate, disaster, and technology-society questions. |
+| 11 | Public Analysis-Only Beta Controls | Public | Strategy & Risk | Keeps the first broad beta focused and trustworthy by hiding unstable or commercially unfinished surfaces from anonymous users. | 71 | Route-level hold surfaces, nav filtering, and beta-mode controls are implemented in the routed app. |
+| 12 | Enterprise Audience Briefing Modes | Analyst / Private | Strategy & Risk | Lets the same analysis be reframed for executive, analyst, or operational audiences without rebuilding the underlying workflow. | 69 | Audience-aware rendering and enterprise workflow panels are still implemented in the console stack. |
+| 13 | Live Geopolitical Intelligence Dashboard | Limited Public / Analyst | Strategy & Risk | Translates live geopolitical feed signals into a decision workflow instead of forcing teams to watch headlines manually. | 67 | Routed `/insights` surface still exists, but public availability remains conditional on hosted feed stability. |
+| 14 | Gold and Safe-Haven Analysis Module | Limited Public / Analyst | Commodity & Market Intelligence | Gives buyers a specialized commodity and safe-haven workflow for uncertainty, inflation, and conflict-linked market scenarios. | 65 | Implemented in the current app with explicit degraded/feed-unavailable states; public release is still conditional. |
+| 15 | Async Hosted Analysis and Status Tracking | Public + Analyst | Forecasting & Research | Matters operationally because users can launch heavier hosted analysis work without the interface collapsing into a blocking experience. | 63 | Current hosted analysis path supports status-aware console behavior and analysis-run tracking. |
+| 16 | War Room Collaboration Surface | Analyst / Private | Strategy & Risk | Preserves strategist briefs, assumptions, and linked scenario artifacts as shared team memory for multi-user strategic work. | 61 | Routed `/war-room` exists and is gated to collaboration-enabled accounts during beta. |
+| 17 | Negotiation Dojo | Analyst / Private | Training & Education | Gives the platform a credible applied-training story for negotiation, decision games, and workshops. | 59 | Implemented and surfaced from Labs, but kept out of the public beta wedge. |
+| 18 | Game Tree Builder | Analyst / Private | Training & Education | Helps users reason about sequential moves and counter-moves rather than only reading narrative analysis. | 57 | Implemented and reachable through Labs with gating. |
+| 19 | Classrooms and Academic Delivery | Analyst / Private | Training & Education | Supports instructional use cases like assignments, private rooms, and academic scenario delivery. | 54 | Routed `/classrooms` exists with academic and enterprise gating, but is private during the public beta. |
+| 20 | Learning Mode and Guided Explainability | Public + Analyst | Training & Education | Lowers the barrier for new users by adding guided explanations without changing the underlying analytical workflow. | 51 | Learning mode, welcome guidance, and explanation components are implemented in the current shell. |
 
+## How to Use This List
 
+- `Ranks 1-6` are the primary story for the current external beta and should dominate demos, landing-page messaging, and buyer research.
+- `Ranks 7-12` are strong supporting capabilities that deepen credibility for analyst and institutional use cases.
+- `Ranks 13-20` are real implemented surfaces, but they should be framed as secondary, conditional, gated, or specialist capabilities until their public readiness is stronger.
 
+Use this ranking in this order:
 
+1. Lead with the public console, trust model, and forecast registry.
+2. Use strategist, review, and enterprise briefing surfaces as proof of depth for analyst or institutional buyers.
+3. Treat insights, commodities, labs, classrooms, and war-room as expansion or upsell stories unless their hosted/public readiness is revalidated.
 
-
-
-
-
-
-
-
-
-
-
-# High-level snapshot (from codebase)
-This is a **Vite + React 18 + TypeScript** single-page app (SPA) with **TailwindCSS + Radix/shadcn-style UI components**, backed by **Supabase Postgres + Supabase Edge Functions (Deno)**. The frontend is static-hostable (Netlify config present) and most “backend logic” lives in **Edge Functions** and **DB migrations**.
-
-# Step-by-step “how it works” (end-to-end visualization)
-
-```text
-1) User opens SPA (Vite build) ──> <App> (tabs) + <ErrorBoundary> + LearningModeProvider
-2) User chooses a module tab:
-   - Analysis (StrategySimulator)
-   - Live Intel (GeopoliticalDashboard)
-   - Multiplayer (MultiplayerLobby)
-   - Bias Training (BiasSimulator)
-   - Life Coach (PersonalLifeCoach)
-   - Mediator (AIMediator)
-   - System (SystemStatus)
-
-3) Analysis tab flow (core):
-   StrategySimulator -> useStrategyAnalysis.runAnalysis()
-     -> POST /functions/v1/analyze-engine (Edge Function)
-        -> retrieves evidence (Perplexity/Google CSE/Crossref/GDELT + optional Firecrawl)
-        -> validates/normalizes JSON (Ajv), persists to analysis tables
-        -> returns { request_id, analysis_run_id } and/or immediate analysis payload
-     -> frontend polls GET /functions/v1/get-analysis-status?request_id=...
-     -> on completion: fetches analysis_runs.analysis_json (audience-specific payload)
-     -> renders AudienceViewRouter (student/learner/researcher/teacher/reviewer views)
-     -> ALSO calls “enhancement” engines (multiple Edge Functions) and merges results
-
-4) Ops & governance:
-   - system-status + health Edge Functions power dashboards + checks
-   - schema_failures table + admin UI for validation triage
-   - human-review Edge Function + HumanReview UI for approve/reject + recompute EV + sensitivity run
-```
-
-# Top 20 highlights of this web app (code-backed)
-
-1. **Modern frontend foundation (React 18 + Vite + TS)**: Fast dev/build (`vite.config.ts`, `package.json`) with a clean SPA bootstrap and global error containment (`src/main.tsx`, `src/components/ErrorBoundary.tsx`).
-
-2. **Tab-based product surface with multiple “apps” inside one UI**: The main app exposes **7+ major modules** via a consistent nav (Analysis, Live Intel, Multiplayer, Bias, Life Coach, Mediator, System) (`src/App.tsx`).
-
-3. **Learning Mode as a first-class UX concept**: A persistent “Learning Mode” toggle plus first-visit onboarding (“WelcomeMessage”) to make advanced game-theory outputs understandable (`src/components/explanations/*`).
-
-4. **Supabase-first architecture (DB + Functions + Realtime)**: Frontend uses `@supabase/supabase-js` for DB queries, function invocation, and realtime channels (`src/lib/supabase.ts`, multiple components/hooks).
-
-5. **Explicit API contract + validation on the frontend**: [useStrategyAnalysis](cci:1://file:///Users/sanjayb/minimax/strategic-intelligence-platform/src/hooks/useStrategyAnalysis.ts:163:0-515:1) uses **Zod** schemas to safely parse and normalize backend responses (protects UI from LLM-shaped data surprises) ([src/hooks/useStrategyAnalysis.ts](cci:7://file:///Users/sanjayb/minimax/strategic-intelligence-platform/src/hooks/useStrategyAnalysis.ts:0:0-0:0)).
-
-6. **Resilient analysis execution model (queued/polling + timeouts)**: `runAnalysis()` supports async job flow with polling (`get-analysis-status`) and a 2-minute timeout guard to prevent infinite spinner UX ([src/hooks/useStrategyAnalysis.ts](cci:7://file:///Users/sanjayb/minimax/strategic-intelligence-platform/src/hooks/useStrategyAnalysis.ts:0:0-0:0), `supabase/functions/get-analysis-status`).
-
-7. **Local deterministic analysis engine for demos/dev**: `localEngine.ts` generates stable outputs (seeded RNG), enabling offline-ish demonstrations while blocking local mode in production builds (`src/lib/localEngine.ts`, [src/hooks/useStrategyAnalysis.ts](cci:7://file:///Users/sanjayb/minimax/strategic-intelligence-platform/src/hooks/useStrategyAnalysis.ts:0:0-0:0)).
-
-8. **Post-processing “multi-engine enrichment” pipeline**: After base analysis completes, the client orchestrates **multiple advanced strategic engines** (recursive equilibrium, symmetry mining, quantum strategy, VOI, forecasting, etc.) and merges results into one unified UI model ([enhanceAnalysisWithStrategicEngines](cci:1://file:///Users/sanjayb/minimax/strategic-intelligence-platform/src/hooks/useStrategyAnalysis.ts:517:0-809:1) in [src/hooks/useStrategyAnalysis.ts](cci:7://file:///Users/sanjayb/minimax/strategic-intelligence-platform/src/hooks/useStrategyAnalysis.ts:0:0-0:0)).
-
-9. **Audience-specific analysis representations stored server-side**: The app fetches `analysis_runs.analysis_json` and renders it via `AudienceViewRouter` into Student/Learner/Researcher/Teacher/Reviewer views (`src/components/audience-views/*`, [src/types/audience-views.ts](cci:7://file:///Users/sanjayb/minimax/strategic-intelligence-platform/src/types/audience-views.ts:0:0-0:0), `src/components/StrategySimulator.tsx`).
-
-10. **Human-in-the-loop governance workflow**: A full review queue UI + backend with role checks (`reviewer` role), approve/reject operations, reviewer guidance, and edit + recompute flows (`src/components/HumanReview.tsx`, [supabase/functions/human-review/index.ts](cci:7://file:///Users/sanjayb/minimax/strategic-intelligence-platform/supabase/functions/human-review/index.ts:0:0-0:0), DB migration adds `human_reviews`, `analysis_runs.status`).
-
-11. **Evidence & provenance is central (not an afterthought)**: The codebase has dedicated “Evidence & Retrievals” UX and multiple evidence pipelines (Perplexity, Google CSE fallback, Crossref, GDELT, optional Firecrawl) (`src/components/PerplexityDashboard.tsx`, [supabase/functions/evidence-retrieval/index.ts](cci:7://file:///Users/sanjayb/minimax/strategic-intelligence-platform/supabase/functions/evidence-retrieval/index.ts:0:0-0:0)).
-
-12. **Anti-fabrication posture in several fallbacks**: Some retrieval fallbacks deliberately return **empty** rather than invent sources (e.g., [fallbackFirecrawlRetrieval](cci:1://file:///Users/sanjayb/minimax/strategic-intelligence-platform/supabase/functions/evidence-retrieval/index.ts:453:0-457:1), [fallbackPerplexityRetrieval](cci:1://file:///Users/sanjayb/minimax/strategic-intelligence-platform/supabase/functions/evidence-retrieval/index.ts:296:0-300:1)) to avoid fake citations ([supabase/functions/evidence-retrieval/index.ts](cci:7://file:///Users/sanjayb/minimax/strategic-intelligence-platform/supabase/functions/evidence-retrieval/index.ts:0:0-0:0)).
-
-13. **Firecrawl integration with caching + per-host pacing**: Firecrawl Edge Function has retries/timeouts, 24h cache, and per-host request pacing to avoid hammering hosts ([supabase/functions/firecrawl-research/index.ts](cci:7://file:///Users/sanjayb/minimax/strategic-intelligence-platform/supabase/functions/firecrawl-research/index.ts:0:0-0:0), `src/components/FirecrawlDashboard.tsx`).
-
-14. **Operational visibility built into the product**: There’s a system status page with component breakdown + health checks, plus a monitoring dashboard driven by DB RPC metrics (`src/components/SystemStatus.tsx`, `src/components/MonitoringDashboard.tsx`, `src/hooks/useMonitoringMetrics.ts`, `supabase/functions/system-status`, `supabase/functions/health`).
-
-15. **Schema failure triage tooling**: `schema_failures` gets enhanced columns (preview, status, first_seen) and has a dedicated admin UI to classify resolved/ignored/active ([supabase/migrations/20250906_0002_enhance_schema_failures.sql](cci:7://file:///Users/sanjayb/minimax/strategic-intelligence-platform/supabase/migrations/20250906_0002_enhance_schema_failures.sql:0:0-0:0), [src/components/SchemaFailuresAdmin.tsx](cci:7://file:///Users/sanjayb/minimax/strategic-intelligence-platform/src/components/SchemaFailuresAdmin.tsx:0:0-0:0)).
-
-16. **Reliability patterns in the DB layer**: Migrations include **retrieval_cache**, **circuit_breaker** (+ cooldown), and **rate_limit_tracking** with an RPC `check_rate_limit()` to guard expensive external calls ([supabase/migrations/20250906_0001_add_retrieval_cache_ph4.sql](cci:7://file:///Users/sanjayb/minimax/strategic-intelligence-platform/supabase/migrations/20250906_0001_add_retrieval_cache_ph4.sql:0:0-0:0), [20250906_0003_add_circuit_breaker_cooldown.sql](cci:7://file:///Users/sanjayb/minimax/strategic-intelligence-platform/supabase/migrations/20250906_0003_add_circuit_breaker_cooldown.sql:0:0-0:0), [20250906_0004_add_rate_limits.sql](cci:7://file:///Users/sanjayb/minimax/strategic-intelligence-platform/supabase/migrations/20250906_0004_add_rate_limits.sql:0:0-0:0)).
-
-17. **Queue cleanup / stuck-job handling**: `process-queue` Edge Function scans for stuck jobs and marks them failed (simple but practical operational safety net) (`supabase/functions/process-queue/index.ts`).
-
-18. **Real-time features beyond “analysis”**: Geopolitical dashboard uses a GDELT stream endpoint (supports SSE) + interactive simulation UI ([supabase/functions/gdelt-stream/index.ts](cci:7://file:///Users/sanjayb/minimax/strategic-intelligence-platform/supabase/functions/gdelt-stream/index.ts:0:0-0:0), `src/components/GeopoliticalDashboard.tsx`, `src/components/WhatIfSimulator.tsx`, `src/components/HistoricalComparison.tsx`).
-
-19. **Multiplayer game-theory mode**: The app includes multiplayer session creation/joining and a playable game interface backed by Supabase tables (`src/components/MultiplayerLobby.tsx`, `src/components/GameInterface.tsx`, `src/types/multiplayer.ts`).
-
-20. **Strong CI/CD posture for a hackathon-style codebase**: GitHub Actions cover:
-    - edge deployment on relevant changes (`.github/workflows/deploy.yml`)
-    - e2e tests hitting a real endpoint (`e2e-tests.yml`)
-    - a larger game-theory CI with Deno tests, performance regression (hyperfine), coverage upload, and gated deploy (`game-theory-ci.yml`).
-
-# Critical “industry practice” observations (quick, because you asked for best practices)
-- **Security posture is mixed**: Netlify security headers are good (`netlify.toml`), but several Edge Functions use permissive CORS (`Access-Control-Allow-Origin: *`) and some deploy scripts use `--no-verify-jwt` for functions (good for public endpoints, risky for sensitive ones).
-- **Some features are “production-structured but stubbed”**: e.g., `gdelt-stream` currently returns simulated events; `personal-life-coach` contains TODO/placeholder LLM extraction logic. Architecturally solid, but worth validating for “real data” readiness.
-- **Secrets & config hygiene**: [.gitignore](cci:7://file:///Users/sanjayb/minimax/strategic-intelligence-platform/.gitignore:0:0-0:0) correctly ignores `.env`, and there are scripts to set Supabase secrets; however [.env.example](cci:7://file:///Users/sanjayb/minimax/strategic-intelligence-platform/.env.example:0:0-0:0) contains a suspicious placeholder value for `SUPABASE_SERVICE_ROLE_KEY` that ideally should be blank.
-
-# 🆕 Monetization Features (Dec 2024)
-
-21. **Monte Carlo Simulator for ABM** (`supabase/functions/monte-carlo-simulator`): 1000-10000 iteration agent-based market simulation with Central Bank, Miner, Retail, and Institutional agents. Returns price distributions, outcome probabilities, and stability scores.
-
-22. **Game-Theoretic Trading Signals** (`supabase/functions/trading-signals`): Detects market patterns (Crowded Trades, Liquidity Traps, Squeeze Setups) and frames them as game theory scenarios (Prisoner's Dilemma, Chicken, Coordination Games). Generates BUY/SELL/HOLD signals with confidence levels.
-
-23. **Brier-Weighted Consensus Oracle** (`supabase/functions/brier-weighted-consensus`): Aggregates forecasts using Brier score weighting to surface "Superforecaster" consensus. Identifies top 10% predictors and calculates reliability metrics.
-
-24. **Game Tree Builder UI** (`src/components/GameTreeBuilder.tsx`): Visual drag-and-drop extensive form game designer with backward induction solver for Subgame Perfect Equilibrium. Supports n-player games and JSON export.
-
-25. **Negotiation Dojo** (`src/components/NegotiationDojo.tsx`): Practice negotiation against Nash Bargaining AI opponents. 4 scenarios (salary, B2B, rental, freelance) with ZOPA analysis and post-game feedback.
-
-26. **Corporate War Room** (`src/components/CorporateWarRoom.tsx`): Enterprise team-based wargaming with round timers, resource tracking, and multi-player coordination. 4 scenario templates (market entry, M&A, disruption, pricing).
-
-27. **Scenario Marketplace** (`src/components/ScenarioMarketplace.tsx`): Creator economy for game theory scenarios with 70/30 revenue share. Browse, search, filter, and publish scenarios.
-
-28. **Bias Profile Dashboard** (`src/components/BiasProfileDashboard.tsx`): Tracks 10 cognitive biases across 4 categories with personalized debiasing recommendations and training modules.
-
-29. **Whop Integration Utilities** (`src/lib/whop.ts`): Tier-based feature gating, license key generation/validation, ready for @whop/sdk integration.
-
-# Status
-- **Completed**: Repo-wide architecture scan + backend/DB/CI review.
-- **Delivered**: A step-by-step operational mental model and the **top 20 highlights** grounded in specific modules and files.
-- **NEW (Dec 2024)**: 9 monetization features implemented across HIGH and MEDIUM priority tiers.
+The ranking intentionally favors features that are both commercially meaningful and demonstrably implemented in the current routed product.

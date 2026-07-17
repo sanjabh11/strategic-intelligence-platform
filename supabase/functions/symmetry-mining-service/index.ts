@@ -4,7 +4,7 @@
 // Endpoint: POST /functions/v1/symmetry-mining-service
 // Advanced cross-domain strategic pattern mining with analogies
 
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { createClient } from 'npm:@supabase/supabase-js@2'
 
 function jsonResponse(status: number, body: any) {
   return new Response(JSON.stringify(body), {
@@ -273,6 +273,7 @@ async function persistSymmetryAnalysis(
   }
 }
 
+// INTERNAL: Called server-side, relies on RLS for auth
 Deno.serve(async (req) => {
   if (req.method !== 'POST') {
     return jsonResponse(405, { ok: false, message: 'Method Not Allowed' });

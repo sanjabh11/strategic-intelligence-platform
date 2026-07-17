@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { ENDPOINTS, getAuthHeaders } from '../lib/supabase'
+import { ENDPOINTS, getUserAuthHeaders } from '../lib/supabase'
 
 export interface SimilarItem { id: string; score: number }
 
@@ -14,7 +14,7 @@ export function useSymmetryMining() {
     try {
       const resp = await fetch(ENDPOINTS.SYMMETRY_MINING, {
         method: 'POST',
-        headers: { ...getAuthHeaders() },
+        headers: await getUserAuthHeaders(),
         body: JSON.stringify({ features, top_k })
       })
       const txt = await resp.text()

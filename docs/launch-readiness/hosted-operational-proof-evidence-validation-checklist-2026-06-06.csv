@@ -1,0 +1,9 @@
+gate,status,evidence,proof_bucket
+register_schema_present,passed,Register schema includes 19 required columns.,repo_artifact
+all_proof_kit_rows_present,passed,12 register rows loaded for 12 proof-kit smoke rows.,repo_artifact
+hosted_runs_present,open_no_hosted_runs,0 executed hosted rows loaded; 0 passed or caveated-pass rows loaded.,hosted_live
+row_quality_validation,open_no_hosted_runs,0 row-level errors and 0 warnings across hosted evidence register.,hosted_live
+redaction_review,open_no_hosted_runs,0/0 executed rows marked redaction_verified.,hosted_live
+evidence_artifacts_attached,open_no_hosted_runs,0/0 passed rows have existing log_path or owner_supplied_external; 0/0 screenshot references exist or are external.,hosted_live
+core_route_api_coverage,open_no_hosted_runs,0/7 core hosted coverage groups passed with buyer-claim-ready rows.,hosted_live
+claim_boundary_preserved,passed,"Rows are checked for unsupported hosted, commercial-ready, enterprise-ready, and prediction-accuracy language.",repo_artifact

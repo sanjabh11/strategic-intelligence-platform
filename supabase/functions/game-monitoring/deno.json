@@ -1,7 +1,7 @@
 {
   "imports": {
-    "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@2",
-    "@std/assert": "https://deno.land/std@0.204.0/assert/mod.ts"
+    "@supabase/supabase-js": "npm:@supabase/supabase-js@2",
+    "@std/assert": "jsr:@std/assert@1.0.19"
   },
   "tasks": {
     "test": "deno test --allow-all tests/",
@@ -11,10 +11,8 @@
     "ci-test": "deno test --allow-all --fail-fast tests/"
   },
   "test": {
-    "files": {
-      "include": ["tests/**/*.ts"],
-      "exclude": ["tests/**/*.bench.ts"]
-    }
+    "include": ["tests/**/*.ts"],
+    "exclude": ["tests/**/*.bench.ts"]
   },
   "fmt": {
     "files": {

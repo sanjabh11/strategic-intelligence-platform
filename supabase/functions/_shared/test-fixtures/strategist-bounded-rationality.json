@@ -1,0 +1,41 @@
+{
+  "title": "Negotiate a noisy supplier renewal",
+  "description": "I need to renew a supplier contract in 10 days. The supplier opened with a 14% increase, but the account team is human, sometimes misreads incentives, and makes suboptimal moves about 20% of the time. I have one weaker outside option and can trade term length for price relief.",
+  "category": "business",
+  "persist": true,
+  "expected_framework": "bounded_rationality",
+  "advanced_game_inputs": {
+    "bounded_rationality": {
+      "players": ["you", "actor_1"],
+      "actions_by_player": [
+        ["accept", "counter"],
+        ["hold", "concede"]
+      ],
+      "payoff_matrix": [
+        [[55, 85], [70, 65]],
+        [[40, 90], [88, 60]]
+      ],
+      "lambda": 0.2
+    }
+  },
+  "evidenceContext": [
+    {
+      "id": "evidence_1",
+      "label": "Supplier offer",
+      "detail": "Supplier opened at a 14% increase",
+      "sourceType": "user_input"
+    },
+    {
+      "id": "evidence_2",
+      "label": "Outside option",
+      "detail": "One weaker alternate supplier exists",
+      "sourceType": "user_input"
+    },
+    {
+      "id": "evidence_3",
+      "label": "Behavioral noise",
+      "detail": "The account team sometimes misreads incentives and makes suboptimal moves about 20% of the time",
+      "sourceType": "user_input"
+    }
+  ]
+}

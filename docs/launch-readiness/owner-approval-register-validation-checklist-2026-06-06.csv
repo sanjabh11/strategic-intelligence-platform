@@ -1,0 +1,7 @@
+gate,status,proof_bucket,evidence
+register_schema_present,passed,repo_artifact,13 required columns present.
+required_approval_rows_present,passed,repo_artifact,14/14 required approval IDs present; missing=none.
+owner_approvals_present,open_no_owner_approvals,owner_input,0/14 required approvals are owner-approved.
+approved_rows_have_audit_trail,passed,owner_input,0 row errors and 0 warnings across 14 approval rows.
+claim_boundaries_acknowledged,open_owner_acknowledgement_missing,owner_input,0/14 approval rows acknowledge claim boundaries.
+all_required_approvals_ready_for_downstream_evidence,open_required_approvals_missing,owner_input,0/14 required approvals complete; rejected=0; reviewed=0.

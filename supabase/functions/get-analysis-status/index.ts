@@ -3,16 +3,20 @@
 // Deno runtime
 // Endpoint: GET /functions/v1/get-analysis-status?request_id=...
 
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { createClient } from 'npm:@supabase/supabase-js@2'
+import { jsonResponse } from '../_shared/auth.ts'
+import { hydrateAnalysisJson } from '../_shared/analysis-artifacts.ts'
 
-function jsonResponse(status: number, body: unknown) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { 'Content-Type': 'application/json' },
-  })
+function isTerminalAnalysisStatus(status: string | null | undefined) {
+  return status === 'completed' || status === 'under_review' || status === 'needs_review' || status === 'rejected' || status === 'failed'
 }
 
+// PUBLIC: No auth required
 Deno.serve(async (req) => {
+  if (req.method === 'OPTIONS') {
+    return jsonResponse(200, { ok: true })
+  }
+
   if (req.method !== 'GET') {
     return jsonResponse(405, { ok: false, message: 'Method Not Allowed' })
   }
@@ -28,10 +32,12 @@ Deno.serve(async (req) => {
     const supabaseUrl = Deno.env.get('SUPABASE_URL') || `https://${ref}.supabase.co`
     const headerApiKey = req.headers.get('apikey') || (req.headers.get('authorization')?.replace(/^Bearer\s+/i, '') ?? '')
     const anonKey = Deno.env.get('SUPABASE_ANON_KEY') || headerApiKey
+    const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || Deno.env.get('EDGE_SUPABASE_SERVICE_ROLE_KEY') || ''
     if (!(supabaseUrl && anonKey)) {
       return jsonResponse(500, { ok: false, message: 'Server configuration error' })
     }
     const supabase = createClient(supabaseUrl, anonKey)
+    const supabaseAdmin = serviceRoleKey ? createClient(supabaseUrl, serviceRoleKey) : null
 
     const { data: job, error: jobErr } = await supabase
       .from('analysis_jobs')
@@ -48,29 +54,43 @@ Deno.serve(async (req) => {
     if (job.status === 'completed' && job.analysis_run_id) {
       const { data: runRow, error: runErr } = await supabase
         .from('analysis_runs')
-        .select('scenario_text, processing_time_ms, stability_score')
+        .select('status, review_reason, analysis_json, payload_mode, artifact_bucket, artifact_path')
         .eq('id', job.analysis_run_id)
         .single()
       if (runErr) {
         return jsonResponse(500, { ok: false, message: runErr.message })
       }
-      // Minimal reconstruction; frontend primarily uses analyze-engine immediate response
+      const runStatus = runRow?.status || 'processing'
+      if (runStatus === 'failed') {
+        return jsonResponse(200, {
+          ok: true,
+          status: 'failed',
+          analysis_run_id: job.analysis_run_id,
+          analysis_status: runStatus,
+          message: runRow?.review_reason || job.error || 'failed',
+        })
+      }
+      if (!isTerminalAnalysisStatus(runStatus)) {
+        return jsonResponse(200, {
+          ok: true,
+          status: 'processing',
+          analysis_run_id: job.analysis_run_id,
+          analysis_status: runStatus,
+          message: 'Analysis run not finalized yet',
+        })
+      }
+      const analysisJson = supabaseAdmin
+        ? await hydrateAnalysisJson(supabaseAdmin, runRow)
+        : runRow?.analysis_json
+      if (!analysisJson || typeof analysisJson !== 'object') {
+        return jsonResponse(500, { ok: false, message: 'analysis_json missing from completed run' })
+      }
       return jsonResponse(200, {
         ok: true,
         status: 'completed',
-        analysis: {
-          scenario_text: runRow.scenario_text,
-          players: [],
-          equilibrium: {
-            profile: {},
-            stability: runRow.stability_score ?? 0,
-            method: 'edge-mvp-1.0'
-          },
-          retrievals: [],
-          retrieval_count: 0,
-          processing_stats: { processing_time_ms: runRow.processing_time_ms ?? 0, stability_score: runRow.stability_score ?? 0 },
-          provenance: { evidence_backed: false, retrieval_count: 0, model: 'edge-mvp-1.0' }
-        }
+        analysis_run_id: job.analysis_run_id,
+        analysis_status: runRow?.status || 'completed',
+        analysis: analysisJson
       })
     }
 

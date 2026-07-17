@@ -65,7 +65,7 @@ const TeacherView: React.FC<AudienceViewProps> = ({
       </div>
 
       <div className="space-y-4">
-        {teacherData.lesson_outline.map((section, index) => (
+        {teacherData.lesson_outline.map((section: any, index: any) => (
           <div key={index} className="bg-slate-700 rounded-lg p-4 border border-slate-600">
             <div className="flex items-start justify-between mb-3">
               <h3 className="font-medium text-slate-200">{section.section}</h3>
@@ -79,7 +79,7 @@ const TeacherView: React.FC<AudienceViewProps> = ({
               <div>
                 <h4 className="font-medium text-slate-300 text-sm mb-2">Objectives</h4>
                 <ul className="space-y-1">
-                  {section.objectives.map((objective, objIndex) => (
+                  {section.objectives.map((objective: any, objIndex: any) => (
                     <li key={objIndex} className="flex items-start space-x-2">
                       <div className="flex-shrink-0 w-4 h-4 bg-orange-500/20 rounded-full flex items-center justify-center mt-0.5">
                         <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
@@ -93,7 +93,7 @@ const TeacherView: React.FC<AudienceViewProps> = ({
               <div>
                 <h4 className="font-medium text-slate-300 text-sm mb-2">Activities</h4>
                 <ul className="space-y-1">
-                  {section.activities.map((activity, actIndex) => (
+                  {section.activities.map((activity: any, actIndex: any) => (
                     <li key={actIndex} className="flex items-start space-x-2">
                       <div className="flex-shrink-0 w-4 h-4 bg-blue-500/20 rounded-full flex items-center justify-center mt-0.5">
                         <div className="w-2 h-2 bg-blue-400 rounded-full"></div>

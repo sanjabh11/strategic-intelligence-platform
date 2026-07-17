@@ -1,0 +1,1666 @@
+{
+  "schema_version": "external-source-freshness-v1",
+  "generated_at": "2026-06-07T03:50:51.678Z",
+  "status": "external_source_freshness_needs_title_review",
+  "summary": {
+    "source_count": 57,
+    "checked_count": 57,
+    "source_artifact_count": 11,
+    "source_count_by_lane": {
+      "prediction_science": 5,
+      "forecast_protocol": 5,
+      "forecast_scoring": 4,
+      "loophole_remediation": 14,
+      "commercial_confidence_frameworks": 10,
+      "enterprise_procurement": 5,
+      "enterprise_trust": 6,
+      "competitive_positioning": 13,
+      "hosted_proof": 6,
+      "market_niche": 12,
+      "rls_proof": 5
+    },
+    "reachable_count": 50,
+    "access_limited_unverified_count": 7,
+    "timeout_unverified_count": 0,
+    "fetch_failed_unverified_count": 0,
+    "server_error_unverified_count": 0,
+    "http_unverified_count": 0,
+    "broken_or_removed_count": 0,
+    "title_warning_count": 7,
+    "not_found_title_warning_count": 1,
+    "access_denied_title_warning_count": 1,
+    "interstitial_title_warning_count": 5,
+    "fetch_timeout_ms": 12000,
+    "fetch_concurrency": 4,
+    "unverified_count": 7,
+    "reachable_or_access_limited_count": 57
+  },
+  "source_artifacts": [
+    "docs/launch-readiness/commercial-confidence-gate-2026-06-06.json",
+    "docs/launch-readiness/commercial-loophole-remediation-2026-06-06.json",
+    "docs/launch-readiness/competitive-positioning-evidence-validation-2026-06-06.json",
+    "docs/launch-readiness/enterprise-procurement-readiness-gate-2026-06-06.json",
+    "docs/launch-readiness/enterprise-trust-execution-readiness-2026-06-06.json",
+    "docs/launch-readiness/forecast-evaluation-protocol-2026-06-06.json",
+    "docs/launch-readiness/forecast-scoring-evidence-validation-2026-06-06.json",
+    "docs/launch-readiness/hosted-smoke-execution-readiness-2026-06-06.json",
+    "docs/launch-readiness/market-niche-evidence-validation-2026-06-06.json",
+    "docs/launch-readiness/prediction-science-evidence-validation-2026-06-06.json",
+    "docs/launch-readiness/rls-proof-evidence-validation-2026-06-06.json"
+  ],
+  "acceptance_gates": [
+    {
+      "gate": "source_inventory_compiled_from_repo_artifacts",
+      "status": "passed",
+      "evidence": "57 unique external URLs compiled from 11 launch-readiness source artifacts.",
+      "proof_bucket": "repo_artifact"
+    },
+    {
+      "gate": "current_url_reachability_attempted",
+      "status": "passed",
+      "evidence": "57/57 URL checks completed with timeout 12000ms and concurrency 4.",
+      "proof_bucket": "local"
+    },
+    {
+      "gate": "broken_source_links_absent",
+      "status": "passed",
+      "evidence": "0 URLs returned 404/410; 7 were access-limited; 0 otherwise unverified.",
+      "proof_bucket": "local"
+    },
+    {
+      "gate": "suspect_response_titles_flagged",
+      "status": "needs_review",
+      "evidence": "7 URL checks returned suspect titles: 1 not-found titles, 1 access-denied titles, and 5 interstitial titles.",
+      "proof_bucket": "local"
+    },
+    {
+      "gate": "claim_boundary_preserved",
+      "status": "passed",
+      "evidence": "The report verifies source freshness only; it does not create buyer validation, hosted proof, enterprise proof, or forecast accuracy proof.",
+      "proof_bucket": "repo_artifact"
+    }
+  ],
+  "sources": [
+    {
+      "normalized_url": "https://ai-challenges.nist.gov/genai",
+      "url": "https://ai-challenges.nist.gov/genai",
+      "labels": [
+        "NIST GenAI evaluation program"
+      ],
+      "rationales": [
+        "Treat evolving benchmark construction and measurement science as part of generative-AI evaluation rather than static demo proof."
+      ],
+      "lanes": [
+        "prediction_science"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/prediction-science-evidence-validation-2026-06-06.json#current_forecasting_science_sources"
+      ],
+      "checked_at": "2026-06-07T03:50:40.630Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://ai-challenges.nist.gov/genai",
+      "content_type": "text/html; charset=utf-8",
+      "title": "GenAI - Evaluating Generative AI",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://airc.nist.gov/airmf-resources/airmf/5-sec-core",
+      "url": "https://airc.nist.gov/airmf-resources/airmf/5-sec-core/",
+      "labels": [
+        "NIST AI RMF Core Measure",
+        "NIST AI RMF Measure/Manage"
+      ],
+      "rationales": [
+        "Document measurable performance changes, field data, monitoring, and risk-response decisions before relying on AI-system claims.",
+        "Performance measurement needs documented uncertainty, benchmark comparison, and reporting before system claims are relied upon."
+      ],
+      "lanes": [
+        "forecast_protocol",
+        "forecast_scoring"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/forecast-evaluation-protocol-2026-06-06.json#external_methodology_alignment",
+        "docs/launch-readiness/forecast-scoring-evidence-validation-2026-06-06.json#current_source_alignment"
+      ],
+      "checked_at": "2026-06-07T03:50:40.728Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://airc.nist.gov/airmf-resources/airmf/5-sec-core/",
+      "content_type": "text/html; charset=utf-8",
+      "title": "AI RMF Core - AIRC",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://arxiv.org/abs/2409.19839",
+      "url": "https://arxiv.org/abs/2409.19839",
+      "labels": [
+        "ForecastBench paper"
+      ],
+      "rationales": [
+        "Compare ML systems with expert forecasters, the public, and other LLMs on forecast questions."
+      ],
+      "lanes": [
+        "prediction_science"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/prediction-science-evidence-validation-2026-06-06.json#current_forecasting_science_sources"
+      ],
+      "checked_at": "2026-06-07T03:50:39.469Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://arxiv.org/abs/2409.19839",
+      "content_type": "text/html; charset=utf-8",
+      "title": "[2409.19839] ForecastBench: A Dynamic Benchmark of AI Forecasting Capabilities",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://csrc.nist.gov/news/2024/the-nist-csf-20-is-here",
+      "url": "https://csrc.nist.gov/news/2024/the-nist-csf-20-is-here",
+      "labels": [
+        "NIST Cybersecurity Framework 2.0"
+      ],
+      "rationales": [
+        "Enterprise/public-sector trust claims need current cybersecurity governance, risk, and control evidence."
+      ],
+      "lanes": [
+        "loophole_remediation"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/commercial-loophole-remediation-2026-06-06.json#current_source_anchors"
+      ],
+      "checked_at": "2026-06-07T03:50:40.767Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://csrc.nist.gov/news/2024/the-nist-csf-20-is-here",
+      "content_type": "text/html; charset=utf-8",
+      "title": "The NIST CSF 2.0 is Here! | CSRC",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://csrc.nist.gov/pubs/sp/800/218/final",
+      "url": "https://csrc.nist.gov/pubs/sp/800/218/final",
+      "labels": [
+        "NIST SSDF SP 800-218"
+      ],
+      "rationales": [
+        "Enterprise procurement should see repeatable secure-development, vulnerability, and acquisition evidence rather than broad security claims.",
+        "Provide a secure-development vocabulary and repeatable SDLC evidence that purchasers can use during acquisition.",
+        "Secure-development, vulnerability response, and release evidence need repeatable artifacts, not generic claims."
+      ],
+      "lanes": [
+        "commercial_confidence_frameworks",
+        "enterprise_procurement",
+        "enterprise_trust"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/commercial-confidence-gate-2026-06-06.json#external_framework_alignment",
+        "docs/launch-readiness/enterprise-procurement-readiness-gate-2026-06-06.json#current_source_alignment",
+        "docs/launch-readiness/enterprise-trust-execution-readiness-2026-06-06.json#current_enterprise_trust_sources"
+      ],
+      "checked_at": "2026-06-07T03:50:40.707Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://csrc.nist.gov/pubs/sp/800/218/final",
+      "content_type": "text/html; charset=utf-8",
+      "title": "SP 800-218, Secure Software Development Framework (SSDF) Version 1.1: Recommendations for Mitigating the Risk of Software Vulnerabilities | CSRC",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://developer.alpha-sense.com/enterprise",
+      "url": "https://developer.alpha-sense.com/enterprise/",
+      "labels": [
+        "AlphaSense Enterprise Intelligence private-cloud documentation"
+      ],
+      "rationales": [
+        "Enterprise market-intelligence incumbents compete on premium content, proprietary/internal-content search, deployment options, mTLS, certifications, and access controls."
+      ],
+      "lanes": [
+        "competitive_positioning"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/competitive-positioning-evidence-validation-2026-06-06.json#current_competitive_sources"
+      ],
+      "checked_at": "2026-06-07T03:50:41.377Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://developer.alpha-sense.com/enterprise/",
+      "content_type": "text/html",
+      "title": "Enterprise Intelligence: Private Cloud | AlphaSense Documentation",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://docs.netlify.com/deploy/deploy-overview",
+      "url": "https://docs.netlify.com/deploy/deploy-overview/",
+      "labels": [
+        "Netlify deploy overview"
+      ],
+      "rationales": [
+        "Keep deploy identifiers and production/preview context explicit so smoke evidence can be tied to a specific release surface."
+      ],
+      "lanes": [
+        "hosted_proof"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/hosted-smoke-execution-readiness-2026-06-06.json#current_hosted_proof_sources"
+      ],
+      "checked_at": "2026-06-07T03:50:41.067Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://docs.netlify.com/deploy/deploy-overview/",
+      "content_type": "text/html; charset=UTF-8",
+      "title": "Deploy overview | Netlify Docs",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://docs.netlify.com/site-deploys/deploy-previews",
+      "url": "https://docs.netlify.com/site-deploys/deploy-previews/",
+      "labels": [
+        "Netlify Deploy Previews"
+      ],
+      "rationales": [
+        "Bind browser proof to a concrete deployed URL, branch/deploy context, and environment-variable context before external review."
+      ],
+      "lanes": [
+        "hosted_proof"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/hosted-smoke-execution-readiness-2026-06-06.json#current_hosted_proof_sources"
+      ],
+      "checked_at": "2026-06-07T03:50:41.189Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://docs.netlify.com/deploy/deploy-types/deploy-previews/",
+      "content_type": "text/html; charset=UTF-8",
+      "title": "Deploy Previews | Netlify Docs",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj",
+      "url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj",
+      "labels": [
+        "EU AI Act risk controls"
+      ],
+      "rationales": [
+        "Worldwide public-sector and enterprise buyers need clear risk classification, human oversight, logging, accuracy, robustness, cybersecurity, and high-impact action boundaries."
+      ],
+      "lanes": [
+        "commercial_confidence_frameworks"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/commercial-confidence-gate-2026-06-06.json#external_framework_alignment"
+      ],
+      "checked_at": "2026-06-07T03:50:42.891Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj",
+      "content_type": "text/html; charset=UTF-8",
+      "title": "Regulation - EU - 2024/1689 - EN - EUR-Lex",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://fiscalnote.com/newsroom/fiscalnote-announces-major-expansion-into-political-prediction-markets",
+      "url": "https://fiscalnote.com/newsroom/fiscalnote-announces-major-expansion-into-political-prediction-markets",
+      "labels": [
+        "FiscalNote political prediction-market expansion"
+      ],
+      "rationales": [
+        "Policy intelligence and prediction-market expansion validate the governed forecasting wedge while raising proof and regulatory expectations."
+      ],
+      "lanes": [
+        "competitive_positioning"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/competitive-positioning-evidence-validation-2026-06-06.json#current_competitive_sources"
+      ],
+      "checked_at": "2026-06-07T03:50:42.251Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://fiscalnote.com/newsroom/fiscalnote-announces-major-expansion-into-political-prediction-markets",
+      "content_type": "text/html; charset=UTF-8",
+      "title": "FiscalNote Announces Major Expansion Into Political Prediction Markets",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://forecastingresearch.org/research/forecastbench",
+      "url": "https://forecastingresearch.org/research/forecastbench",
+      "labels": [
+        "ForecastBench"
+      ],
+      "rationales": [
+        "Forecasting claims need dynamic, contamination-resistant evaluation rather than sample fixtures.",
+        "Use dynamic, future-event forecasting questions and baseline comparison before any AI forecasting accuracy claim.",
+        "World-class forecasting claims need contamination-resistant benchmark discipline."
+      ],
+      "lanes": [
+        "competitive_positioning",
+        "forecast_scoring",
+        "market_niche"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/competitive-positioning-evidence-validation-2026-06-06.json#current_competitive_sources",
+        "docs/launch-readiness/forecast-scoring-evidence-validation-2026-06-06.json#current_source_alignment",
+        "docs/launch-readiness/market-niche-evidence-validation-2026-06-06.json#current_research_anchors"
+      ],
+      "checked_at": "2026-06-07T03:50:42.444Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://forecastingresearch.org/research/forecastbench",
+      "content_type": "text/html; charset=UTF-8",
+      "title": "ForecastBench &#8211; Forecasting Research Institute",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://genai.owasp.org/llm-top-10",
+      "url": "https://genai.owasp.org/llm-top-10/",
+      "labels": [
+        "OWASP GenAI/LLM Top 10 2025"
+      ],
+      "rationales": [
+        "LLM security proof must cover prompt injection, sensitive information disclosure, output handling, supply chain, excessive agency, and unbounded consumption."
+      ],
+      "lanes": [
+        "commercial_confidence_frameworks"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/commercial-confidence-gate-2026-06-06.json#external_framework_alignment"
+      ],
+      "checked_at": "2026-06-07T03:50:41.768Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://genai.owasp.org/llm-top-10/",
+      "content_type": "text/html; charset=UTF-8",
+      "title": "LLMRisks Archive - OWASP Gen AI Security Project",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://goodjudgment.com/",
+      "url": "https://goodjudgment.com/",
+      "labels": [
+        "Good Judgment Superforecasting services"
+      ],
+      "rationales": [
+        "Forecasting services and training are credible substitutes, but this app needs real outcomes before claiming performance parity.",
+        "Human forecasting services validate buyer demand for foresight but set a high bar for outcome track record and expert process credibility."
+      ],
+      "lanes": [
+        "competitive_positioning",
+        "market_niche"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/competitive-positioning-evidence-validation-2026-06-06.json#current_competitive_sources",
+        "docs/launch-readiness/market-niche-evidence-validation-2026-06-06.json#current_research_anchors"
+      ],
+      "checked_at": "2026-06-07T03:50:43.304Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://goodjudgment.com/",
+      "content_type": "text/html; charset=UTF-8",
+      "title": "See the future sooner with Superforecasting | Good Judgment",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://goodjudgment.com/services",
+      "url": "https://goodjudgment.com/services/",
+      "labels": [
+        "Good Judgment professional forecasting services"
+      ],
+      "rationales": [
+        "Buyer-facing forecasting services sell strategic uncertainty reduction, custom forecasts, monitoring, and training."
+      ],
+      "lanes": [
+        "loophole_remediation"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/commercial-loophole-remediation-2026-06-06.json#current_source_anchors"
+      ],
+      "checked_at": "2026-06-07T03:50:43.487Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://goodjudgment.com/services/",
+      "content_type": "text/html; charset=UTF-8",
+      "title": "Accurate forecasts and training from professional Superforecasters",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf",
+      "url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf",
+      "labels": [
+        "NIST AI 600-1 Generative AI Profile"
+      ],
+      "rationales": [
+        "Generative-AI decision support needs explicit controls for hallucination, misuse, transparency, and security risks."
+      ],
+      "lanes": [
+        "loophole_remediation"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/commercial-loophole-remediation-2026-06-06.json#current_source_anchors"
+      ],
+      "checked_at": "2026-06-07T03:50:43.994Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf",
+      "content_type": "application/pdf",
+      "title": "",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://owasp.org/www-project-application-security-verification-standard",
+      "url": "https://owasp.org/www-project-application-security-verification-standard/",
+      "labels": [
+        "OWASP ASVS"
+      ],
+      "rationales": [
+        "Tenant and object-level access control claims require verification evidence, including negative tests."
+      ],
+      "lanes": [
+        "rls_proof"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/rls-proof-evidence-validation-2026-06-06.json#current_source_alignment"
+      ],
+      "checked_at": "2026-06-07T03:50:43.610Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://owasp.org/www-project-application-security-verification-standard/",
+      "content_type": "text/html; charset=utf-8",
+      "title": "OWASP Application Security Verification Standard (ASVS) | OWASP Foundation",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://owasp.org/www-project-top-10-for-large-language-model-applications",
+      "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/",
+      "labels": [
+        "OWASP GenAI Security Project / LLM Top 10",
+        "OWASP Top 10 for LLM Applications 2025",
+        "OWASP Top 10 for Large Language Model Applications"
+      ],
+      "rationales": [
+        "Cover prompt injection, sensitive information disclosure, insecure output handling, excessive agency, overreliance, model theft, and related GenAI security risks.",
+        "LLM apps need prompt-injection, output-handling, data, supply-chain, and agent/tool security proof.",
+        "LLM decision-support systems need prompt-injection, insecure-output, sensitive-disclosure, excessive-agency, and overreliance controls before enterprise trust claims."
+      ],
+      "lanes": [
+        "enterprise_trust",
+        "loophole_remediation",
+        "market_niche"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/commercial-loophole-remediation-2026-06-06.json#current_source_anchors",
+        "docs/launch-readiness/enterprise-trust-execution-readiness-2026-06-06.json#current_enterprise_trust_sources",
+        "docs/launch-readiness/market-niche-evidence-validation-2026-06-06.json#current_research_anchors"
+      ],
+      "checked_at": "2026-06-07T03:50:43.946Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/",
+      "content_type": "text/html; charset=utf-8",
+      "title": "OWASP Top 10 for Large Language Model Applications | OWASP Foundation",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://playwright.dev/docs/test-use-options",
+      "url": "https://playwright.dev/docs/test-use-options",
+      "labels": [
+        "Playwright configuration"
+      ],
+      "rationales": [
+        "Use explicit base URLs, browser context options, and trace/screenshot/video capture for repeatable browser smoke proof."
+      ],
+      "lanes": [
+        "hosted_proof"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/hosted-smoke-execution-readiness-2026-06-06.json#current_hosted_proof_sources"
+      ],
+      "checked_at": "2026-06-07T03:50:43.675Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://playwright.dev/docs/test-use-options",
+      "content_type": "text/html; charset=utf-8",
+      "title": "Configuration (use) | Playwright",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://playwright.dev/docs/trace-viewer",
+      "url": "https://playwright.dev/docs/trace-viewer",
+      "labels": [
+        "Playwright trace viewer"
+      ],
+      "rationales": [
+        "Retain trace or screenshot evidence when a hosted smoke fails or needs review."
+      ],
+      "lanes": [
+        "hosted_proof"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/hosted-smoke-execution-readiness-2026-06-06.json#current_hosted_proof_sources"
+      ],
+      "checked_at": "2026-06-07T03:50:43.748Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://playwright.dev/docs/trace-viewer",
+      "content_type": "text/html; charset=utf-8",
+      "title": "Trace viewer | Playwright",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://supabase.com/docs/guides/database/extensions/pgtap",
+      "url": "https://supabase.com/docs/guides/database/extensions/pgtap",
+      "labels": [
+        "Supabase pgTAP docs"
+      ],
+      "rationales": [
+        "pgTAP provides database-level assertions for policies, functions, and security behavior."
+      ],
+      "lanes": [
+        "rls_proof"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/rls-proof-evidence-validation-2026-06-06.json#current_source_alignment"
+      ],
+      "checked_at": "2026-06-07T03:50:43.948Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://supabase.com/docs/guides/database/extensions/pgtap",
+      "content_type": "text/html; charset=utf-8",
+      "title": "pgTAP: Unit Testing | Supabase Docs",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://supabase.com/docs/guides/database/postgres/row-level-security",
+      "url": "https://supabase.com/docs/guides/database/postgres/row-level-security",
+      "labels": [
+        "Supabase Row Level Security docs"
+      ],
+      "rationales": [
+        "Policies should constrain anon/authenticated/service-role behavior by row and operation rather than broad public grants."
+      ],
+      "lanes": [
+        "rls_proof"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/rls-proof-evidence-validation-2026-06-06.json#current_source_alignment"
+      ],
+      "checked_at": "2026-06-07T03:50:44.016Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://supabase.com/docs/guides/database/postgres/row-level-security",
+      "content_type": "text/html; charset=utf-8",
+      "title": "Row Level Security | Supabase Docs",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://supabase.com/docs/guides/functions",
+      "url": "https://supabase.com/docs/guides/functions",
+      "labels": [
+        "Supabase Edge Functions"
+      ],
+      "rationales": [
+        "Treat deployed edge functions as a managed runtime surface that must be checked separately from repo-local code."
+      ],
+      "lanes": [
+        "hosted_proof"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/hosted-smoke-execution-readiness-2026-06-06.json#current_hosted_proof_sources"
+      ],
+      "checked_at": "2026-06-07T03:50:44.054Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://supabase.com/docs/guides/functions",
+      "content_type": "text/html; charset=utf-8",
+      "title": "Edge Functions | Supabase Docs",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://supabase.com/docs/guides/local-development",
+      "url": "https://supabase.com/docs/guides/local-development",
+      "labels": [
+        "Supabase local development and CLI"
+      ],
+      "rationales": [
+        "Use the CLI for local development and project-scoped checks, but require actual project visibility before hosted proof claims."
+      ],
+      "lanes": [
+        "hosted_proof"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/hosted-smoke-execution-readiness-2026-06-06.json#current_hosted_proof_sources"
+      ],
+      "checked_at": "2026-06-07T03:50:44.163Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://supabase.com/docs/guides/local-development",
+      "content_type": "text/html; charset=utf-8",
+      "title": "Local Development &amp; CLI | Supabase Docs",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://supabase.com/docs/guides/local-development/testing/overview",
+      "url": "https://supabase.com/docs/guides/local-development/testing/overview",
+      "labels": [
+        "Supabase Testing overview"
+      ],
+      "rationales": [
+        "Database tests, especially RLS policy tests, should be run and evidenced before release claims."
+      ],
+      "lanes": [
+        "rls_proof"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/rls-proof-evidence-validation-2026-06-06.json#current_source_alignment"
+      ],
+      "checked_at": "2026-06-07T03:50:44.243Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://supabase.com/docs/guides/local-development/testing/overview",
+      "content_type": "text/html; charset=utf-8",
+      "title": "Testing Overview | Supabase Docs",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://www.cisa.gov/news-events/news/building-secure-design-ecosystem",
+      "url": "https://www.cisa.gov/news-events/news/building-secure-design-ecosystem",
+      "labels": [
+        "CISA Secure by Design",
+        "CISA Secure by Design software manufacturer guidance"
+      ],
+      "rationales": [
+        "Security posture should be framed as secure-by-design process evidence and owner-approved operational proof, not post-hoc assurance copy.",
+        "Security posture should shift customer risk back to the software maker through secure defaults and evidence."
+      ],
+      "lanes": [
+        "loophole_remediation",
+        "market_niche"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/commercial-loophole-remediation-2026-06-06.json#current_source_anchors",
+        "docs/launch-readiness/market-niche-evidence-validation-2026-06-06.json#current_research_anchors"
+      ],
+      "checked_at": "2026-06-07T03:50:44.323Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://www.cisa.gov/news-events/news/building-secure-design-ecosystem",
+      "content_type": "text/html; charset=UTF-8",
+      "title": "Building a Secure by Design Ecosystem | CISA",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://www.cisa.gov/resources-tools/resources/secure-demand-guide",
+      "url": "https://www.cisa.gov/resources-tools/resources/secure-demand-guide",
+      "labels": [
+        "CISA Secure by Demand Guide",
+        "CISA Secure by Design and Secure by Demand"
+      ],
+      "rationales": [
+        "Procurement buyers should receive direct answers about secure-by-design practices, current proof, and supplier accountability.",
+        "Use supplier security questions to separate current proof, missing proof, owner actions, and buyer-safe claims."
+      ],
+      "lanes": [
+        "commercial_confidence_frameworks",
+        "enterprise_procurement"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/commercial-confidence-gate-2026-06-06.json#external_framework_alignment",
+        "docs/launch-readiness/enterprise-procurement-readiness-gate-2026-06-06.json#current_source_alignment"
+      ],
+      "checked_at": "2026-06-07T03:50:44.332Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://www.cisa.gov/resources-tools/resources/secure-demand-guide",
+      "content_type": "text/html; charset=UTF-8",
+      "title": "Secure by Demand Guide: How Software Customers Can Drive a Secure Technology Ecosystem | CISA",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://www.cisa.gov/sites/default/files/2024-08/SecureByDemandGuide_080624_508c.pdf",
+      "url": "https://www.cisa.gov/sites/default/files/2024-08/SecureByDemandGuide_080624_508c.pdf",
+      "labels": [
+        "CISA Secure by Demand Guide"
+      ],
+      "rationales": [
+        "Answer product-security procurement questions and show secure-by-design ownership, transparency, and accountability."
+      ],
+      "lanes": [
+        "enterprise_trust"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/enterprise-trust-execution-readiness-2026-06-06.json#current_enterprise_trust_sources"
+      ],
+      "checked_at": "2026-06-07T03:50:44.254Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://www.cisa.gov/sites/default/files/2024-08/SecureByDemandGuide_080624_508c.pdf",
+      "content_type": "application/pdf",
+      "title": "",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://www.controlrisks.com/riskmap",
+      "url": "https://www.controlrisks.com/riskmap",
+      "labels": [
+        "Control Risks RiskMap 2026"
+      ],
+      "rationales": [
+        "Consulting and advisory incumbents validate buyer urgency but have trust, analyst, and briefing credibility this app has not proven."
+      ],
+      "lanes": [
+        "competitive_positioning"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/competitive-positioning-evidence-validation-2026-06-06.json#current_competitive_sources"
+      ],
+      "checked_at": "2026-06-07T03:50:45.734Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://www.controlrisks.com/riskmap",
+      "content_type": "text/html; charset=utf-8",
+      "title": "RiskMap 2026 | Control Risks",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://www.dataminr.com/",
+      "url": "https://www.dataminr.com/",
+      "labels": [
+        "Dataminr real-time risk intelligence"
+      ],
+      "rationales": [
+        "Risk-intelligence buyers expect real-time signal detection, alerting, public-data coverage, and operational response workflows."
+      ],
+      "lanes": [
+        "loophole_remediation"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/commercial-loophole-remediation-2026-06-06.json#current_source_anchors"
+      ],
+      "checked_at": "2026-06-07T03:50:44.489Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://www.dataminr.com/",
+      "content_type": "text/html; charset=UTF-8",
+      "title": "AI-Powered Real-Time Event, Threat &amp; Risk Intelligence - Dataminr",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://www.eurasiagroup.net/services/political-risk-advisory",
+      "url": "https://www.eurasiagroup.net/services/political-risk-advisory",
+      "labels": [
+        "Eurasia Group political risk advisory"
+      ],
+      "rationales": [
+        "Political-risk advisory substitutes reinforce that buyer value is judgment, briefing, and decision context, not only event feeds."
+      ],
+      "lanes": [
+        "competitive_positioning"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/competitive-positioning-evidence-validation-2026-06-06.json#current_competitive_sources"
+      ],
+      "checked_at": "2026-06-07T03:50:45.623Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://www.eurasiagroup.net/services/political-risk-advisory",
+      "content_type": "text/html;charset=UTF-8",
+      "title": "Eurasia Group | Political risk advisory",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://www.forecastbench.org/about",
+      "url": "https://www.forecastbench.org/about/",
+      "labels": [
+        "ForecastBench",
+        "ForecastBench dynamic forecasting benchmark"
+      ],
+      "rationales": [
+        "AI forecasting claims need dynamic, continuously updated benchmark comparisons rather than static fixtures alone.",
+        "Dynamic, continuously updated, contamination-resistant forecasting benchmark with human comparison groups.",
+        "Prefer dynamic, contamination-resistant questions whose answers were unknown at forecast time, with human comparison groups where available.",
+        "World-class AI forecasting claims require dynamic, contamination-resistant benchmarks and human accuracy references."
+      ],
+      "lanes": [
+        "commercial_confidence_frameworks",
+        "forecast_protocol",
+        "loophole_remediation",
+        "prediction_science"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/commercial-confidence-gate-2026-06-06.json#external_framework_alignment",
+        "docs/launch-readiness/commercial-loophole-remediation-2026-06-06.json#current_source_anchors",
+        "docs/launch-readiness/forecast-evaluation-protocol-2026-06-06.json#external_methodology_alignment",
+        "docs/launch-readiness/prediction-science-evidence-validation-2026-06-06.json#current_forecasting_science_sources"
+      ],
+      "checked_at": "2026-06-07T03:50:44.749Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://www.forecastbench.org/about/",
+      "content_type": "text/html; charset=utf-8",
+      "title": "About - ForecastBench",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://www.forecastbench.org/docs",
+      "url": "https://www.forecastbench.org/docs/",
+      "labels": [
+        "ForecastBench docs",
+        "ForecastBench documentation"
+      ],
+      "rationales": [
+        "Track difficulty-adjusted Brier or comparable Brier-style scoring and ranking stability rather than one-off anecdotes.",
+        "Use Brier-style scoring, question-set methodology, resolved forecasts, and ranking caveats for fair benchmark comparisons."
+      ],
+      "lanes": [
+        "forecast_protocol",
+        "forecast_scoring"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/forecast-evaluation-protocol-2026-06-06.json#external_methodology_alignment",
+        "docs/launch-readiness/forecast-scoring-evidence-validation-2026-06-06.json#current_source_alignment"
+      ],
+      "checked_at": "2026-06-07T03:50:44.850Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://www.forecastbench.org/docs/",
+      "content_type": "text/html; charset=utf-8",
+      "title": "Docs - ForecastBench",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://www.ftc.gov/business-guidance/blog/2023/02/keep-your-ai-claims-check",
+      "url": "https://www.ftc.gov/business-guidance/blog/2023/02/keep-your-ai-claims-check",
+      "labels": [
+        "FTC AI claims substantiation guidance"
+      ],
+      "rationales": [
+        "Marketing claims about AI capability, superiority, accuracy, replacement, or readiness must be substantiated before they are shown externally."
+      ],
+      "lanes": [
+        "commercial_confidence_frameworks"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/commercial-confidence-gate-2026-06-06.json#external_framework_alignment"
+      ],
+      "checked_at": "2026-06-07T03:50:49.724Z",
+      "status": 403,
+      "status_text": "Forbidden",
+      "final_url": "https://www.ftc.gov/business-guidance/blog/2023/02/keep-your-ai-claims-check",
+      "content_type": "text/html; charset=UTF-8",
+      "title": "Page not found | Federal Trade Commission",
+      "error": "",
+      "reachability_status": "access_limited_unverified",
+      "title_warning": "title_indicates_not_found",
+      "title_review_required": true
+    },
+    {
+      "normalized_url": "https://www.gartner.com/en/newsroom/press-releases/2025-07-30-gartner-says-generative-ai-for-procurement-has-entered-the-trough-of-disillusionment",
+      "url": "https://www.gartner.com/en/newsroom/press-releases/2025-07-30-gartner-says-generative-ai-for-procurement-has-entered-the-trough-of-disillusionment",
+      "labels": [
+        "Gartner procurement GenAI disillusionment signal"
+      ],
+      "rationales": [
+        "AI buyers need process-specific proof, risk controls, and ROI evidence; broad AI-platform copy is a commercial risk."
+      ],
+      "lanes": [
+        "market_niche"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/market-niche-evidence-validation-2026-06-06.json#current_research_anchors"
+      ],
+      "checked_at": "2026-06-07T03:50:45.200Z",
+      "status": 403,
+      "status_text": "Forbidden",
+      "final_url": "https://www.gartner.com/en/newsroom/press-releases/2025-07-30-gartner-says-generative-ai-for-procurement-has-entered-the-trough-of-disillusionment",
+      "content_type": "text/html; charset=UTF-8",
+      "title": "Just a moment... | Gartner",
+      "error": "",
+      "reachability_status": "access_limited_unverified",
+      "title_warning": "title_indicates_interstitial",
+      "title_review_required": true
+    },
+    {
+      "normalized_url": "https://www.iarpa.gov/research-programs/ace",
+      "url": "https://www.iarpa.gov/research-programs/ace",
+      "labels": [
+        "IARPA ACE forecasting program"
+      ],
+      "rationales": [
+        "Forecasting accuracy claims need probabilistic judgment, aggregation, and empirical testing against real events."
+      ],
+      "lanes": [
+        "loophole_remediation"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/commercial-loophole-remediation-2026-06-06.json#current_source_anchors"
+      ],
+      "checked_at": "2026-06-07T03:50:46.115Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://www.iarpa.gov/research-programs/ace",
+      "content_type": "text/html; charset=utf-8",
+      "title": "IARPA - ACE",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://www.iso.org/standard/42001",
+      "url": "https://www.iso.org/standard/42001",
+      "labels": [
+        "ISO/IEC 42001:2023",
+        "ISO/IEC 42001:2023 AI management system"
+      ],
+      "rationales": [
+        "AI management-system language is valid only as alignment unless an audited/certified management system exists.",
+        "Enterprise AI buyers increasingly expect an AI management-system posture: policies, traceability, transparency, risk treatment, and continuous improvement.",
+        "Treat AI governance as a management-system readiness path; do not claim certification or audited AIMS without external proof."
+      ],
+      "lanes": [
+        "enterprise_procurement",
+        "enterprise_trust",
+        "market_niche"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/enterprise-procurement-readiness-gate-2026-06-06.json#current_source_alignment",
+        "docs/launch-readiness/enterprise-trust-execution-readiness-2026-06-06.json#current_enterprise_trust_sources",
+        "docs/launch-readiness/market-niche-evidence-validation-2026-06-06.json#current_research_anchors"
+      ],
+      "checked_at": "2026-06-07T03:50:45.852Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://www.iso.org/standard/42001",
+      "content_type": "text/html;charset=UTF-8",
+      "title": "ISO/IEC 42001:2023 - AI management systems",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://www.iso.org/standard/81230.html",
+      "url": "https://www.iso.org/standard/81230.html",
+      "labels": [
+        "ISO/IEC 42001:2023"
+      ],
+      "rationales": [
+        "AI governance can be mapped for readiness, but certification or an audited AI management system cannot be claimed from repo artifacts alone."
+      ],
+      "lanes": [
+        "commercial_confidence_frameworks"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/commercial-confidence-gate-2026-06-06.json#external_framework_alignment"
+      ],
+      "checked_at": "2026-06-07T03:50:45.955Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://www.iso.org/standard/42001",
+      "content_type": "text/html;charset=UTF-8",
+      "title": "ISO/IEC 42001:2023 - AI management systems",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://www.mckinsey.com/capabilities/strategy-and-corporate-finance/our-insights/cfos-have-been-concerned-about-geopolitical-impacts-for-months",
+      "url": "https://www.mckinsey.com/capabilities/strategy-and-corporate-finance/our-insights/cfos-have-been-concerned-about-geopolitical-impacts-for-months",
+      "labels": [
+        "McKinsey CFO Pulse Survey 2026"
+      ],
+      "rationales": [
+        "CFOs are spending attention on geopolitical impact, risk monitoring, and scenario planning; the pilot should sell decision workflow, not raw prediction."
+      ],
+      "lanes": [
+        "market_niche"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/market-niche-evidence-validation-2026-06-06.json#current_research_anchors"
+      ],
+      "checked_at": "2026-06-07T03:50:46.282Z",
+      "status": 403,
+      "status_text": "Forbidden",
+      "final_url": "https://www.mckinsey.com/capabilities/strategy-and-corporate-finance/our-insights/cfos-have-been-concerned-about-geopolitical-impacts-for-months",
+      "content_type": "text/html",
+      "title": "Access Denied",
+      "error": "",
+      "reachability_status": "access_limited_unverified",
+      "title_warning": "title_indicates_access_denied",
+      "title_review_required": true
+    },
+    {
+      "normalized_url": "https://www.metaculus.com/about",
+      "url": "https://www.metaculus.com/about/",
+      "labels": [
+        "Metaculus forecasting platform and aggregation engine"
+      ],
+      "rationales": [
+        "Forecasting products are judged by resolved-question history, aggregation quality, and organizational use cases; sample fixtures do not prove parity.",
+        "Forecasting-platform substitutes bring resolved-question history, aggregation, tournaments, private spaces, and pro forecasters."
+      ],
+      "lanes": [
+        "competitive_positioning",
+        "market_niche"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/competitive-positioning-evidence-validation-2026-06-06.json#current_competitive_sources",
+        "docs/launch-readiness/market-niche-evidence-validation-2026-06-06.json#current_research_anchors"
+      ],
+      "checked_at": "2026-06-07T03:50:46.156Z",
+      "status": 403,
+      "status_text": "Forbidden",
+      "final_url": "https://www.metaculus.com/about/",
+      "content_type": "text/html; charset=UTF-8",
+      "title": "Just a moment...",
+      "error": "",
+      "reachability_status": "access_limited_unverified",
+      "title_warning": "title_indicates_interstitial",
+      "title_review_required": true
+    },
+    {
+      "normalized_url": "https://www.metaculus.com/futureeval",
+      "url": "https://www.metaculus.com/futureeval/",
+      "labels": [
+        "Metaculus FutureEval"
+      ],
+      "rationales": [
+        "AI forecasting agents should be evaluated on real future outcomes and compared against human, community, pro-forecaster, and model baselines."
+      ],
+      "lanes": [
+        "loophole_remediation"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/commercial-loophole-remediation-2026-06-06.json#current_source_anchors"
+      ],
+      "checked_at": "2026-06-07T03:50:46.239Z",
+      "status": 403,
+      "status_text": "Forbidden",
+      "final_url": "https://www.metaculus.com/futureeval/",
+      "content_type": "text/html; charset=UTF-8",
+      "title": "Just a moment...",
+      "error": "",
+      "reachability_status": "access_limited_unverified",
+      "title_warning": "title_indicates_interstitial",
+      "title_review_required": true
+    },
+    {
+      "normalized_url": "https://www.metaculus.com/futureeval/methodology",
+      "url": "https://www.metaculus.com/futureeval/methodology/",
+      "labels": [
+        "Metaculus FutureEval",
+        "Metaculus FutureEval methodology"
+      ],
+      "rationales": [
+        "Compare AI forecasts with human/community/pro baselines on questions forecast before the answers are known.",
+        "Evaluate on open/resolved forecasting questions and compare with pro/community human baselines where humans and bots both forecast.",
+        "Forecasting accuracy should be compared against human and model baselines on resolved questions.",
+        "Forecasting claims need resolved outcomes and comparison against human/community/pro or model baselines.",
+        "Forecasting parity claims require resolved questions and comparable human/model baselines.",
+        "Use real future-outcome questions and compare with community/pro/human baselines where both humans and bots made forecasts."
+      ],
+      "lanes": [
+        "commercial_confidence_frameworks",
+        "competitive_positioning",
+        "forecast_protocol",
+        "forecast_scoring",
+        "market_niche",
+        "prediction_science"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/commercial-confidence-gate-2026-06-06.json#external_framework_alignment",
+        "docs/launch-readiness/competitive-positioning-evidence-validation-2026-06-06.json#current_competitive_sources",
+        "docs/launch-readiness/forecast-evaluation-protocol-2026-06-06.json#external_methodology_alignment",
+        "docs/launch-readiness/forecast-scoring-evidence-validation-2026-06-06.json#current_source_alignment",
+        "docs/launch-readiness/market-niche-evidence-validation-2026-06-06.json#current_research_anchors",
+        "docs/launch-readiness/prediction-science-evidence-validation-2026-06-06.json#current_forecasting_science_sources"
+      ],
+      "checked_at": "2026-06-07T03:50:48.586Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://www.metaculus.com/futureeval/methodology/",
+      "content_type": "text/html; charset=utf-8",
+      "title": "Methodology | FutureEval | Metaculus",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://www.metaculus.com/help/scores-faq",
+      "url": "https://www.metaculus.com/help/scores-faq/",
+      "labels": [
+        "Metaculus scores FAQ"
+      ],
+      "rationales": [
+        "Use proper scoring rules so incentives reward sincere probabilities rather than overconfident predictions."
+      ],
+      "lanes": [
+        "forecast_protocol"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/forecast-evaluation-protocol-2026-06-06.json#external_methodology_alignment"
+      ],
+      "checked_at": "2026-06-07T03:50:47.662Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://www.metaculus.com/help/scores-faq/",
+      "content_type": "text/html; charset=utf-8",
+      "title": "Scores FAQ | Metaculus",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://www.metaculus.com/questions/track-record",
+      "url": "https://www.metaculus.com/questions/track-record/",
+      "labels": [
+        "Metaculus track record and calibration evidence"
+      ],
+      "rationales": [
+        "Forecast platforms compete on scored resolved questions, calibration curves, and transparent track records."
+      ],
+      "lanes": [
+        "loophole_remediation"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/commercial-loophole-remediation-2026-06-06.json#current_source_anchors"
+      ],
+      "checked_at": "2026-06-07T03:50:46.389Z",
+      "status": 403,
+      "status_text": "Forbidden",
+      "final_url": "https://www.metaculus.com/questions/track-record/",
+      "content_type": "text/html; charset=UTF-8",
+      "title": "Just a moment...",
+      "error": "",
+      "reachability_status": "access_limited_unverified",
+      "title_warning": "title_indicates_interstitial",
+      "title_review_required": true
+    },
+    {
+      "normalized_url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "labels": [
+        "NIST AI RMF",
+        "NIST AI RMF Critical Infrastructure Profile concept note",
+        "NIST AI Risk Management Framework",
+        "NIST AI Risk Management Framework plus Generative AI Profile"
+      ],
+      "rationales": [
+        "AI trust claims should remain governed, measured, and managed across the lifecycle.",
+        "Best-practice AI claims need risk management, measurement, governance, and claim-specific proof gates before being upgraded.",
+        "Public-sector and critical-infrastructure positioning needs explicit trustworthy-AI and operational-risk controls, not only useful demos.",
+        "Treat governance, measurement, managed risk, and critical-infrastructure trust evidence as proof gates, not marketing copy.",
+        "Trustworthy AI posture needs governed risk management, measurement, and claim controls.",
+        "Use documented governance, measurement, evaluation, monitoring, and risk-management evidence before AI trust claims.",
+        "Use documented test, evaluation, verification, validation, monitoring, and risk-management evidence before trust claims."
+      ],
+      "lanes": [
+        "commercial_confidence_frameworks",
+        "enterprise_procurement",
+        "enterprise_trust",
+        "loophole_remediation",
+        "market_niche",
+        "prediction_science"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/commercial-confidence-gate-2026-06-06.json#external_framework_alignment",
+        "docs/launch-readiness/commercial-loophole-remediation-2026-06-06.json#current_source_anchors",
+        "docs/launch-readiness/enterprise-procurement-readiness-gate-2026-06-06.json#current_source_alignment",
+        "docs/launch-readiness/enterprise-trust-execution-readiness-2026-06-06.json#current_enterprise_trust_sources",
+        "docs/launch-readiness/market-niche-evidence-validation-2026-06-06.json#current_research_anchors",
+        "docs/launch-readiness/prediction-science-evidence-validation-2026-06-06.json#current_forecasting_science_sources"
+      ],
+      "checked_at": "2026-06-07T03:50:47.656Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "content_type": "text/html; charset=UTF-8",
+      "title": "AI Risk Management Framework | NIST",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://www.nist.gov/privacy-framework/privacy-framework",
+      "url": "https://www.nist.gov/privacy-framework/privacy-framework",
+      "labels": [
+        "NIST Privacy Framework"
+      ],
+      "rationales": [
+        "Privacy should be treated as enterprise risk management with clear data, retention, and processing evidence."
+      ],
+      "lanes": [
+        "enterprise_procurement"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/enterprise-procurement-readiness-gate-2026-06-06.json#current_source_alignment"
+      ],
+      "checked_at": "2026-06-07T03:50:47.991Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://www.nist.gov/privacy-framework/privacy-framework",
+      "content_type": "text/html; charset=UTF-8",
+      "title": "Privacy Framework | NIST",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://www.nist.gov/system/files/documents/2026/04/08/Concept%20Note_%20Development%20of%20the%20NIST%20AI%20RMF%20Trustworthy%20Use%20of%20AI%20in%20Critical%20Infrastructure%20Profile.pdf",
+      "url": "https://www.nist.gov/system/files/documents/2026/04/08/Concept%20Note_%20Development%20of%20the%20NIST%20AI%20RMF%20Trustworthy%20Use%20of%20AI%20in%20Critical%20Infrastructure%20Profile.pdf",
+      "labels": [
+        "NIST AI RMF Trustworthy AI in Critical Infrastructure Profile concept note"
+      ],
+      "rationales": [
+        "For critical-infrastructure-facing AI, emphasize TEVV, adversarial robustness, explainability, graceful degradation, supply-chain visibility, and human oversight."
+      ],
+      "lanes": [
+        "enterprise_trust"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/enterprise-trust-execution-readiness-2026-06-06.json#current_enterprise_trust_sources"
+      ],
+      "checked_at": "2026-06-07T03:50:49.108Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://www.nist.gov/system/files/documents/2026/04/08/Concept%20Note_%20Development%20of%20the%20NIST%20AI%20RMF%20Trustworthy%20Use%20of%20AI%20in%20Critical%20Infrastructure%20Profile.pdf",
+      "content_type": "application/pdf",
+      "title": "",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://www.oecd.org/en/topics/ai-principles.html",
+      "url": "https://www.oecd.org/en/topics/ai-principles.html",
+      "labels": [
+        "OECD AI Principles, updated 2024"
+      ],
+      "rationales": [
+        "AI systems should be robust, secure, safe, accountable, transparent, and human-centered."
+      ],
+      "lanes": [
+        "loophole_remediation"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/commercial-loophole-remediation-2026-06-06.json#current_source_anchors"
+      ],
+      "checked_at": "2026-06-07T03:50:48.191Z",
+      "status": 403,
+      "status_text": "Forbidden",
+      "final_url": "https://www.oecd.org/en/topics/ai-principles.html",
+      "content_type": "text/html; charset=UTF-8",
+      "title": "Just a moment...",
+      "error": "",
+      "reachability_status": "access_limited_unverified",
+      "title_warning": "title_indicates_interstitial",
+      "title_review_required": true
+    },
+    {
+      "normalized_url": "https://www.oxan.com/",
+      "url": "https://www.oxan.com/",
+      "labels": [
+        "Oxford Analytica advisory services"
+      ],
+      "rationales": [
+        "Analyst-led briefing incumbents are a substitute for executive/analyst briefing workflows."
+      ],
+      "lanes": [
+        "competitive_positioning"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/competitive-positioning-evidence-validation-2026-06-06.json#current_competitive_sources"
+      ],
+      "checked_at": "2026-06-07T03:50:50.195Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://www.dowjones.com/business-intelligence/risk/products/oxford-analytica-daily-brief/",
+      "content_type": "text/html; charset=UTF-8",
+      "title": "The Oxford Analytica Daily Brief",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://www.palantir.com/docs/foundry/platform-overview",
+      "url": "https://www.palantir.com/docs/foundry/platform-overview",
+      "labels": [
+        "Palantir AIP and Foundry platform overview"
+      ],
+      "rationales": [
+        "Operational AI incumbents win on data integration, ontology, security, and deployment depth; this app should sell a narrower strategic workflow pilot."
+      ],
+      "lanes": [
+        "competitive_positioning"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/competitive-positioning-evidence-validation-2026-06-06.json#current_competitive_sources"
+      ],
+      "checked_at": "2026-06-07T03:50:48.745Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://www.palantir.com/docs/foundry/platform-overview",
+      "content_type": "text/html",
+      "title": "Platform overview • Overview • Palantir",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://www.palantir.com/platforms/aip",
+      "url": "https://www.palantir.com/platforms/aip/",
+      "labels": [
+        "Palantir AIP"
+      ],
+      "rationales": [
+        "Enterprise substitutes emphasize operational decision workflows, ontology grounding, automations, and human approval."
+      ],
+      "lanes": [
+        "loophole_remediation"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/commercial-loophole-remediation-2026-06-06.json#current_source_anchors"
+      ],
+      "checked_at": "2026-06-07T03:50:48.782Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://www.palantir.com/platforms/aip/",
+      "content_type": "text/html",
+      "title": "Palantir Artificial Intelligence Platform",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://www.postgresql.org/docs/current/ddl-rowsecurity.html",
+      "url": "https://www.postgresql.org/docs/current/ddl-rowsecurity.html",
+      "labels": [
+        "PostgreSQL Row Security Policies"
+      ],
+      "rationales": [
+        "When row security is enabled, row access must be allowed by policy; absent policies default to deny for normal users."
+      ],
+      "lanes": [
+        "rls_proof"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/rls-proof-evidence-validation-2026-06-06.json#current_source_alignment"
+      ],
+      "checked_at": "2026-06-07T03:50:49.786Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://www.postgresql.org/docs/current/ddl-rowsecurity.html",
+      "content_type": "text/html; charset=utf-8",
+      "title": "PostgreSQL: Documentation: 18: 5.9. Row Security Policies",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://www.quid.com/",
+      "url": "https://www.quid.com/",
+      "labels": [
+        "Quid AI-powered consumer and market intelligence"
+      ],
+      "rationales": [
+        "Market-intelligence incumbents compete on data coverage, proprietary NLP, context customization, and decision-ready workflows; this app should not claim data-breadth superiority."
+      ],
+      "lanes": [
+        "competitive_positioning"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/competitive-positioning-evidence-validation-2026-06-06.json#current_competitive_sources"
+      ],
+      "checked_at": "2026-06-07T03:50:49.573Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://www.quid.com/",
+      "content_type": "text/html; charset=UTF-8",
+      "title": "Quid | AI-Powered Consumer &amp; Market Intelligence Platform",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://www.recordedfuture.com/products/geopolitical-intelligence",
+      "url": "https://www.recordedfuture.com/products/geopolitical-intelligence",
+      "labels": [
+        "Recorded Future Geopolitical Intelligence"
+      ],
+      "rationales": [
+        "Threat-intelligence incumbents win on monitoring breadth and analyst support; this app should not claim raw coverage superiority."
+      ],
+      "lanes": [
+        "competitive_positioning"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/competitive-positioning-evidence-validation-2026-06-06.json#current_competitive_sources"
+      ],
+      "checked_at": "2026-06-07T03:50:50.418Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://www.recordedfuture.com/products/geopolitical-intelligence",
+      "content_type": "text/html; charset=utf-8",
+      "title": "Protect Assets with Geopolitical Intelligence | Recorded Future",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://www.tradeweb.com/newsroom/media-center/news-releases/geopolitical-risk-concerns-surge-for-corporate-treasurers-according-to-2026-tradeweb-icd-portal-client-survey",
+      "url": "https://www.tradeweb.com/newsroom/media-center/news-releases/geopolitical-risk-concerns-surge-for-corporate-treasurers-according-to-2026-tradeweb-icd-portal-client-survey/",
+      "labels": [
+        "Tradeweb ICD Portal Client Survey 2026"
+      ],
+      "rationales": [
+        "Corporate treasury buyers have a current geopolitical-risk pain signal, but this supports discovery focus rather than buyer validation."
+      ],
+      "lanes": [
+        "market_niche"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/market-niche-evidence-validation-2026-06-06.json#current_research_anchors"
+      ],
+      "checked_at": "2026-06-07T03:50:51.624Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://www.tradeweb.com/newsroom/media-center/news-releases/geopolitical-risk-concerns-surge-for-corporate-treasurers-according-to-2026-tradeweb-icd-portal-client-survey/",
+      "content_type": "text/html; charset=utf-8",
+      "title": "Geopolitical Risk Concerns Surge for Corporate Treasurers, According to 2026 Tradeweb ICD Portal Client Survey",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://www.tripod-statement.org/",
+      "url": "https://www.tripod-statement.org/",
+      "labels": [
+        "TRIPOD+AI reporting discipline"
+      ],
+      "rationales": [
+        "Prediction-model claims should report intended use, data provenance, participants/events, predictors, model versioning, performance, uncertainty, limitations, and external validation."
+      ],
+      "lanes": [
+        "commercial_confidence_frameworks"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/commercial-confidence-gate-2026-06-06.json#external_framework_alignment"
+      ],
+      "checked_at": "2026-06-07T03:50:50.314Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://www.tripod-statement.org/",
+      "content_type": "text/html; charset=UTF-8",
+      "title": "Tripod statement",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://www.weforum.org/focus/strategic-intelligence",
+      "url": "https://www.weforum.org/focus/strategic-intelligence/",
+      "labels": [
+        "World Economic Forum Strategic Intelligence"
+      ],
+      "rationales": [
+        "Strategic-intelligence demand is real, but differentiation must be workflow/actionability proof rather than another contextual map.",
+        "Strategic-intelligence incumbents validate the category but raise the bar for curated expert networks, maps, and foresight credibility.",
+        "Strategic-intelligence platforms validate complexity mapping and foresight demand, but this app needs workflow proof to avoid being only a map or content layer."
+      ],
+      "lanes": [
+        "competitive_positioning",
+        "market_niche"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/competitive-positioning-evidence-validation-2026-06-06.json#current_competitive_sources",
+        "docs/launch-readiness/market-niche-evidence-validation-2026-06-06.json#current_research_anchors"
+      ],
+      "checked_at": "2026-06-07T03:50:51.678Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://intelligence.weforum.org/discover",
+      "content_type": "text/html",
+      "title": "Strategic Intelligence",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    },
+    {
+      "normalized_url": "https://www.weforum.org/publications/global-risks-report-2026/in-full",
+      "url": "https://www.weforum.org/publications/global-risks-report-2026/in-full/",
+      "labels": [
+        "World Economic Forum Global Risks Report 2026"
+      ],
+      "rationales": [
+        "Geoeconomic confrontation, conflict, polarization, misinformation, and AI risk provide current buyer-pain context."
+      ],
+      "lanes": [
+        "loophole_remediation"
+      ],
+      "source_artifacts": [
+        "docs/launch-readiness/commercial-loophole-remediation-2026-06-06.json#current_source_anchors"
+      ],
+      "checked_at": "2026-06-07T03:50:50.789Z",
+      "status": 200,
+      "status_text": "OK",
+      "final_url": "https://www.weforum.org/publications/global-risks-report-2026/in-full/",
+      "content_type": "text/html; charset=utf-8",
+      "title": "Preface - Global Risks Report 2026 | World Economic Forum",
+      "error": "",
+      "reachability_status": "reachable",
+      "title_warning": "",
+      "title_review_required": false
+    }
+  ],
+  "proof_boundary": "Fresh external source anchors support desk-research freshness and framework alignment only. They do not prove buyer demand, willingness to pay, hosted runtime health, enterprise procurement readiness, or prediction accuracy."
+}

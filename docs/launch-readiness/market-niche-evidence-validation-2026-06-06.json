@@ -1,0 +1,358 @@
+{
+  "schema_version": "market-niche-evidence-validation-v1",
+  "generated_at": "2026-06-07T03:39:31.515Z",
+  "status": "market_niche_evidence_validation_ready_not_buyer_validated",
+  "source": {
+    "pilot_offer_pack": "docs/launch-readiness/pilot-offer-pack-2026-06-06.json",
+    "buyer_proof_gate": "docs/launch-readiness/buyer-proof-gate-2026-06-06.json",
+    "buyer_evidence_validation": "docs/launch-readiness/buyer-evidence-input-validation-2026-06-06.json",
+    "local_browser_route_proof": "docs/launch-readiness/local-browser-route-proof-2026-06-06.json",
+    "hosted_proof_validation": "docs/launch-readiness/hosted-operational-proof-evidence-validation-2026-06-06.json",
+    "scoring_validation": "docs/launch-readiness/forecast-scoring-evidence-validation-2026-06-06.json",
+    "enterprise_procurement_gate": "docs/launch-readiness/enterprise-procurement-readiness-gate-2026-06-06.json",
+    "commercial_confidence_gate": "docs/launch-readiness/commercial-confidence-gate-2026-06-06.json",
+    "launch_evidence": "docs/launch-readiness/launch-evidence-2026-06-06.json"
+  },
+  "summary": {
+    "niche_count": 5,
+    "required_niche_count": 5,
+    "required_niche_present_count": 5,
+    "source_alignment_count": 8,
+    "current_research_anchor_count": 13,
+    "substitution_matrix_count": 5,
+    "substitution_matrix_required_count": 5,
+    "substitution_covered_niche_count": 5,
+    "substitution_coverage_complete": true,
+    "named_target_count": 20,
+    "selected_target_count": 10,
+    "local_route_signal_ready_count": 5,
+    "local_route_proof_ready": true,
+    "buyer_validation_verified": false,
+    "buyer_evidence_ready_for_proof_gate": false,
+    "hosted_ready_for_buyer_safe_claims": false,
+    "scoring_output_ready_for_claim_review": false,
+    "enterprise_procurement_ready_for_review": false,
+    "commercial_world_class_confidence_percent": 53.7,
+    "commercial_confidence_decision": "not_95_confident",
+    "active_release_hold_count": 5,
+    "buyer_safe_pilot_claim_allowed": true,
+    "buyer_validated_claim_allowed": false,
+    "hosted_live_claim_allowed": false,
+    "enterprise_ready_claim_allowed": false,
+    "accuracy_claim_allowed": false,
+    "world_class_prediction_claim_allowed": false
+  },
+  "current_research_anchors": [
+    {
+      "source": "NIST AI Risk Management Framework plus Generative AI Profile",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "implication": "Best-practice AI claims need risk management, measurement, governance, and claim-specific proof gates before being upgraded."
+    },
+    {
+      "source": "NIST AI RMF Critical Infrastructure Profile concept note",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "implication": "Public-sector and critical-infrastructure positioning needs explicit trustworthy-AI and operational-risk controls, not only useful demos."
+    },
+    {
+      "source": "ISO/IEC 42001:2023 AI management system",
+      "url": "https://www.iso.org/standard/42001",
+      "implication": "Enterprise AI buyers increasingly expect an AI management-system posture: policies, traceability, transparency, risk treatment, and continuous improvement."
+    },
+    {
+      "source": "OWASP Top 10 for LLM Applications 2025",
+      "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/",
+      "implication": "LLM decision-support systems need prompt-injection, insecure-output, sensitive-disclosure, excessive-agency, and overreliance controls before enterprise trust claims."
+    },
+    {
+      "source": "CISA Secure by Design software manufacturer guidance",
+      "url": "https://www.cisa.gov/news-events/news/building-secure-design-ecosystem",
+      "implication": "Security posture should be framed as secure-by-design process evidence and owner-approved operational proof, not post-hoc assurance copy."
+    },
+    {
+      "source": "ForecastBench",
+      "url": "https://forecastingresearch.org/research/forecastbench",
+      "implication": "Forecasting claims need dynamic, contamination-resistant evaluation rather than sample fixtures."
+    },
+    {
+      "source": "Metaculus FutureEval methodology",
+      "url": "https://www.metaculus.com/futureeval/methodology/",
+      "implication": "Forecasting accuracy should be compared against human and model baselines on resolved questions."
+    },
+    {
+      "source": "Metaculus forecasting platform and aggregation engine",
+      "url": "https://www.metaculus.com/about/",
+      "implication": "Forecasting products are judged by resolved-question history, aggregation quality, and organizational use cases; sample fixtures do not prove parity."
+    },
+    {
+      "source": "Good Judgment Superforecasting services",
+      "url": "https://goodjudgment.com/",
+      "implication": "Human forecasting services validate buyer demand for foresight but set a high bar for outcome track record and expert process credibility."
+    },
+    {
+      "source": "World Economic Forum Strategic Intelligence",
+      "url": "https://www.weforum.org/focus/strategic-intelligence/",
+      "implication": "Strategic-intelligence demand is real, but differentiation must be workflow/actionability proof rather than another contextual map."
+    },
+    {
+      "source": "Tradeweb ICD Portal Client Survey 2026",
+      "url": "https://www.tradeweb.com/newsroom/media-center/news-releases/geopolitical-risk-concerns-surge-for-corporate-treasurers-according-to-2026-tradeweb-icd-portal-client-survey/",
+      "implication": "Corporate treasury buyers have a current geopolitical-risk pain signal, but this supports discovery focus rather than buyer validation."
+    },
+    {
+      "source": "McKinsey CFO Pulse Survey 2026",
+      "url": "https://www.mckinsey.com/capabilities/strategy-and-corporate-finance/our-insights/cfos-have-been-concerned-about-geopolitical-impacts-for-months",
+      "implication": "CFOs are spending attention on geopolitical impact, risk monitoring, and scenario planning; the pilot should sell decision workflow, not raw prediction."
+    },
+    {
+      "source": "Gartner procurement GenAI disillusionment signal",
+      "url": "https://www.gartner.com/en/newsroom/press-releases/2025-07-30-gartner-says-generative-ai-for-procurement-has-entered-the-trough-of-disillusionment",
+      "implication": "AI buyers need process-specific proof, risk controls, and ROI evidence; broad AI-platform copy is a commercial risk."
+    }
+  ],
+  "niche_checks": [
+    {
+      "niche": "Enterprise/public-sector strategic decision intelligence",
+      "present": true,
+      "buyer_job_ready": true,
+      "proof_assets_ready": true,
+      "sale_boundary_ready": true,
+      "substitution_coverage_ready": true,
+      "substitution_rows": [
+        "Operational AI platforms",
+        "Public-sector foresight process"
+      ],
+      "local_route_signal_ready": true,
+      "route_signals": [
+        "/console: Strategy Console",
+        "/insights: Live Geopolitical Intelligence",
+        "/labs/negotiation: Negotiation Dojo",
+        "/labs/game-tree: Sequential Game Studio"
+      ],
+      "readiness_score_percent": 80,
+      "status": "ready_for_pilot_positioning"
+    },
+    {
+      "niche": "Governed forecasting and research workflow",
+      "present": true,
+      "buyer_job_ready": true,
+      "proof_assets_ready": true,
+      "sale_boundary_ready": true,
+      "substitution_coverage_ready": true,
+      "substitution_rows": [
+        "Forecasting services and tournaments"
+      ],
+      "local_route_signal_ready": true,
+      "route_signals": [
+        "/forecasts: Forecast Registry"
+      ],
+      "readiness_score_percent": 35,
+      "status": "ready_for_pilot_positioning"
+    },
+    {
+      "niche": "Geopolitical risk radar and scenario monitor",
+      "present": true,
+      "buyer_job_ready": true,
+      "proof_assets_ready": true,
+      "sale_boundary_ready": true,
+      "substitution_coverage_ready": true,
+      "substitution_rows": [
+        "Geopolitical intelligence platforms"
+      ],
+      "local_route_signal_ready": true,
+      "route_signals": [
+        "/insights: Live Geopolitical Intelligence"
+      ],
+      "readiness_score_percent": 75,
+      "status": "ready_for_pilot_positioning"
+    },
+    {
+      "niche": "Executive and analyst briefing layer",
+      "present": true,
+      "buyer_job_ready": true,
+      "proof_assets_ready": true,
+      "sale_boundary_ready": true,
+      "substitution_coverage_ready": true,
+      "substitution_rows": [
+        "Operational AI platforms",
+        "Public-sector foresight process"
+      ],
+      "local_route_signal_ready": true,
+      "route_signals": [
+        "/war-room: War Room requires sign-in",
+        "/war-room: Corporate War Room"
+      ],
+      "readiness_score_percent": 78,
+      "status": "ready_for_pilot_positioning"
+    },
+    {
+      "niche": "Negotiation and strategic reasoning training",
+      "present": true,
+      "buyer_job_ready": true,
+      "proof_assets_ready": true,
+      "sale_boundary_ready": true,
+      "substitution_coverage_ready": true,
+      "substitution_rows": [
+        "Strategy training and simulation programs"
+      ],
+      "local_route_signal_ready": true,
+      "route_signals": [
+        "/console: Strategy Console",
+        "/labs/negotiation: Negotiation Dojo",
+        "/labs/game-tree: Sequential Game Studio"
+      ],
+      "readiness_score_percent": 55,
+      "status": "ready_for_pilot_positioning"
+    }
+  ],
+  "substitution_coverage_by_niche": [
+    {
+      "niche": "Enterprise/public-sector strategic decision intelligence",
+      "covered": true,
+      "substitute_count": 2,
+      "substitutes": [
+        "Operational AI platforms",
+        "Public-sector foresight process"
+      ]
+    },
+    {
+      "niche": "Governed forecasting and research workflow",
+      "covered": true,
+      "substitute_count": 1,
+      "substitutes": [
+        "Forecasting services and tournaments"
+      ]
+    },
+    {
+      "niche": "Geopolitical risk radar and scenario monitor",
+      "covered": true,
+      "substitute_count": 1,
+      "substitutes": [
+        "Geopolitical intelligence platforms"
+      ]
+    },
+    {
+      "niche": "Executive and analyst briefing layer",
+      "covered": true,
+      "substitute_count": 2,
+      "substitutes": [
+        "Operational AI platforms",
+        "Public-sector foresight process"
+      ]
+    },
+    {
+      "niche": "Negotiation and strategic reasoning training",
+      "covered": true,
+      "substitute_count": 1,
+      "substitutes": [
+        "Strategy training and simulation programs"
+      ]
+    }
+  ],
+  "acceptance_gates": [
+    {
+      "gate": "five_niche_sequence_present",
+      "status": "passed",
+      "evidence": "5/5 required niches present; offer sequence length 5.",
+      "proof_bucket": "repo_artifact"
+    },
+    {
+      "gate": "source_alignment_present",
+      "status": "passed",
+      "evidence": "8 pilot-pack source alignments and 13 current research anchors attached.",
+      "proof_bucket": "repo_artifact"
+    },
+    {
+      "gate": "substitution_matrix_present",
+      "status": "passed",
+      "evidence": "5 substitute/competitor rows loaded; 5/5 required niches have substitute coverage.",
+      "proof_bucket": "repo_artifact"
+    },
+    {
+      "gate": "niche_proof_assets_and_boundaries_present",
+      "status": "passed",
+      "evidence": "5/5 niches have buyer job, proof assets, sale boundary, and substitute coverage.",
+      "proof_bucket": "repo_artifact"
+    },
+    {
+      "gate": "buyer_safe_claim_language_preserved",
+      "status": "passed",
+      "evidence": "0 prohibited claim patterns found in pilot offer name, promise, or allowed claims.",
+      "proof_bucket": "repo_artifact"
+    },
+    {
+      "gate": "local_route_proof_present",
+      "status": "passed",
+      "evidence": "5/5 niches have local route signals; local artifact status local_route_proof_ready_not_hosted_proof; hosted_live_proof=false.",
+      "proof_bucket": "local"
+    },
+    {
+      "gate": "hosted_live_proof_absent_boundary_preserved",
+      "status": "passed",
+      "evidence": "Hosted validation status hosted_operational_evidence_validation_ready_no_hosted_runs; ready_for_buyer_safe_hosted_claims=false.",
+      "proof_bucket": "hosted_live"
+    },
+    {
+      "gate": "buyer_validation_absent_boundary_preserved",
+      "status": "passed",
+      "evidence": "Buyer validation verified=false; buyer evidence ready=false; completed calls 0.",
+      "proof_bucket": "owner_input"
+    },
+    {
+      "gate": "accuracy_claim_blocked",
+      "status": "passed",
+      "evidence": "Scoring status forecast_scoring_evidence_validation_sample_only_not_claim_proof; scoring_ready=false; accuracy_claim_allowed=false; world_class_prediction_claim_allowed=false.",
+      "proof_bucket": "owner_input"
+    },
+    {
+      "gate": "enterprise_ready_claim_blocked",
+      "status": "passed",
+      "evidence": "Enterprise procurement status enterprise_procurement_gate_ready_not_owner_approved_or_security_proof; enterprise_ready=false.",
+      "proof_bucket": "owner_input"
+    }
+  ],
+  "release_holds": [
+    {
+      "hold": "buyer_validation_missing",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "10 completed buyer discovery calls, three qualified follow-ups, and one paid-pilot/LOI/procurement-path signal."
+    },
+    {
+      "hold": "hosted_live_claim_proof_missing",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "Validated hosted route/API proof with deploy binding, redacted logs/screenshots, and core coverage."
+    },
+    {
+      "hold": "prediction_accuracy_claim_proof_missing",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "Owner-approved resolved forecasts, real comparable baselines, leakage review, scoring output, and approved claim language."
+    },
+    {
+      "hold": "enterprise_security_procurement_proof_missing",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "Owner-approved privacy/support/incident evidence, RLS proof, hosted AI security proof, and external-share approvals."
+    },
+    {
+      "hold": "owner_external_claim_language_approval_missing",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "Owner-approved external-share language for pilot copy, screenshots, and proof packets."
+    }
+  ],
+  "recommended_market_language": [
+    "governed strategic-intelligence pilot",
+    "buyer-safe niche thesis with local route proof and explicit proof boundaries",
+    "calibration-aware decision support, pending owner-approved resolved-outcome scoring"
+  ],
+  "prohibited_market_language": [
+    "world-class accurate predictions",
+    "commercial-ready enterprise platform",
+    "buyer-validated demand",
+    "hosted live proof complete",
+    "enterprise-ready security posture"
+  ],
+  "proof_boundary": "This validator confirms market-niche coherence, source alignment, local route evidence, and claim boundaries. It is not buyer validation, hosted proof, enterprise-security proof, or prediction-accuracy proof."
+}

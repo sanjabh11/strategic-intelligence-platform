@@ -1,5 +1,6 @@
 // Geopolitical Dashboard Types
 // Based on GDELT streaming data and game theory analysis
+import type { DriftSignalSummary, GroundedEntityRef } from '../../shared/mlAdvisory'
 
 export interface GDELTEvent {
   event_id: string
@@ -17,6 +18,23 @@ export interface GDELTEvent {
   }
   realtime: boolean
   timestamp: string
+  entity_refs?: GroundedEntityRef[]
+  shadow_risk?: {
+    score: number
+    model_version: string
+  }
+  drift_signal?: DriftSignalSummary | null
+}
+
+export type AttentionTier = 'critical' | 'high' | 'monitor'
+export type RadarSort = 'priority' | 'newest'
+
+export interface RadarEvent extends GDELTEvent {
+  priority_score: number
+  watch_reason: string
+  briefing_summary: string
+  attention_tier: AttentionTier
+  region: RegionFilter
 }
 
 export interface HistoricalScenario {

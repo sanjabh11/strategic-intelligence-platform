@@ -1,7 +1,15 @@
 // @ts-nocheck
 // Deno test runner configuration for game monitoring system
 
-import { runGameTheoryTests, runPerformanceTests, runAccuracyTests } from './game_theory.tests.ts'
+const isDenoRuntime = typeof Deno !== 'undefined' && typeof Deno.version !== 'undefined'
+
+async function loadDenoSuites() {
+  if (!isDenoRuntime) {
+    throw new Error('Deno test suites are only available in the Deno runtime')
+  }
+
+  return import('./game_theory.tests.ts')
+}
 
 // Main test runner for the comprehensive CI monitoring system
 async function runComprehensiveCITests() {
@@ -10,6 +18,8 @@ async function runComprehensiveCITests() {
   const startTime = performance.now()
 
   try {
+    const { runGameTheoryTests, runPerformanceTests, runAccuracyTests } = await loadDenoSuites()
+
     // Run all test suites
     console.log('='.repeat(60))
     console.log('🧪 GAME THEORY ALGORITHM TESTS')
@@ -145,7 +155,11 @@ export {
 
 // Run tests if executed directly
 if (import.meta.main) {
-  await runComprehensiveCITests()
-  await runIntegrationTests()
-  await generateCoverageReport()
+  if (!isDenoRuntime) {
+    console.warn('Skipping Deno-specific game monitoring suite outside the Deno runtime.')
+  } else {
+    await runComprehensiveCITests()
+    await runIntegrationTests()
+    await generateCoverageReport()
+  }
 }

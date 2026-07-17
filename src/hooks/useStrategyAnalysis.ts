@@ -1,7 +1,13 @@
 // Strategic analysis custom hook
+// TODO (M4-T4): This file is ~1330 lines and should be refactored:
+//   - Extract enhanceAnalysisWithStrategicEngines into a separate module
+//   - Extract polling/status logic into a useAnalysisPolling sub-hook
+//   - Extract local engine fallback into a useLocalAnalysis sub-hook
+//   - Move type definitions to a separate types.ts file
+// Refactoring deferred until full E2E test coverage is available to verify state transitions.
 import { useState, useEffect, useCallback } from 'react';
 import { z } from 'zod';
-import { ENDPOINTS, getAuthHeaders, isLocalMode, isLocalPreviewOrigin } from '../lib/supabase';
+import { ENDPOINTS, getAuthHeaders, getUserAuthHeaders, isLocalMode, isLocalPreviewOrigin } from '../lib/supabase';
 import { analyzeLocally } from '../lib/localEngine';
 import type {
   AnalysisRequest,
@@ -314,7 +320,7 @@ function buildLocalMultiAgentForecast(analysis: AnalysisResult): MultiAgentForec
     route,
     questionContext,
     evidenceBacked: analysis.provenance?.evidence_backed === true,
-    retrievalCount: analysis.provenance?.retrieval_count || evidenceCount,
+    sourceCount: analysis.provenance?.retrieval_count || evidenceCount,
     distinctProviderCount: analysis.provenance?.retrieval_provider_summary?.distinctProviderCount || uniqueSourceCount,
   });
   const question = {
@@ -322,6 +328,12 @@ function buildLocalMultiAgentForecast(analysis: AnalysisResult): MultiAgentForec
       title: firstSentence.slice(0, 100),
       horizonDays,
     }),
+    question: scenario,
+    questionType: 'binary' as const,
+    closeTime: new Date(Date.now() + horizonDays * 24 * 60 * 60 * 1000).toISOString(),
+    resolutionSource: 'Manual review required',
+    fallbackResolution: 'Expert judgment',
+    resolutionCriteria: 'Binary outcome determined by analyst review',
     intent: route.intent,
     requiredInputs: route.requiredInputs,
     horizonLabel: route.horizonLabel,
@@ -484,7 +496,6 @@ function buildLocalMultiAgentForecast(analysis: AnalysisResult): MultiAgentForec
       contradictionPoints,
       missingEvidence,
       questionContext,
-      alignment,
     }),
   };
 }
@@ -637,7 +648,7 @@ export function useStrategyAnalysis(): UseStrategyAnalysisReturn {
       setLoading(false);
       return true; // Stop polling on error
     }
-  }, []);
+  }, [analysisRunId, normalizeAnalysisData]);
   
   // Start status polling
   const startStatusPolling = useCallback((reqId: string) => {
@@ -703,7 +714,7 @@ export function useStrategyAnalysis(): UseStrategyAnalysisReturn {
 
       // Prefer the deterministic local path during localhost preview QA.
       if (isLocalPreviewOrigin) {
-        console.log('Using local preview analysis engine');
+        if (import.meta.env.DEV) console.log('Using local preview analysis engine');
         const localRunId = crypto.randomUUID();
         setAnalysisRunId(localRunId);
         const localResult = await analyzeLocally(request);
@@ -725,7 +736,7 @@ export function useStrategyAnalysis(): UseStrategyAnalysisReturn {
         if (isProdBuild) {
           throw new Error('Local demo engine is disabled in production builds. Please configure Supabase endpoints.');
         }
-        console.log('Using local analysis engine');
+        if (import.meta.env.DEV) console.log('Using local analysis engine');
         const localRunId = crypto.randomUUID();
         setAnalysisRunId(localRunId);
         const localResult = await analyzeLocally(request);
@@ -746,7 +757,7 @@ export function useStrategyAnalysis(): UseStrategyAnalysisReturn {
 
       const response = await fetch(ENDPOINTS.ANALYZE, {
         method: 'POST',
-        headers: getAuthHeaders(),
+        headers: await getUserAuthHeaders(),
         body: JSON.stringify({ ...request, audience, async_probe: true }),
         signal: controller.signal
       });
@@ -849,9 +860,8 @@ export function useStrategyAnalysis(): UseStrategyAnalysisReturn {
       } else if (typeof err === 'string') {
         errorMessage = err;
       } else if (err && typeof err === 'object') {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        errorMessage = (err as any).message || (err as any).error || JSON.stringify(err);
-        errorName = (err as any).name || '';
+        errorMessage = (err as Record<string, unknown>).message as string || (err as Record<string, unknown>).error as string || JSON.stringify(err);
+        errorName = (err as Record<string, unknown>).name as string || '';
       }
       
       const isNetworkError = errorName === 'AbortError' || errorMessage.includes('fetch') || errorMessage.includes('network') || errorMessage.includes('ECONNREFUSED') || errorMessage.includes('timeout');
@@ -865,7 +875,7 @@ export function useStrategyAnalysis(): UseStrategyAnalysisReturn {
       setStatus('failed');
       setLoading(false);
     }
-  }, [clearResults, startStatusPolling]);
+  }, [clearResults, startStatusPolling, audience, normalizeAnalysisData]);
   
   // Computed properties
   const isProcessing = loading && (status === 'queued' || status === 'processing');
@@ -961,7 +971,7 @@ async function enhanceAnalysisWithStrategicEngines(
     try {
       const response = await fetch(url, {
         method: 'POST',
-        headers: getAuthHeaders(),
+        headers: await getUserAuthHeaders(),
         body: JSON.stringify(body),
       })
       return await parseEnhancementResponse(engine, response)
@@ -1031,7 +1041,7 @@ async function enhanceAnalysisWithStrategicEngines(
           score: Number(a.structuralSimilarity ?? a.successProbability ?? 0)
         }));
         (enhancements as any).pattern_matches = patternMatches;
-      } catch {}
+      } catch { /* enhancement call failed */ }
     }
 
     // Call Quantum Strategy Service
@@ -1071,7 +1081,7 @@ async function enhanceAnalysisWithStrategicEngines(
           ? q.entanglementMatrix.correlationMatrix
           : undefined;
         (enhancements as any).quantum = { collapsed, influence };
-      } catch {}
+      } catch { /* enhancement call failed */ }
     }
 
     // Call Information Value Assessment
@@ -1102,7 +1112,7 @@ async function enhanceAnalysisWithStrategicEngines(
         const evpi = typeof summary.evpi === 'number' ? summary.evpi : (summary.expectedValueOfPerfectInformation ?? 0);
         const evppi = summary.evppi || summary.signal_evppi || {};
         (enhancements as any).voi = { ev_prior: Number(ev_prior) || 0, evpi: Number(evpi) || 0, evppi };
-      } catch {}
+      } catch { /* enhancement call failed */ }
     }
 
     // Call Outcome Forecasting
@@ -1133,7 +1143,7 @@ async function enhanceAnalysisWithStrategicEngines(
         const points = Array.isArray(forecasts[primaryKey]) ? forecasts[primaryKey] : [];
         const forecastArr = points.map((p: any) => ({ t: Number(p.t ?? 0), probability: Number(p.probability ?? 0) }));
         (enhancements as any).forecast = forecastArr;
-      } catch {}
+      } catch { /* enhancement call failed */ }
     }
 
     const multiAgentForecastData = await postEnhancement('multi-agent-forecast', ENDPOINTS.MULTI_AGENT_FORECAST, {
@@ -1155,7 +1165,7 @@ async function enhanceAnalysisWithStrategicEngines(
 
     // Additional engines to close PRD gaps
     // Strategy Success Analysis (historical effectiveness)
-    const topPattern = (enhancements.symmetryAnalysis?.strategicAnalogies?.[0]?.sourceScenario) || 'Flanking Maneuver';
+    const topPattern = ((enhancements.symmetryAnalysis as any)?.strategicAnalogies?.[0]?.sourceScenario) || 'Flanking Maneuver';
     const strategySuccessData = await postEnhancement('strategy-success-analysis', ENDPOINTS.STRATEGY_SUCCESS, {
       runId: analysisRunId,
       strategyPattern: topPattern,
@@ -1248,7 +1258,7 @@ function generatePlayerInteractions(players: any[], mode: EduAnalysisMode = 'ana
 
 // Generate decision alternatives for information value assessment - mode-aware
 function generateDecisionAlternatives(players: any[], mode: EduAnalysisMode = 'analysis'): any[] {
-  if (mode === 'education' || mode === 'classroom') {
+  if (mode === 'education') {
     // Return empty for education - students should determine these
     return [];
   }

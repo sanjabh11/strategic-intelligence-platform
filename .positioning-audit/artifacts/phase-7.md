@@ -1,3 +1,5 @@
+> **SUPERSEDED**: This artifact contains v7 "AUDIT COMPLETE" language that was invalidated by INVALID_VERDICT_NOTICE.md (2026-07-16). The audit is currently in VALIDATION_PENDING state. See phase-9-decision-gate.md for the authoritative current status.
+
 # Phase 7: Evidence Refresh, Drift Tracking & Final Audit Report
 
 ## Page 1: Decision Confidence Log (Final)

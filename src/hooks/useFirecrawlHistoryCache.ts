@@ -47,7 +47,7 @@ export function useFirecrawlHistoryCache() {
   }, [])
 
   const save = useCallback((items: FirecrawlHistoryEntry[]) => {
-    try { localStorage.setItem(CACHE_KEY, JSON.stringify(items)) } catch {}
+    try { localStorage.setItem(CACHE_KEY, JSON.stringify(items)) } catch { /* localStorage may be unavailable */ }
   }, [])
 
   const add = useCallback((entry: { mode: 'scrape' | 'crawl' | 'search'; query?: string; urls?: string[]; pagesScraped: number; processingTimeMs: number }) => {
@@ -75,7 +75,7 @@ export function useFirecrawlHistoryCache() {
 
   const clear = useCallback(() => {
     setHistory([])
-    try { localStorage.removeItem(CACHE_KEY) } catch {}
+    try { localStorage.removeItem(CACHE_KEY) } catch { /* localStorage may be unavailable */ }
   }, [])
 
   return { history, loading, add, clear, MAX_ENTRIES, EXPIRY_DAYS }

@@ -1,0 +1,9 @@
+gate,status,evidence,proof_bucket
+forecast_schema_present,passed,Forecast schema includes 13 required columns.,repo_artifact
+baseline_schema_present,passed,Baseline schema includes 10 required columns.,repo_artifact
+owner_rows_present,open_no_real_rows,0 forecast rows and 0 baseline rows loaded.,owner_input
+minimum_resolved_forecast_rows,open_no_real_rows,0 valid resolved forecast rows; required 25.,owner_input
+binary_resolution_probability_and_timestamp_quality,open_no_real_rows,"0/0 forecast rows pass binary outcome, 0-1 probability, pre-resolution timestamp, resolution-source, criteria, and exclusion-review checks.",owner_input
+comparable_baseline_present,open_no_real_rows,"0/0 baseline rows pass Brier, sample-size, source, scope, timestamp, and comparability checks.",owner_input
+placeholder_or_sample_rows_absent,open_no_real_rows,0 forecast placeholder rows and 0 baseline placeholder rows detected.,owner_input
+ready_for_scoring_not_accuracy_proof,open_no_real_rows,Inputs are only ready for calibration and benchmark scoring after all prior gates pass; scoring still remains a separate artifact and hosted/security proof remains separate.,repo_artifact

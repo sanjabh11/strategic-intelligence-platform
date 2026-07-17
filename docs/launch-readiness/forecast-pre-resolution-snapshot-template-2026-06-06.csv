@@ -1,0 +1,1 @@
+snapshot_id,question_id,prediction_source,forecaster_type,model_or_team,probability,prediction_timestamp,evidence_bundle_ref,prompt_or_policy_version,retrieval_cutoff,source_cutoff,abstained,abstention_reason,notes

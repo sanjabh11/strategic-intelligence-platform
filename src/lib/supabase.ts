@@ -4,6 +4,8 @@ import { createClient } from '@supabase/supabase-js'
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string
 export const isLocalMode = String(import.meta.env.VITE_LOCAL_ANALYZE ?? '').toLowerCase() === 'true'
+export const isLocalPreviewOrigin = typeof window !== 'undefined'
+  && ['127.0.0.1', 'localhost'].includes(window.location.hostname)
 
 if ((!supabaseUrl || !supabaseAnonKey) && !isLocalMode) {
   throw new Error(
@@ -23,7 +25,10 @@ export const ENDPOINTS = {
   STATUS: `${API_BASE}/get-analysis-status`,
   SYSTEM_STATUS: `${API_BASE}/system-status`,
   HEALTH: `${API_BASE}/health`,
+  MARKET_STREAM: `${API_BASE}/market-stream`,
   ANALYZE_STREAM: `${API_BASE}/analyze-stream`,
+  PERSONAL_LIFE_COACH: `${API_BASE}/personal-life-coach`,
+  QUESTION_INTAKE: `${API_BASE}/question-intake`,
   MULTI_AGENT_FORECAST: `${API_BASE}/multi-agent-forecast`,
   FORECAST_CREATE: `${API_BASE}/forecast-create`,
   BRIER_WEIGHTED_CONSENSUS: `${API_BASE}/brier-weighted-consensus`,
@@ -40,9 +45,16 @@ export const ENDPOINTS = {
   SHARE_STRATEGY: `${API_BASE}/share-strategy`,
   COLLECTIVE_STATS: `${API_BASE}/collective-stats`,
   FIRECRAWL_RESEARCH: `${API_BASE}/firecrawl-research`,
-  EVIDENCE_RETRIEVAL: `${API_BASE}/evidence-retrieval`,
+  EVIDENCE_RETRIEVAL: `${API_BASE}/evidence-retrieval-exa`,
+  HYDRATE_ANALYSIS: `${API_BASE}/analysis-hydrator`,
   HUMAN_REVIEW_QUEUE: `${API_BASE}/human-review/review_queue`,
   HUMAN_REVIEW_POST: `${API_BASE}/human-review/analysis`,
+  CALIBRATION_REFRESH: `${API_BASE}/calibration-refresh`,
+  DRIFT_EVALUATE: `${API_BASE}/drift-evaluate`,
+  SHADOW_MODEL_REFRESH: `${API_BASE}/shadow-model-refresh`,
+  ONTOLOGY_SYNC: `${API_BASE}/ontology-sync`,
+  MARKET_PRIOR: `${API_BASE}/market-prior`,
+  LEARNINGS_QUERY: `${API_BASE}/learnings-query`,
 }
 
 // Authentication headers for direct API calls
@@ -61,7 +73,9 @@ export const getUserAuthHeaders = async () => {
     headers['apikey'] = supabaseAnonKey
   }
 
-  const { data } = await supabase.auth.getSession()
+  const { data } = supabase
+    ? await supabase.auth.getSession()
+    : { data: { session: null } }
   const accessToken = data.session?.access_token
 
   if (accessToken) {

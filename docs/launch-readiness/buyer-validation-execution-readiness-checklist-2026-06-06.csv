@@ -1,0 +1,8 @@
+gate,status,proof_bucket,evidence,next_action
+named_target_pack_covers_top_five,passed,repo_artifact,20 named targets; 5/5 priority niches covered.,No target-pack action needed before owner slate review.
+selected_10_call_slate_covers_top_five,passed,repo_artifact,10 selected targets; 5/5 priority niches covered.,Owner can approve or edit the balanced slate.
+call_sheet_matches_selected_slate,passed,repo_artifact,10 call-sheet rows; 5/5 priority niches covered.,Use the call sheet as the discovery recording surface.
+capture_schema_ready,passed,repo_artifact,28/28 call-sheet columns and 11/11 CRM columns present; schema vocabulary ready=true.,No schema repair needed before calls.
+market_and_competitive_claim_boundaries_ready,passed,repo_artifact,market_buyer_safe=true; competitive_wedge=true; claim_consistency_ready=true; buyer_proof_claimed=false.,"Use pilot-only language and keep buyer-validated, commercial-ready, replacement/parity, and world-class prediction claims blocked."
+local_demo_route_proof_available,passed,local,Local route proof status=local_route_proof_ready_not_hosted_proof; ready routes=7; runtime errors=0.,Use local proof only; do not claim hosted proof.
+real_interaction_boundary_preserved,passed,repo_artifact,"0 real interactions, 0 completed calls, 0 qualified follow-ups, 0 commitment-path signals.","After owner-approved calls, rerun buyer input validation, buyer proof gate, this readiness validator, and commercial confidence gate."

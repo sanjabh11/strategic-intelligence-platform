@@ -3,7 +3,8 @@
 // Monetization Feature F1: Shadow Market ABM Simulator
 // Runs 1000+ agent-based model iterations for financial market simulation
 
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { createClient } from 'npm:@supabase/supabase-js@2'
+import { getAuthenticatedUser, jsonResponse } from '../_shared/auth.ts'
 
 // Agent Types
 interface MarketAgent {
@@ -310,7 +311,7 @@ function jsonResponse(status: number, body: unknown) {
         status,
         headers: {
             'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Origin': Deno.env.get('ALLOWED_ORIGIN') || Deno.env.get('APP_URL') || 'null',
             'Access-Control-Allow-Methods': 'POST, OPTIONS',
             'Access-Control-Allow-Headers': 'Content-Type, Authorization, apikey, X-Client-Info'
         },
@@ -319,6 +320,11 @@ function jsonResponse(status: number, body: unknown) {
 
 // Main handler
 Deno.serve(async (req) => {
+  // Auth check
+  const _user = await getAuthenticatedUser(req)
+  if (!_user) return jsonResponse(401, { ok: false, error: 'authentication_required' })
+
+
     if (req.method === 'OPTIONS') return jsonResponse(200, { ok: true });
     if (req.method !== 'POST') return jsonResponse(405, { ok: false, message: 'Method Not Allowed' });
 

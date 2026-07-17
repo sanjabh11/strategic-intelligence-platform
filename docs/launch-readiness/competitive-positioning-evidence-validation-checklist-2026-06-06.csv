@@ -1,0 +1,15 @@
+gate,status,proof_bucket,evidence
+market_differentiation_artifact_present,passed,repo_artifact,docs/launch-readiness/market-differentiation-validation-2026-06-06.md length=12838.
+source_backed_market_signals_present,passed,repo_artifact,7 market-signal rows in Markdown; 14 current competitive-source anchors attached.
+top_five_niche_revalidation_present,passed,repo_artifact,5 niche rows loaded from market differentiation artifact.
+competitor_substitute_matrix_complete,passed,repo_artifact,7/7 required substitute categories found; 7 competitor rows loaded.
+loopholes_and_avoid_claims_present,passed,repo_artifact,6 loophole rows loaded; claims-to-avoid section present=true.
+ten_call_buyer_plan_present,passed,repo_artifact,5 buyer-validation plan rows loaded.
+prohibited_strength_claims_absent,passed,repo_artifact,0 prohibited equivalence/superiority patterns found in competitor strength cells.
+pilot_substitution_matrix_consistent,passed,repo_artifact,"5 pilot-offer substitution rows, 5/5 required niches covered, and 8 source-alignment rows loaded."
+market_niche_gate_buyer_safe,passed,repo_artifact,Market niche validation status=market_niche_evidence_validation_ready_not_buyer_validated; buyer_safe_pilot_claim_allowed=true.
+local_route_proof_supports_demo_not_live_claim,passed,local,Local route proof status=local_route_proof_ready_not_hosted_proof; rendered_or_expected_auth_gate_count=7; hosted_live_proof=false.
+buyer_validated_claim_blocked,passed,owner_input,Buyer proof status=buyer_proof_gate_ready_not_buyer_validation; buyer_validation_verified=false.
+hosted_live_claim_blocked,passed,hosted_live,Hosted proof status=hosted_operational_evidence_validation_ready_no_hosted_runs; ready_for_buyer_safe_hosted_claims=false.
+enterprise_ready_claim_blocked,passed,owner_input,Enterprise procurement status=enterprise_procurement_gate_ready_not_owner_approved_or_security_proof; enterprise_ready=false.
+forecasting_parity_claim_blocked,passed,owner_input,Scoring status=forecast_scoring_evidence_validation_sample_only_not_claim_proof; scoring_ready=false; accuracy_claim_allowed=false; world_class_prediction_claim_allowed=false.

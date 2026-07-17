@@ -69,7 +69,7 @@ const RealTimeNotifications: React.FC<RealTimeNotificationsProps> = ({
           schema: 'public',
           table: 'collective_insights',
           ...(sessionId ? { filter: `session_id=eq.${sessionId}` } : {})
-        }, (payload) => {
+        }, (payload: any) => {
           const row: any = payload.new
           pushNotification({
             type: 'insight',
@@ -94,7 +94,7 @@ const RealTimeNotifications: React.FC<RealTimeNotificationsProps> = ({
           schema: 'public',
           table: 'insight_reactions',
           ...(sessionId ? { filter: `session_id=eq.${sessionId}` } : {})
-        }, (payload) => {
+        }, (payload: any) => {
           const row: any = payload.new
           pushNotification({
             type: 'session_update',
@@ -118,7 +118,7 @@ const RealTimeNotifications: React.FC<RealTimeNotificationsProps> = ({
           event: 'INSERT',
           schema: 'public',
           table: 'belief_evolution_log',
-        }, (payload) => {
+        }, (payload: any) => {
           const row: any = payload.new
           pushNotification({
             type: 'belief_update',

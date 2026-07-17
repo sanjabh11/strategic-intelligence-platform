@@ -1,0 +1,129 @@
+- generic [ref=e3]:
+  - navigation [ref=e4]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - link "Strategy Console" [ref=e8] [cursor=pointer]:
+          - /url: /console
+          - img [ref=e9]
+          - generic [ref=e19]: Strategy Console
+        - 'button "Learning Mode: OFF" [ref=e21] [cursor=pointer]':
+          - img [ref=e22]
+          - text: "Learning Mode: OFF"
+      - generic [ref=e25]:
+        - link "Console" [ref=e26] [cursor=pointer]:
+          - /url: /console
+          - img [ref=e27]
+          - text: Console
+        - link "Templates" [ref=e29] [cursor=pointer]:
+          - /url: /templates
+          - img [ref=e30]
+          - text: Templates
+        - link "Forecasts" [ref=e33] [cursor=pointer]:
+          - /url: /forecasts
+          - img [ref=e34]
+          - text: Forecasts
+  - main [ref=e37]:
+    - generic [ref=e40]:
+      - generic [ref=e42]:
+        - generic [ref=e43]:
+          - img [ref=e44]
+          - generic [ref=e48]:
+            - heading "Forecast Registry" [level=2] [ref=e49]
+            - paragraph [ref=e50]: Public predictions powered by game theory
+        - button "Leaderboard" [ref=e52] [cursor=pointer]:
+          - img [ref=e53]
+          - text: Leaderboard
+      - generic [ref=e505]:
+        - button "← Back to Forecasts" [ref=e506] [cursor=pointer]
+        - generic [ref=e507]:
+          - generic [ref=e509]: geopolitical
+          - heading "Are managed rivalry and contained tensions more likely than a major direct war between great powers over the next 3 years?" [level=2] [ref=e510]
+          - generic [ref=e511]:
+            - generic [ref=e512]: Direct answer
+            - generic [ref=e513]: Too close to call cleanly over the next 3 years
+            - paragraph [ref=e514]: The most likely path is still contested over the next 3 years; neither managed rivalry and contained tensions nor a major direct war between great powers clearly dominates yet.
+            - generic [ref=e515]:
+              - generic [ref=e516]:
+                - generic [ref=e517]: Time horizon
+                - generic [ref=e518]: the next 3 years
+              - generic [ref=e519]:
+                - generic [ref=e520]: Confidence label
+                - generic [ref=e521]: Moderate
+              - generic [ref=e522]:
+                - generic [ref=e523]: What to do next
+                - generic [ref=e524]: Treat this as a decision aid, not a certainty. Re-check the evidence and watch factors before making a high-stakes move.
+          - paragraph [ref=e525]: "The most likely path is still contested over the next 3 years; neither managed rivalry and contained tensions nor a major direct war between great powers clearly dominates yet. Best current call: Too close to call cleanly over the next 3 years Why this is the call: Will there be a major war between big powers in the next few years, or will tensions cool down? Primary caution: The question is scoreable, but later phases should tighten directional measurement where possible. What to do next: Treat this as a decision aid, not a certainty. Re-check the evidence and watch factors before making a high-stakes move. Current public probability: 53.7%."
+          - generic [ref=e526]:
+            - generic [ref=e527]: Analysis-linked
+            - generic [ref=e528]: Evidence-backed analysis
+            - generic [ref=e529]: Fresh analysis
+            - generic [ref=e530]: Evidence-backed
+            - generic [ref=e531]: Moderate-confidence public answer
+            - generic [ref=e532]: 2 providers
+            - generic [ref=e533]: Thin participation
+          - button "Save to war room" [ref=e535] [cursor=pointer]
+          - generic [ref=e536]:
+            - generic [ref=e537]:
+              - generic [ref=e538]: Review state
+              - generic [ref=e539]: Review not requested
+              - generic [ref=e540]: No completed human review is recorded for the linked analysis.
+            - generic [ref=e541]:
+              - generic [ref=e542]: Evidence status
+              - generic [ref=e543]: Evidence-backed
+              - generic [ref=e544]: Evidence-backed provenance is present for the linked analysis.
+            - generic [ref=e545]:
+              - generic [ref=e546]: Consensus quality
+              - generic [ref=e547]: Low consensus reliability
+              - generic [ref=e548]: Weighted consensus is thin or unstable across 1 participants.
+          - generic [ref=e549]:
+            - generic [ref=e550]:
+              - generic [ref=e551]: Community Prediction
+              - generic [ref=e552]: 54%
+              - generic [ref=e553]: Based on 1 predictions
+              - generic [ref=e554]: Advisory calibration 53% · prior smoothed
+            - generic [ref=e557]:
+              - generic [ref=e558]: 0% (No)
+              - generic [ref=e559]: 100% (Yes)
+          - generic [ref=e560]:
+            - generic [ref=e561]:
+              - generic [ref=e562]: Weighted Consensus
+              - generic [ref=e563]: 53%
+              - generic [ref=e564]: Raw 54% · reliability 20%
+            - generic [ref=e565]:
+              - generic [ref=e566]: Superforecaster View
+              - generic [ref=e567]: 54%
+              - generic [ref=e568]: 1 top-weighted forecasters
+            - generic [ref=e569]:
+              - generic [ref=e570]: Consensus Gap
+              - generic [ref=e571]: 0.0 pts
+              - generic [ref=e572]: 1 participants
+          - generic [ref=e573]:
+            - generic [ref=e574]:
+              - generic [ref=e575]: Analysis Provenance
+              - generic [ref=e576]: 4717c365-869b-42a8-a954-6ff1485b2e32
+              - generic [ref=e577]: "Review status: completed"
+              - generic [ref=e578]:
+                - generic [ref=e579]: Fresh analysis
+                - generic [ref=e580]: Linked analysis was generated within the last 24 hours.
+            - generic [ref=e581]:
+              - generic [ref=e582]: Engine Review
+              - generic [ref=e583]: Engine-linked forecast draft
+              - generic [ref=e584]: Structured forecast metadata available
+          - generic [ref=e585]:
+            - generic [ref=e586]: Watch factors
+            - generic [ref=e587]:
+              - generic [ref=e588]: The question is scoreable, but later phases should tighten directional measurement where possible.
+              - generic [ref=e589]: No baseline temporal forecast curve was available for anchoring.
+          - generic [ref=e590]:
+            - generic [ref=e591]:
+              - generic [ref=e592]: Resolution Criteria
+              - generic [ref=e593]: "Resolve toward containment or major war using cited public evidence on direct state conflict, alliance entry, and sustained escalation over the next 3 years. Primary source: Authoritative public reporting and official releases cited by the platform. Fallback source: If the primary source becomes unavailable, use the first archived or official source with the same event definition.."
+            - generic [ref=e594]:
+              - generic [ref=e595]: Resolution Date
+              - generic [ref=e596]:
+                - img [ref=e597]
+                - text: 5/2/2029
+  - contentinfo [ref=e91]:
+    - generic [ref=e93]:
+      - paragraph [ref=e94]: Strategy Console - Evidence-Backed Strategic Analysis
+      - paragraph [ref=e95]: Real citations. Real simulations. Real clarity.

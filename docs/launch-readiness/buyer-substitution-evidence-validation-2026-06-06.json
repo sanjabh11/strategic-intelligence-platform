@@ -1,0 +1,206 @@
+{
+  "schema_version": "buyer-substitution-evidence-validation-v1",
+  "generated_at": "2026-06-06T17:01:49.588Z",
+  "status": "buyer_substitution_evidence_validation_ready_no_real_calls",
+  "proof_boundary": "This artifact validates owner-filled buyer substitution evidence. It does not create buyer validation, replacement proof, parity proof, paid-pilot proof, hosted proof, enterprise proof, or prediction-accuracy proof.",
+  "source": {
+    "substitution_kit": "docs/launch-readiness/buyer-substitution-proof-kit-2026-06-06.json",
+    "substitution_sheet": "docs/launch-readiness/buyer-substitution-test-sheet-2026-06-06.csv",
+    "minimum_completed_calls": 10,
+    "minimum_completed_niches": 5,
+    "minimum_qualified_outcomes": 3,
+    "minimum_commitment_signals": 1
+  },
+  "summary": {
+    "substitution_sheet_rows_read": 30,
+    "real_substitution_interaction_count": 0,
+    "valid_completed_substitution_call_count": 0,
+    "completed_substitution_niche_count": 0,
+    "completed_substitute_category_count": 0,
+    "valid_qualified_substitution_outcome_count": 0,
+    "valid_commitment_signal_count": 0,
+    "missing_column_count": 0,
+    "row_issue_count": 0,
+    "row_error_count": 0,
+    "active_release_hold_count": 6,
+    "ready_for_buyer_proof_gate": false,
+    "substitution_protocol_ready": true,
+    "buyer_substitution_evidence_claim_allowed": false,
+    "buyer_validated_claim_allowed": false,
+    "replacement_claim_allowed": false,
+    "parity_claim_allowed": false
+  },
+  "required_columns": [
+    "rank",
+    "account_name",
+    "website",
+    "buyer_role",
+    "niche",
+    "substitute_priority",
+    "substitute_category",
+    "substitute_examples",
+    "substitute_source_url",
+    "strongest_substitute_strength",
+    "app_wedge_to_test",
+    "must_not_claim",
+    "close_question",
+    "proof_to_show",
+    "call_status",
+    "call_date",
+    "buyer_name_or_redacted_id",
+    "current_tool_or_workflow",
+    "current_budget_owner",
+    "switching_barrier",
+    "must_have_proof",
+    "proof_shown",
+    "buyer_reaction",
+    "next_action",
+    "willingness_to_pay_signal",
+    "substitution_outcome",
+    "evidence_quality",
+    "validation_status"
+  ],
+  "allowed_values": {
+    "call_status": [
+      "",
+      "completed",
+      "contacted",
+      "hypothesis",
+      "not_contacted",
+      "not_contacted_not_buyer_proof",
+      "rejected",
+      "replied",
+      "research",
+      "scheduled",
+      "template"
+    ],
+    "willingness_to_pay_signal": [
+      "",
+      "curiosity_only",
+      "loi_discussion",
+      "no_fit",
+      "none",
+      "paid_pilot_discussion",
+      "procurement_path",
+      "qualified_followup",
+      "rejected"
+    ],
+    "substitution_outcome": [
+      "",
+      "complement_only",
+      "no_fit",
+      "pilot_candidate",
+      "procurement_path",
+      "replacement_candidate"
+    ],
+    "evidence_quality": [
+      "",
+      "external_share_approved",
+      "high",
+      "low",
+      "medium",
+      "owner_verified"
+    ]
+  },
+  "acceptance_gates": [
+    {
+      "gate": "substitution_protocol_ready",
+      "status": "passed",
+      "evidence": "Kit status=buyer_substitution_proof_kit_ready_not_buyer_proof; substitution_protocol_ready=true.",
+      "proof_bucket": "repo_artifact"
+    },
+    {
+      "gate": "substitution_sheet_schema_present",
+      "status": "passed",
+      "evidence": "Substitution sheet includes 28 required columns.",
+      "proof_bucket": "repo_artifact"
+    },
+    {
+      "gate": "real_substitution_calls_present",
+      "status": "open_no_real_substitution_calls",
+      "evidence": "0 real substitution rows loaded; 30 research/template rows ignored as proof.",
+      "proof_bucket": "owner_input"
+    },
+    {
+      "gate": "row_quality_validation",
+      "status": "open_no_real_substitution_calls",
+      "evidence": "0 row-level errors and 0 warnings in substitution sheet.",
+      "proof_bucket": "owner_input"
+    },
+    {
+      "gate": "completed_substitution_calls",
+      "status": "open_no_real_substitution_calls",
+      "evidence": "0 valid completed substitution calls; required 10.",
+      "proof_bucket": "owner_input"
+    },
+    {
+      "gate": "completed_niche_coverage",
+      "status": "open_no_real_substitution_calls",
+      "evidence": "0 niches with valid completed substitution calls; required 5.",
+      "proof_bucket": "owner_input"
+    },
+    {
+      "gate": "qualified_substitution_outcomes",
+      "status": "open_no_real_substitution_calls",
+      "evidence": "0 valid qualified substitution outcomes; required 3.",
+      "proof_bucket": "owner_input"
+    },
+    {
+      "gate": "commitment_path_signal",
+      "status": "open_no_real_substitution_calls",
+      "evidence": "0 paid-pilot, LOI, procurement-path, or equivalent commitment rows; required 1.",
+      "proof_bucket": "owner_input"
+    },
+    {
+      "gate": "claim_boundary_preserved",
+      "status": "passed",
+      "evidence": "Rows are checked for prohibited claims such as world-class, commercial-ready, buyer-validated, replacement, parity, or enterprise-ready.",
+      "proof_bucket": "repo_artifact"
+    }
+  ],
+  "row_issues": [],
+  "release_holds": [
+    {
+      "hold": "real_substitution_calls_present",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "0 real substitution rows loaded; 30 research/template rows ignored as proof."
+    },
+    {
+      "hold": "row_quality_validation",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "0 row-level errors and 0 warnings in substitution sheet."
+    },
+    {
+      "hold": "completed_substitution_calls",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "0 valid completed substitution calls; required 10."
+    },
+    {
+      "hold": "completed_niche_coverage",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "0 niches with valid completed substitution calls; required 5."
+    },
+    {
+      "hold": "qualified_substitution_outcomes",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "0 valid qualified substitution outcomes; required 3."
+    },
+    {
+      "hold": "commitment_path_signal",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "0 paid-pilot, LOI, procurement-path, or equivalent commitment rows; required 1."
+    }
+  ],
+  "next_commands_after_owner_data": [
+    "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:buyer:validate-substitution-evidence -- --substitution-sheet docs/launch-readiness/buyer-substitution-test-sheet-2026-06-06.csv --update-evidence",
+    "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:buyer:validate-inputs -- --update-evidence",
+    "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:buyer:proof-gate",
+    "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:commercial:confidence"
+  ]
+}

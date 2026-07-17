@@ -1,0 +1,175 @@
+{
+  "schema_version": "local-browser-route-proof-v1",
+  "proof_date": "2026-07-17",
+  "generated_at": "2026-07-17T08:03:29.423Z",
+  "status": "local_route_proof_ready_not_hosted_proof",
+  "proof_bucket": "local",
+  "hosted_live_proof": false,
+  "source": {
+    "smoke": "docs/launch-readiness/local-browser-route-smoke-2026-07-17.json",
+    "source_mode": "local_preview_full_beta_labs_bypass_mocked_placeholder_supabase",
+    "base_url": "http://127.0.0.1:4188",
+    "route_count": 7,
+    "rendered_or_expected_auth_gate_count": 7,
+    "rendered_count": 6,
+    "auth_gate_expected_count": 1,
+    "credential_free_authenticated_route_count": 1,
+    "failed_count": 0,
+    "render_problem_count": 0,
+    "runtime_console_error_count": 0,
+    "placeholder_network_error_count": 0,
+    "all_top_niche_routes_ready": true,
+    "hosted_live_proof": false
+  },
+  "marketability_route_map": [
+    {
+      "niche": "Enterprise/public-sector strategic decision intelligence",
+      "route": "/console",
+      "status": "rendered",
+      "expected_signal": "Strategy Console",
+      "expected_signal_found": true,
+      "screenshot": "/Users/sanjayb/minimax/strategic-intelligence-platform/docs/launch-readiness/browser-route-smoke-2026-07-17/enterprise_decision_console.png",
+      "proof_boundary": "local route-render proof only",
+      "sellability_signal": "Buyer-facing route signal found: Strategy Console."
+    },
+    {
+      "niche": "Governed forecasting and research workflow",
+      "route": "/forecasts",
+      "status": "rendered",
+      "expected_signal": "Forecast Registry",
+      "expected_signal_found": true,
+      "screenshot": "/Users/sanjayb/minimax/strategic-intelligence-platform/docs/launch-readiness/browser-route-smoke-2026-07-17/governed_forecast_registry.png",
+      "proof_boundary": "local route-render proof only",
+      "sellability_signal": "Buyer-facing route signal found: Forecast Registry."
+    },
+    {
+      "niche": "Geopolitical risk radar/scenario monitor",
+      "route": "/insights",
+      "status": "rendered",
+      "expected_signal": "Live Geopolitical Intelligence",
+      "expected_signal_found": true,
+      "screenshot": "/Users/sanjayb/minimax/strategic-intelligence-platform/docs/launch-readiness/browser-route-smoke-2026-07-17/geopolitical_risk_radar.png",
+      "proof_boundary": "local route-render proof only",
+      "sellability_signal": "Buyer-facing route signal found: Live Geopolitical Intelligence."
+    },
+    {
+      "niche": "Executive/analyst briefing layer",
+      "route": "/war-room",
+      "status": "auth_gate_expected",
+      "expected_signal": "War Room requires sign-in",
+      "expected_signal_found": true,
+      "screenshot": "/Users/sanjayb/minimax/strategic-intelligence-platform/docs/launch-readiness/browser-route-smoke-2026-07-17/executive_briefing_auth_gate.png",
+      "proof_boundary": "local route/auth-gate proof only",
+      "sellability_signal": "Executive collaboration route exists but needs authenticated workflow proof."
+    },
+    {
+      "niche": "Executive/analyst briefing layer",
+      "route": "/war-room",
+      "status": "rendered",
+      "expected_signal": "Corporate War Room",
+      "expected_signal_found": true,
+      "screenshot": "/Users/sanjayb/minimax/strategic-intelligence-platform/docs/launch-readiness/browser-route-smoke-2026-07-17/executive_briefing_workflow.png",
+      "proof_boundary": "local credential-free enterprise fixture proof only",
+      "sellability_signal": "Buyer-facing authenticated workflow signal found: Corporate War Room."
+    },
+    {
+      "niche": "Negotiation and strategic reasoning training",
+      "route": "/labs/negotiation",
+      "status": "rendered",
+      "expected_signal": "Negotiation Dojo",
+      "expected_signal_found": true,
+      "screenshot": "/Users/sanjayb/minimax/strategic-intelligence-platform/docs/launch-readiness/browser-route-smoke-2026-07-17/negotiation_training.png",
+      "proof_boundary": "local route-render proof only",
+      "sellability_signal": "Buyer-facing route signal found: Negotiation Dojo."
+    },
+    {
+      "niche": "Negotiation and strategic reasoning training",
+      "route": "/labs/game-tree",
+      "status": "rendered",
+      "expected_signal": "Sequential Game Studio",
+      "expected_signal_found": true,
+      "screenshot": "/Users/sanjayb/minimax/strategic-intelligence-platform/docs/launch-readiness/browser-route-smoke-2026-07-17/game_tree_training.png",
+      "proof_boundary": "local route-render proof only",
+      "sellability_signal": "Buyer-facing route signal found: Sequential Game Studio."
+    }
+  ],
+  "acceptance_gates": [
+    {
+      "gate": "full_beta_placeholder_preview_build",
+      "status": "passed",
+      "evidence": "Node 20 Vite build passed before local preview; environment used full-beta and labs bypass with placeholder Supabase values.",
+      "proof_bucket": "local"
+    },
+    {
+      "gate": "top_five_niche_route_capture",
+      "status": "passed",
+      "evidence": "7 routes captured across 5 niche labels.",
+      "proof_bucket": "local"
+    },
+    {
+      "gate": "no_failed_or_blank_routes",
+      "status": "passed",
+      "evidence": "0 failed routes and 0 render-problem routes.",
+      "proof_bucket": "local"
+    },
+    {
+      "gate": "no_unclassified_runtime_console_errors",
+      "status": "passed",
+      "evidence": "0 runtime console/page errors after mocked placeholder Supabase boundaries.",
+      "proof_bucket": "local"
+    },
+    {
+      "gate": "auth_gates_are_not_false_failures",
+      "status": "passed",
+      "evidence": "Auth-gated routes observed: /war-room.",
+      "proof_bucket": "local"
+    },
+    {
+      "gate": "credential_free_enterprise_war_room_workflow_capture",
+      "status": "passed",
+      "evidence": "The /war-room route rendered Corporate War Room through a local enterprise auth fixture without using real credentials.",
+      "proof_bucket": "local"
+    },
+    {
+      "gate": "hosted_proof_boundary_preserved",
+      "status": "passed",
+      "evidence": "hosted_live_proof=false.",
+      "proof_bucket": "local"
+    }
+  ],
+  "loopholes": [
+    {
+      "id": "war_room_auth_gate_not_workflow_proof",
+      "severity": "P2",
+      "status": "mitigated_local_only",
+      "evidence": "/war-room now has local credential-free enterprise fixture proof for the Corporate War Room lobby, while the anonymous auth gate remains separately captured.",
+      "fix": "Promote this to owner-approved hosted authenticated workflow smoke with screenshots and redacted logs."
+    },
+    {
+      "id": "local_null_supabase_mode_crash",
+      "severity": "P2",
+      "status": "mitigated_local_only",
+      "evidence": "StrategyConsole, PersonalLifeCoach, and getUserAuthHeaders guard null Supabase clients; VITE_LOCAL_ANALYZE=true /console smoke rendered without auth-null errors.",
+      "fix": "Keep the local-mode guard covered by focused smoke before using VITE_LOCAL_ANALYZE=true as proof infrastructure."
+    },
+    {
+      "id": "mocked_supabase_not_live_data_proof",
+      "severity": "P2",
+      "status": "open",
+      "evidence": "The local route smoke mocks placeholder Supabase and GDELT responses to avoid secrets and external account dependency.",
+      "fix": "Run the hosted operational proof kit against owner-approved hosted URL, smoke account, and redacted logs before live data or hosted claims."
+    },
+    {
+      "id": "browser_plugin_multi_route_timeout",
+      "severity": "P3",
+      "status": "open",
+      "evidence": "In-app Browser connected and loaded /console, then multi-route capture timed out on browser-use page attach.",
+      "fix": "Keep Browser as a visual/manual cross-check, but use repo-native Playwright for repeatable route proof until Browser attach stabilizes."
+    }
+  ],
+  "recommended_next_fixes": [
+    "Add or approve a credential-safe test-session path for War Room and enterprise briefing workflow smoke.",
+    "Convert the hosted operational proof kit into an owner-approved hosted smoke run with screenshots and redacted logs.",
+    "Keep top-five niche route proof local-only until hosted proof and buyer validation clear."
+  ]
+}

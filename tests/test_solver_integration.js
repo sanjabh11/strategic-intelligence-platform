@@ -198,6 +198,60 @@ async function testResearcherSchema() {
   }
 }
 
+async function testAdvancedFrameworkUpgrade() {
+  console.log('\n🧠 Testing Advanced Framework Upgrade...');
+
+  const scenarios = [
+    {
+      framework: 'coalitional',
+      scenario_text: 'Three parliamentary blocs can form binding coalitions and divide rewards. Model every coalition worth and compute a fair payoff split.',
+    },
+    {
+      framework: 'signaling',
+      scenario_text: 'An incumbent firm may be strong or weak, knows its type privately, and can signal before an entrant chooses whether to enter.',
+    },
+  ];
+
+  let passed = true;
+
+  for (const scenario of scenarios) {
+    const response = await makeRequest(`${SUPABASE_URL}/functions/v1/analyze-engine`, {
+      scenario_text: scenario.scenario_text,
+      audience: 'researcher',
+      run_id: `test_framework_${scenario.framework}_${Date.now()}`,
+    });
+
+    if (response.status !== 200) {
+      console.log(`  ❌ ${scenario.framework} request failed:`, response.status, response.data);
+      passed = false;
+      continue;
+    }
+
+    const envelope = response.data.analysis?.simulation_results?.advanced_frameworks?.[scenario.framework];
+    if (!envelope) {
+      console.log(`  ❌ ${scenario.framework} envelope missing`);
+      passed = false;
+      continue;
+    }
+
+    if (envelope.status !== 'deterministic') {
+      console.log(`  ❌ ${scenario.framework} expected deterministic status, got:`, envelope.status);
+      passed = false;
+      continue;
+    }
+
+    if (!envelope.normalized_inputs || Object.keys(envelope.normalized_inputs).length === 0) {
+      console.log(`  ❌ ${scenario.framework} missing normalized inputs`);
+      passed = false;
+      continue;
+    }
+
+    console.log(`  ✅ ${scenario.framework} deterministic upgrade verified`);
+  }
+
+  return passed;
+}
+
 async function runAllTests() {
   console.log('🚀 Starting Comprehensive Test Suite');
   console.log('=====================================');
@@ -210,6 +264,7 @@ async function runAllTests() {
     results.push(await testCacheBypass());
     results.push(await testEvidenceBackedValidation());
     results.push(await testResearcherSchema());
+    results.push(await testAdvancedFrameworkUpgrade());
 
     const passed = results.filter(Boolean).length;
     const total = results.length;

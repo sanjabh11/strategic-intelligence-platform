@@ -3,7 +3,8 @@
 // PRD-Compliant quantum-inspired strategic analysis with real entanglement computation
 // Implements superposition states, entanglement matrices, and decoherence modeling
 
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { createClient } from 'npm:@supabase/supabase-js@2'
+import { getAuthenticatedUser, jsonResponse } from '../_shared/auth.ts'
 
 // Quantum Strategy Interfaces
 interface QuantumStrategicState {
@@ -29,11 +30,33 @@ interface EntanglementMatrix {
   };
 }
 
+// Seeded RNG (mulberry32) for reproducible quantum simulations
+function mulberry32(seed: number) {
+  let t = seed >>> 0;
+  return function() {
+    t += 0x6D2B79F5;
+    let r = Math.imul(t ^ (t >>> 15), 1 | t);
+    r ^= r + Math.imul(r ^ (r >>> 7), 61 | r);
+    return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function hashStringToSeed(s: string): number {
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h += (h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24);
+  }
+  return h >>> 0;
+}
+
 class QuantumStrategyEngine {
   private supabase: any;
-  
-  constructor(supabaseClient: any) {
+  private rng: () => number;
+
+  constructor(supabaseClient: any, randomSeed?: number) {
     this.supabase = supabaseClient;
+    this.rng = mulberry32(typeof randomSeed === 'number' ? randomSeed : 1337);
   }
 
   async analyzeQuantumStrategicSuperposition(
@@ -47,8 +70,12 @@ class QuantumStrategyEngine {
       environmentalNoise: number;
       observationLevel: number;
       timeHorizon: number;
+      randomSeed?: number;
     }
   ) {
+    if (typeof config.randomSeed === 'number') {
+      this.rng = mulberry32(config.randomSeed);
+    }
     const quantumStates = this.initializeQuantumStates(scenario.players, config);
     const entanglementMatrix = this.computeEntanglementMatrix(scenario.players, scenario.interactions, config.quantumCoherence);
     const decoherenceModel = this.modelDecoherenceEffects(scenario, config.environmentalNoise, config.timeHorizon);
@@ -65,8 +92,8 @@ class QuantumStrategyEngine {
     return players.map(player => {
       const numActions = player.actions.length;
       const coherentStrategies = player.actions.map((action: string, index: number) => {
-        const amplitude = Math.sqrt(1 / numActions) * (0.8 + 0.4 * Math.random());
-        const phase = Math.random() * 2 * Math.PI;
+        const amplitude = Math.sqrt(1 / numActions) * (0.8 + 0.4 * this.rng());
+        const phase = this.rng() * 2 * Math.PI;
         return { action, amplitude, probability: amplitude * amplitude, phase };
       });
 
@@ -315,7 +342,7 @@ function jsonResponse(status: number, body: unknown) {
     status,
     headers: { 
       'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Origin': Deno.env.get('ALLOWED_ORIGIN') || Deno.env.get('APP_URL') || 'null',
       'Access-Control-Allow-Methods': 'POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type, Authorization, apikey, X-Client-Info'
     },
@@ -323,6 +350,11 @@ function jsonResponse(status: number, body: unknown) {
 }
 
 Deno.serve(async (req) => {
+  // Auth check
+  const _user = await getAuthenticatedUser(req)
+  if (!_user) return jsonResponse(401, { ok: false, error: 'authentication_required' })
+
+
   if (req.method === 'OPTIONS') return jsonResponse(200, { ok: true })
   if (req.method !== 'POST') return jsonResponse(405, { ok: false, message: 'Method Not Allowed' })
   
@@ -345,7 +377,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    const engine = new QuantumStrategyEngine(supabase);
+    const engine = new QuantumStrategyEngine(supabase, body.config.randomSeed ?? hashStringToSeed(body.runId || 'default'));
     const result = await engine.analyzeQuantumStrategicSuperposition(
       body.runId,
       body.scenario,

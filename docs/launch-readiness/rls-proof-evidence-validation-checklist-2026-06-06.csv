@@ -1,0 +1,11 @@
+gate,status,evidence,proof_bucket
+register_schema_present,passed,Register schema includes 22 required columns.,repo_artifact
+all_required_case_environment_rows_present,passed,54 register case/environment rows loaded for 54 expected rows from docs/launch-readiness/rls-identity-and-review-test-plan-2026-06-06.json.,repo_artifact
+local_pgtap_execution_present,open_no_executed_tests,0/27 local rows executed.,local
+linked_pgtap_execution_present,open_no_executed_tests,0/27 linked-project rows executed.,hosted_live
+all_local_cases_passed_owner_approved,open_no_executed_tests,"0/27 local rows are passed, redacted, owner-approved, and artifact-backed.",local
+all_linked_cases_passed_owner_approved,open_no_executed_tests,"0/27 linked rows are passed, redacted, owner-approved, and artifact-backed.",hosted_live
+owner_approval_and_redaction,open_no_executed_tests,0/54 rows owner-approved and 0/54 rows redaction-verified.,owner_input
+migration_applied_marker,failed,docs/launch-readiness/rls-identity-and-review-policy-draft-2026-06-06.json source.migration_applied=false; policy draft test_execution_verified=false.,repo_artifact
+row_quality_validation,open_no_executed_tests,0 row-level errors and 0 warnings across RLS proof evidence register.,owner_input
+claim_boundary_preserved,passed,"Rows are checked for unsupported tenant-isolation, enterprise-ready, production-ready, commercial-ready, and zero-risk claim language.",repo_artifact

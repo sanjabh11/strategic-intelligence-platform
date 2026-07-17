@@ -1,0 +1,72 @@
+{
+  "scenario_text": "An incumbent firm may be strong or weak, knows its type privately, and can choose a high-price or low-price signal before a rival decides whether to enter or stay out. Estimate prior probabilities, sender strategies, receiver beliefs, and whether the outcome is pooling or separating.",
+  "audience": "researcher",
+  "mode": "standard",
+  "expected_framework": "signaling",
+  "advanced_game_inputs": {
+    "signaling": {
+      "sender_types": ["Strong", "Weak"],
+      "prior_probs": {
+        "Strong": 0.6,
+        "Weak": 0.4
+      },
+      "messages": ["high_price", "low_price"],
+      "receiver_actions": ["enter", "stay_out"],
+      "sender_strategies": {
+        "Strong": {
+          "high_price": 1,
+          "low_price": 0
+        },
+        "Weak": {
+          "high_price": 0,
+          "low_price": 1
+        }
+      },
+      "observed_message": "high_price",
+      "sender_payoffs": {
+        "Strong": {
+          "high_price": {
+            "enter": 6,
+            "stay_out": 10
+          },
+          "low_price": {
+            "enter": 5,
+            "stay_out": 8
+          }
+        },
+        "Weak": {
+          "high_price": {
+            "enter": -2,
+            "stay_out": 4
+          },
+          "low_price": {
+            "enter": 1,
+            "stay_out": 3
+          }
+        }
+      },
+      "receiver_payoffs": {
+        "Strong": {
+          "high_price": {
+            "enter": -1,
+            "stay_out": 0
+          },
+          "low_price": {
+            "enter": -2,
+            "stay_out": 0
+          }
+        },
+        "Weak": {
+          "high_price": {
+            "enter": 3,
+            "stay_out": 0
+          },
+          "low_price": {
+            "enter": 2,
+            "stay_out": 0
+          }
+        }
+      }
+    }
+  }
+}

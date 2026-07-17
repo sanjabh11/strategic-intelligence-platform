@@ -1,0 +1,28 @@
+drop index if exists public.idx_life_decisions_user;
+drop index if exists public.idx_life_decisions_category;
+drop index if exists public.idx_life_decisions_created;
+drop index if exists public.idx_disputes_status;
+drop index if exists public.idx_disputes_category;
+drop index if exists public.idx_disputes_created;
+drop index if exists public.idx_matching_participants_market;
+drop index if exists public.idx_matching_participants_status;
+drop index if exists public.idx_matches_market;
+drop index if exists public.idx_matches_status;
+drop index if exists public.idx_cooperation_campaigns_category;
+drop index if exists public.idx_cooperation_campaigns_status;
+drop index if exists public.idx_campaign_participants_campaign;
+drop index if exists public.idx_strategic_dna_user;
+drop index if exists public.idx_debiasing_interventions_user;
+drop index if exists public.idx_debiasing_interventions_decision;
+
+drop policy if exists "Users can view own life decisions" on public.life_decisions;
+drop policy if exists "Users can insert own life decisions" on public.life_decisions;
+drop policy if exists "Users can update own life decisions" on public.life_decisions;
+drop policy if exists "Users can view own DNA profile" on public.strategic_dna_profiles;
+drop policy if exists "Users can create own DNA profile" on public.strategic_dna_profiles;
+drop policy if exists "Users can update own DNA profile" on public.strategic_dna_profiles;
+drop policy if exists "Users can view matching participants in same market" on public.matching_participants;
+drop policy if exists "Users can insert own matching profile" on public.matching_participants;
+drop policy if exists "Users can update own matching profile" on public.matching_participants;
+drop policy if exists "Anyone can view cooperation campaigns" on public.cooperation_campaigns;
+drop policy if exists "Anyone can join campaigns" on public.campaign_participants;

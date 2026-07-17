@@ -1,0 +1,314 @@
+- generic [ref=e3]:
+  - navigation [ref=e4]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - link "Strategy Console" [ref=e8] [cursor=pointer]:
+          - /url: /console
+          - img [ref=e9]
+          - generic [ref=e19]: Strategy Console
+        - 'button "Learning Mode: OFF" [ref=e21] [cursor=pointer]':
+          - img [ref=e22]
+          - text: "Learning Mode: OFF"
+      - generic [ref=e25]:
+        - link "Console" [ref=e26] [cursor=pointer]:
+          - /url: /console
+          - img [ref=e27]
+          - text: Console
+        - link "Insights" [ref=e29] [cursor=pointer]:
+          - /url: /insights
+          - img [ref=e30]
+          - text: Insights
+        - link "Commodities" [ref=e33] [cursor=pointer]:
+          - /url: /commodities
+          - img [ref=e34]
+          - text: Commodities
+        - link "Labs" [ref=e36] [cursor=pointer]:
+          - /url: /labs
+          - img [ref=e37]
+          - text: Labs
+        - link "Templates" [ref=e39] [cursor=pointer]:
+          - /url: /templates
+          - img [ref=e40]
+          - text: Templates
+        - link "Forecasts" [ref=e43] [cursor=pointer]:
+          - /url: /forecasts
+          - img [ref=e44]
+          - text: Forecasts
+        - link "Pricing" [ref=e47] [cursor=pointer]:
+          - /url: /pricing
+          - img [ref=e48]
+          - text: Pricing
+  - main [ref=e50]:
+    - generic [ref=e53]:
+      - generic:
+        - generic:
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - img
+                - generic:
+                  - heading "Commodity Response Workspace" [level=2]
+                  - paragraph: Procurement-led volatility response for gold and oil exposed decisions
+          - generic:
+            - generic:
+              - generic:
+                - heading "Procurement Response Playbook" [level=3]:
+                  - img
+                  - text: Procurement Response Playbook
+                - paragraph: Live market context routed through doctrine selection, supplier leverage mapping, and buyer response posture.
+              - generic:
+                - generic: sequential bargaining
+                - generic: sequential / incomplete
+            - generic:
+              - button "Price increase pushback Challenge pass-through, hold on precedent, and trade only for reciprocal movement.":
+                - generic: Price increase pushback
+                - generic: Challenge pass-through, hold on precedent, and trade only for reciprocal movement.
+              - button "Constrained supply allocation Secure continuity first, then control price leakage through allocation-linked trades.":
+                - generic: Constrained supply allocation
+                - generic: Secure continuity first, then control price leakage through allocation-linked trades.
+              - button "Renewal under switching leverage Use migration or alternate supply leverage without giving away future renewal posture.":
+                - generic: Renewal under switching leverage
+                - generic: Use migration or alternate supply leverage without giving away future renewal posture.
+            - generic:
+              - generic:
+                - generic:
+                  - generic: Volatility driver summary
+                  - generic: No dominant live commodity move is available. Hold the workspace in contingency mode and rely more heavily on lead time, allocation, and fallback evidence.
+                - generic:
+                  - generic: Recommended posture
+                  - generic: Challenge the pass-through. Demand justification for the increase, tie any movement to reciprocal terms, and keep alternate supply options visible.
+                  - generic: The scenario is a multi-round bargaining problem with uncertain flexibility, BATNA, and package trade-offs.
+                - generic:
+                  - generic: Supplier leverage map
+                  - generic:
+                    - generic:
+                      - generic: Primary supplier
+                      - generic: Leverage is balanced enough that package trade-offs matter more than spot commentary alone.
+                      - generic: Test whether the supplier can justify pass-through with continuity risk rather than just spot-market narrative.
+                    - generic:
+                      - generic: Buyer / procurement lead
+                      - generic: Inventory, alternate suppliers, timing flexibility, and non-price tradeables shift reservation logic.
+                      - generic: Use package trades, not isolated asks, to recover value.
+                    - generic:
+                      - generic: Market / policy environment
+                      - generic: Tariffs, sanctions, shipping constraints, and currency moves can amplify or dampen supplier pressure.
+                      - generic: Watch triggers that would change whether speed or price control is the dominant objective.
+              - generic:
+                - generic:
+                  - generic: Buyer tradeables
+                  - generic:
+                    - generic: volume commitment
+                    - generic: contract term
+                    - generic: payment timing
+                    - generic: forecast visibility
+                    - generic: onboarding or support scope
+                    - generic: termination or renewal flexibility
+                - generic:
+                  - generic: Trigger watchlist
+                  - list:
+                    - listitem:
+                      - img
+                      - generic: additional 3%+ move in the dominant commodity feed
+                    - listitem:
+                      - img
+                      - generic: supplier allocation or lead-time notice
+                    - listitem:
+                      - img
+                      - generic: tariff, sanctions, or shipping disruptions affecting supply
+                    - listitem:
+                      - img
+                      - generic: evidence that alternate suppliers can absorb more volume
+                    - listitem:
+                      - img
+                      - generic: material shift in FX or financing conditions
+                - generic:
+                  - generic: Claim-to-evidence
+                  - generic:
+                    - generic:
+                      - generic: Live commodity evidence is sparse, so posture should stay review-visible rather than fully evidence-backed.
+                      - generic: Provider mode (partial)
+                    - generic:
+                      - generic: The provider is degraded, so the playbook should emphasize trigger monitoring and contingency planning over point certainty.
+                      - generic: Market provider mode (direct)
+            - generic:
+              - button "Brief in Console":
+                - img
+                - text: Brief in Console
+              - button "Test Countermoves in Studio":
+                - img
+                - text: Test Countermoves in Studio
+          - generic:
+            - button "Market Overview":
+              - generic:
+                - img
+                - generic: Market Overview
+              - img
+            - generic:
+              - generic:
+                - img
+                - text: Loading live market feed...
+          - generic:
+            - heading "Macro Scenario Parameters" [level=3]:
+              - img
+              - text: Macro Scenario Parameters
+            - generic:
+              - generic:
+                - generic: Inflation Rate (%)
+                - spinbutton: "3.5"
+              - generic:
+                - generic: Dollar Index
+                - spinbutton: "100"
+              - generic:
+                - generic: Fed Funds Rate (%)
+                - spinbutton: "5.25"
+              - generic:
+                - generic: Geopolitical Risk (0-1)
+                - slider: "0.5"
+                - generic: "0.5"
+              - generic:
+                - generic: Recession Probability
+                - slider: "0.25"
+                - generic: 25%
+          - generic:
+            - heading "Advanced demand-side actors" [level=3]:
+              - img
+              - text: Advanced demand-side actors
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - img
+                    - generic: PBoC (China)
+                  - generic: Accumulating
+                - generic:
+                  - generic:
+                    - text: Current Reserves
+                    - generic: 2,235 t
+                  - generic:
+                    - text: Target
+                    - generic: 3,000 t
+                - generic:
+                  - generic:
+                    - generic: Reserve Progress
+                    - generic: 75%
+                - generic:
+                  - text: Buying Pressure
+                  - slider: "0.7"
+                  - generic:
+                    - generic: Selling
+                    - generic: Neutral
+                    - generic: Buying
+              - generic:
+                - generic:
+                  - generic:
+                    - img
+                    - generic: Bank of Russia
+                  - generic: Accumulating
+                - generic:
+                  - generic:
+                    - text: Current Reserves
+                    - generic: 2,330 t
+                  - generic:
+                    - text: Target
+                    - generic: 2,500 t
+                - generic:
+                  - generic:
+                    - generic: Reserve Progress
+                    - generic: 93%
+                - generic:
+                  - text: Buying Pressure
+                  - slider: "0.4"
+                  - generic:
+                    - generic: Selling
+                    - generic: Neutral
+                    - generic: Buying
+              - generic:
+                - generic:
+                  - generic:
+                    - img
+                    - generic: RBI (India)
+                  - generic: Accumulating
+                - generic:
+                  - generic:
+                    - text: Current Reserves
+                    - generic: 800 t
+                  - generic:
+                    - text: Target
+                    - generic: 1,000 t
+                - generic:
+                  - generic:
+                    - generic: Reserve Progress
+                    - generic: 80%
+                - generic:
+                  - text: Buying Pressure
+                  - slider: "0.5"
+                  - generic:
+                    - generic: Selling
+                    - generic: Neutral
+                    - generic: Buying
+              - generic:
+                - generic:
+                  - generic:
+                    - img
+                    - generic: Federal Reserve
+                  - generic: Holding
+                - generic:
+                  - generic:
+                    - text: Current Reserves
+                    - generic: 8,133 t
+                  - generic:
+                    - text: Target
+                    - generic: 8,133 t
+                - generic:
+                  - generic:
+                    - generic: Reserve Progress
+                    - generic: 100%
+                - generic:
+                  - text: Buying Pressure
+                  - slider: "0"
+                  - generic:
+                    - generic: Selling
+                    - generic: Neutral
+                    - generic: Buying
+              - generic:
+                - generic:
+                  - generic:
+                    - img
+                    - generic: ECB
+                  - generic: Holding
+                - generic:
+                  - generic:
+                    - text: Current Reserves
+                    - generic: 10,773 t
+                  - generic:
+                    - text: Target
+                    - generic: 10,773 t
+                - generic:
+                  - generic:
+                    - generic: Reserve Progress
+                    - generic: 100%
+                - generic:
+                  - text: Buying Pressure
+                  - slider: "-0.1"
+                  - generic:
+                    - generic: Selling
+                    - generic: Neutral
+                    - generic: Buying
+          - generic:
+            - button "Run Market Structure Simulation" [disabled]:
+              - img
+              - text: Run Market Structure Simulation
+          - generic: Simulation is disabled until the live Gold feed returns a usable spot price.
+      - generic [ref=e55]:
+        - img [ref=e57]
+        - heading "Upgrade to Premium" [level=3] [ref=e59]
+        - paragraph [ref=e60]: This feature requires a premium subscription. Unlock advanced capabilities and take your strategic analysis to the next level.
+        - button "Upgrade Now" [ref=e61] [cursor=pointer]:
+          - text: Upgrade Now
+          - img [ref=e62]
+        - paragraph [ref=e64]: "Current plan: Free"
+  - contentinfo [ref=e65]:
+    - generic [ref=e67]:
+      - paragraph [ref=e68]: Strategy Console - Evidence-Backed Strategic Analysis
+      - paragraph [ref=e69]: Real citations. Real simulations. Real clarity.

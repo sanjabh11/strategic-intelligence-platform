@@ -3,7 +3,9 @@
 // PRD-Compliant temporal decay models and confidence intervals
 // Implements sophisticated forecasting with uncertainty quantification
 
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { createClient } from 'npm:@supabase/supabase-js@2'
+import { fetchLatestDriftSignal } from '../_shared/ml-platform.ts'
+import { getAuthenticatedUser, jsonResponse } from '../_shared/auth.ts'
 
 interface ForecastPoint {
   t: number; // Time point (hours from now)
@@ -61,6 +63,180 @@ interface ForecastingRequest {
     aleatoricUncertainty: number; // Natural randomness
     confidenceLevel: number; // 0.90, 0.95, 0.99 etc.
   };
+  biasAdjustedBaseline?: {
+    probability: number;
+    method: string;
+    confidence: number;
+  };
+}
+
+class SafeDecayExpressionParser {
+  private position = 0;
+
+  constructor(
+    private readonly expression: string,
+    private readonly variables: Record<'p' | 't', number>
+  ) {}
+
+  parse(): number {
+    const value = this.parseExpression();
+    this.skipWhitespace();
+    if (this.position !== this.expression.length) {
+      throw new Error('Unexpected trailing expression input');
+    }
+    return this.bound(value);
+  }
+
+  private parseExpression(): number {
+    let value = this.parseTerm();
+
+    while (true) {
+      this.skipWhitespace();
+      if (this.consume('+')) value += this.parseTerm();
+      else if (this.consume('-')) value -= this.parseTerm();
+      else return this.bound(value);
+    }
+  }
+
+  private parseTerm(): number {
+    let value = this.parsePower();
+
+    while (true) {
+      this.skipWhitespace();
+      if (this.consume('*')) value *= this.parsePower();
+      else if (this.consume('/')) {
+        const divisor = this.parsePower();
+        if (Math.abs(divisor) < 1e-12) throw new Error('Division by zero');
+        value /= divisor;
+      } else return this.bound(value);
+    }
+  }
+
+  private parsePower(): number {
+    let value = this.parseUnary();
+
+    while (true) {
+      this.skipWhitespace();
+      if (!this.consume('^')) return this.bound(value);
+      value = Math.pow(value, this.parseUnary());
+    }
+  }
+
+  private parseUnary(): number {
+    this.skipWhitespace();
+    if (this.consume('+')) return this.parseUnary();
+    if (this.consume('-')) return -this.parseUnary();
+    return this.parseFactor();
+  }
+
+  private parseFactor(): number {
+    this.skipWhitespace();
+
+    if (this.consume('(')) {
+      const value = this.parseExpression();
+      this.expect(')');
+      return value;
+    }
+
+    const current = this.expression[this.position];
+    if (current === undefined) throw new Error('Unexpected end of expression');
+    if (/[0-9.]/.test(current)) return this.parseNumber();
+    if (/[a-z_]/i.test(current)) return this.parseIdentifier();
+
+    throw new Error(`Unexpected token: ${current}`);
+  }
+
+  private parseIdentifier(): number {
+    const start = this.position;
+    while (/[a-z_]/i.test(this.expression[this.position] || '')) {
+      this.position += 1;
+    }
+
+    const identifier = this.expression.slice(start, this.position).toLowerCase();
+    if (identifier === 'p' || identifier === 't') return this.variables[identifier];
+
+    this.expect('(');
+    const args: number[] = [];
+    this.skipWhitespace();
+
+    if (!this.consume(')')) {
+      do {
+        args.push(this.parseExpression());
+        this.skipWhitespace();
+      } while (this.consume(','));
+      this.expect(')');
+    }
+
+    return this.applyFunction(identifier, args);
+  }
+
+  private parseNumber(): number {
+    const start = this.position;
+    while (/[0-9.]/.test(this.expression[this.position] || '')) {
+      this.position += 1;
+    }
+
+    const value = Number(this.expression.slice(start, this.position));
+    if (!Number.isFinite(value)) throw new Error('Invalid number');
+    return value;
+  }
+
+  private applyFunction(name: string, args: number[]): number {
+    switch (name) {
+      case 'abs':
+        if (args.length !== 1) throw new Error('abs expects one argument');
+        return Math.abs(args[0]);
+      case 'clamp':
+        if (args.length !== 3) throw new Error('clamp expects three arguments');
+        return Math.min(args[2], Math.max(args[1], args[0]));
+      case 'exp':
+        if (args.length !== 1) throw new Error('exp expects one argument');
+        return Math.exp(Math.max(-100, Math.min(100, args[0])));
+      case 'log':
+        if (args.length !== 1 || args[0] <= 0) throw new Error('log expects one positive argument');
+        return Math.log(args[0]);
+      case 'max':
+        if (args.length === 0) throw new Error('max expects at least one argument');
+        return Math.max(...args);
+      case 'min':
+        if (args.length === 0) throw new Error('min expects at least one argument');
+        return Math.min(...args);
+      case 'pow':
+        if (args.length !== 2) throw new Error('pow expects two arguments');
+        return Math.pow(args[0], args[1]);
+      case 'sqrt':
+        if (args.length !== 1 || args[0] < 0) throw new Error('sqrt expects one non-negative argument');
+        return Math.sqrt(args[0]);
+      default:
+        throw new Error(`Unsupported function: ${name}`);
+    }
+  }
+
+  private consume(token: string): boolean {
+    this.skipWhitespace();
+    if (this.expression.startsWith(token, this.position)) {
+      this.position += token.length;
+      return true;
+    }
+    return false;
+  }
+
+  private expect(token: string): void {
+    if (!this.consume(token)) throw new Error(`Expected token: ${token}`);
+  }
+
+  private skipWhitespace(): void {
+    while (/\s/.test(this.expression[this.position] || '')) {
+      this.position += 1;
+    }
+  }
+
+  private bound(value: number): number {
+    if (!Number.isFinite(value) || Math.abs(value) > 1e6) {
+      throw new Error('Expression result out of bounds');
+    }
+    return value;
+  }
 }
 
 class OutcomeForecastingEngine {
@@ -84,7 +260,8 @@ class OutcomeForecastingEngine {
       request.decayModels,
       request.scenario,
       request.externalFactors,
-      request.uncertaintyConfig
+      request.uncertaintyConfig,
+      request.biasAdjustedBaseline,
     );
     
     // Step 2: Compute outcome correlations and interactions
@@ -144,7 +321,8 @@ class OutcomeForecastingEngine {
     decayModels: Record<string, DecayModel>,
     scenario: any,
     externalFactors: any[],
-    uncertaintyConfig: any
+    uncertaintyConfig: any,
+    biasAdjustedBaseline?: ForecastingRequest['biasAdjustedBaseline'],
   ): Promise<Record<string, ForecastPoint[]>> {
     
     const forecasts: Record<string, ForecastPoint[]> = {};
@@ -154,10 +332,15 @@ class OutcomeForecastingEngine {
       const decayModel = decayModels[outcome.id] || this.getDefaultDecayModel();
       const forecastPoints: ForecastPoint[] = [];
       
+      // Use bias-adjusted baseline when available, blending with outcome baseline
+      const effectiveBaseline = biasAdjustedBaseline
+        ? (outcome.baselineProbability * 0.4 + biasAdjustedBaseline.probability * 0.6)
+        : outcome.baselineProbability;
+      
       for (const t of timePoints) {
         // Compute base probability with decay
         const baseProbability = this.applyDecayModel(
-          outcome.baselineProbability,
+          effectiveBaseline,
           t,
           decayModel
         );
@@ -520,11 +703,13 @@ class OutcomeForecastingEngine {
   }
 
   private evaluateCustomFunction(func: string, p: number, t: number): number {
-    // Simplified function evaluation - replace 'p' and 't' in string
     try {
-      const expression = func.replace(/p/g, p.toString()).replace(/t/g, t.toString());
-      // In practice, would use a proper expression evaluator
-      return eval(expression);
+      const expression = func.trim();
+      if (expression.length === 0 || expression.length > 160) return p;
+      if (!/^[0-9a-z_\s+\-*/^().,]+$/i.test(expression)) return p;
+
+      const value = new SafeDecayExpressionParser(expression, { p, t }).parse();
+      return Number.isFinite(value) ? value : p;
     } catch {
       return p; // Fallback to original probability
     }
@@ -630,7 +815,7 @@ function jsonResponse(status: number, body: unknown) {
     status,
     headers: { 
       'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Origin': Deno.env.get('ALLOWED_ORIGIN') || Deno.env.get('APP_URL') || 'null',
       'Access-Control-Allow-Methods': 'POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type, Authorization, apikey, X-Client-Info'
     },
@@ -638,6 +823,11 @@ function jsonResponse(status: number, body: unknown) {
 }
 
 Deno.serve(async (req) => {
+  // Auth check
+  const _user = await getAuthenticatedUser(req)
+  if (!_user) return jsonResponse(401, { ok: false, error: 'authentication_required' })
+
+
   if (req.method === 'OPTIONS') return jsonResponse(200, { ok: true })
   if (req.method !== 'POST') return jsonResponse(405, { ok: false, message: 'Method Not Allowed' })
   
@@ -662,10 +852,14 @@ Deno.serve(async (req) => {
 
     const engine = new OutcomeForecastingEngine(supabase);
     const result = await engine.generateOutcomeForecasts(body);
+    const driftSignal = body.driftContext || await fetchLatestDriftSignal(supabase, 'outcome_forecasting', 'global').catch(() => null)
     
     return jsonResponse(200, {
       ok: true,
-      response: result
+      response: {
+        ...result,
+        drift_signal: driftSignal,
+      }
     });
     
   } catch (e) {

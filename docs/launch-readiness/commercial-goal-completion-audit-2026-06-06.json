@@ -1,0 +1,234 @@
+{
+  "schema_version": "commercial-goal-completion-audit-v1",
+  "generated_at": "2026-06-07T04:25:31.846Z",
+  "status": "commercial_goal_completion_audit_not_complete",
+  "source": {
+    "evidence": "docs/launch-readiness/launch-evidence-2026-06-06.json",
+    "commercial_confidence_gate": "docs/launch-readiness/commercial-confidence-gate-2026-06-06.json",
+    "market_niche_validation": "docs/launch-readiness/market-niche-evidence-validation-2026-06-06.json",
+    "competitive_positioning_validation": "docs/launch-readiness/competitive-positioning-evidence-validation-2026-06-06.json",
+    "pilot_package_readiness": "docs/launch-readiness/pilot-package-readiness-2026-06-06.json",
+    "buyer_execution_readiness": "docs/launch-readiness/buyer-validation-execution-readiness-2026-06-06.json",
+    "buyer_substitution_evidence_validation": "docs/launch-readiness/buyer-substitution-evidence-validation-2026-06-06.json",
+    "forecast_execution_readiness": "docs/launch-readiness/forecast-evaluation-execution-readiness-2026-06-06.json",
+    "enterprise_execution_readiness": "docs/launch-readiness/enterprise-trust-execution-readiness-2026-06-06.json",
+    "hosted_smoke_execution_readiness": "docs/launch-readiness/hosted-smoke-execution-readiness-2026-06-06.json",
+    "claim_consistency_validation": "docs/launch-readiness/claim-consistency-validation-2026-06-06.json",
+    "owner_approval_validation": "docs/launch-readiness/owner-approval-register-validation-2026-06-06.json",
+    "local_browser_route_proof": "docs/launch-readiness/local-browser-route-proof-2026-06-06.json",
+    "external_source_freshness": "docs/launch-readiness/external-source-freshness-2026-06-06.json"
+  },
+  "summary": {
+    "requirement_count": 11,
+    "proven_count": 5,
+    "partial_count": 0,
+    "blocked_owner_or_external_count": 6,
+    "not_proven_count": 0,
+    "completion_ready": false,
+    "launch_decision": "pilot-only",
+    "pilot_strategy_confidence_percent": 77.7,
+    "commercial_world_class_confidence_percent": 53.7,
+    "target_confidence_percent": 95,
+    "confidence_gap_percent": 41.3,
+    "claim_consistency_ready": true,
+    "owner_approval_validation_status": "owner_approval_register_ready_no_owner_approvals",
+    "owner_approval_required_count": 14,
+    "owner_approval_approved_count": 0,
+    "owner_approval_row_error_count": 0,
+    "owner_approval_ready_for_downstream_evidence": false,
+    "pilot_package_readiness_status": "pilot_package_ready_for_owner_review_not_external_share",
+    "pilot_package_ready_for_owner_review": true,
+    "pilot_package_external_share_ready": false,
+    "pilot_package_selected_top_five_count": 5,
+    "pilot_package_required_niche_count": 5,
+    "top_five_niches_clear": true,
+    "buyer_validation_verified": false,
+    "buyer_substitution_evidence_ready": false,
+    "buyer_substitution_real_interaction_count": 0,
+    "buyer_substitution_valid_completed_call_count": 0,
+    "buyer_substitution_completed_niche_count": 0,
+    "buyer_substitution_commitment_signal_count": 0,
+    "forecast_claim_ready": false,
+    "hosted_proof_complete": false,
+    "enterprise_proof_ready": false,
+    "source_anchor_count": 46,
+    "external_source_freshness_status": "external_source_freshness_needs_title_review",
+    "external_source_freshness_source_count": 57,
+    "external_source_freshness_reachable_count": 50,
+    "external_source_freshness_access_limited_count": 7,
+    "external_source_freshness_broken_count": 0,
+    "local_proof_count": 78,
+    "repo_proof_count": 129,
+    "hosted_proof_count": 0
+  },
+  "requirement_audit": [
+    {
+      "id": "top_five_niche_areas_clear",
+      "requirement": "Proceed only once the top five niche areas are clear.",
+      "status": "proven_current",
+      "evidence": "market_niche_evidence_validation_ready_not_buyer_validated; niches=5/5; buyer_safe_pilot_claim_allowed=true.",
+      "proof_bucket": "repo_artifact",
+      "next_action": "Keep these five niches as the working commercial thesis until buyer evidence changes the ranking."
+    },
+    {
+      "id": "repo_first_deep_codebase_audit",
+      "requirement": "Inspect the real codebase closely before conclusions.",
+      "status": "proven_current",
+      "evidence": "78 local proof entries, 129 repo-artifact entries, 38 launch-readiness source artifacts referenced by the confidence gate.",
+      "proof_bucket": "repo_artifact",
+      "next_action": "Continue treating full source/runtime checks as lane-specific proof; avoid claiming every source line is fully audited."
+    },
+    {
+      "id": "current_internet_best_practice_research",
+      "requirement": "Use current internet-backed best practices and scientific frameworks.",
+      "status": "proven_current",
+      "evidence": "Source anchors: market=13, competitive=14, forecast=7, enterprise=6, hosted=6; total=46. Source freshness=external_source_freshness_needs_title_review; checked=57/57; reachable=50; access_limited=7; broken=0.",
+      "proof_bucket": "repo_artifact",
+      "next_action": "Refresh source anchors when market, forecasting, AI security, or hosted-proof standards change."
+    },
+    {
+      "id": "marketability_sellability_uniqueness",
+      "requirement": "Identify unique, marketable, sellable strengths versus market gaps.",
+      "status": "blocked_owner_or_external_evidence",
+      "evidence": "competitive_positioning_validation_ready_pilot_only_not_buyer_validated; defensible_competitive_wedge_claim_allowed=true; pilot_package_status=pilot_package_ready_for_owner_review_not_external_share; package_ready_for_owner_review=true; external_share_ready=false; selected_top_five=5/5; buyer_validated_claim_allowed=false; substitution_evidence_status=buyer_substitution_evidence_validation_ready_no_real_calls; substitution_evidence_ready=false; real_substitution_interactions=0.",
+      "proof_bucket": "repo_artifact",
+      "next_action": "Run owner-approved discovery calls and validate real buyer signals."
+    },
+    {
+      "id": "buyer_validation_and_willingness_to_pay",
+      "requirement": "Verify sellability with buyer evidence, not desk research alone.",
+      "status": "blocked_owner_or_external_evidence",
+      "evidence": "buyer_validation_execution_ready_no_real_calls; selected targets=10; completed calls=0; valid outcome-capture rows=0; qualified followups=0; paid/LOI/procurement signals=0; substitution validation=buyer_substitution_evidence_validation_ready_no_real_calls; substitution completed calls=0; substitution niches=0; substitution commitment signals=0; owner approvals=0/14.",
+      "proof_bucket": "owner_input",
+      "next_action": "Owner completes the 10-call validation loop with outcome-capture rows, fills substitution outcomes, and reruns buyer input, substitution-evidence, and proof validators."
+    },
+    {
+      "id": "accurate_prediction_scientific_proof",
+      "requirement": "Make accurate/world-class prediction strategy factually defensible.",
+      "status": "blocked_owner_or_external_evidence",
+      "evidence": "forecast_evaluation_execution_ready_for_owner_export_no_real_outcomes; repo surfaces=10/10; valid resolved forecasts=0; valid baselines=0; scoring_chain_ready=false; owner approvals=0/14.",
+      "proof_bucket": "owner_input",
+      "next_action": "Owner supplies resolved forecast export and comparable baselines, then rerun leakage/scoring/science validators."
+    },
+    {
+      "id": "hosted_browser_runtime_proof",
+      "requirement": "Use Browser/hosted runtime proof before hosted-live or buyer-facing runtime claims.",
+      "status": "blocked_owner_or_external_evidence",
+      "evidence": "hosted_smoke_execution_blocked_project_privileges_owner_unblock_ready; owner_unblock_ready=true; hosted_smoke_execution_ready=false; hosted_proof_complete=false; local route proof=true; hosted proof entries=0; owner approvals=0/14.",
+      "proof_bucket": "repo_artifact",
+      "next_action": "Owner grants project access/deploy binding and then Browser/Playwright hosted smoke can run."
+    },
+    {
+      "id": "enterprise_public_sector_trust",
+      "requirement": "Support enterprise/public-sector sellability with trust, procurement, RLS, LLM security, and AI action controls.",
+      "status": "blocked_owner_or_external_evidence",
+      "evidence": "enterprise_trust_execution_ready_for_owner_review_no_approved_docs; procurement docs=0/8; RLS rows=0/54; local LLM red-team=true; hosted access=false; owner approvals=0/14.",
+      "proof_bucket": "owner_input",
+      "next_action": "Owner approves procurement documents and RLS/action-policy gates, then run hosted/RLS proof."
+    },
+    {
+      "id": "loopholes_and_fix_loop",
+      "requirement": "Find loopholes, suggest fixes, and keep looping.",
+      "status": "proven_current",
+      "evidence": "4 primary blockers ranked; dimension statuses=market_thesis:niche_evidence_validated_pilot_only_not_buyer_proof; differentiated_workflow:pilot_offer_packaged_guided_pilot_wedge; repo_product_proof:local_route_proof_good_hosted_proof_absent; enterprise_security_trust:enterprise_trust_execution_ready_owner_docs_and_runtime_proof_missing; prediction_accuracy_proof:forecast_execution_ready_owner_export_missing_real_rows; buyer_validation:buyer_execution_ready_substitution_evidence_gate_no_real_calls; hosted_operational_proof:hosted_smoke_owner_unblock_ready_project_access_missing; owner approval register=owner_approval_register_ready_no_owner_approvals; approved=0/14; errors=0.",
+      "proof_bucket": "repo_artifact",
+      "next_action": "Continue the loop in ranked order: prediction, buyer, enterprise, hosted."
+    },
+    {
+      "id": "claim_boundary_truthfulness",
+      "requirement": "Do not overclaim world-class, commercial-ready, hosted-live, enterprise-ready, or accurate predictions.",
+      "status": "proven_current",
+      "evidence": "claim_consistency_validation_passed_pilot_only_boundaries; scanned=157; unsupported=0; confidence=53.7.",
+      "proof_bucket": "repo_artifact",
+      "next_action": "Rerun claim consistency after every generated artifact or market-language change."
+    },
+    {
+      "id": "requested_95_percent_confidence",
+      "requirement": "Reach factual 95% confidence in the strategy and world-class prediction posture.",
+      "status": "blocked_owner_or_external_evidence",
+      "evidence": "commercial_world_class_confidence_percent=53.7; target=95; decision=not_95_confident; launch_decision=pilot-only.",
+      "proof_bucket": "commercial_gate",
+      "next_action": "Do not mark the goal complete until real owner/buyer/hosted/prediction evidence closes the confidence gap."
+    }
+  ],
+  "primary_blockers": [
+    {
+      "rank": 1,
+      "id": "prediction_accuracy_proof",
+      "label": "Prediction accuracy and calibration proof",
+      "current_score_percent": 35,
+      "weight_percent": 20,
+      "missing_evidence": [
+        "Clear owner approval register rows for pre-resolution packet freeze, resolved forecast export, and prediction claim language before any accuracy or world-class prediction claim review.",
+        "Clear the forecast claim-governance release holds with validated owner-approved inputs, resolved outcomes, real baselines, leakage review, hosted/security proof, and approved claim language.",
+        "Run the accuracy input validator on owner-approved resolved forecasts and baselines before calibration or benchmark scoring.",
+        "Run the forecast leakage review validator on owner-approved resolved forecasts and baselines so pre-resolution timestamps, temporal source cutoffs, retrieval cutoffs, baseline comparability, benchmark contamination, training/evaluation overlap, ambiguous outcomes, and claim copy are reviewer-approved.",
+        "Use the forecast evaluation execution-readiness gate as the owner export contract, then rerun it after real forecast and baseline rows are added.",
+        "Run the forecast scoring evidence validator after calibration ledger and benchmark comparison outputs are generated so sample-only mechanics cannot support accuracy claims.",
+        "Run the calibration ledger on owner-approved resolved forecasts with explicit inclusion/exclusion rules and sample size.",
+        "Compare against real human/community/pro/external baselines on comparable questions before any world-class accuracy claim."
+      ]
+    },
+    {
+      "rank": 2,
+      "id": "buyer_validation",
+      "label": "Buyer validation and willingness to pay",
+      "current_score_percent": 25,
+      "weight_percent": 15,
+      "missing_evidence": [
+        "Clear owner approval register rows for discovery slate, buyer outcome-capture protocol, and buyer external claim language before outreach proof can be upgraded.",
+        "Owner approves or edits the balanced buyer-validation execution slate before manual outreach.",
+        "Clear the buyer proof-gate release holds with 10 completed calls, three qualified follow-ups, and one paid-pilot/LOI/procurement-path signal.",
+        "Run the buyer evidence input validator after real discovery rows are added so only valid completed calls, pilot outcome-capture rows, qualified follow-ups, and commitment signals count.",
+        "Run the buyer substitution evidence validator after owner-filled substitution rows are added so current-tool, budget-owner, switching-barrier, must-have-proof, qualified outcome, and commitment signals are checked against substitutes.",
+        "Complete the 10-call validation loop and record buyer role, proof shown, objection, next action, willingness-to-pay signal, baseline/current workflow, pilot outcome or expected delta, quality signal, buyer decision event, and outcome evidence notes.",
+        "Do not upgrade beyond pilot-only without at least three qualified follow-ups and one paid-pilot or LOI conversation."
+      ]
+    },
+    {
+      "rank": 3,
+      "id": "enterprise_security_trust",
+      "label": "Enterprise security and trust proof",
+      "current_score_percent": 45,
+      "weight_percent": 15,
+      "missing_evidence": [
+        "Clear owner approval register rows for procurement documents, RLS execution, AI action policy, hosted runtime tests, and enterprise claim language before upgrading enterprise-ready claims.",
+        "Owner approves table classifications and policy draft.",
+        "Convert approved SQL into one narrow migration, run pgTAP locally and against linked Supabase, then run the RLS proof validator before any tenant-isolation claim is upgraded.",
+        "Run owner-approved hosted LLM red-team smoke before public-sector AI security claims.",
+        "Owner approves or edits the draft high-impact AI action policy, then runs hosted no-autonomous-action tests for publication, review, payment/webhook, and post-analysis fanout boundaries.",
+        "Use the enterprise trust execution-readiness gate as the owner procurement/security review contract, then rerun it after owner documents and runtime proofs are added.",
+        "Clear the enterprise procurement release holds with owner-approved privacy/retention/DPA, support/SLA, incident response, external-share register, RLS/hosted proof, and AI runtime proof.",
+        "Fill and validate the enterprise procurement evidence register so owner-approved documents, external-share approvals, and no-secrets/no-unsupported-claims markers are machine-checked before procurement claims are upgraded.",
+        "Complete privacy/retention, monitoring, support/SLA, and procurement questionnaire evidence before enterprise-ready claims."
+      ]
+    },
+    {
+      "rank": 4,
+      "id": "hosted_operational_proof",
+      "label": "Hosted operational proof",
+      "current_score_percent": 25,
+      "weight_percent": 5,
+      "missing_evidence": [
+        "Clear owner approval register rows for hosted project access, deploy binding, payment proof values, and hosted claim language before hosted-live proof can be upgraded.",
+        "Use the hosted smoke execution-readiness gate as the owner unblock contract, then rerun it after project access, deploy binding, and Stripe proof values are supplied.",
+        "Clear hosted access preflight blockers: intended project visibility, function/secret management access, owner-approved hosted URL/deploy binding, and missing payment proof values.",
+        "Run hosted access, auth, schema, strategist, insights, retrieval/analyze, and pricing/entitlement smoke scripts after owner-approved deploy/secrets.",
+        "Fill the hosted operational proof evidence register with hosted URL, deploy id or commit, timestamp, operator, logs, screenshots where relevant, failure class, and redaction status.",
+        "Run the hosted operational evidence validator so only passed, redacted, core-coverage rows can support specific buyer-safe hosted claims.",
+        "Attach screenshots/logs without exposing credentials or direct personal/payment identifiers."
+      ]
+    }
+  ],
+  "next_decision": "Keep goal active. Current evidence supports pilot-only positioning, not 95% world-class/commercial-ready completion.",
+  "next_loop_order": [
+    "Owner-approved consolidated approval register rows before downstream forecast, buyer, enterprise, RLS, hosted, payment, AI-action, and claim-language proof runs.",
+    "Owner-approved resolved forecast export and comparable baselines for prediction proof.",
+    "Owner-approved 10-call buyer discovery execution and evidence validation.",
+    "Owner-approved buyer substitution outcomes across the five niches, including current tool, budget owner, switching barrier, proof shown, qualified outcome, and commitment signal.",
+    "Owner-approved procurement documents, RLS execution, AI action policy approval, and hosted LLM/security proof.",
+    "Hosted project visibility, function/secret management access, deploy binding, Stripe proof values, and hosted smoke runs.",
+    "Rerun claim consistency and commercial confidence after every evidence addition."
+  ],
+  "proof_boundary": "This audit checks whether the original goal is currently complete. It does not create buyer evidence, hosted proof, enterprise proof, or prediction accuracy proof."
+}

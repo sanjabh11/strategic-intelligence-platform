@@ -1,0 +1,232 @@
+{
+  "schema_version": "enterprise-trust-execution-readiness-v1",
+  "generated_at": "2026-06-06T17:10:17.123Z",
+  "status": "enterprise_trust_execution_ready_for_owner_review_no_approved_docs",
+  "source": {
+    "enterprise_trust_pack": "docs/launch-readiness/enterprise-trust-pack-2026-06-06.json",
+    "enterprise_evidence_validation": "docs/launch-readiness/enterprise-procurement-evidence-validation-2026-06-06.json",
+    "enterprise_procurement_gate": "docs/launch-readiness/enterprise-procurement-readiness-gate-2026-06-06.json",
+    "rls_draft": "docs/launch-readiness/rls-identity-and-review-policy-draft-2026-06-06.json",
+    "rls_proof_validation": "docs/launch-readiness/rls-proof-evidence-validation-2026-06-06.json",
+    "llm_security_audit": "docs/launch-readiness/llm-security-readiness-audit-2026-06-06.json",
+    "ai_action_inventory": "docs/launch-readiness/ai-action-inventory-2026-06-06.json",
+    "ai_action_policy": "docs/launch-readiness/ai-high-impact-action-policy-2026-06-06.json",
+    "hosted_access_preflight": "docs/launch-readiness/hosted-access-preflight-validation-2026-06-06.json",
+    "hosted_proof_validation": "docs/launch-readiness/hosted-operational-proof-evidence-validation-2026-06-06.json",
+    "claim_consistency_validation": "docs/launch-readiness/claim-consistency-validation-2026-06-06.json",
+    "commercial_confidence_gate": "docs/launch-readiness/commercial-confidence-gate-2026-06-06.json",
+    "launch_evidence": "docs/launch-readiness/launch-evidence-2026-06-06.json",
+    "enterprise_dimension_status": "enterprise_trust_execution_ready_owner_docs_and_runtime_proof_missing",
+    "enterprise_dimension_score_percent": 45
+  },
+  "summary": {
+    "current_enterprise_source_count": 6,
+    "trust_pack_ready": true,
+    "questionnaire_row_count": 19,
+    "trust_domain_count": 10,
+    "trust_acceptance_gate_count": 8,
+    "procurement_register_template_ready": true,
+    "procurement_evidence_validation_status": "enterprise_procurement_evidence_validation_ready_no_owner_documents",
+    "procurement_required_document_count": 8,
+    "procurement_ready_document_count": 0,
+    "procurement_missing_document_count": 8,
+    "procurement_external_share_approved_count": 0,
+    "procurement_evidence_ready_for_review": false,
+    "procurement_privacy_dpa_ready": false,
+    "procurement_support_sla_ready": false,
+    "procurement_incident_response_ready": false,
+    "procurement_gate_ready": true,
+    "procurement_gate_release_hold_count": 6,
+    "rls_execution_plan_ready": true,
+    "rls_expected_case_environment_row_count": 54,
+    "rls_executed_row_count": 0,
+    "rls_tenant_isolation_proof_ready": false,
+    "local_llm_red_team_passed": true,
+    "llm_local_red_team_passed_count": 10,
+    "llm_red_team_fixture_count": 10,
+    "llm_hosted_runtime_executed_count": 0,
+    "llm_hosted_runtime_proof_ready": false,
+    "ai_action_inventory_ready": true,
+    "ai_action_policy_ready": true,
+    "ai_action_surface_count": 10,
+    "ai_policy_surface_count": 10,
+    "ai_approval_required_surface_count": 9,
+    "ai_direct_llm_to_irreversible_action_count": 0,
+    "ai_owner_approved_policy_count": 0,
+    "ai_hosted_verified_test_count": 0,
+    "hosted_access_ready_for_smoke": false,
+    "hosted_proof_ready_for_buyer_safe_claims": false,
+    "hosted_claim_allowed": false,
+    "claim_consistency_ready": true,
+    "active_release_hold_count": 7,
+    "execution_ready_for_owner_trust_review": true,
+    "enterprise_proof_ready_for_owner_claim_review": false,
+    "enterprise_ready_claim_allowed": false
+  },
+  "current_enterprise_trust_sources": [
+    {
+      "source": "NIST AI RMF",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "requirement": "Use documented governance, measurement, evaluation, monitoring, and risk-management evidence before AI trust claims."
+    },
+    {
+      "source": "NIST AI RMF Trustworthy AI in Critical Infrastructure Profile concept note",
+      "url": "https://www.nist.gov/system/files/documents/2026/04/08/Concept%20Note_%20Development%20of%20the%20NIST%20AI%20RMF%20Trustworthy%20Use%20of%20AI%20in%20Critical%20Infrastructure%20Profile.pdf",
+      "requirement": "For critical-infrastructure-facing AI, emphasize TEVV, adversarial robustness, explainability, graceful degradation, supply-chain visibility, and human oversight."
+    },
+    {
+      "source": "NIST SSDF SP 800-218",
+      "url": "https://csrc.nist.gov/pubs/sp/800/218/final",
+      "requirement": "Provide a secure-development vocabulary and repeatable SDLC evidence that purchasers can use during acquisition."
+    },
+    {
+      "source": "CISA Secure by Demand Guide",
+      "url": "https://www.cisa.gov/sites/default/files/2024-08/SecureByDemandGuide_080624_508c.pdf",
+      "requirement": "Answer product-security procurement questions and show secure-by-design ownership, transparency, and accountability."
+    },
+    {
+      "source": "OWASP GenAI Security Project / LLM Top 10",
+      "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/",
+      "requirement": "Cover prompt injection, sensitive information disclosure, insecure output handling, excessive agency, overreliance, model theft, and related GenAI security risks."
+    },
+    {
+      "source": "ISO/IEC 42001:2023",
+      "url": "https://www.iso.org/standard/42001",
+      "requirement": "Treat AI governance as a management-system readiness path; do not claim certification or audited AIMS without external proof."
+    }
+  ],
+  "acceptance_gates": [
+    {
+      "gate": "current_enterprise_trust_sources_attached",
+      "status": "passed",
+      "proof_bucket": "repo_artifact",
+      "evidence": "6 current enterprise AI/security source anchors attached.",
+      "next_action": "Refresh source anchors when NIST, CISA, OWASP, or ISO guidance changes."
+    },
+    {
+      "gate": "enterprise_trust_pack_ready",
+      "status": "passed",
+      "proof_bucket": "repo_artifact",
+      "evidence": "trust_pack_status=enterprise_trust_pack_ready_not_security_proof; questionnaire_rows=19; trust_domains=10; acceptance_gates=8.",
+      "next_action": "Use the trust pack as the internal procurement-questionnaire map only."
+    },
+    {
+      "gate": "procurement_register_template_ready",
+      "status": "passed",
+      "proof_bucket": "repo_artifact",
+      "evidence": "register_template_exists=true; ready_docs=0/8; missing_docs=8; external_share_approved=0.",
+      "next_action": "Owner fills and approves required procurement documents before any enterprise-ready claim."
+    },
+    {
+      "gate": "procurement_gate_ready",
+      "status": "passed",
+      "proof_bucket": "repo_artifact",
+      "evidence": "procurement_gate_status=enterprise_procurement_gate_ready_not_owner_approved_or_security_proof; release_holds=6.",
+      "next_action": "Clear release holds with owner-approved docs, hosted proof, RLS proof, AI action policy approval, and claim-language review."
+    },
+    {
+      "gate": "rls_execution_plan_ready_not_proof",
+      "status": "passed",
+      "proof_bucket": "repo_artifact",
+      "evidence": "rls_register_exists=true; rls_draft_ready=true; expected_case_environment_rows=54; executed_rows=0; rls_proof_ready=false.",
+      "next_action": "Owner approves classifications and migration, then run local and linked RLS proof rows."
+    },
+    {
+      "gate": "local_llm_red_team_ready_not_hosted",
+      "status": "passed",
+      "proof_bucket": "local",
+      "evidence": "local_red_team_passed=10/10; hosted_runtime_executed=0; hosted_runtime_ready=false.",
+      "next_action": "Run owner-approved hosted LLM red-team smoke before external security claims."
+    },
+    {
+      "gate": "ai_action_policy_ready_not_owner_approved",
+      "status": "passed",
+      "proof_bucket": "repo_artifact",
+      "evidence": "action_surfaces=10; policy_surfaces=10; approval_required=9; direct_llm_to_irreversible_actions=0; owner_approved_policies=0; hosted_verified_tests=0.",
+      "next_action": "Owner approves high-impact action policy and runs hosted no-autonomous-action boundary tests."
+    },
+    {
+      "gate": "hosted_runtime_boundary_ready",
+      "status": "open_hosted_runtime_not_ready",
+      "proof_bucket": "hosted_live",
+      "evidence": "hosted_access_ready=false; hosted_proof_ready=false; hosted_claim_allowed=false.",
+      "next_action": "Clear hosted access preflight and hosted operational proof validation."
+    },
+    {
+      "gate": "claim_boundaries_preserved",
+      "status": "passed",
+      "proof_bucket": "repo_artifact",
+      "evidence": "claim_consistency_ready=true; enterprise_ready_claim_allowed=false.",
+      "next_action": "Keep enterprise-ready, hosted-live, certified, and security-proof language blocked until evidence validators pass."
+    },
+    {
+      "gate": "enterprise_execution_ready_for_owner_review",
+      "status": "passed",
+      "proof_bucket": "repo_artifact",
+      "evidence": "execution_ready_for_owner_trust_review=true; enterprise_proof_ready=false.",
+      "next_action": "Owner can review, approve, and attach procurement documents and then run hosted/RLS evidence gates."
+    }
+  ],
+  "release_holds": [
+    {
+      "hold": "owner_approved_procurement_documents_missing",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "Eight owner-approved procurement documents covering privacy/data processing, data inventory, retention, DPA/subprocessors, support/SLA, incident response, secure SDLC, and external-share approval."
+    },
+    {
+      "hold": "external_share_approval_missing",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "Owner-approved external-share status for every artifact that may be shown to buyers."
+    },
+    {
+      "hold": "rls_tests_not_executed",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "Executed local and linked RLS proof register rows with migration marker and redacted logs."
+    },
+    {
+      "hold": "hosted_llm_red_team_not_executed",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "Hosted runtime LLM red-team rows for prompt injection, disclosure, output handling, excessive agency, overreliance, and unbounded consumption."
+    },
+    {
+      "hold": "ai_action_policy_not_owner_approved_or_hosted_tested",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "Owner-approved high-impact action policy plus hosted no-autonomous-action boundary tests."
+    },
+    {
+      "hold": "hosted_access_and_operational_proof_missing",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "Hosted access preflight success and validated hosted operational proof with deploy binding and redacted logs/screenshots."
+    },
+    {
+      "hold": "enterprise_claim_language_missing",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "Owner-approved external wording after procurement, hosted, RLS, and AI runtime gates pass."
+    }
+  ],
+  "owner_action_order": [
+    "Review the procurement evidence register and attach or approve the eight required documents.",
+    "Mark which artifacts are externally shareable and verify they contain no secrets or unsupported claims.",
+    "Approve RLS table classifications and policy draft, then run local and linked RLS proof rows.",
+    "Approve the high-impact AI action policy and run hosted no-autonomous-action boundary tests.",
+    "Clear hosted access preflight and run hosted LLM/security smoke with redacted evidence.",
+    "Rerun enterprise procurement evidence validation, this execution-readiness gate, claim consistency, and commercial confidence before changing enterprise/security language."
+  ],
+  "proof_boundary": {
+    "proves": [
+      "The repo has an internal trust pack, procurement questionnaire, procurement register template, RLS proof plan, local LLM red-team proof, and AI action policy draft ready for owner review.",
+      "Enterprise/security proof remains claim-blocked until owner documents, hosted proof, RLS proof, and AI runtime proof are executed and validated."
+    ],
+    "does_not_prove": [
+      "Enterprise readiness, SOC 2/ISO certification, tenant-isolation proof, hosted runtime proof, buyer-share approval, or public-sector procurement acceptance.",
+      "That privacy/DPA/SLA/incident-response documents exist or are owner-approved."
+    ]
+  }
+}

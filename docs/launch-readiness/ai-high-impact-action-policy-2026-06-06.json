@@ -1,0 +1,499 @@
+{
+  "schema_version": "ai-high-impact-action-policy-v1",
+  "generated_at": "2026-06-06T17:06:10.196Z",
+  "generated_for_date": "2026-06-06",
+  "status": "draft_high_impact_action_policy_ready_not_owner_approved_or_hosted_tested",
+  "source": {
+    "inventory": "docs/launch-readiness/ai-action-inventory-2026-06-06.json",
+    "inventory_status": "ai_action_inventory_ready_high_impact_gates_partial_not_hosted_proof",
+    "hosted_state_verified": false,
+    "production_state_verified": false,
+    "owner_policy_approved": false,
+    "no_runtime_or_payment_or_outreach_actions_executed": true
+  },
+  "proof_boundary": {
+    "allowed_use": "Internal owner-review packet and hosted-test specification for excessive-agency and high-impact action controls.",
+    "not_proof_of": [
+      "owner-approved policy",
+      "hosted runtime behavior",
+      "production RLS or object authorization",
+      "payment/webhook correctness",
+      "buyer acceptance",
+      "world-class prediction accuracy"
+    ],
+    "buyer_safe_positioning": "A draft high-impact action policy and boundary-test matrix exist; hosted no-autonomous-action proof is still missing."
+  },
+  "summary": {
+    "inventory_action_surface_count": 10,
+    "policy_surface_count": 10,
+    "high_impact_product_action_count": 7,
+    "approval_required_surface_count": 9,
+    "hosted_boundary_test_count": 9,
+    "static_boundary_test_count": 4,
+    "direct_llm_to_irreversible_action_count": 0,
+    "owner_approved_policy_count": 0,
+    "hosted_verified_test_count": 0
+  },
+  "current_source_alignment": [
+    {
+      "framework": "OWASP LLM06:2025 Excessive Agency",
+      "source_url": "https://genai.owasp.org/llmrisk/llm062025-excessive-agency/",
+      "policy_implication": "Keep LLM tools minimal, avoid open-ended tools, apply least privilege, execute in user context, require human approval for high-impact actions, and mediate authorization outside the model."
+    },
+    {
+      "framework": "NIST AI RMF Generative AI Profile",
+      "source_url": "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf",
+      "policy_implication": "Make action risk part of govern, map, measure, and manage controls before public-sector AI trust claims."
+    },
+    {
+      "framework": "CISA Secure by Design and Secure by Demand",
+      "source_url": "https://www.cisa.gov/sites/default/files/2024-08/SecureByDemandGuide_080624_508c.pdf",
+      "policy_implication": "Convert action safety into purchaser-reviewable questions, owner decisions, transparent boundaries, and repeatable verification evidence."
+    },
+    {
+      "framework": "NIST SSDF SP 800-218",
+      "source_url": "https://csrc.nist.gov/pubs/sp/800/218/final",
+      "policy_implication": "Treat action-boundary tests as secure-development verification evidence for buyers and software consumers."
+    }
+  ],
+  "policy_principles": [
+    "No model-selected irreversible action: LLM output may recommend, draft, or classify, but downstream systems must enforce authorization and approval.",
+    "High-impact actions require a named authority context: authenticated user, reviewer role, verified webhook signature, or owner-approved operator context.",
+    "Open-ended tools and model-selected destinations are prohibited for post-analysis fanout.",
+    "Payment and entitlement actions require test-policy approval before proof execution and signed webhooks before mutation.",
+    "Outreach artifacts are copy-only until owner approval; no app or script should send external messages as part of this evidence phase.",
+    "Service-role scripts are operator proof tools, not autonomous product runtime tools."
+  ],
+  "policy_surfaces": [
+    {
+      "id": "analyze_engine_service_role_persistence",
+      "name": "Analyze-engine service-role persistence",
+      "category": "ai_adjacent_persistence",
+      "impact_level": "high",
+      "high_impact_product_action": true,
+      "direct_llm_to_irreversible_action": false,
+      "required_context": [
+        "server_route_context",
+        "service_role_key_operator_boundary",
+        "request_id_or_analysis_run_id",
+        "audit_log"
+      ],
+      "forbidden_context": [
+        "model_selected_database_write",
+        "anonymous_direct_write",
+        "unbounded_table_mutation"
+      ],
+      "approval_required": true,
+      "allowed_claim": "Service-role writes are mapped and must remain server-mediated.",
+      "owner_decision_needed": "Approve whether analyze-engine service-role writes need a centralized action allowlist before hosted pilots.",
+      "hosted_test_status": "not_tested",
+      "local_assertion": "static_inventory_found_service_role_persistence_and_no_direct_llm_irreversible_action",
+      "source_evidence_status": "all_expected_static_evidence_found",
+      "evidence_files": [
+        "supabase/functions/analyze-engine/index.ts"
+      ],
+      "next_gate": "Add owner-approved hosted proof and a centralized allowlist for post-synthesis writes/fanout before enterprise no-autonomous-action claims."
+    },
+    {
+      "id": "analyze_engine_function_fanout",
+      "name": "Analyze-engine adjacent function and ML fanout",
+      "category": "ai_adjacent_tool_fanout",
+      "impact_level": "high",
+      "high_impact_product_action": true,
+      "direct_llm_to_irreversible_action": false,
+      "required_context": [
+        "fixed_function_allowlist",
+        "server_route_context",
+        "request_id_or_analysis_run_id",
+        "timeout_and_error_logging"
+      ],
+      "forbidden_context": [
+        "model_supplied_function_url",
+        "open_ended_fetch_tool",
+        "unapproved_post_synthesis_fanout"
+      ],
+      "approval_required": true,
+      "allowed_claim": "Post-analysis fanout is source-visible and should be allowlisted before public-sector AI claims.",
+      "owner_decision_needed": "Approve the allowed post-analysis fanout list and decide whether any fanout must require explicit user confirmation.",
+      "hosted_test_status": "not_tested",
+      "local_assertion": "static_inventory_found_known_function_fanout",
+      "source_evidence_status": "all_expected_static_evidence_found",
+      "evidence_files": [
+        "supabase/functions/analyze-engine/index.ts"
+      ],
+      "next_gate": "Add a centralized post-LLM action allowlist with per-action approval/authorization labels and hosted regression evidence."
+    },
+    {
+      "id": "forecast_publication",
+      "name": "Forecast publication",
+      "category": "public_content_publication",
+      "impact_level": "high",
+      "high_impact_product_action": true,
+      "direct_llm_to_irreversible_action": false,
+      "required_context": [
+        "authenticated_user",
+        "analysis_owner_match",
+        "publish_governance_can_publish",
+        "forecast_row_auditability"
+      ],
+      "forbidden_context": [
+        "anonymous_publication",
+        "unowned_linked_analysis",
+        "rejected_or_unreviewed_publication"
+      ],
+      "approval_required": true,
+      "allowed_claim": "Public forecast creation has static auth, ownership, and governance gates.",
+      "owner_decision_needed": "Approve hosted negative tests for unowned, rejected, unreviewed, and contested linked analyses.",
+      "hosted_test_status": "not_tested",
+      "local_assertion": "static_inventory_found_forecast_publication_gates",
+      "source_evidence_status": "all_expected_static_evidence_found",
+      "evidence_files": [
+        "supabase/functions/forecast-create/index.ts"
+      ],
+      "next_gate": "Run hosted smoke plus RLS tests for owned, unowned, rejected, unreviewed, and contested linked analyses."
+    },
+    {
+      "id": "human_review_request",
+      "name": "Human review request",
+      "category": "review_workflow_state_change",
+      "impact_level": "medium",
+      "high_impact_product_action": false,
+      "direct_llm_to_irreversible_action": false,
+      "required_context": [
+        "authenticated_user",
+        "analysis_owner_or_reviewer",
+        "review_state_auditability"
+      ],
+      "forbidden_context": [
+        "anonymous_review_request",
+        "unrelated_user_review_request"
+      ],
+      "approval_required": false,
+      "allowed_claim": "Review-request transitions are statically owner/reviewer gated.",
+      "owner_decision_needed": "Approve hosted reviewer/owner/unrelated-user boundary tests.",
+      "hosted_test_status": "not_tested",
+      "local_assertion": "static_inventory_found_review_request_gates",
+      "source_evidence_status": "all_expected_static_evidence_found",
+      "evidence_files": [
+        "supabase/functions/human-review/index.ts"
+      ],
+      "next_gate": "Run hosted owner/reviewer/other-user request-review smoke with redacted evidence."
+    },
+    {
+      "id": "human_review_approve_reject",
+      "name": "Human review approve/reject",
+      "category": "review_decision",
+      "impact_level": "high",
+      "high_impact_product_action": true,
+      "direct_llm_to_irreversible_action": false,
+      "required_context": [
+        "authenticated_reviewer",
+        "analysis_status_under_review",
+        "review_record_insert",
+        "reviewer_audit_trail"
+      ],
+      "forbidden_context": [
+        "ai_reviewer_decision",
+        "non_reviewer_decision",
+        "decision_on_non_pending_analysis"
+      ],
+      "approval_required": true,
+      "allowed_claim": "Approve/reject is human reviewer gated in source.",
+      "owner_decision_needed": "Approve hosted role-boundary tests before no-autonomous-review claims.",
+      "hosted_test_status": "not_tested",
+      "local_assertion": "static_inventory_found_human_review_decision_gates",
+      "source_evidence_status": "all_expected_static_evidence_found",
+      "evidence_files": [
+        "supabase/functions/human-review/index.ts"
+      ],
+      "next_gate": "Run hosted role-boundary tests for reviewer, owner, anonymous, and unrelated users."
+    },
+    {
+      "id": "stripe_checkout_session",
+      "name": "Stripe checkout session creation",
+      "category": "payment_action",
+      "impact_level": "high",
+      "high_impact_product_action": true,
+      "direct_llm_to_irreversible_action": false,
+      "required_context": [
+        "authenticated_user",
+        "email_match",
+        "allowed_tier",
+        "same_origin_redirect",
+        "stripe_test_policy_for_proof"
+      ],
+      "forbidden_context": [
+        "model_initiated_checkout",
+        "email_mismatch_checkout",
+        "unsupported_tier_checkout",
+        "unapproved_live_payment_test"
+      ],
+      "approval_required": true,
+      "allowed_claim": "Checkout initiation is user-authenticated and source-gated.",
+      "owner_decision_needed": "Approve Stripe test-key policy and hosted negative tests before payment-boundary claims.",
+      "hosted_test_status": "not_tested",
+      "local_assertion": "static_inventory_found_checkout_gates",
+      "source_evidence_status": "all_expected_static_evidence_found",
+      "evidence_files": [
+        "supabase/functions/stripe-checkout/index.ts"
+      ],
+      "next_gate": "Run hosted payment test only with owner-approved test keys and redacted evidence."
+    },
+    {
+      "id": "stripe_webhook_entitlement_sync",
+      "name": "Stripe webhook entitlement sync",
+      "category": "payment_entitlement_mutation",
+      "impact_level": "high",
+      "high_impact_product_action": true,
+      "direct_llm_to_irreversible_action": false,
+      "required_context": [
+        "stripe_signature_verified",
+        "event_type_allowlist",
+        "entitlement_audit_log",
+        "invalid_signature_rejection"
+      ],
+      "forbidden_context": [
+        "unsigned_entitlement_mutation",
+        "model_mutated_subscription",
+        "unapproved_live_webhook_test"
+      ],
+      "approval_required": true,
+      "allowed_claim": "Stripe entitlement sync is signature-gated in source.",
+      "owner_decision_needed": "Approve invalid-signature and valid-test-event hosted proof under test credentials.",
+      "hosted_test_status": "not_tested",
+      "local_assertion": "static_inventory_found_stripe_signature_gate",
+      "source_evidence_status": "all_expected_static_evidence_found",
+      "evidence_files": [
+        "supabase/functions/stripe-webhook/index.ts",
+        "supabase/functions/_shared/monetization.ts"
+      ],
+      "next_gate": "Run invalid-signature and valid-test-event hosted proof under owner-approved Stripe test policy."
+    },
+    {
+      "id": "whop_webhook_entitlement_sync",
+      "name": "Whop webhook entitlement sync",
+      "category": "payment_entitlement_mutation",
+      "impact_level": "high",
+      "high_impact_product_action": true,
+      "direct_llm_to_irreversible_action": false,
+      "required_context": [
+        "whop_signature_verified",
+        "event_type_allowlist",
+        "entitlement_audit_log",
+        "invalid_signature_rejection"
+      ],
+      "forbidden_context": [
+        "unsigned_entitlement_mutation",
+        "model_mutated_membership",
+        "unapproved_live_webhook_test"
+      ],
+      "approval_required": true,
+      "allowed_claim": "Whop entitlement sync is signature-gated in source.",
+      "owner_decision_needed": "Approve invalid-signature and valid-test-event hosted proof under test policy.",
+      "hosted_test_status": "not_tested",
+      "local_assertion": "static_inventory_found_whop_signature_gate",
+      "source_evidence_status": "all_expected_static_evidence_found",
+      "evidence_files": [
+        "supabase/functions/whop-webhook/index.ts",
+        "supabase/functions/_shared/monetization.ts"
+      ],
+      "next_gate": "Run invalid-signature and valid-test-event hosted proof under owner-approved Whop test policy."
+    },
+    {
+      "id": "buyer_discovery_outreach_copy",
+      "name": "Buyer discovery outreach copy",
+      "category": "outreach_copy_only",
+      "impact_level": "low",
+      "high_impact_product_action": false,
+      "direct_llm_to_irreversible_action": false,
+      "required_context": [
+        "copy_generation_only",
+        "owner_approval_before_send",
+        "no_send_capability_in_script"
+      ],
+      "forbidden_context": [
+        "app_sends_outreach",
+        "model_sends_email_or_linkedin",
+        "unapproved_external_contact"
+      ],
+      "approval_required": true,
+      "allowed_claim": "Outreach artifacts are draft-only and require owner approval.",
+      "owner_decision_needed": "Approve or edit the target slate and copy before any external contact.",
+      "hosted_test_status": "not_applicable_copy_only",
+      "local_assertion": "static_inventory_found_do_not_send_warning",
+      "source_evidence_status": "all_expected_static_evidence_found",
+      "evidence_files": [
+        "scripts/build-buyer-discovery-kit.mjs"
+      ],
+      "next_gate": "Owner approves or edits the target slate and message copy before any outreach."
+    },
+    {
+      "id": "hosted_service_role_smoke_scripts",
+      "name": "Hosted service-role smoke scripts",
+      "category": "operator_test_only",
+      "impact_level": "operator_high",
+      "high_impact_product_action": false,
+      "direct_llm_to_irreversible_action": false,
+      "required_context": [
+        "operator_run_only",
+        "owner_approved_secrets_policy",
+        "redacted_logs",
+        "no_secret_persistence"
+      ],
+      "forbidden_context": [
+        "autonomous_service_role_test",
+        "service_role_key_in_artifact",
+        "unapproved_production_mutation"
+      ],
+      "approval_required": true,
+      "allowed_claim": "Hosted service-role scripts are operator proof tools, not product runtime tools.",
+      "owner_decision_needed": "Approve hosted proof scope, smoke users, redaction path, and secret handling.",
+      "hosted_test_status": "not_tested",
+      "local_assertion": "static_inventory_found_operator_script_boundaries",
+      "source_evidence_status": "all_expected_static_evidence_found",
+      "evidence_files": [
+        "scripts/hosted-access-preflight.sh",
+        "scripts/hosted-strategist-smoke.mjs",
+        "scripts/hosted-auth-diagnostics.mjs",
+        "scripts/hosted-stripe-proof.mjs"
+      ],
+      "next_gate": "Run only after owner approval, with redacted logs and no secrets persisted."
+    }
+  ],
+  "boundary_tests": [
+    {
+      "id": "forecast_unowned_analysis_denied",
+      "surface_id": "forecast_publication",
+      "execution_scope": "hosted_after_owner_approval",
+      "risk": "public forecast linked to another user analysis",
+      "required_setup": "two smoke users and one analysis_run owned by user A",
+      "action": "user B POSTs forecast-create with user A analysis_run_id",
+      "expected_result": "HTTP 403 with code analysis_not_owned; no forecast row created",
+      "source_evidence": "supabase/functions/forecast-create/index.ts ownership check"
+    },
+    {
+      "id": "forecast_governance_blocks_unready_publication",
+      "surface_id": "forecast_publication",
+      "execution_scope": "hosted_after_owner_approval",
+      "risk": "public forecast from rejected, unreviewed, or non-evidence-backed analysis",
+      "required_setup": "smoke user owns linked analysis with rejected/unreviewed governance state",
+      "action": "POST forecast-create with linked analysis_run_id",
+      "expected_result": "HTTP 400 with governance status; no forecast row created",
+      "source_evidence": "supabase/functions/forecast-create/index.ts assessPublishGovernance"
+    },
+    {
+      "id": "human_review_non_reviewer_denied",
+      "surface_id": "human_review_approve_reject",
+      "execution_scope": "hosted_after_owner_approval",
+      "risk": "non-reviewer approves or rejects analysis",
+      "required_setup": "analysis_run under_review and authenticated user without reviewer role",
+      "action": "POST human-review analysis approve/reject",
+      "expected_result": "HTTP 403 with reviewer role required; analysis status unchanged",
+      "source_evidence": "supabase/functions/human-review/index.ts reviewer.role check"
+    },
+    {
+      "id": "human_review_requires_under_review",
+      "surface_id": "human_review_approve_reject",
+      "execution_scope": "hosted_after_owner_approval",
+      "risk": "reviewer changes status of analysis that is not pending review",
+      "required_setup": "reviewer user and analysis_run not under_review",
+      "action": "POST human-review approve/reject",
+      "expected_result": "HTTP 400 Analysis is not pending review; analysis status unchanged",
+      "source_evidence": "supabase/functions/human-review/index.ts under_review precondition"
+    },
+    {
+      "id": "stripe_checkout_email_mismatch_denied",
+      "surface_id": "stripe_checkout_session",
+      "execution_scope": "hosted_after_owner_approval_test_keys_only",
+      "risk": "authenticated user initiates checkout for another email",
+      "required_setup": "authenticated smoke user and Stripe test key policy",
+      "action": "POST stripe-checkout with mismatched email",
+      "expected_result": "HTTP 403 Authenticated user email does not match checkout email; no Stripe session created",
+      "source_evidence": "supabase/functions/stripe-checkout/index.ts email match check"
+    },
+    {
+      "id": "stripe_checkout_academic_non_edu_denied",
+      "surface_id": "stripe_checkout_session",
+      "execution_scope": "hosted_after_owner_approval_test_keys_only",
+      "risk": "non-edu user initiates academic checkout",
+      "required_setup": "authenticated non-edu smoke user and Stripe test key policy",
+      "action": "POST stripe-checkout with tier academic",
+      "expected_result": "HTTP 400 academic pricing requires .edu email; no Stripe session created",
+      "source_evidence": "supabase/functions/stripe-checkout/index.ts academic email gate"
+    },
+    {
+      "id": "stripe_webhook_invalid_signature_denied",
+      "surface_id": "stripe_webhook_entitlement_sync",
+      "execution_scope": "hosted_after_owner_approval_test_keys_only",
+      "risk": "unsigned webhook mutates entitlement",
+      "required_setup": "hosted webhook endpoint with configured test secret",
+      "action": "POST unsigned or badly signed Stripe event",
+      "expected_result": "HTTP 401 Invalid Stripe signature; no payment_logs or subscription mutation",
+      "source_evidence": "supabase/functions/stripe-webhook/index.ts verifyStripeSignature"
+    },
+    {
+      "id": "whop_webhook_invalid_signature_denied",
+      "surface_id": "whop_webhook_entitlement_sync",
+      "execution_scope": "hosted_after_owner_approval_test_policy_only",
+      "risk": "unsigned Whop webhook mutates membership or subscription",
+      "required_setup": "hosted webhook endpoint with configured Whop webhook secret",
+      "action": "POST unsigned or badly signed Whop event",
+      "expected_result": "HTTP 401 Invalid signature; no whop_users or subscription mutation",
+      "source_evidence": "supabase/functions/whop-webhook/index.ts verifyWhopSignature"
+    },
+    {
+      "id": "analyze_engine_fanout_allowlist_review",
+      "surface_id": "analyze_engine_function_fanout",
+      "execution_scope": "static_local_then_hosted_after_owner_approval",
+      "risk": "post-analysis fanout uses open-ended model-selected function or URL",
+      "required_setup": "source scan plus optional hosted request with fanout-triggering analysis",
+      "action": "verify fanout targets are fixed known functions and record whether model can alter destination",
+      "expected_result": "known allowlist only; no model-supplied arbitrary endpoint",
+      "source_evidence": "supabase/functions/analyze-engine/index.ts buildFunctionUrl and functions/v1 calls"
+    },
+    {
+      "id": "service_role_scripts_operator_only",
+      "surface_id": "hosted_service_role_smoke_scripts",
+      "execution_scope": "static_local",
+      "risk": "service-role proof scripts become autonomous product actions",
+      "required_setup": "source scan of hosted proof scripts",
+      "action": "verify service-role scripts require explicit operator env and are not exposed as app runtime routes",
+      "expected_result": "operator-only scripts with owner-approved secret policy and no secret persistence in artifacts",
+      "source_evidence": "scripts/hosted-*.mjs and scripts/hosted-access-preflight.sh"
+    },
+    {
+      "id": "buyer_outreach_copy_no_send",
+      "surface_id": "buyer_discovery_outreach_copy",
+      "execution_scope": "static_local",
+      "risk": "generated copy is mistaken for authorized outreach execution",
+      "required_setup": "source scan of discovery kit generator",
+      "action": "verify artifact remains copy-only and requires owner approval before sending",
+      "expected_result": "no send action and visible owner-approval warning",
+      "source_evidence": "scripts/build-buyer-discovery-kit.mjs do-not-send warning"
+    },
+    {
+      "id": "direct_llm_irreversible_action_count_zero",
+      "surface_id": "all",
+      "execution_scope": "static_local",
+      "risk": "LLM has direct path to irreversible high-impact action",
+      "required_setup": "AI action inventory generated from current source map",
+      "action": "read direct_llm_to_irreversible_action_count",
+      "expected_result": "count is 0; any future nonzero count blocks public-sector AI claims",
+      "source_evidence": "docs/launch-readiness/ai-action-inventory-2026-06-06.json"
+    }
+  ],
+  "owner_approval_checklist": [
+    "Approve or edit the high-impact action classification for every policy surface.",
+    "Approve whether analyze-engine service-role persistence and fanout require a centralized allowlist before hosted pilots.",
+    "Approve hosted negative tests for forecast publication and human review role boundaries.",
+    "Approve Stripe and Whop test-key/test-webhook policy before payment or entitlement proof.",
+    "Approve hosted URL, deployed release, smoke users, redacted evidence paths, and no-secret logging rules.",
+    "Mark this policy externally shareable only after hosted boundary tests, RLS tests, and privacy/support terms are attached."
+  ],
+  "decision": {
+    "launch_confidence_delta": 0,
+    "confidence_reason": "The policy draft improves governance readiness, but no owner approval or hosted boundary test evidence exists.",
+    "current_claim": "draft high-impact action policy and boundary-test matrix ready for owner review",
+    "prohibited_claim": "hosted-proven no-autonomous-action AI system"
+  }
+}

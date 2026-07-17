@@ -1,0 +1,326 @@
+{
+  "schema_version": "experiment-casebook-v1",
+  "generated_at": "2026-07-17T11:45:00+05:30",
+  "audit_id": "sip-deep-2026-07-13",
+  "status": "designed_not_executed",
+  "description": "Machine-readable experiment casebook derived from the comparative 5+5 discovery pack. All cases are design-only. No contacts have been made. No experiments have been executed.",
+  "source_pack": ".positioning-audit/comparative-5plus5-discovery-pack-2026-07-17.json",
+  "experiment_refs": ["EXP-007", "EXP-008"],
+  "rules": {
+    "no_private_contact_data": true,
+    "no_outreach_executed": true,
+    "no_experiment_status_changes": true,
+    "experiments_executed_remains_0": true,
+    "hypothesis_transition_remains_unresolved": true,
+    "education_lane_complementary_to_moblab": true,
+    "moblab_url": "https://www.moblab.com/products/classroom"
+  },
+  "cases": [
+    {
+      "case_id": "CASE-ENT-001",
+      "experiment_id": "EXP-008",
+      "hypothesis_id": "H-ENT-0",
+      "lane": "enterprise",
+      "target_organization": "GAO Center for Strategic Foresight",
+      "target_role": "Strategic foresight director or federal program-analysis lead",
+      "public_source_url": "https://www.gao.gov/about/what-gao-does/audit-role/csf/",
+      "job_to_be_tested": "Moving from source material to a decision-ready brief with evidence, review, and governance steps",
+      "demo_surface": "Console to strategist brief to human-review and forecast-draft handoff",
+      "discovery_questions": [
+        "Where does GAO Center for Strategic Foresight currently lose time or confidence moving from source material to a decision-ready brief?",
+        "Which evidence, review, or governance step is mandatory before a forecast or scenario recommendation is trusted?",
+        "What proof would you need from a guided pilot before sponsoring a broader evaluation?",
+        "Which existing tool, analyst workflow, consultancy, or spreadsheet would this need to complement or replace?",
+        "If the workflow helped, what concrete next step would be credible: second review, internal demo, paid pilot, LOI, or no action?"
+      ],
+      "required_evidence_fields": [
+        "buyer_role", "proof_shown", "objection", "next_action",
+        "willingness_to_pay_signal", "baseline_value_or_current_workflow",
+        "pilot_outcome_value_or_expected_delta", "quality_signal",
+        "buyer_decision_event", "outcome_evidence_notes"
+      ],
+      "consent_requirement": "Explicit verbal consent before recording any notes; public-sector confidentiality boundaries apply",
+      "stop_failure_rule": "Stop if target declines consent, requests written materials only, or indicates no recurring unmet job",
+      "status": "designed_not_executed",
+      "contact_status": "not_contacted"
+    },
+    {
+      "case_id": "CASE-ENT-002",
+      "experiment_id": "EXP-008",
+      "hypothesis_id": "H-ENT-0",
+      "lane": "enterprise",
+      "target_organization": "UK Government Office for Science Futures and Foresight",
+      "target_role": "Futures, foresight, or horizon-scanning team lead",
+      "public_source_url": "https://www.gov.uk/government/groups/futures-and-foresight",
+      "job_to_be_tested": "Moving from horizon-scanning sources to a decision-ready foresight brief with governance",
+      "demo_surface": "Actor/countermove brief plus review state and forecast-governance caveats",
+      "discovery_questions": [
+        "Where does UK Government Office for Science Futures and Foresight currently lose time or confidence moving from source material to a decision-ready brief?",
+        "Which evidence, review, or governance step is mandatory before a forecast or scenario recommendation is trusted?",
+        "What proof would you need from a guided pilot before sponsoring a broader evaluation?",
+        "Which existing tool, analyst workflow, consultancy, or spreadsheet would this need to complement or replace?",
+        "If the workflow helped, what concrete next step would be credible: second review, internal demo, paid pilot, LOI, or no action?"
+      ],
+      "required_evidence_fields": [
+        "buyer_role", "proof_shown", "objection", "next_action",
+        "willingness_to_pay_signal", "baseline_value_or_current_workflow",
+        "pilot_outcome_value_or_expected_delta", "quality_signal",
+        "buyer_decision_event", "outcome_evidence_notes"
+      ],
+      "consent_requirement": "Explicit verbal consent; UK government communication standards apply",
+      "stop_failure_rule": "Stop if target declines consent or indicates no recurring unmet job",
+      "status": "designed_not_executed",
+      "contact_status": "not_contacted"
+    },
+    {
+      "case_id": "CASE-ENT-003",
+      "experiment_id": "EXP-008",
+      "hypothesis_id": "H-ENT-0",
+      "lane": "enterprise",
+      "target_organization": "OECD Strategic Foresight Unit / Government Foresight Community",
+      "target_role": "Strategic foresight unit lead or GFC program contact",
+      "public_source_url": "https://www.oecd.org/strategic-foresight/",
+      "job_to_be_tested": "Moving from evidence-based foresight inputs to anticipatory policy recommendations",
+      "demo_surface": "Public-sector scenario brief with transparent uncertainty and policy trade-off questions",
+      "discovery_questions": [
+        "Where does OECD Strategic Foresight Unit currently lose time or confidence moving from source material to a decision-ready brief?",
+        "Which evidence, review, or governance step is mandatory before a forecast or scenario recommendation is trusted?",
+        "What proof would you need from a guided pilot before sponsoring a broader evaluation?",
+        "Which existing tool, analyst workflow, consultancy, or spreadsheet would this need to complement or replace?",
+        "If the workflow helped, what concrete next step would be credible: second review, internal demo, paid pilot, LOI, or no action?"
+      ],
+      "required_evidence_fields": [
+        "buyer_role", "proof_shown", "objection", "next_action",
+        "willingness_to_pay_signal", "baseline_value_or_current_workflow",
+        "pilot_outcome_value_or_expected_delta", "quality_signal",
+        "buyer_decision_event", "outcome_evidence_notes"
+      ],
+      "consent_requirement": "Explicit verbal consent; OECD institutional communication protocols apply",
+      "stop_failure_rule": "Stop if target declines consent or indicates no recurring unmet job",
+      "status": "designed_not_executed",
+      "contact_status": "not_contacted"
+    },
+    {
+      "case_id": "CASE-ENT-004",
+      "experiment_id": "EXP-008",
+      "hypothesis_id": "H-ENT-0",
+      "lane": "enterprise",
+      "target_organization": "Policy Horizons Canada",
+      "target_role": "Foresight analyst or policy innovation lead",
+      "public_source_url": "https://horizons.service.canada.ca/en/home/index.shtml",
+      "job_to_be_tested": "Moving from foresight inputs to policy recommendations under uncertainty",
+      "demo_surface": "Evidence bundle and audience-specific briefing for a policy uncertainty",
+      "discovery_questions": [
+        "Where does Policy Horizons Canada currently lose time or confidence moving from source material to a decision-ready brief?",
+        "Which evidence, review, or governance step is mandatory before a forecast or scenario recommendation is trusted?",
+        "What proof would you need from a guided pilot before sponsoring a broader evaluation?",
+        "Which existing tool, analyst workflow, consultancy, or spreadsheet would this need to complement or replace?",
+        "If the workflow helped, what concrete next step would be credible: second review, internal demo, paid pilot, LOI, or no action?"
+      ],
+      "required_evidence_fields": [
+        "buyer_role", "proof_shown", "objection", "next_action",
+        "willingness_to_pay_signal", "baseline_value_or_current_workflow",
+        "pilot_outcome_value_or_expected_delta", "quality_signal",
+        "buyer_decision_event", "outcome_evidence_notes"
+      ],
+      "consent_requirement": "Explicit verbal consent; Government of Canada communication standards apply",
+      "stop_failure_rule": "Stop if target declines consent or indicates no recurring unmet job",
+      "status": "designed_not_executed",
+      "contact_status": "not_contacted"
+    },
+    {
+      "case_id": "CASE-ENT-005",
+      "experiment_id": "EXP-008",
+      "hypothesis_id": "H-ENT-0",
+      "lane": "enterprise",
+      "target_organization": "Atlantic Council GeoStrategy Initiative",
+      "target_role": "Foresight, strategy, or program lead",
+      "public_source_url": "https://www.atlanticcouncil.org/our-programs/foresight-strategy-and-risks-initiative/",
+      "job_to_be_tested": "Producing global foresight and long-range strategy work for complex international issues",
+      "demo_surface": "Analyst briefing layer plus forecast-draft governance for a Global Foresight scenario",
+      "discovery_questions": [
+        "Where does Atlantic Council GeoStrategy Initiative currently lose time or confidence moving from source material to a decision-ready brief?",
+        "Which evidence, review, or governance step is mandatory before a forecast or scenario recommendation is trusted?",
+        "What proof would you need from a guided pilot before sponsoring a broader evaluation?",
+        "Which existing tool, analyst workflow, consultancy, or spreadsheet would this need to complement or replace?",
+        "If the workflow helped, what concrete next step would be credible: second review, internal demo, paid pilot, LOI, or no action?"
+      ],
+      "required_evidence_fields": [
+        "buyer_role", "proof_shown", "objection", "next_action",
+        "willingness_to_pay_signal", "baseline_value_or_current_workflow",
+        "pilot_outcome_value_or_expected_delta", "quality_signal",
+        "buyer_decision_event", "outcome_evidence_notes"
+      ],
+      "consent_requirement": "Explicit verbal consent; think-tank institutional protocols apply",
+      "stop_failure_rule": "Stop if target declines consent or indicates no recurring unmet job",
+      "status": "designed_not_executed",
+      "contact_status": "not_contacted"
+    },
+    {
+      "case_id": "CASE-EDU-001",
+      "experiment_id": "EXP-007",
+      "hypothesis_id": "H-EDU-4",
+      "lane": "education",
+      "target_organization": "Stanford GSB — Political Economy Group",
+      "target_role": "Game theory / political economy professor or teaching faculty",
+      "public_source_url": "https://www.gsb.stanford.edu/fac-research/academic-groups/political-economy",
+      "job_to_be_tested": "Moving from a game-theory model to a decision-ready brief for students with evidence-linked reasoning",
+      "demo_surface": "Console to strategist brief with actor reasoning and equilibrium analysis for a classroom case",
+      "discovery_questions": [
+        "How do you currently move from a game-theory model to a decision-ready brief for students?",
+        "What evidence or reasoning steps do you require before presenting a case as 'decision-ready'?",
+        "Would an evidence-to-actor-reasoning-to-forecast workflow complement your current teaching tools (e.g., MobLab Classroom)?",
+        "What would you need to see before adopting this in a course or recommending it to colleagues?"
+      ],
+      "required_evidence_fields": [
+        "buyer_role", "proof_shown", "objection", "next_action",
+        "willingness_to_pay_signal", "baseline_value_or_current_workflow",
+        "pilot_outcome_value_or_expected_delta", "quality_signal",
+        "buyer_decision_event", "outcome_evidence_notes"
+      ],
+      "consent_requirement": "Explicit verbal consent; no outreach to students; FERPA and Stanford IRB protocols apply if student data is involved. Distinguish quality-improvement from research per HHS OHRP guidance.",
+      "stop_failure_rule": "Stop if target declines consent, indicates no teaching need, or requests written materials only",
+      "status": "designed_not_executed",
+      "contact_status": "not_contacted",
+      "moblab_complement_note": "This case positions the workflow as a complement to MobLab Classroom (https://www.moblab.com/products/classroom), not a replacement. MobLab provides interactive games, assignments, and gradebook; this workflow provides evidence-to-reasoning governance."
+    },
+    {
+      "case_id": "CASE-EDU-002",
+      "experiment_id": "EXP-007",
+      "hypothesis_id": "H-EDU-4",
+      "lane": "education",
+      "target_organization": "MIT OpenCourseWare — Game Theory and Strategic Decision Making",
+      "target_role": "Course coordinator or instructional designer for strategy courses",
+      "public_source_url": "https://ocw.mit.edu/courses/14-12-game-theory-spring-2015/",
+      "job_to_be_tested": "Bridging the gap between theory and decision-ready reasoning in online course materials",
+      "demo_surface": "Console workflow showing evidence bundle, actor map, and equilibrium for a classic game theory scenario",
+      "discovery_questions": [
+        "What tools do students currently use to explore game-theory scenarios interactively?",
+        "Where does the gap exist between theory and decision-ready reasoning in your course materials?",
+        "Would an evidence-linked actor reasoning workflow complement MobLab or other interactive tools?",
+        "What proof would you need before recommending this as a teaching supplement?"
+      ],
+      "required_evidence_fields": [
+        "buyer_role", "proof_shown", "objection", "next_action",
+        "willingness_to_pay_signal", "baseline_value_or_current_workflow",
+        "pilot_outcome_value_or_expected_delta", "quality_signal",
+        "buyer_decision_event", "outcome_evidence_notes"
+      ],
+      "consent_requirement": "Explicit verbal consent; respect OCW editorial independence; MIT IRB protocols apply if student data is involved",
+      "stop_failure_rule": "Stop if target declines consent or indicates no need for interactive reasoning tools",
+      "status": "designed_not_executed",
+      "contact_status": "not_contacted",
+      "moblab_complement_note": "This case positions the workflow as a complement to MobLab Classroom, not a replacement."
+    },
+    {
+      "case_id": "CASE-EDU-003",
+      "experiment_id": "EXP-007",
+      "hypothesis_id": "H-EDU-4",
+      "lane": "education",
+      "target_organization": "University of Chicago — Pearson Institute for the Study and Resolution of Global Conflicts",
+      "target_role": "Research fellow or faculty lead in conflict resolution and game theory",
+      "public_source_url": "https://pearsoninstitute.uchicago.edu/",
+      "job_to_be_tested": "Moving from a game-theory model to a policy-relevant recommendation with evidence governance",
+      "demo_surface": "Console to strategist brief with actor reasoning, countermoves, and forecast-draft governance for a conflict scenario",
+      "discovery_questions": [
+        "How do you currently move from a game-theory model to a policy-relevant recommendation?",
+        "What evidence and review steps are required before a forecast is trusted in your research?",
+        "Would a governed evidence-to-forecast workflow complement your current analytical tools?",
+        "What would convince you to pilot this in a research project or seminar?"
+      ],
+      "required_evidence_fields": [
+        "buyer_role", "proof_shown", "objection", "next_action",
+        "willingness_to_pay_signal", "baseline_value_or_current_workflow",
+        "pilot_outcome_value_or_expected_delta", "quality_signal",
+        "buyer_decision_event", "outcome_evidence_notes"
+      ],
+      "consent_requirement": "Explicit verbal consent; UChicago IRB protocols apply; no claims about prediction accuracy",
+      "stop_failure_rule": "Stop if target declines consent or indicates no research need for evidence governance tools",
+      "status": "designed_not_executed",
+      "contact_status": "not_contacted",
+      "moblab_complement_note": "This case positions the workflow as a complement to MobLab Classroom, not a replacement."
+    },
+    {
+      "case_id": "CASE-EDU-004",
+      "experiment_id": "EXP-007",
+      "hypothesis_id": "H-EDU-4",
+      "lane": "education",
+      "target_organization": "Yale University — Jackson School of Global Affairs",
+      "target_role": "Professor of grand strategy, international relations, or decision analysis",
+      "public_source_url": "https://jackson.yale.edu/",
+      "job_to_be_tested": "Helping students explore the gap between strategic theory and evidence-linked decision-making",
+      "demo_surface": "Console workflow showing evidence bundle, actor reasoning, and equilibrium for a geopolitical strategy case",
+      "discovery_questions": [
+        "How do students currently explore the gap between strategic theory and evidence-linked decision-making?",
+        "What tools do you use to show actor reasoning and countermoves in a policy scenario?",
+        "Would a governed evidence-to-forecast workflow complement your current case-teaching approach?",
+        "What proof would you need before adopting this as a teaching tool?"
+      ],
+      "required_evidence_fields": [
+        "buyer_role", "proof_shown", "objection", "next_action",
+        "willingness_to_pay_signal", "baseline_value_or_current_workflow",
+        "pilot_outcome_value_or_expected_delta", "quality_signal",
+        "buyer_decision_event", "outcome_evidence_notes"
+      ],
+      "consent_requirement": "Explicit verbal consent; respect academic independence; Yale IRB protocols apply if student data is involved. Separate quality-improvement from research per HHS OHRP guidance.",
+      "stop_failure_rule": "Stop if target declines consent or indicates no teaching need",
+      "status": "designed_not_executed",
+      "contact_status": "not_contacted",
+      "moblab_complement_note": "This case positions the workflow as a complement to MobLab Classroom, not a replacement."
+    },
+    {
+      "case_id": "CASE-EDU-005",
+      "experiment_id": "EXP-007",
+      "hypothesis_id": "H-EDU-4",
+      "lane": "education",
+      "target_organization": "INSEAD — Strategy Department",
+      "target_role": "Strategy professor or case-method teaching faculty",
+      "public_source_url": "https://www.insead.edu/departments/strategy",
+      "job_to_be_tested": "Helping students move from case evidence to strategic recommendations with reasoning governance",
+      "demo_surface": "Console to strategist brief with evidence bundle, actor map, and equilibrium for a business strategy case",
+      "discovery_questions": [
+        "How do you currently help students move from case evidence to strategic recommendations?",
+        "What reasoning steps do you require students to show before accepting a recommendation?",
+        "Would an evidence-to-actor-reasoning-to-forecast workflow complement your case-teaching tools (e.g., MobLab Classroom)?",
+        "What would you need to see before piloting this in an MBA or executive program?"
+      ],
+      "required_evidence_fields": [
+        "buyer_role", "proof_shown", "objection", "next_action",
+        "willingness_to_pay_signal", "baseline_value_or_current_workflow",
+        "pilot_outcome_value_or_expected_delta", "quality_signal",
+        "buyer_decision_event", "outcome_evidence_notes"
+      ],
+      "consent_requirement": "Explicit verbal consent; no commercial claims without evidence; INSEAD IRB protocols apply if student data is involved. Separate quality-improvement from research per HHS OHRP guidance.",
+      "stop_failure_rule": "Stop if target declines consent or indicates no teaching need",
+      "status": "designed_not_executed",
+      "contact_status": "not_contacted",
+      "moblab_complement_note": "This case positions the workflow as a complement to MobLab Classroom, not a replacement."
+    }
+  ],
+  "summary": {
+    "total_cases": 10,
+    "education_cases": 5,
+    "enterprise_cases": 5,
+    "all_targets_not_contacted": true,
+    "experiments_executed": 0,
+    "hypothesis_transitions": "none — all hypotheses remain unresolved"
+  },
+  "validation": {
+    "schema_valid": true,
+    "all_cases_design_only": true,
+    "no_private_contact_data": true,
+    "education_lane_complementary_to_moblab": true,
+    "cross_artifact_check": "validated design-only mapping: EXP-007 education/H-EDU-4; EXP-008 enterprise/H-ENT-0; no execution, outreach, or hypothesis transition"
+  },
+  "approval_required_before_execution": [
+    "Owner approval of target slate",
+    "Owner approval of outreach wording",
+    "Owner approval of demo scope",
+    "Owner approval to execute EXP-007 and/or EXP-008"
+  ],
+  "regulatory_references": {
+    "education_privacy": "U.S. Department of Education privacy guidance (https://studentprivacy.ed.gov/)",
+    "research_vs_qi": "HHS OHRP guidance on quality improvement vs research (https://www.hhs.gov/ohrp/regulations-and-policy/guidance/)",
+    "lti_advantage": "1EdTech LTI Advantage implementation guide (https://www.imsglobal.org/lti-advantage-implementations)"
+  }
+}

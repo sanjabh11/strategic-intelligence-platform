@@ -479,9 +479,9 @@ const StrategicDNA: React.FC<StrategicDNAProps> = ({
                 <p className="text-xs text-slate-300">{rec.action}</p>
               </div>
 
-              {rec.bias && (
+              {(rec as any).bias && (
                 <div className="mt-2 text-xs text-slate-500">
-                  Addresses: {rec.bias}
+                  Addresses: {(rec as any).bias}
                 </div>
               )}
             </div>

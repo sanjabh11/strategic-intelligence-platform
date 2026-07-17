@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-06-06T17:08:44.705Z",
+  "source": {
+    "acceptance_test_plan": "docs/launch-readiness/rls-identity-and-review-test-plan-2026-06-06.json",
+    "production_state_verified": false,
+    "owner_classification_verified": false,
+    "migration_applied": false,
+    "test_execution_verified": false
+  },
+  "domain": "identity_and_review",
+  "commercial_security_status": "policy_draft_not_applied",
+  "proof_boundary": "This draft is a launch-readiness artifact only. It must not be copied into supabase/migrations or applied to hosted Supabase until owner approval, hosted policy inspection, local pgTAP tests, and linked-project approval gates are complete.",
+  "summary": {
+    "table_count": 5,
+    "policy_count_to_drop": 14,
+    "policy_count_to_create": 15,
+    "open_decision_count": 3,
+    "expected_test_plan_cases": 27,
+    "expected_initial_result": "not_executable_until_owner_approval_and_pgTAP_helpers"
+  },
+  "policy_decisions": [
+    {
+      "table": "analysis_runs",
+      "decision": "owner/reviewer/admin access; no anonymous read or insert by default",
+      "drops_broad_policies": [
+        "read_anon_runs",
+        "read_public_runs",
+        "read_runs",
+        "public_read_completed_runs",
+        "mvp_insert_anon_runs",
+        "insert_service_role_runs"
+      ],
+      "creates_policies": [
+        "identity_review_owner_read_analysis_runs",
+        "identity_review_owner_insert_analysis_runs",
+        "identity_review_reviewer_read_analysis_runs",
+        "identity_review_reviewer_update_analysis_runs",
+        "identity_review_admin_all_analysis_runs"
+      ],
+      "commercial_reason": "Analysis rows can contain customer questions, source context, strategist output, and review state.",
+      "public_exception_status": "not approved in this draft; requires explicit published/redacted workflow"
+    },
+    {
+      "table": "human_reviews",
+      "decision": "owner, assigned reviewer, queue reviewer, or admin access only",
+      "drops_broad_policies": [
+        "read_human_reviews",
+        "reviewer_read_human_reviews",
+        "reviewer_write_human_reviews",
+        "admin_access_human_reviews"
+      ],
+      "creates_policies": [
+        "identity_review_owner_read_human_reviews",
+        "identity_review_reviewer_read_human_reviews",
+        "identity_review_reviewer_update_human_reviews",
+        "identity_review_admin_all_human_reviews"
+      ],
+      "commercial_reason": "Review records expose high-stakes reviewer decisions and feedback.",
+      "public_exception_status": "none by default"
+    },
+    {
+      "table": "users",
+      "decision": "own profile row plus admin access; direct reviewer reads require a separate approved minimization path",
+      "drops_broad_policies": [
+        "read_users_public",
+        "read_users"
+      ],
+      "creates_policies": [
+        "identity_review_owner_read_users",
+        "identity_review_admin_all_users"
+      ],
+      "commercial_reason": "User role data powers RLS decisions and should not be public catalog data.",
+      "public_exception_status": "none by default"
+    },
+    {
+      "table": "asset_storage",
+      "decision": "owner or approved reviewer/admin access through linked analysis_runs",
+      "drops_broad_policies": [
+        "read_asset_storage"
+      ],
+      "creates_policies": [
+        "identity_review_owner_read_asset_storage",
+        "identity_review_reviewer_read_asset_storage",
+        "identity_review_admin_all_asset_storage"
+      ],
+      "commercial_reason": "Assets can contain handouts, slides, source packages, and customer analysis material.",
+      "public_exception_status": "only via explicit published/redacted asset workflow, not included in this draft"
+    },
+    {
+      "table": "schema_failures",
+      "decision": "admin-only direct reads until owner chooses an analysis_run_id/user_id schema link",
+      "drops_broad_policies": [
+        "read_schema_failures"
+      ],
+      "creates_policies": [
+        "identity_review_admin_read_schema_failures"
+      ],
+      "commercial_reason": "Validation failures can leak prompts, raw model output, schema internals, and customer context.",
+      "public_exception_status": "none by default"
+    }
+  ],
+  "open_decisions": [
+    {
+      "decision_id": "schema_failures_owner_path",
+      "status": "owner_decision_required",
+      "recommended_default": "admin_service_role_only",
+      "alternative": "add analysis_run_id uuid references public.analysis_runs(id) and owner/reviewer policies through analysis_runs",
+      "reason": "Current migrations define schema_failures with request_id/raw_response/validation_errors but no durable owner column."
+    },
+    {
+      "decision_id": "public_completed_analysis_runs",
+      "status": "owner_decision_required",
+      "recommended_default": "no_public_completed_read_in_enterprise_default",
+      "alternative": "create a separate redacted/published summary table or explicit published_at flag before public reads",
+      "reason": "status=completed alone is not enough to prove a row is safe for anonymous or public reads."
+    },
+    {
+      "decision_id": "reviewer_direct_user_reads",
+      "status": "owner_decision_required",
+      "recommended_default": "no_direct_reviewer_user_table_reads",
+      "alternative": "create a least-privilege reviewer profile view with only role/name fields needed for queue work",
+      "reason": "The users table powers role checks and should not become a broad reviewer directory without minimization."
+    }
+  ],
+  "required_approval_gates": [
+    "Owner approves identity_and_review table classifications and public exceptions.",
+    "Owner chooses schema_failures owner path: admin/service-role only or add analysis_run_id/user_id.",
+    "Current hosted Supabase policies are inspected before migration text is finalized.",
+    "SQL draft is converted into one timestamped migration only after approval.",
+    "Generated pgTAP template is converted into supabase/tests with helpers and run locally.",
+    "Linked-project pgTAP and hosted smoke are run only after explicit production approval."
+  ],
+  "sql_draft_preview": "-- NON-APPLIED DRAFT: identity_and_review RLS remediation\n-- Generated by scripts/build-rls-policy-draft.mjs.\n-- Do not place this file under supabase/migrations or apply it to hosted Supabase\n-- until owner classification, current hosted policy inspection, and local pgTAP\n-- test helpers are complete.\n--\n-- Proof boundary:\n-- - This is a draft, not an executed migration.\n-- - Supabase service_role keys can bypass RLS server-side; never expose them to clients.\n-- - Public reads are intentionally not included for analysis_runs, users,\n--   human_reviews, asset_storage, or schema_failures in this draft.\n\n-- Harden helper used by RLS role predicates.\ncreate or replace function public.get_user_role()\nreturns text\nsecurity definer\nset search_path = public\nlanguage sql\nstable\nas $$\n  select u.role\n  from public.users u\n  where u.auth_id = (select auth.uid())::uuid\n  limit 1\n$$;\n\n-- Remove legacy broad policies for the first remediation batch.\ndrop policy if exists read_anon_runs on public.analysis_runs;\ndrop policy if exists read_public_runs on public.analysis_runs;\ndrop policy if exists read_runs on public.analysis_runs;\ndrop policy if exists public_read_completed_runs on public.analysis_runs;\ndrop policy if exists mvp_insert_anon_runs on public.analysis_runs;\ndrop policy if exists insert_service_role_runs on public.analysis_runs;\ndrop policy if exists reviewer_read_analysis_runs on public.analysis_runs;\ndrop policy if exists reviewer_update_analysis_runs on public.analysis_runs;\ndrop policy if exists admin_access_analysis_runs on public.analysis_runs;\n\ndrop policy if exists read_human_reviews on public.human_reviews;\ndrop policy if exists reviewer_read_human_reviews on public.human_reviews;\ndrop policy if exists reviewer_write_human_reviews on public.human_reviews;\ndrop policy if exists admin_access_human_reviews on public.human_reviews;\n\ndrop policy if exists read_users_public on public.users;\ndrop policy if exists read_users on public.users;\n\ndrop policy if exists read_asset_storage on public.asset_storage;\ndrop policy if exists read_schema_failures on public.schema_failures;\n\n-- Remove prior draft policy names as well, so the final approved migration can be idempotent.\ndrop policy if exists identity_review_owner_read_analysis_runs on public.analysis_runs;\ndrop policy if exists identity_review_owner_insert_analysis_runs on public.analysis_runs;\ndrop policy if exists identity_review_reviewer_read_analysis_runs on public.analysis_runs;\ndrop policy if exists identity_review_reviewer_update_analysis_runs on public.analysis_runs;\ndrop policy if exists identity_review_admin_all_analysis_runs on public.analysis_runs;\n\ndrop policy if exists identity_review_owner_read_human_reviews on public.human_reviews;\ndrop policy if exists identity_review_reviewer_read_human_reviews on public.human_reviews;\ndrop policy if exists identity_review_reviewer_update_human_reviews on public.human_reviews;\ndrop policy if exists identity_review_admin_all_human_reviews on public.human_reviews;\n\ndrop policy if exists identity_review_owner_read_users on public.users;\ndrop policy if exists identity_review_admin_all_users on public.users;\n\ndrop policy if exists identity_review_owner_read_asset_storage on public.asset_storage;\ndrop policy if exists identity_review_reviewer_read_asset_storage on public.asset_storage;\ndrop policy if exists identity_review_admin_all_asset_storage on public.asset_storage;\n\ndrop policy if exists identity_review_admin_read_schema_failures on public.schema_failures;\n\nalter table public.analysis_runs enable row level security;\nalter table public.human_reviews enable row level security;\nalter table public.users enable row level security;\nalter table public.asset_storage enable row level security;\nalter table public.schema_failures enable row level security;\n\n-- analysis_runs: owner, reviewer queue, and admin.\ncreate policy identity_review_owner_read_analysis_runs\n  on public.analysis_runs\n  for select\n  to authenticated\n  using (user_id = (select auth.uid()));\n\ncreate policy identity_review_owner_insert_analysis_runs\n  on public.analysis_runs\n  for insert\n  to authenticated\n  with check (user_id = (select auth.uid()));\n\ncreate policy identity_review_reviewer_read_analysis_runs\n  on public.analysis_runs\n  for select\n  to authenticated\n  using (\n    public.get_user_role() = 'reviewer'\n    and status in ('needs_review', 'under_review')\n  );\n\ncreate policy identity_review_reviewer_update_analysis_runs\n  on public.analysis_runs\n  for update\n  to authenticated\n  using (\n    public.get_user_role() = 'reviewer'\n    and status in ('needs_review', 'under_review')\n  )\n  with check (\n    public.get_user_role() = 'reviewer'\n    and status in ('needs_review', 'under_review', 'approved', 'rejected')\n  );\n\ncreate policy identity_review_admin_all_analysis_runs\n  on public.analysis_runs\n  for all\n  to authenticated\n  using (public.get_user_role() = 'admin')\n  with check (public.get_user_role() = 'admin');\n\n-- human_reviews: owner through analysis_run, assigned/queue reviewer, and admin.\ncreate policy identity_review_owner_read_human_reviews\n  on public.human_reviews\n  for select\n  to authenticated\n  using (\n    exists (\n      select 1\n      from public.analysis_runs ar\n      where ar.id = human_reviews.analysis_run_id\n        and ar.user_id = (select auth.uid())\n    )\n  );\n\ncreate policy identity_review_reviewer_read_human_reviews\n  on public.human_reviews\n  for select\n  to authenticated\n  using (\n    public.get_user_role() = 'reviewer'\n    and (\n      reviewer_id = (select auth.uid())::text\n      or exists (\n        select 1\n        from public.analysis_runs ar\n        where ar.id = human_reviews.analysis_run_id\n          and ar.status in ('needs_review', 'under_review')\n      )\n    )\n  );\n\ncreate policy identity_review_reviewer_update_human_reviews\n  on public.human_reviews\n  for update\n  to authenticated\n  using (\n    public.get_user_role() = 'reviewer'\n    and reviewer_id = (select auth.uid())::text\n  )\n  with check (\n    public.get_user_role() = 'reviewer'\n    and reviewer_id = (select auth.uid())::text\n  );\n\ncreate policy identity_review_admin_all_human_reviews\n  on public.human_reviews\n  for all\n  to authenticated\n  using (public.get_user_role() = 'admin')\n  with check (public.get_user_role() = 'admin');\n\n-- users: own row and admin only.\ncreate policy identity_review_owner_read_users\n  on public.users\n  for select\n  to authenticated\n  using (auth_id = (select auth.uid()));\n\ncreate policy identity_review_admin_all_users\n  on public.users\n  for all\n  to authenticated\n  using (public.get_user_role() = 'admin')\n  with check (public.get_user_role() = 'admin');\n\n-- asset_storage: owner through analysis_run, approved review queue, and admin.\ncreate policy identity_review_owner_read_asset_storage\n  on public.asset_storage\n  for select\n  to authenticated\n  using (\n    exists (\n      select 1\n      from public.analysis_runs ar\n      where ar.id = asset_storage.analysis_run_id\n        and ar.user_id = (select auth.uid())\n    )\n  );\n\ncreate policy identity_review_reviewer_read_asset_storage\n  on public.asset_storage\n  for select\n  to authenticated\n  using (\n    public.get_user_role() = 'reviewer'\n    and exists (\n      select 1\n      from public.analysis_runs ar\n      where ar.id = asset_storage.analysis_run_id\n        and ar.status in ('needs_review', 'under_review')\n    )\n  );\n\ncreate policy identity_review_admin_all_asset_storage\n  on public.asset_storage\n  for all\n  to authenticated\n  using (public.get_user_role() = 'admin')\n  with check (public.get_user_role() = 'admin');\n\n-- schema_failures: no owner path exists in current migrations.\n-- Draft default: admin-only direct reads; service-role jobs can manage server-side.\n-- Owner alternative: add analysis_run_id/user_id and mirror owner/reviewer policies.\ncreate policy identity_review_admin_read_schema_failures\n  on public.schema_failures\n  for select\n  to authenticated\n  using (public.get_user_role() = 'admin');\n"
+}

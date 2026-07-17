@@ -107,10 +107,10 @@ const PLAN_TIER_MAP: Record<string, WhopTier> = {
     'plan_enterprise_monthly': 'enterprise'
 };
 
-/**
- * Validate user's Whop membership and return tier
- * In production, use actual Whop SDK
- */
+// ⚠️ PAYMENTS NOT FUNCTIONAL — Mock implementation
+// TODO: Install @whop/sdk and replace this mock with real API call
+// See: https://docs.whop.com/sdk for integration guide
+// This was identified in the 2026-07-05 audit as PRC-01 (Critical)
 export async function validateWhopMembership(
     accessToken: string
 ): Promise<{ valid: boolean; tier: WhopTier | null; membership: WhopMembership | null }> {
@@ -146,45 +146,47 @@ export async function validateWhopMembership(
 }
 
 /**
- * Generate a signed license key for desktop app validation
+ * Generate a signed license key using HMAC-SHA256
  */
-export function generateLicenseKey(
+export async function generateLicenseKey(
     userId: string,
     tier: WhopTier,
     expiresAt: Date,
     secretKey: string
-): string {
-    // Create payload
+): Promise<string> {
     const payload = {
         u: userId,
         t: tier,
         e: expiresAt.getTime()
     };
 
-    // Base64 encode payload
     const encodedPayload = btoa(JSON.stringify(payload));
+    const key = await crypto.subtle.importKey(
+        'raw',
+        new TextEncoder().encode(secretKey),
+        { name: 'HMAC', hash: 'SHA-256' },
+        false,
+        ['sign']
+    );
+    const signature = await crypto.subtle.sign(
+        'HMAC',
+        key,
+        new TextEncoder().encode(encodedPayload)
+    );
+    const sigHex = Array.from(new Uint8Array(signature))
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('');
 
-    // Create simple HMAC-like signature (use actual HMAC in production)
-    const signatureInput = encodedPayload + secretKey;
-    let hash = 0;
-    for (let i = 0; i < signatureInput.length; i++) {
-        const char = signatureInput.charCodeAt(i);
-        hash = ((hash << 5) - hash) + char;
-        hash = hash & hash;
-    }
-    const signature = Math.abs(hash).toString(36).substring(0, 8);
-
-    // Format: STRATEGY-{payload}-{signature}
-    return `STRATEGY-${encodedPayload}-${signature}`;
+    return `STRATEGY-${encodedPayload}-${sigHex.substring(0, 16)}`;
 }
 
 /**
- * Validate a license key
+ * Validate a license key using HMAC-SHA256
  */
-export function validateLicenseKey(
+export async function validateLicenseKey(
     licenseKey: string,
     secretKey: string
-): { valid: boolean; userId?: string; tier?: WhopTier; expired?: boolean } {
+): Promise<{ valid: boolean; userId?: string; tier?: WhopTier; expired?: boolean }> {
     try {
         const parts = licenseKey.split('-');
         if (parts.length !== 3 || parts[0] !== 'STRATEGY') {
@@ -194,15 +196,22 @@ export function validateLicenseKey(
         const encodedPayload = parts[1];
         const providedSignature = parts[2];
 
-        // Verify signature
-        const signatureInput = encodedPayload + secretKey;
-        let hash = 0;
-        for (let i = 0; i < signatureInput.length; i++) {
-            const char = signatureInput.charCodeAt(i);
-            hash = ((hash << 5) - hash) + char;
-            hash = hash & hash;
-        }
-        const expectedSignature = Math.abs(hash).toString(36).substring(0, 8);
+        const key = await crypto.subtle.importKey(
+            'raw',
+            new TextEncoder().encode(secretKey),
+            { name: 'HMAC', hash: 'SHA-256' },
+            false,
+            ['sign']
+        );
+        const signature = await crypto.subtle.sign(
+            'HMAC',
+            key,
+            new TextEncoder().encode(encodedPayload)
+        );
+        const expectedSigHex = Array.from(new Uint8Array(signature))
+            .map(b => b.toString(16).padStart(2, '0'))
+            .join('');
+        const expectedSignature = expectedSigHex.substring(0, 16);
 
         if (providedSignature !== expectedSignature) {
             return { valid: false };

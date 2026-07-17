@@ -1,35 +1,248 @@
 {
   "audit_id": "sip-deep-2026-07-13",
-  "product_context": "c:/Users/Sanjay/strategic-intelligence-platform",
-  "product_name": "Strategic Intelligence Platform",
-  "company": "Ignite IT Serve",
+  "product_context": "/Users/sanjayb/minimax/strategic-intelligence-platform",
+  "product": "Strategic Intelligence Platform",
   "scope": "deep",
   "started_at": "2026-07-13T16:23:00+05:30",
-  "completed_at": "2026-07-13T22:30:00+05:30",
-  "current_phase": 7,
-  "current_gate": "gate-7-conditional-recycle",
+  "completed_at": null,
+  "current_phase": "VALIDATION_PENDING",
+  "current_gate": "CONDITIONAL_GO",
   "evidence_limited_mode": true,
+  "analysis_status": "complete",
+  "market_validation_status": "validation_pending",
+  "implementation_hardening_status": "complete",
+  "experiments_designed": 8,
+  "experiments_executed": 0,
   "decision_confidence": {
-    "composite": 72,
-    "quality": 24,
-    "coverage": 20,
+    "composite": 76,
+    "implementation_confidence": 76,
+    "evidence_coverage": 22,
+    "market_validation_confidence": 0,
+    "hosted_readiness": 0,
+    "confidence_label": "implementation_only_not_market",
+    "quality": 26,
+    "coverage": 22,
     "consistency": 18,
-    "counter": 7,
-    "validation": 3
+    "counter": 10,
+    "validation": 0
   },
-  "hypotheses": ["PH-1", "PH-2", "PH-3", "PH-4", "PH-5", "PH-6", "PH-7", "PH-8"],
-  "recommended_hypothesis": "PH-1",
-  "secondary_hypotheses": ["PH-4", "PH-6", "PH-8"],
-  "beachhead_segment": "S3-university-educators",
+  "hypotheses": [
+    {
+      "id": "H-EDU-1",
+      "text": "Education-First: University educators are the beachhead segment for game-theory-based strategic intelligence",
+      "status": "unresolved",
+      "evidence": [
+        "EV-005",
+        "EV-006",
+        "EV-007",
+        "EV-008",
+        "EV-012"
+      ],
+      "load_bearing_claims": [
+        "Educators need an integrated platform",
+        "ClassroomManager and academic features are production-ready",
+        "Game theory courses are growing and need AI-resistant teaching tools"
+      ]
+    },
+    {
+      "id": "H-ENT-0",
+      "text": "Enterprise-First (Current Positioning): Enterprise strategy teams need governed game-theoretic analysis",
+      "status": "unresolved",
+      "evidence": [
+        "EV-001",
+        "EV-002"
+      ],
+      "load_bearing_claims": [
+        "Enterprise teams need governed game-theoretic analysis"
+      ]
+    },
+    {
+      "id": "H-CON-1",
+      "text": "Consultant Analysis Tool: Independent strategy consultants need structured, evidence-backed analysis tools",
+      "status": "unresolved",
+      "evidence": [
+        "EV-005",
+        "EV-006",
+        "EV-007",
+        "EV-008"
+      ],
+      "load_bearing_claims": [
+        "Consultants need structured analysis tools"
+      ]
+    },
+    {
+      "id": "H-NEG-1",
+      "text": "Negotiation Training Platform: Corporate negotiation trainers need AI-powered practice tools",
+      "status": "unresolved",
+      "evidence": [
+        "EV-007",
+        "EV-008"
+      ],
+      "load_bearing_claims": [
+        "NegotiationDojo is production-ready for training use"
+      ]
+    },
+    {
+      "id": "H-EDU-2",
+      "text": "Evidence-Backed Assignment Platform: Professors need evidence-backed analysis assignments with governed forecasts",
+      "status": "unresolved",
+      "evidence": [
+        "EV-027",
+        "EV-028",
+        "EV-029",
+        "EV-030",
+        "EV-034",
+        "EV-038",
+        "EV-045"
+      ],
+      "load_bearing_claims": [
+        "Evidence retrieval differentiates from MobLab",
+        "LTI integration enables Canvas/Moodle adoption",
+        "AI-resistant assessment tools are in demand"
+      ]
+    },
+    {
+      "id": "H-GOV-1",
+      "text": "Policy Think Tank Analysis Tool: Policy researchers need game-theoretic modeling with GDELT integration",
+      "status": "unresolved",
+      "evidence": [
+        "EV-008",
+        "EV-011",
+        "EV-014"
+      ],
+      "load_bearing_claims": [
+        "Evidence retrieval + GDELT integration provides unique value"
+      ]
+    },
+    {
+      "id": "H-EDU-3",
+      "text": "AI-Resistant Assessment Tool: Professors need AI-resistant assessment requiring evidence gathering and game-theory modeling",
+      "status": "unresolved",
+      "evidence": [
+        "EV-038",
+        "EV-010",
+        "EV-011"
+      ],
+      "load_bearing_claims": [
+        "AI substitution is a top concern for professors",
+        "Provenance trails make AI substitution detectable"
+      ]
+    },
+    {
+      "id": "H-PRO-1",
+      "text": "Strategic Thinking Prosumer Platform: Prosumers will pay for structured strategic analysis tools",
+      "status": "unresolved",
+      "evidence": [
+        "EV-012",
+        "EV-019",
+        "EV-040"
+      ],
+      "load_bearing_claims": [
+        "Prosumers will pay $19-$49/mo for strategic analysis tools"
+      ]
+    },
+    {
+      "id": "H-EDU-4",
+      "text": "MobLab Complement: Professors using MobLab want complementary evidence-backed analysis and forecast governance",
+      "status": "unresolved",
+      "evidence": [
+        "EV-027",
+        "EV-028",
+        "EV-029",
+        "EV-030",
+        "EV-045"
+      ],
+      "load_bearing_claims": [
+        "Evidence + governance fills MobLab's gap"
+      ]
+    },
+    {
+      "id": "H-GOV-2",
+      "text": "Governance-First Platform: Enterprise teams need AI-assisted decisions with human review and audit trails for EU AI Act compliance",
+      "status": "unresolved",
+      "evidence": [
+        "EV-068",
+        "EV-070",
+        "EV-072",
+        "EV-069"
+      ],
+      "load_bearing_claims": [
+        "EU AI Act creates budget for governance tools"
+      ]
+    }
+  ],
+  "experiments": [
+    {
+      "experiment_id": "EXP-001",
+      "hypothesis_id": "H-EDU-1",
+      "status": "designed",
+      "result": null,
+      "hypothesis_transition": "unresolved"
+    },
+    {
+      "experiment_id": "EXP-002",
+      "hypothesis_id": "H-EDU-1",
+      "status": "designed",
+      "result": null,
+      "hypothesis_transition": "unresolved"
+    },
+    {
+      "experiment_id": "EXP-003",
+      "hypothesis_id": "H-EDU-1",
+      "status": "designed",
+      "result": null,
+      "hypothesis_transition": "unresolved"
+    },
+    {
+      "experiment_id": "EXP-004",
+      "hypothesis_id": "H-EDU-2",
+      "status": "designed",
+      "result": null,
+      "hypothesis_transition": "unresolved"
+    },
+    {
+      "experiment_id": "EXP-005",
+      "hypothesis_id": "H-EDU-1",
+      "status": "designed",
+      "result": null,
+      "hypothesis_transition": "unresolved"
+    },
+    {
+      "experiment_id": "EXP-006",
+      "hypothesis_id": "H-GOV-2",
+      "status": "designed",
+      "result": null,
+      "hypothesis_transition": "unresolved"
+    },
+    {
+      "experiment_id": "EXP-007",
+      "hypothesis_id": "H-EDU-4",
+      "status": "designed",
+      "result": null,
+      "hypothesis_transition": "unresolved"
+    },
+    {
+      "experiment_id": "EXP-008",
+      "hypothesis_id": "H-ENT-0",
+      "status": "designed",
+      "result": null,
+      "hypothesis_transition": "unresolved"
+    }
+  ],
   "evidence_types_present": [
     "product_promise",
     "codebase_evidence",
     "stakeholder_input",
-    "competitor_intel",
-    "market_data",
-    "pricing_signal",
-    "alignment_analysis",
-    "implementation_detail"
+    "competitor_intel"
+  ],
+  "evidence_types_missing": [
+    "customer_outcome",
+    "user_quote",
+    "behavioral_observation",
+    "support_ticket",
+    "analytics_data",
+    "sales_data",
+    "pricing_signal"
   ],
   "evidence_limitations": [
     "No customer evidence (0 customers, pilot phase)",
@@ -37,21 +250,442 @@
     "No sales data, conversion rates, or win/loss analysis",
     "No pricing signals from real buyers",
     "No usage analytics or telemetry data",
-    "LTI integration fixed but E2E untested",
+    "LTI integration implemented but JWKS uses placeholder key \u2014 not production-verified",
     "GDELT not configured",
-    "Build not verified on Windows (scripts fixed but not run)"
+    "Build and tests now pass after conformance recovery \u2014 ready for pilot validation"
   ],
-  "phases_completed": [0, 1, 2, 3, 4, 5, 6, 7],
-  "gates_passed": ["gate-0", "gate-1", "gate-2", "gate-3", "gate-4", "gate-5", "gate-6", "gate-7"],
-  "all_gates_conditional": true,
-  "audit_verdict": "CONDITIONAL GO / RECYCLE",
-  "recycle_conditions": [
-    "Validate PH-1 with 5+ professor interviews",
-    "Test per-student pricing model (align with MobLab $12-$25)",
-    "End-to-end test LTI integration with Canvas",
-    "Run Windows build to verify compilation",
-    "Add gradebook or grade export feature",
-    "Validate AI-resistant assessment hypothesis (PH-6)"
+  "phases_completed": [
+    "phase-0",
+    "phase-1",
+    "phase-2",
+    "phase-3",
+    "phase-4",
+    "phase-5",
+    "phase-6",
+    "phase-7",
+    "phase-8",
+    "phase-9",
+    "conformance-recovery"
   ],
-  "last_updated": "2026-07-13T22:30:00+05:30"
+  "gates_passed": [
+    {
+      "gate": "phase-0",
+      "decision": "CONDITIONAL_GO",
+      "timestamp": "2026-07-13T16:30:00+05:30"
+    },
+    {
+      "gate": "phase-1",
+      "decision": "CONDITIONAL_GO",
+      "timestamp": "2026-07-13T17:00:00+05:30"
+    },
+    {
+      "gate": "phase-2",
+      "decision": "CONDITIONAL_GO",
+      "timestamp": "2026-07-13T18:00:00+05:30"
+    },
+    {
+      "gate": "phase-3",
+      "decision": "CONDITIONAL_GO",
+      "timestamp": "2026-07-13T19:00:00+05:30"
+    },
+    {
+      "gate": "phase-4",
+      "decision": "CONDITIONAL_GO",
+      "timestamp": "2026-07-13T20:00:00+05:30"
+    },
+    {
+      "gate": "phase-5",
+      "decision": "CONDITIONAL_GO",
+      "timestamp": null
+    },
+    {
+      "gate": "phase-6",
+      "decision": "CONDITIONAL_GO",
+      "timestamp": "2026-07-13T21:00:00+05:30"
+    },
+    {
+      "gate": "phase-7",
+      "decision": "CONDITIONAL_GO",
+      "timestamp": "2026-07-14T12:00:00+05:30"
+    },
+    {
+      "gate": "phase-8",
+      "decision": "CONDITIONAL_GO",
+      "timestamp": "2026-07-16T18:00:00+05:30"
+    },
+    {
+      "gate": "phase-9",
+      "decision": "CONDITIONAL_GO",
+      "timestamp": "2026-07-17T09:28:02+05:30"
+    },
+    {
+      "gate": "conformance-recovery",
+      "decision": "CONDITIONAL_GO",
+      "timestamp": "2026-07-17T09:28:02+05:30"
+    }
+  ],
+  "gaps": {
+    "critical": 4,
+    "major": 8,
+    "minor": 4,
+    "total": 16
+  },
+  "beachhead": "S3-university-educators",
+  "beachhead_score": null,
+  "remediation_completed": null,
+  "next_audit": null,
+  "audit_version": "v8-repair-1",
+  "previous_audit": ".positioning-audit/history/legacy-v7-snapshot/",
+  "stack_detected": "React + TypeScript + Vite + Supabase",
+  "domain_detected": "strategic-intelligence-game-theory",
+  "advisor_used": false,
+  "extensions_loaded": [],
+  "research_log": [
+    {
+      "query_id": "Q-001",
+      "query_text": "What is the product positioning and promise of Strategic Intelligence Platform?",
+      "phase": "phase-0",
+      "sources_found": [
+        "README.md line 1-8",
+        "docs/POSITIONING.md",
+        "docs/sales/one-pager.md",
+        "docs/sales/battle-card.md"
+      ],
+      "saturation_reached": false,
+      "counter_evidence": false,
+      "evidence_ids": [
+        "EV-001",
+        "EV-002",
+        "EV-003",
+        "EV-004"
+      ],
+      "contradiction_status": "none",
+      "timestamp": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "query_id": "Q-002",
+      "query_text": "What features and capabilities exist in the codebase?",
+      "phase": "phase-1",
+      "sources_found": [
+        "package.json",
+        "src/App.tsx routes",
+        "src/components/ (56 components)",
+        "supabase/functions/ (41+ edge functions)",
+        "supabase/migrations/ (35 migrations)",
+        "src/lib/claimRegistry.ts",
+        "src/lib/forecastGovernance.ts",
+        "src/lib/whop-config.ts",
+        "src/lib/analytics.ts",
+        ".env.example",
+        "src/App.tsx \u2014 public beta gating",
+        "src/lib/ \u2014 missing modules",
+        "README.md \u2014 platform status",
+        "netlify.toml, .github/ directory",
+        "src/lib/ \u2014 missing modules (FIXED)",
+        "package.json build script (FIXED)",
+        "src/components/ClassroomManager.tsx (FIXED)",
+        "supabase/functions/lti-launch/index.ts (FIXED)",
+        "supabase/migrations/20251212110000_lms_classrooms.sql (FIXED)",
+        "src/components/ClassroomManager.tsx \u2014 actual capabilities",
+        "src/components/NegotiationDojo.tsx",
+        "src/components/audience-views/TeacherView.tsx",
+        "supabase/functions/teacher-packet/index.ts",
+        "supabase/functions/lti-launch/index.ts \u2014 security audit",
+        "src/lib/whop-config.ts \u2014 academic tier",
+        "shared/ directory \u2014 existing modules",
+        "src/hooks/useStrategyAnalysis.ts \u2014 education helpers",
+        "src/components/StrategyConsole.tsx \u2014 strategist + enterprise workflow",
+        "src/lib/claimRegistry.ts \u2014 prohibited claims",
+        "src/lib/educationHelpers.ts (CREATED)",
+        "shared/publicForecasting.ts (CREATED)",
+        "src/lib/labsCatalog.ts (CREATED)",
+        "src/components/LabAccessGate.tsx (CREATED)",
+        "src/lib/strategistContract.ts (CREATED)",
+        "src/lib/enterpriseWorkflow.ts (CREATED)"
+      ],
+      "saturation_reached": true,
+      "counter_evidence": false,
+      "evidence_ids": [
+        "EV-005",
+        "EV-006",
+        "EV-007",
+        "EV-008",
+        "EV-009",
+        "EV-010",
+        "EV-011",
+        "EV-012",
+        "EV-013",
+        "EV-014",
+        "EV-015",
+        "EV-016",
+        "EV-020",
+        "EV-021",
+        "EV-022",
+        "EV-023",
+        "EV-024",
+        "EV-025",
+        "EV-026",
+        "EV-039",
+        "EV-040",
+        "EV-041",
+        "EV-042",
+        "EV-043",
+        "EV-044",
+        "EV-049",
+        "EV-050",
+        "EV-051",
+        "EV-055",
+        "EV-059",
+        "EV-060",
+        "EV-061",
+        "EV-062",
+        "EV-063",
+        "EV-064"
+      ],
+      "contradiction_status": "none",
+      "timestamp": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "query_id": "Q-003",
+      "query_text": "What do stakeholders say about the product and market?",
+      "phase": "phase-2",
+      "sources_found": [
+        "docs/POSITIONING.md \u2014 claim boundaries",
+        "docs/Monetization_Strategy.md",
+        "COMPETITION_WINNING_INNOVATIONS.md",
+        "docs/Monetization_Strategy.md \u2014 education mention"
+      ],
+      "saturation_reached": false,
+      "counter_evidence": true,
+      "evidence_ids": [
+        "EV-017",
+        "EV-018",
+        "EV-019",
+        "EV-056"
+      ],
+      "contradiction_status": "none",
+      "timestamp": "2026-07-05T00:00:00.000Z"
+    },
+    {
+      "query_id": "Q-004",
+      "query_text": "What are MobLab Classroom features and pricing for game theory education?",
+      "phase": "phase-2",
+      "sources_found": [
+        "https://www.moblab.com/products/classroom",
+        "https://www.moblab.com/products/classroom/pricing",
+        "https://www.moblab.com/edu/game-maps/game-theory",
+        "https://www.moblab.com/products/classroom + support docs"
+      ],
+      "saturation_reached": false,
+      "counter_evidence": true,
+      "evidence_ids": [
+        "EV-027",
+        "EV-028",
+        "EV-029",
+        "EV-030"
+      ],
+      "contradiction_status": "unresolved",
+      "timestamp": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "query_id": "Q-005",
+      "query_text": "What competitors exist in the strategic intelligence and game theory space?",
+      "phase": "phase-2",
+      "sources_found": [
+        "https://blog.wolfram.com/2025/02/25/a-whole-new-ball-game-game-theory-in-wolfram-language-14-2/",
+        "https://gambit.sourceforge.net/",
+        "Coursera game theory courses",
+        "https://home.dartmouth.edu/news/2023/04/game-theory-scores-big-dartmouth",
+        "Education software market research 2026",
+        "EdTech market research 2026",
+        "Education gamification market",
+        "AI academic integrity research 2025-2026",
+        "MobLab vs SIP feature comparison",
+        "MIT OCW 14.12 Game Theory Fall 2025",
+        "Harvard Business Publishing MobLab pricing",
+        "Yale SOM MobLab usage",
+        "Game-based learning statistics 2026",
+        "Gambit + Wolfram comparison",
+        "AI in education adoption 2026",
+        "MobLab instructor experience",
+        "RePEc top institutions in game theory",
+        "entrapeer.com (web research 2026-07)",
+        "worldmonitor.app (web research 2026-07)",
+        "corvus.software (web research 2026-07)",
+        "intelrift.com (web research 2026-07)",
+        "gdelt-cloud.com (web research 2026-07)",
+        "finhelm.ai (web research 2026-07)",
+        "iridae.com (web research 2026-07)",
+        "jeda.ai (web research 2026-07)",
+        "calibrationledger.com (web research 2026-07)",
+        "synalogic.ai (web research 2026-07)",
+        " Competitive Intelligence Industry Report (sendview.io, 2025-07)",
+        "Strategic Foresight Platforms Market (indexbox.io, 2026-02)",
+        "getaitoolhub.com (web research 2026-07)",
+        "klue.com (web research 2026-07)"
+      ],
+      "saturation_reached": true,
+      "counter_evidence": true,
+      "evidence_ids": [
+        "EV-031",
+        "EV-032",
+        "EV-033",
+        "EV-034",
+        "EV-035",
+        "EV-036",
+        "EV-037",
+        "EV-038",
+        "EV-045",
+        "EV-046",
+        "EV-047",
+        "EV-048",
+        "EV-052",
+        "EV-053",
+        "EV-054",
+        "EV-057",
+        "EV-058",
+        "EV-067",
+        "EV-075",
+        "EV-076",
+        "EV-077",
+        "EV-078",
+        "EV-079",
+        "EV-080",
+        "EV-081",
+        "EV-082",
+        "EV-083",
+        "EV-084",
+        "EV-085",
+        "EV-086",
+        "EV-087"
+      ],
+      "contradiction_status": "unresolved",
+      "timestamp": "2025-02-25T00:00:00.000Z"
+    },
+    {
+      "query_id": "Q-006",
+      "query_text": "What are Feynn.ai features for strategic intelligence and game theory?",
+      "phase": "phase-2",
+      "sources_found": [
+        "feynn.ai (web research 2026-07)"
+      ],
+      "saturation_reached": false,
+      "counter_evidence": true,
+      "evidence_ids": [
+        "EV-065"
+      ],
+      "contradiction_status": "unresolved",
+      "timestamp": "2026-07-14T00:00:00.000Z"
+    },
+    {
+      "query_id": "Q-007",
+      "query_text": "What are SPIDR features for competitive intelligence and game theory?",
+      "phase": "phase-2",
+      "sources_found": [
+        "spidr.specttro.com (web research 2026-07)"
+      ],
+      "saturation_reached": false,
+      "counter_evidence": true,
+      "evidence_ids": [
+        "EV-066"
+      ],
+      "contradiction_status": "none",
+      "timestamp": "2026-07-14T00:00:00.000Z"
+    },
+    {
+      "query_id": "Q-008",
+      "query_text": "What governance and decision intelligence platforms exist for enterprise AI compliance?",
+      "phase": "phase-1",
+      "sources_found": [
+        "decisionledgerai.com (web research 2026-07)",
+        "kiteedge.co.uk (web research 2026-07)",
+        "qonera.ai (web research 2026-07)",
+        "magnarix.ai (web research 2026-07)",
+        "coalex.ai (web research 2026-07)"
+      ],
+      "saturation_reached": true,
+      "counter_evidence": false,
+      "evidence_ids": [
+        "EV-068",
+        "EV-069",
+        "EV-070",
+        "EV-071",
+        "EV-072"
+      ],
+      "contradiction_status": "unresolved",
+      "timestamp": "2026-07-14T00:00:00.000Z"
+    },
+    {
+      "query_id": "Q-009",
+      "query_text": "What enterprise forecasting platforms exist with Brier scoring and calibration?",
+      "phase": "phase-2",
+      "sources_found": [
+        "cultivatelabs.com (web research 2026-07)",
+        "shreeng.ai (web research 2026-07)"
+      ],
+      "saturation_reached": false,
+      "counter_evidence": false,
+      "evidence_ids": [
+        "EV-073",
+        "EV-074"
+      ],
+      "contradiction_status": "unresolved",
+      "timestamp": "2026-07-14T00:00:00.000Z"
+    }
+  ],
+  "tool_health": {
+    "pnpm-build": {
+      "status": "healthy",
+      "checked_at": "2026-07-17T09:15:00+05:30",
+      "notes": "tsc -b 0 errors, vite build pass"
+    },
+    "pnpm-test": {
+      "status": "healthy",
+      "checked_at": "2026-07-17T09:28:02+05:30",
+      "notes": "121 passed, 0 failed, 8 skipped (canonical-games skipped)"
+    },
+    "lti-launch": {
+      "status": "unavailable",
+      "checked_at": "2026-07-17T09:28:02+05:30",
+      "notes": "Edge function exists but JWKS uses placeholder RSA modulus \u2014 not production-verified. LTI 1.3/OIDC launch, signature validation, and Canvas/Moodle sandbox not tested. Status: blocked_partial (detailed in notes) but schema-valid value is 'unavailable'."
+    },
+    "classroom-grading": {
+      "status": "healthy",
+      "checked_at": "2026-07-16T18:30:00+05:30",
+      "notes": "Manual grading implemented in ClassroomManager.tsx with score + feedback"
+    },
+    "pricing-catalog": {
+      "status": "healthy",
+      "checked_at": "2026-07-16T20:20:00+05:30",
+      "notes": "PricingPage.tsx consolidated to canonical whop-config.ts: $0/$19/$49/$199/$34"
+    },
+    "pnpm-lint": {
+      "status": "healthy",
+      "checked_at": "2026-07-17T09:28:02+05:30",
+      "notes": "0 errors, 17 warnings (down from 22 baseline; 5 fixed in touched files, 17 pre-existing in untouched files)"
+    },
+    "pnpm-tsc-b": {
+      "status": "healthy",
+      "checked_at": "2026-07-17T09:28:02+05:30",
+      "notes": "tsc -b (build mode) 0 errors \u2014 authoritative type gate"
+    },
+    "audit-validator": {
+      "status": "healthy",
+      "checked_at": "2026-07-17T09:28:02+05:30",
+      "notes": "ALL CHECKS PASSED \u2014 206/206 schema+instance checks (scripts/validate-audit-v8.mjs)"
+    },
+    "route-smoke": {
+      "status": "unavailable",
+      "checked_at": "2026-07-17T09:28:02+05:30",
+      "notes": "Cached 7/7 routes pass as artifact. Fresh browser run not reproducible on this host (Playwright Chromium launch hangs). hosted_live_proof=false. artifact_only_not_fresh."
+    },
+    "claims-consistency": {
+      "status": "healthy",
+      "checked_at": "2026-07-17T09:28:02+05:30",
+      "notes": "246 files scanned, 651 claims, 0 unsupported"
+    }
+  },
+  "drift_status": "stable",
+  "last_updated": "2026-07-17T12:43:00+05:30",
+  "schema_version": "v8"
 }

@@ -1,0 +1,132 @@
+- generic [ref=e3]:
+  - navigation [ref=e4]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - link "Strategy Console" [ref=e8] [cursor=pointer]:
+          - /url: /console
+          - img [ref=e9]
+          - generic [ref=e19]: Strategy Console
+        - 'button "Learning Mode: OFF" [ref=e21] [cursor=pointer]':
+          - img [ref=e22]
+          - text: "Learning Mode: OFF"
+      - generic [ref=e25]:
+        - link "Console" [ref=e26] [cursor=pointer]:
+          - /url: /console
+          - img [ref=e27]
+          - text: Console
+        - link "Insights" [ref=e29] [cursor=pointer]:
+          - /url: /insights
+          - img [ref=e30]
+          - text: Insights
+        - link "Labs" [ref=e33] [cursor=pointer]:
+          - /url: /labs
+          - img [ref=e34]
+          - text: Labs
+        - link "Templates" [ref=e36] [cursor=pointer]:
+          - /url: /templates
+          - img [ref=e37]
+          - text: Templates
+        - link "Forecasts" [ref=e40] [cursor=pointer]:
+          - /url: /forecasts
+          - img [ref=e41]
+          - text: Forecasts
+        - link "Pricing" [ref=e44] [cursor=pointer]:
+          - /url: /pricing
+          - img [ref=e45]
+          - text: Pricing
+  - main [ref=e47]:
+    - generic [ref=e261]:
+      - generic [ref=e263]:
+        - generic [ref=e264]:
+          - button [ref=e265] [cursor=pointer]:
+            - img [ref=e266]
+          - generic [ref=e269]:
+            - img [ref=e271]
+            - generic [ref=e281]:
+              - heading "Welcome to Strategy Console" [level=2] [ref=e282]
+              - paragraph [ref=e283]: Evidence-backed strategic analysis in seconds
+        - generic [ref=e284]:
+          - paragraph [ref=e286]: Turn complex strategic questions into clean, defensible insights with real citations and advanced game theory.
+          - generic [ref=e287]:
+            - generic [ref=e289]:
+              - img [ref=e291]
+              - generic [ref=e301]:
+                - heading "Evidence-Backed Analysis" [level=4] [ref=e302]
+                - paragraph [ref=e303]: Real citations from verified sources - no hallucinations
+            - generic [ref=e305]:
+              - img [ref=e307]
+              - generic [ref=e309]:
+                - heading "Multiple Analysis Engines" [level=4] [ref=e310]
+                - paragraph [ref=e311]: Recursive equilibrium, quantum strategies, forecasting & more
+            - generic [ref=e313]:
+              - img [ref=e315]
+              - generic [ref=e320]:
+                - heading "Audience-Tailored Views" [level=4] [ref=e321]
+                - paragraph [ref=e322]: Student, researcher, teacher - get explanations that fit you
+            - generic [ref=e324]:
+              - img [ref=e326]
+              - generic [ref=e330]:
+                - heading "Strategic Clarity" [level=4] [ref=e331]
+                - paragraph [ref=e332]: Turn complex questions into defensible, structured insights
+          - generic [ref=e333]:
+            - heading "How It Works" [level=3] [ref=e334]
+            - generic [ref=e335]:
+              - generic [ref=e336]:
+                - generic [ref=e337]: "1"
+                - heading "Describe Your Scenario" [level=4] [ref=e338]
+                - paragraph [ref=e339]: Enter a strategic situation with multiple actors and choices
+              - img [ref=e340]
+              - generic [ref=e342]:
+                - generic [ref=e343]: "2"
+                - heading "Select Analysis Engines" [level=4] [ref=e344]
+                - paragraph [ref=e345]: Choose from baseline to advanced quantum and forecasting
+              - img [ref=e346]
+              - generic [ref=e348]:
+                - generic [ref=e349]: "3"
+                - heading "Run Analysis" [level=4] [ref=e350]
+                - paragraph [ref=e351]: Get evidence-backed equilibria, strategies, and predictions
+        - generic [ref=e352]:
+          - button "Don't show again" [ref=e353] [cursor=pointer]
+          - button "Get Started" [ref=e354] [cursor=pointer]:
+            - text: Get Started
+            - img [ref=e355]
+      - generic [ref=e357]:
+        - generic [ref=e358]:
+          - heading "Strategy Console" [level=1] [ref=e359]
+          - paragraph [ref=e360]: Run evidence-backed strategic analysis in seconds. Real citations. Real simulations. Real clarity.
+        - generic [ref=e362]:
+          - button "Strategic Analysis" [ref=e363] [cursor=pointer]
+          - button "Strategist" [ref=e364] [cursor=pointer]
+        - generic [ref=e365]:
+          - generic [ref=e366]:
+            - generic [ref=e367]: Describe your strategic scenario
+            - textbox "e.g., Three tech companies must decide on AI safety standards. Each can lead with strict standards, follow consensus, or prioritize competitive advantage..." [ref=e368]: "Countermove planning request: Vendor renewal under switching leverage Summary: Test whether an incumbent supplier should hold firm or accommodate when the buyer has a credible migration path. Move structure: sequential Information structure: incomplete Critical assumptions: The buyer can move enough volume to matter within one renewal cycle.; The supplier values retention but wants to protect precedent. Credible-threat checks: The supplier threat to hold price is non-credible if churn cost exceeds the concession.; The buyer threat to switch is non-credible if migration cost remains unaffordable. Next countermove to test: Test whether the buyer should credibly threaten a phased migration rather than an immediate full switch. Brief: Test whether an incumbent supplier should hold firm or accommodate when the buyer has a credible migration path. Test whether the buyer should credibly threaten a phased migration rather than an immediate full switch."
+            - generic [ref=e369]:
+              - generic [ref=e370]: "Try:"
+              - button "Tech Giants AI Safety Coordination..." [ref=e371] [cursor=pointer]
+              - button "Semiconductor Supply Chain Strategy..." [ref=e372] [cursor=pointer]
+              - button "Climate Policy Coordination..." [ref=e373] [cursor=pointer]
+          - generic [ref=e374]:
+            - generic [ref=e376]:
+              - generic [ref=e377]:
+                - img [ref=e379]
+                - generic [ref=e382]:
+                  - generic [ref=e383]:
+                    - text: Evidence Retrieval
+                    - generic [ref=e384]: Active
+                  - generic [ref=e385]: Real citations from Google CSE, Perplexity, Crossref, GDELT
+              - button [ref=e386] [cursor=pointer]
+            - button "Advanced analysis settings (1 selected) Keep the flagship path simple and open these only when needed" [ref=e389] [cursor=pointer]:
+              - generic [ref=e390]:
+                - img [ref=e391]
+                - generic [ref=e393]:
+                  - generic [ref=e394]: Advanced analysis settings (1 selected)
+                  - generic [ref=e395]: Keep the flagship path simple and open these only when needed
+              - img [ref=e396]
+          - button "Run Analysis" [ref=e399] [cursor=pointer]:
+            - img [ref=e400]
+            - text: Run Analysis
+  - contentinfo [ref=e256]:
+    - generic [ref=e258]:
+      - paragraph [ref=e259]: Strategy Console - Evidence-Backed Strategic Analysis
+      - paragraph [ref=e260]: Real citations. Real simulations. Real clarity.

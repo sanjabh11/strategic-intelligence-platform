@@ -13,6 +13,9 @@ const LearnerView: React.FC<AudienceViewProps> = ({
   isLoading = false,
   error
 }) => {
+  const learnerData = (analysisData?.audience === 'learner' ? analysisData.data : null) as LearnerViewData | null;
+  const [_updatedData, setUpdatedData] = useState<LearnerViewData | null>(learnerData);
+
   if (error) {
     return (
       <div className="bg-slate-800 rounded-xl p-6 border border-red-500/20">
@@ -35,7 +38,7 @@ const LearnerView: React.FC<AudienceViewProps> = ({
     );
   }
 
-  if (!analysisData || analysisData.audience !== 'learner') {
+  if (!analysisData || analysisData.audience !== 'learner' || !learnerData) {
     return (
       <div className="bg-slate-800 rounded-xl p-6 border border-yellow-500/20">
         <div className="text-yellow-400 flex items-center">
@@ -46,8 +49,8 @@ const LearnerView: React.FC<AudienceViewProps> = ({
     );
   }
 
-  const learnerData = analysisData.data as LearnerViewData;
-  const [_updatedData, setUpdatedData] = useState<LearnerViewData>(learnerData);
+  // learnerData and _updatedData are already set above
+
 
   const renderDecisionTable = () => (
     <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">

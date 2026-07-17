@@ -2,17 +2,28 @@
 // Monetization Feature F4: Counterfactual Solver Interface
 // Visual drag-and-drop interface for extensive form games
 
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import {
     GitBranch, Plus, Trash2, Play, Download, Info,
-    ChevronDown, ChevronUp, Target, Zap, RefreshCw
+    ChevronDown, ChevronUp, Target, Zap, RefreshCw, ArrowRight, ClipboardCopy, ShieldCheck
 } from 'lucide-react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import {
+    SEQUENTIAL_GAME_STUDIO_TEMPLATES,
+    buildSequentialConsoleScenarioText,
+    buildSequentialGameStudioReport,
+    getSequentialGameTemplateById,
+    type SequentialGameStudioTemplate,
+    type SequentialTreeNodeTemplate
+} from '../../shared/gameTheoryKnowledge';
+import type { WarRoomRouteState } from '../lib/warRoom';
 
 // Types
 interface GameNode {
     id: string;
     type: 'decision' | 'chance' | 'terminal';
     label: string;
+    actionLabel?: string;
     player?: string;
     payoffs?: number[];
     probability?: number;
@@ -38,6 +49,7 @@ interface EquilibriumResult {
 interface GameTreeBuilderProps {
     userId?: string;
     onSolve?: (result: EquilibriumResult) => void;
+    initialTemplateId?: string;
 }
 
 // Generate unique IDs
@@ -53,13 +65,30 @@ const createDefaultTree = (): GameNode => ({
     children: []
 });
 
-const GameTreeBuilder: React.FC<GameTreeBuilderProps> = ({ userId, onSolve }) => {
+function cloneTemplateNode(node: SequentialTreeNodeTemplate): GameNode {
+    return {
+        id: generateId(),
+        type: node.type,
+        label: node.label,
+        actionLabel: node.actionLabel,
+        player: node.player,
+        payoffs: node.payoffs ? [...node.payoffs] : undefined,
+        probability: node.probability,
+        children: node.children.map(cloneTemplateNode)
+    };
+}
+
+const GameTreeBuilder: React.FC<GameTreeBuilderProps> = ({ userId, onSolve, initialTemplateId }) => {
+    const navigate = useNavigate();
+    const location = useLocation();
     const [tree, setTree] = useState<GameNode>(createDefaultTree);
     const [selectedNode, setSelectedNode] = useState<string | null>(null);
     const [players, setPlayers] = useState<string[]>(['Player 1', 'Player 2']);
     const [isSolving, setIsSolving] = useState(false);
     const [equilibrium, setEquilibrium] = useState<EquilibriumResult | null>(null);
     const [showHelp, setShowHelp] = useState(false);
+    const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null);
+    const [copiedStudioBrief, setCopiedStudioBrief] = useState(false);
 
     // Find node by ID
     const findNode = useCallback((node: GameNode, id: string): GameNode | null => {
@@ -93,6 +122,7 @@ const GameTreeBuilder: React.FC<GameTreeBuilderProps> = ({ userId, onSolve }) =>
                         label: type === 'terminal' ? 'Terminal' :
                             type === 'chance' ? 'Chance' :
                                 players[(node.children.length) % players.length],
+                        actionLabel: `Action ${node.children.length + 1}`,
                         player: type === 'decision' ? players[(node.children.length) % players.length] : undefined,
                         payoffs: type === 'terminal' ? players.map(() => 0) : undefined,
                         probability: type === 'chance' ? 0.5 : undefined,
@@ -178,7 +208,7 @@ const GameTreeBuilder: React.FC<GameTreeBuilderProps> = ({ userId, onSolve }) =>
 
                 const strategy = {
                     ...bestChild.result.strategy,
-                    [node.id]: `Action ${bestChild.idx + 1}`
+                    [node.id]: bestChild.child.actionLabel || `Action ${bestChild.idx + 1}`
                 };
 
                 return { value: bestChild.result.value, strategy };
@@ -270,7 +300,7 @@ const GameTreeBuilder: React.FC<GameTreeBuilderProps> = ({ userId, onSolve }) =>
                         {node.children.map((child, idx) => (
                             <div key={child.id} className="flex flex-col items-center">
                                 <div className="h-8 w-px bg-slate-600"></div>
-                                <div className="text-xs text-slate-500 mb-2">Action {idx + 1}</div>
+                                <div className="text-xs text-slate-500 mb-2">{child.actionLabel || `Action ${idx + 1}`}</div>
                                 {renderNode(child, depth + 1)}
                             </div>
                         ))}
@@ -286,6 +316,78 @@ const GameTreeBuilder: React.FC<GameTreeBuilderProps> = ({ userId, onSolve }) =>
         return findNode(tree, selectedNode);
     }, [selectedNode, tree, findNode]);
 
+    const selectedTemplate = useMemo<SequentialGameStudioTemplate | null>(() => {
+        return selectedTemplateId ? getSequentialGameTemplateById(selectedTemplateId) : null;
+    }, [selectedTemplateId]);
+
+    const studioReport = useMemo(() => {
+        if (!selectedTemplate) return null;
+        return buildSequentialGameStudioReport({ template: selectedTemplate, equilibrium });
+    }, [equilibrium, selectedTemplate]);
+
+    const loadTemplate = useCallback((templateId: string) => {
+        const template = getSequentialGameTemplateById(templateId);
+        if (!template) return;
+        const nextTree = cloneTemplateNode(template.tree);
+        setSelectedTemplateId(templateId);
+        setTree(nextTree);
+        setPlayers([...template.players]);
+        setSelectedNode(nextTree.id);
+        setEquilibrium(null);
+    }, []);
+
+    useEffect(() => {
+        const routeState = location.state as { templateId?: string } | null;
+        const requestedTemplateId = routeState?.templateId || initialTemplateId || null;
+        if (requestedTemplateId && requestedTemplateId !== selectedTemplateId && getSequentialGameTemplateById(requestedTemplateId)) {
+            loadTemplate(requestedTemplateId);
+        }
+    }, [initialTemplateId, loadTemplate, location.state, selectedTemplateId]);
+
+    useEffect(() => {
+        if (!copiedStudioBrief) return undefined;
+        const timeout = window.setTimeout(() => setCopiedStudioBrief(false), 1800);
+        return () => window.clearTimeout(timeout);
+    }, [copiedStudioBrief]);
+
+    const copyStudioBrief = useCallback(async () => {
+        if (!studioReport) return;
+        await navigator.clipboard.writeText(studioReport.human_readable_brief);
+        setCopiedStudioBrief(true);
+    }, [studioReport]);
+
+    const openInConsole = useCallback(() => {
+        if (!selectedTemplate || !studioReport) return;
+        navigate('/console', {
+            state: {
+                scenarioText: buildSequentialConsoleScenarioText({
+                    template: selectedTemplate,
+                    report: studioReport
+                })
+            }
+        });
+    }, [navigate, selectedTemplate, studioReport]);
+
+    const saveToWarRoom = useCallback(() => {
+        if (!selectedTemplate || !studioReport) return;
+
+        const state: WarRoomRouteState = {
+            scenarioVersionDraft: {
+                title: selectedTemplate.title,
+                scenarioText: buildSequentialConsoleScenarioText({
+                    template: selectedTemplate,
+                    report: studioReport
+                }),
+                sourceSurface: 'game_studio',
+                templateId: selectedTemplate.id,
+                studioBrief: studioReport.human_readable_brief,
+                report: studioReport as unknown as Record<string, unknown>
+            }
+        }
+
+        navigate('/war-room', { state })
+    }, [navigate, selectedTemplate, studioReport]);
+
     return (
         <div className="space-y-6">
             {/* Header */}
@@ -296,8 +398,8 @@ const GameTreeBuilder: React.FC<GameTreeBuilderProps> = ({ userId, onSolve }) =>
                             <GitBranch className="w-8 h-8" />
                         </div>
                         <div>
-                            <h2 className="text-2xl font-bold">Game Tree Builder</h2>
-                            <p className="text-purple-200">Visual Extensive Form Game Designer</p>
+                            <h2 className="text-2xl font-bold">Sequential Game Studio</h2>
+                            <p className="text-purple-200">Template-driven countermove planning for extensive-form games</p>
                         </div>
                     </div>
                     <div className="flex gap-2">
@@ -322,14 +424,42 @@ const GameTreeBuilder: React.FC<GameTreeBuilderProps> = ({ userId, onSolve }) =>
                 <div className="bg-blue-900/30 border border-blue-500/30 rounded-lg p-4">
                     <h4 className="font-medium text-blue-300 mb-2">How to use:</h4>
                     <ul className="text-sm text-slate-300 space-y-1">
-                        <li>• Click on a node to select it</li>
-                        <li>• Add decision, chance, or terminal nodes as children</li>
-                        <li>• Set payoffs for terminal nodes (one per player)</li>
-                        <li>• Click "Solve" to find the Subgame Perfect Equilibrium</li>
-                        <li>• Export your tree as JSON for later use</li>
+                        <li>• Start with a studio template when you want a reusable countermove sequence.</li>
+                        <li>• Keep move order and action labels explicit so backward induction remains explainable.</li>
+                        <li>• Click "Solve" to test whether the current strategy profile is subgame perfect.</li>
+                        <li>• Use the studio brief to move the sequence into the Strategy Console.</li>
+                        <li>• Custom editing still works when you need to adjust payoffs or add a branch.</li>
                     </ul>
                 </div>
             )}
+
+            <div className="bg-slate-800 rounded-xl p-4 border border-slate-700">
+                <h3 className="font-semibold text-slate-200 mb-3">Studio Templates</h3>
+                <div className="grid gap-3 md:grid-cols-2">
+                    {SEQUENTIAL_GAME_STUDIO_TEMPLATES.map((template) => (
+                        <button
+                            key={template.id}
+                            onClick={() => loadTemplate(template.id)}
+                            className={`rounded-lg border p-4 text-left transition-colors ${
+                                selectedTemplateId === template.id
+                                    ? 'border-purple-500/40 bg-purple-500/10'
+                                    : 'border-slate-700 bg-slate-900/70 hover:border-slate-600'
+                            }`}
+                        >
+                            <div className="flex items-center justify-between gap-3">
+                                <div className="font-medium text-white">{template.title}</div>
+                                <span className="rounded-full border border-slate-600 bg-slate-800 px-2 py-1 text-[10px] uppercase tracking-wide text-slate-300">
+                                    {template.domain.replace(/_/g, ' ')}
+                                </span>
+                            </div>
+                            <div className="mt-2 text-sm text-slate-400">{template.summary}</div>
+                            <div className="mt-3 text-xs text-cyan-200">
+                                Next test: {template.next_countermove_to_test}
+                            </div>
+                        </button>
+                    ))}
+                </div>
+            </div>
 
             {/* Players Config */}
             <div className="bg-slate-800 rounded-xl p-4 border border-slate-700">
@@ -392,6 +522,18 @@ const GameTreeBuilder: React.FC<GameTreeBuilderProps> = ({ userId, onSolve }) =>
                                 className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white"
                             />
                         </div>
+
+                        {selectedNodeData.id !== tree.id && (
+                            <div>
+                                <label className="block text-sm text-slate-400 mb-1">Action From Parent</label>
+                                <input
+                                    type="text"
+                                    value={selectedNodeData.actionLabel || ''}
+                                    onChange={(e) => setTree(updateNode(tree, selectedNodeData.id, { actionLabel: e.target.value }))}
+                                    className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white"
+                                />
+                            </div>
+                        )}
 
                         <div>
                             <label className="block text-sm text-slate-400 mb-1">Type</label>
@@ -547,6 +689,77 @@ const GameTreeBuilder: React.FC<GameTreeBuilderProps> = ({ userId, onSolve }) =>
                         <span className={`px-3 py-1 rounded-full ${equilibrium.nashEquilibrium ? 'bg-green-900/50 text-green-400' : 'bg-red-900/50 text-red-400'}`}>
                             {equilibrium.nashEquilibrium ? '✓ Nash Equilibrium' : '✗ Not Nash Equilibrium'}
                         </span>
+                    </div>
+                </div>
+            )}
+
+            {studioReport && (
+                <div className="bg-slate-800 rounded-xl p-6 border border-cyan-500/30">
+                    <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
+                        <div>
+                            <h3 className="flex items-center gap-2 text-lg font-semibold text-white">
+                                <ShieldCheck className="w-5 h-5 text-cyan-300" />
+                                Studio Brief
+                            </h3>
+                            <p className="mt-1 text-sm text-slate-400">
+                                Explain why the current sequence does or does not survive backward induction, then carry the result into the enterprise workflow.
+                            </p>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                            <button
+                                onClick={copyStudioBrief}
+                                className="inline-flex items-center gap-2 rounded-lg bg-cyan-500 px-4 py-2 text-sm font-medium text-white hover:bg-cyan-400"
+                            >
+                                <ClipboardCopy className="w-4 h-4" />
+                                {copiedStudioBrief ? 'Copied' : 'Copy studio brief'}
+                            </button>
+                            <button
+                                onClick={openInConsole}
+                                className="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-slate-100 hover:bg-slate-950"
+                            >
+                                <ArrowRight className="w-4 h-4" />
+                                Brief in Console
+                            </button>
+                            <button
+                                onClick={saveToWarRoom}
+                                className="inline-flex items-center gap-2 rounded-lg bg-fuchsia-500/90 px-4 py-2 text-sm font-medium text-white hover:bg-fuchsia-400"
+                            >
+                                <ShieldCheck className="w-4 h-4" />
+                                Save to War Room
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="grid gap-4 lg:grid-cols-[1.1fr,0.9fr]">
+                        <div className="space-y-4">
+                            <div className="rounded-lg border border-slate-700 bg-slate-900/70 p-4">
+                                <div className="text-xs uppercase tracking-wide text-slate-500">Executive summary</div>
+                                <div className="mt-2 text-sm leading-6 text-slate-200">{studioReport.executive_summary}</div>
+                            </div>
+                            <div className="rounded-lg border border-slate-700 bg-slate-900/70 p-4">
+                                <div className="text-xs uppercase tracking-wide text-slate-500">Backward induction assessment</div>
+                                <div className="mt-2 text-sm leading-6 text-slate-200">{studioReport.backward_induction_assessment}</div>
+                            </div>
+                        </div>
+
+                        <div className="space-y-4">
+                            <div className="rounded-lg border border-slate-700 bg-slate-900/70 p-4">
+                                <div className="text-xs uppercase tracking-wide text-slate-500">Credible-threat analysis</div>
+                                <ul className="mt-2 space-y-2 text-sm text-slate-300">
+                                    {studioReport.credible_threat_analysis.map((line) => (
+                                        <li key={line} className="flex items-start gap-2">
+                                            <Zap className="mt-0.5 h-4 w-4 flex-shrink-0 text-amber-300" />
+                                            <span>{line}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                            <div className="rounded-lg border border-slate-700 bg-slate-900/70 p-4">
+                                <div className="text-xs uppercase tracking-wide text-slate-500">Assumption drivers</div>
+                                <div className="mt-2 text-sm text-slate-300">{studioReport.assumption_drivers.join(' ')}</div>
+                                <div className="mt-3 text-xs text-cyan-200">Next countermove to test: {studioReport.next_countermove_to_test}</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             )}

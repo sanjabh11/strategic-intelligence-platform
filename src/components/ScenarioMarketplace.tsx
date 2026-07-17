@@ -88,7 +88,7 @@ const ScenarioMarketplace: React.FC<ScenarioMarketplaceProps> = ({ userId }) => 
                 setScenarios([]);
             } else {
                 // Map database fields to component interface
-                const mapped: MarketplaceScenario[] = (data || []).map(item => ({
+                const mapped: MarketplaceScenario[] = (data || []).map((item: any) => ({
                     id: item.id,
                     title: item.title,
                     description: item.description,
@@ -139,7 +139,7 @@ const ScenarioMarketplace: React.FC<ScenarioMarketplaceProps> = ({ userId }) => 
     // Handle scenario purchase
     const handlePurchase = useCallback(async (scenarioId: string) => {
         // Would integrate with Stripe
-        console.log('Purchasing scenario:', scenarioId);
+        if (import.meta.env.DEV) console.log('Purchasing scenario:', scenarioId);
     }, []);
 
     // Handle scenario creation
@@ -147,7 +147,7 @@ const ScenarioMarketplace: React.FC<ScenarioMarketplaceProps> = ({ userId }) => 
         if (!newScenario.title || !newScenario.description) return;
 
         // Would upload to Supabase
-        console.log('Creating scenario:', newScenario);
+        if (import.meta.env.DEV) console.log('Creating scenario:', newScenario);
         setView('browse');
         setNewScenario({
             title: '',

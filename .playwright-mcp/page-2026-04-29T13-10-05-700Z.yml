@@ -1,0 +1,216 @@
+- generic [ref=e3]:
+  - navigation [ref=e4]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - link "Strategy Console" [ref=e8] [cursor=pointer]:
+          - /url: /console
+          - img [ref=e9]
+          - generic [ref=e19]: Strategy Console
+        - 'button "Learning Mode: OFF" [ref=e21] [cursor=pointer]':
+          - img [ref=e22]
+          - text: "Learning Mode: OFF"
+      - generic [ref=e25]:
+        - link "Console" [ref=e26] [cursor=pointer]:
+          - /url: /console
+          - img [ref=e27]
+          - text: Console
+        - link "Insights" [ref=e29] [cursor=pointer]:
+          - /url: /insights
+          - img [ref=e30]
+          - text: Insights
+        - link "Labs" [ref=e33] [cursor=pointer]:
+          - /url: /labs
+          - img [ref=e34]
+          - text: Labs
+        - link "Templates" [ref=e36] [cursor=pointer]:
+          - /url: /templates
+          - img [ref=e37]
+          - text: Templates
+        - link "Forecasts" [ref=e40] [cursor=pointer]:
+          - /url: /forecasts
+          - img [ref=e41]
+          - text: Forecasts
+        - link "Pricing" [ref=e44] [cursor=pointer]:
+          - /url: /pricing
+          - img [ref=e45]
+          - text: Pricing
+  - main [ref=e47]:
+    - generic [ref=e377]:
+      - generic [ref=e378]: Testing override active. This lab is temporarily unlocked in the UI without changing live entitlements.
+      - generic [ref=e380]:
+        - generic [ref=e381]:
+          - link "Back to Labs" [ref=e382] [cursor=pointer]:
+            - /url: /labs
+          - heading "Game Tree Builder" [level=1] [ref=e383]
+          - paragraph [ref=e384]: Model sequential decisions, chance nodes, and terminal payoffs, then solve by backward induction.
+        - generic [ref=e385]:
+          - img [ref=e386]
+          - text: PRO Lab
+      - generic [ref=e389]:
+        - generic [ref=e391]:
+          - generic [ref=e392]:
+            - img [ref=e394]
+            - generic [ref=e398]:
+              - heading "Sequential Game Studio" [level=2] [ref=e399]
+              - paragraph [ref=e400]: Template-driven countermove planning for extensive-form games
+          - generic [ref=e401]:
+            - button [ref=e402] [cursor=pointer]:
+              - img [ref=e403]
+            - button [ref=e405] [cursor=pointer]:
+              - img [ref=e406]
+        - generic [ref=e409]:
+          - heading "Studio Templates" [level=3] [ref=e410]
+          - generic [ref=e411]:
+            - 'button "Vendor renewal under switching leverage commodity procurement Test whether an incumbent supplier should hold firm or accommodate when the buyer has a credible migration path. Next test: Test whether the buyer should credibly threaten a phased migration rather than an immediate full switch." [ref=e412] [cursor=pointer]':
+              - generic [ref=e413]:
+                - generic [ref=e414]: Vendor renewal under switching leverage
+                - generic [ref=e415]: commodity procurement
+              - generic [ref=e416]: Test whether an incumbent supplier should hold firm or accommodate when the buyer has a credible migration path.
+              - generic [ref=e417]: "Next test: Test whether the buyer should credibly threaten a phased migration rather than an immediate full switch."
+            - 'button "Constrained supply allocation sequence commodity procurement Test whether the buyer should concede deposit timing early to secure allocation or hold for better terms. Next test: Test whether offering demand visibility instead of a larger deposit preserves more buyer surplus." [ref=e418] [cursor=pointer]':
+              - generic [ref=e419]:
+                - generic [ref=e420]: Constrained supply allocation sequence
+                - generic [ref=e421]: commodity procurement
+              - generic [ref=e422]: Test whether the buyer should concede deposit timing early to secure allocation or hold for better terms.
+              - generic [ref=e423]: "Next test: Test whether offering demand visibility instead of a larger deposit preserves more buyer surplus."
+            - 'button "Entry deterrence and accommodation test competitive strategy Test whether the incumbent’s threat to fight entry survives backward induction. Next test: Test whether the incumbent can commit to a cost-reducing defensive move before entry." [ref=e424] [cursor=pointer]':
+              - generic [ref=e425]:
+                - generic [ref=e426]: Entry deterrence and accommodation test
+                - generic [ref=e427]: competitive strategy
+              - generic [ref=e428]: Test whether the incumbent’s threat to fight entry survives backward induction.
+              - generic [ref=e429]: "Next test: Test whether the incumbent can commit to a cost-reducing defensive move before entry."
+            - 'button "Tariff retaliation sequence geopolitical Test whether a state should escalate or seek a negotiated climbdown after a tariff shock. Next test: Test whether a symbolic response can preserve deterrence without triggering a full retaliatory round." [ref=e430] [cursor=pointer]':
+              - generic [ref=e431]:
+                - generic [ref=e432]: Tariff retaliation sequence
+                - generic [ref=e433]: geopolitical
+              - generic [ref=e434]: Test whether a state should escalate or seek a negotiated climbdown after a tariff shock.
+              - generic [ref=e435]: "Next test: Test whether a symbolic response can preserve deterrence without triggering a full retaliatory round."
+            - 'button "Regulatory escalation and settlement competitive strategy Test whether a regulated firm should settle early or force a regulator into a costly escalation path. Next test: Test whether an early partial settlement weakens the regulator’s incentive to escalate." [ref=e436] [cursor=pointer]':
+              - generic [ref=e437]:
+                - generic [ref=e438]: Regulatory escalation and settlement
+                - generic [ref=e439]: competitive strategy
+              - generic [ref=e440]: Test whether a regulated firm should settle early or force a regulator into a costly escalation path.
+              - generic [ref=e441]: "Next test: Test whether an early partial settlement weakens the regulator’s incentive to escalate."
+            - 'button "Bargaining under incomplete information enterprise negotiation Test whether a buyer should make a tough early ask or probe for type first when the seller’s flexibility is uncertain. Next test: Test whether a diagnostic question followed by a smaller ask dominates a blunt ultimatum." [ref=e442] [cursor=pointer]':
+              - generic [ref=e443]:
+                - generic [ref=e444]: Bargaining under incomplete information
+                - generic [ref=e445]: enterprise negotiation
+              - generic [ref=e446]: Test whether a buyer should make a tough early ask or probe for type first when the seller’s flexibility is uncertain.
+              - generic [ref=e447]: "Next test: Test whether a diagnostic question followed by a smaller ask dominates a blunt ultimatum."
+        - generic [ref=e448]:
+          - heading "Players" [level=3] [ref=e449]
+          - generic [ref=e450]:
+            - textbox [ref=e452]: Buyer
+            - textbox [ref=e454]: Supplier
+            - button "Add Player" [ref=e455] [cursor=pointer]:
+              - img [ref=e456]
+              - text: Add Player
+        - generic [ref=e457]:
+          - heading "Game Tree" [level=3] [ref=e458]
+          - generic [ref=e460]:
+            - generic [ref=e461] [cursor=pointer]:
+              - generic [ref=e462]:
+                - img [ref=e463]
+                - generic [ref=e467]: Buyer renewal decision
+              - generic [ref=e468]: Buyer
+            - generic [ref=e469]:
+              - generic [ref=e470]:
+                - generic [ref=e472]: Request improved terms
+                - generic [ref=e473]:
+                  - generic [ref=e474] [cursor=pointer]:
+                    - generic [ref=e475]:
+                      - img [ref=e476]
+                      - generic [ref=e480]: Supplier response
+                    - generic [ref=e481]: Supplier
+                  - generic [ref=e482]:
+                    - generic [ref=e483]:
+                      - generic [ref=e485]: Accommodate
+                      - generic [ref=e487] [cursor=pointer]:
+                        - generic [ref=e488]:
+                          - img [ref=e489]
+                          - generic [ref=e493]: Accommodation
+                        - generic [ref=e494]: "Payoffs: [8, 6]"
+                    - generic [ref=e495]:
+                      - generic [ref=e497]: Hold firm
+                      - generic [ref=e499] [cursor=pointer]:
+                        - generic [ref=e500]:
+                          - img [ref=e501]
+                          - generic [ref=e505]: Hold firm
+                        - generic [ref=e506]: "Payoffs: [3, 4]"
+              - generic [ref=e507]:
+                - generic [ref=e509]: Accept current terms
+                - generic [ref=e511] [cursor=pointer]:
+                  - generic [ref=e512]:
+                    - img [ref=e513]
+                    - generic [ref=e517]: Accept incumbent terms
+                  - generic [ref=e518]: "Payoffs: [4, 8]"
+        - generic [ref=e519]:
+          - 'heading "Edit Node: Buyer renewal decision" [level=3] [ref=e520]'
+          - generic [ref=e521]:
+            - generic [ref=e522]:
+              - generic [ref=e523]: Label
+              - textbox [ref=e524]: Buyer renewal decision
+            - generic [ref=e525]:
+              - generic [ref=e526]: Type
+              - combobox [ref=e527]:
+                - option "Decision Node" [selected]
+                - option "Chance Node"
+                - option "Terminal Node"
+            - generic [ref=e528]:
+              - generic [ref=e529]: Player
+              - combobox [ref=e530]:
+                - option "Buyer" [selected]
+                - option "Supplier"
+          - generic [ref=e531]:
+            - button "Decision" [ref=e532] [cursor=pointer]:
+              - img [ref=e533]
+              - text: Decision
+            - button "Chance" [ref=e534] [cursor=pointer]:
+              - img [ref=e535]
+              - text: Chance
+            - button "Terminal" [ref=e536] [cursor=pointer]:
+              - img [ref=e537]
+              - text: Terminal
+        - button "Solve for SPE" [ref=e539] [cursor=pointer]:
+          - img [ref=e540]
+          - text: Solve for SPE
+        - generic [ref=e542]:
+          - generic [ref=e543]:
+            - generic [ref=e544]:
+              - heading "Studio Brief" [level=3] [ref=e545]:
+                - img [ref=e546]
+                - text: Studio Brief
+              - paragraph [ref=e549]: Explain why the current sequence does or does not survive backward induction, then carry the result into the enterprise workflow.
+            - generic [ref=e550]:
+              - button "Copy studio brief" [ref=e551] [cursor=pointer]:
+                - img [ref=e552]
+                - text: Copy studio brief
+              - button "Brief in Console" [ref=e557] [cursor=pointer]:
+                - img [ref=e558]
+                - text: Brief in Console
+          - generic [ref=e560]:
+            - generic [ref=e561]:
+              - generic [ref=e562]:
+                - generic [ref=e563]: Executive summary
+                - generic [ref=e564]: Test whether an incumbent supplier should hold firm or accommodate when the buyer has a credible migration path. Test whether the buyer should credibly threaten a phased migration rather than an immediate full switch.
+              - generic [ref=e565]:
+                - generic [ref=e566]: Backward induction assessment
+                - generic [ref=e567]: Backward induction is the right solver when the move order and continuation payoffs are explicit.
+            - generic [ref=e568]:
+              - generic [ref=e569]:
+                - generic [ref=e570]: Credible-threat analysis
+                - list [ref=e571]:
+                  - listitem [ref=e572]:
+                    - img [ref=e573]
+                    - generic [ref=e575]: The supplier threat to hold price is non-credible if churn cost exceeds the concession.
+                  - listitem [ref=e576]:
+                    - img [ref=e577]
+                    - generic [ref=e579]: The buyer threat to switch is non-credible if migration cost remains unaffordable.
+              - generic [ref=e580]:
+                - generic [ref=e581]: Assumption drivers
+                - generic [ref=e582]: The buyer can move enough volume to matter within one renewal cycle. The supplier values retention but wants to protect precedent.
+                - generic [ref=e583]: "Next countermove to test: Test whether the buyer should credibly threaten a phased migration rather than an immediate full switch."
+  - contentinfo [ref=e339]:
+    - generic [ref=e341]:
+      - paragraph [ref=e342]: Strategy Console - Evidence-Backed Strategic Analysis
+      - paragraph [ref=e343]: Real citations. Real simulations. Real clarity.

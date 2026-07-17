@@ -1,0 +1,692 @@
+{
+  "schema_version": "prelaunch-gtm-campaign-kit-v1",
+  "generated_at": "2026-06-07T04:24:28.825Z",
+  "status": "prelaunch_gtm_complete_ready_for_founder_led_outreach_not_buyer_validated",
+  "source_artifacts": {
+    "pilot_offer_pack": "docs/launch-readiness/pilot-offer-pack-2026-06-06.json",
+    "buyer_discovery_kit": "docs/launch-readiness/buyer-discovery-kit-2026-06-06.json",
+    "commercial_goal_completion_audit": "docs/launch-readiness/commercial-goal-completion-audit-2026-06-06.json"
+  },
+  "summary": {
+    "top_five_niche_count": 5,
+    "segment_count": 10,
+    "selected_target_count": 10,
+    "selected_niche_coverage_count": 5,
+    "current_market_source_count": 8,
+    "email_template_count": 5,
+    "linkedin_template_count": 3,
+    "phase_count": 5,
+    "live_outreach_performed": false,
+    "mvp_prelaunch_obtainable_goal_complete": true,
+    "buyer_validation_claim_allowed": false,
+    "hosted_live_claim_allowed": false,
+    "enterprise_ready_claim_allowed": false,
+    "accuracy_claim_allowed": false,
+    "world_class_prediction_claim_allowed": false,
+    "commercial_world_class_confidence_percent": 53.7,
+    "commercial_goal_status": "commercial_goal_completion_audit_not_complete",
+    "launch_decision": "mvp-prelaunch-ready-for-founder-led-outreach"
+  },
+  "top_five_niches": [
+    {
+      "rank": 1,
+      "niche": "Enterprise/public-sector strategic decision intelligence",
+      "sellability_role": "primary_offer",
+      "buyer_job": "Turn ambiguous geopolitical, policy, supplier, or operational risk questions into evidence-backed briefs, countermove maps, review states, and scoreable forecast drafts.",
+      "proof_assets": [
+        "Strategist/enterprise workflow route and function evidence",
+        "commercial-confidence-gate-2026-06-06.json",
+        "buyer-discovery-kit-2026-06-06.json"
+      ],
+      "sale_boundary": "guided pilot only; no commercial-ready or prediction-superiority claim",
+      "readiness_score_percent": 80
+    },
+    {
+      "rank": 2,
+      "niche": "Governed forecasting and research workflow",
+      "sellability_role": "second_offer_after_data",
+      "buyer_job": "Link research evidence, human review, forecast governance, Brier scoring, and resolved-outcome learning.",
+      "proof_assets": [
+        "accuracy-evidence-intake-kit-2026-06-06.json",
+        "forecast-benchmark-comparison-2026-06-06.json",
+        "whitebox-release function evidence"
+      ],
+      "sale_boundary": "do not sell accuracy until owner-approved resolved outcomes and real baselines are scored",
+      "readiness_score_percent": 35
+    },
+    {
+      "rank": 3,
+      "niche": "Geopolitical risk radar and scenario monitor",
+      "sellability_role": "demo_lane_with_feed_caveats",
+      "buyer_job": "Monitor external risk signals and convert them into actor-aware strategic prompts and scenarios.",
+      "proof_assets": [
+        "hosted-operational-proof-kit-2026-06-06.json",
+        "live-data-providers function evidence",
+        "geopolitical-radar tests"
+      ],
+      "sale_boundary": "requires hosted non-simulated feed proof and freshness/SLA labels before production claims",
+      "readiness_score_percent": 75
+    },
+    {
+      "rank": 4,
+      "niche": "Executive and analyst briefing layer",
+      "sellability_role": "proof_of_depth_for_primary_offer",
+      "buyer_job": "Package the same evidence/review/forecast workflow for executives, analysts, and governance reviewers.",
+      "proof_assets": [
+        "EnterpriseBriefingPanel route/component evidence",
+        "market-differentiation-validation-2026-06-06.md"
+      ],
+      "sale_boundary": "use as demo narrative, not standalone enterprise platform claim",
+      "readiness_score_percent": 78
+    },
+    {
+      "rank": 5,
+      "niche": "Negotiation and strategic reasoning training",
+      "sellability_role": "adjacent_revenue_lane",
+      "buyer_job": "Train managers, students, and analysts on negotiation, game trees, and forecasting discipline with structured debriefs.",
+      "proof_assets": [
+        "NegotiationDojo/Classroom route evidence",
+        "hosted-operational-proof-kit-2026-06-06.json"
+      ],
+      "sale_boundary": "requires classroom hosted smoke and buyer-specific curriculum proof before packaging as training product",
+      "readiness_score_percent": 55
+    }
+  ],
+  "current_market_sources": [
+    {
+      "id": "bcg-geopolitical-muscle-2026",
+      "source": "BCG - From Crisis Reaction to Strategic Geopolitical Response",
+      "url": "https://www.bcg.com/publications/2026/crisis-reaction-to-strategic-geopolitical-response",
+      "signal": "80% of surveyed companies report significant geopolitical exposure and about 95% plan to strengthen geopolitical capabilities; only about 15% have embedded geopolitics into core decisions.",
+      "implication": "Lead with a decision-connected geopolitical workflow pilot, not a dashboard-only pitch.",
+      "source_type": "current_market_signal"
+    },
+    {
+      "id": "tradeweb-icd-treasury-2026",
+      "source": "Tradeweb ICD Portal Client Survey 2026",
+      "url": "https://www.businesswire.com/news/home/20260416122640/en/Geopolitical-Risk-Concerns-Surge-for-Corporate-Treasurers-According-to-2026-Tradeweb-ICD-Portal-Client-Survey",
+      "signal": "88% of corporate treasury respondents reported moderate-to-high geopolitical concern; AI deployment in treasury rose to 22%.",
+      "implication": "Treasury and finance are reachable early adopters for scenario-to-decision pilots when the ask is workflow relevance, not enterprise rollout.",
+      "source_type": "current_market_signal"
+    },
+    {
+      "id": "nist-ai-rmf",
+      "source": "NIST AI Risk Management Framework",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "signal": "NIST AI RMF provides Govern, Map, Measure, and Manage functions for trustworthy AI risk management; NIST released a critical-infrastructure AI RMF profile concept note on April 7, 2026.",
+      "implication": "Position the product as a governed human-review workflow and show AI risk boundaries in the pilot packet.",
+      "source_type": "official_framework"
+    },
+    {
+      "id": "nist-genai-profile",
+      "source": "NIST AI 600-1 Generative AI Profile",
+      "url": "https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence",
+      "signal": "NIST AI 600-1 aligns generative AI governance with system inventory, supplier risk, pre-deployment testing, provenance, and incident disclosure.",
+      "implication": "Prelaunch outreach should include governance evidence, not only model capability claims.",
+      "source_type": "official_framework"
+    },
+    {
+      "id": "forecastbench-about",
+      "source": "ForecastBench",
+      "url": "https://www.forecastbench.org/about/",
+      "signal": "ForecastBench uses dynamic, continuously updated forecasting questions to reduce contamination and updates performance as questions resolve.",
+      "implication": "Accuracy claims must wait for real resolved forecasts and comparable baselines; prelaunch can sell evaluation readiness.",
+      "source_type": "forecasting_science"
+    },
+    {
+      "id": "forecastbench-docs",
+      "source": "ForecastBench documentation",
+      "url": "https://www.forecastbench.org/docs/",
+      "signal": "ForecastBench documents difficulty-adjusted Brier scoring, stability tests, and resolved-question methodology.",
+      "implication": "The MVP can borrow the proof standard: pre-resolution capture, resolved outcomes, baselines, and leakage review.",
+      "source_type": "forecasting_science"
+    },
+    {
+      "id": "metaculus-futureeval",
+      "source": "Metaculus FutureEval",
+      "url": "https://www.metaculus.com/futureeval/",
+      "signal": "FutureEval benchmarks AI forecasting against model, bot, community, and professional forecaster baselines across future-event questions.",
+      "implication": "Use professional/community baselines as future comparison anchors; do not claim parity before scoring.",
+      "source_type": "forecasting_science"
+    },
+    {
+      "id": "cisa-secure-by-demand",
+      "source": "CISA Secure by Demand Guide",
+      "url": "https://www.cisa.gov/resources-tools/resources/secure-demand-guide",
+      "signal": "CISA frames buyer-side software security evidence as a demand-side procurement lever.",
+      "implication": "For pre-selling, prepare security and claim-boundary evidence as a buyer packet even before external validation exists.",
+      "source_type": "official_framework"
+    }
+  ],
+  "target_segments": [
+    {
+      "rank": 1,
+      "segment": "Corporate strategy, geopolitical risk, and CEO-office teams at global companies",
+      "target_roles": "Chief Strategy Officer, head of geopolitical risk, enterprise risk strategy lead",
+      "primary_niche": "Enterprise/public-sector strategic decision intelligence",
+      "buyer_pain": "Geopolitical signals are visible, but they are not translated into quantified decisions, countermoves, and reviewable forecast drafts.",
+      "trigger": "Board asks for scenario options after trade, conflict, supply-chain, or policy shocks.",
+      "current_workaround": "Consulting brief, manual analyst memo, news dashboard, or spreadsheet scenario model.",
+      "repo_proof_to_show": "Strategy Console, Corporate War Room, human review, forecast governance, commercial confidence gate.",
+      "prelaunch_offer": "Two-week guided pilot: convert one live strategic question into evidence bundle, actor/countermove map, and pre-resolution forecast register.",
+      "outreach_angle": "Your team likely has more geopolitical information than decision bandwidth; we are testing a governed workflow that turns one uncertainty into an auditable decision brief.",
+      "willingness_signal": "Budget exists for strategy consulting, risk intelligence, and executive decision support.",
+      "confidence": 5,
+      "source_ids": [
+        "bcg-geopolitical-muscle-2026",
+        "nist-ai-rmf"
+      ]
+    },
+    {
+      "rank": 2,
+      "segment": "Corporate treasury and finance risk teams",
+      "target_roles": "Treasurer, assistant treasurer, finance transformation lead, liquidity risk lead",
+      "primary_niche": "Geopolitical risk radar and scenario monitor",
+      "buyer_pain": "Geopolitical shocks affect liquidity, funding, FX, and cash allocation, but treasury teams need faster scenario translation.",
+      "trigger": "Rising geopolitical concern, defensive liquidity posture, AI adoption in treasury workflows.",
+      "current_workaround": "Bank research, treasury portals, liquidity dashboards, and manual scenario packs.",
+      "repo_proof_to_show": "GeopoliticalDashboard, market/risk feed smoke plans, evidence-to-brief workflow, forecast pre-resolution capture kit.",
+      "prelaunch_offer": "One treasury scenario pilot: turn a geopolitical trigger into liquidity/risk decision options and forecastable assumptions.",
+      "outreach_angle": "We are testing whether treasury teams want a faster path from geopolitical event to decision-ready scenario and review trail.",
+      "willingness_signal": "Paid treasury tooling, banking relationships, and urgent volatility management.",
+      "confidence": 5,
+      "source_ids": [
+        "tradeweb-icd-treasury-2026",
+        "bcg-geopolitical-muscle-2026"
+      ]
+    },
+    {
+      "rank": 3,
+      "segment": "Public-sector foresight, policy planning, and horizon-scanning units",
+      "target_roles": "Strategic foresight director, policy innovation lead, horizon scanning program lead",
+      "primary_niche": "Enterprise/public-sector strategic decision intelligence",
+      "buyer_pain": "Foresight teams need transparent uncertainty, cross-impact reasoning, and policy trade-off documentation without black-box predictions.",
+      "trigger": "Public agencies need explainable scenario planning under AI governance and procurement scrutiny.",
+      "current_workaround": "Workshops, consultant reports, qualitative horizon scans, and static scenario decks.",
+      "repo_proof_to_show": "Audience-specific briefing, evidence sources dashboard, human review, claim consistency validation.",
+      "prelaunch_offer": "Founder-led relevance review: apply the workflow to one public-policy uncertainty and ask whether the output fits their process.",
+      "outreach_angle": "This is not a replacement for foresight practice; it is a reviewable workflow layer for evidence, assumptions, and forecast governance.",
+      "willingness_signal": "Public foresight programs, innovation units, and procurement interest in explainable AI workflows.",
+      "confidence": 4,
+      "source_ids": [
+        "nist-ai-rmf",
+        "nist-genai-profile"
+      ]
+    },
+    {
+      "rank": 4,
+      "segment": "Think tanks, geopolitical research institutes, and analyst programs",
+      "target_roles": "Program director, research lead, futures lab lead, analyst team lead",
+      "primary_niche": "Executive and analyst briefing layer",
+      "buyer_pain": "Analyst teams need to package evidence, uncertainty, and strategic implications quickly while preserving expert review.",
+      "trigger": "Recurring publication cycles and demand for faster executive-ready briefings.",
+      "current_workaround": "Analyst memos, Airtable/Notion workflows, research assistants, and deck production.",
+      "repo_proof_to_show": "Strategist brief panel, provenance dashboard, forecast draft governance, local route proof.",
+      "prelaunch_offer": "Briefing workflow pilot: turn one research question into a governed executive brief with assumptions and reviewer notes.",
+      "outreach_angle": "We are testing a workflow that makes expert judgment easier to audit and reuse, without claiming to replace analysts.",
+      "willingness_signal": "Budgets for research operations, publications, partnerships, and sponsored analysis.",
+      "confidence": 4,
+      "source_ids": [
+        "bcg-geopolitical-muscle-2026",
+        "metaculus-futureeval"
+      ]
+    },
+    {
+      "rank": 5,
+      "segment": "Forecasting research, AI evaluation, and model-risk teams",
+      "target_roles": "Forecasting evaluation lead, AI evaluation researcher, model risk lead",
+      "primary_niche": "Governed forecasting and research workflow",
+      "buyer_pain": "Teams need contamination-aware forecasting protocols, pre-resolution capture, baselines, and reviewer-visible uncertainty.",
+      "trigger": "Rapid progress in AI forecasting benchmarks and pressure to compare models to human/community baselines.",
+      "current_workaround": "Custom notebooks, Metaculus/ForecastBench participation, ad hoc benchmark scripts.",
+      "repo_proof_to_show": "Forecast evaluation protocol, calibration ledger, benchmark comparison, leakage review register.",
+      "prelaunch_offer": "Protocol review: compare the MVP forecast evidence workflow to current benchmark standards and identify pilot scoring gaps.",
+      "outreach_angle": "We are not claiming model skill yet; we are testing a governed evidence pipeline that can support real scoring once outcomes resolve.",
+      "willingness_signal": "Evaluation budgets, benchmark programs, AI governance pressure, and research partnerships.",
+      "confidence": 4,
+      "source_ids": [
+        "forecastbench-about",
+        "forecastbench-docs",
+        "metaculus-futureeval"
+      ]
+    },
+    {
+      "rank": 6,
+      "segment": "Critical infrastructure operators and resilience teams",
+      "target_roles": "Operational resilience lead, risk manager, critical infrastructure AI governance lead",
+      "primary_niche": "Enterprise/public-sector strategic decision intelligence",
+      "buyer_pain": "Operational teams need risk-aware AI workflows with human oversight, incident-aware evidence, and traceable decisions.",
+      "trigger": "NIST critical infrastructure AI profile work and increasing AI governance scrutiny.",
+      "current_workaround": "Manual risk registers, incident reports, vendor questionnaires, and control spreadsheets.",
+      "repo_proof_to_show": "AI action policy, RLS policy draft, enterprise trust pack, hosted proof kit.",
+      "prelaunch_offer": "Governance-readiness review: map one workflow to AI RMF and identify missing controls before any deployment discussion.",
+      "outreach_angle": "The value is a controlled decision-support pilot, not an autonomous operational AI system.",
+      "willingness_signal": "Regulated risk-management programs and supplier-security review pressure.",
+      "confidence": 4,
+      "source_ids": [
+        "nist-ai-rmf",
+        "nist-genai-profile",
+        "cisa-secure-by-demand"
+      ]
+    },
+    {
+      "rank": 7,
+      "segment": "Enterprise AI governance, procurement, and third-party-risk teams",
+      "target_roles": "AI governance lead, procurement risk lead, security questionnaire owner",
+      "primary_niche": "Executive and analyst briefing layer",
+      "buyer_pain": "AI tools are hard to approve when evidence, human oversight, logs, and claim boundaries are not packaged for procurement.",
+      "trigger": "AI vendor due diligence moves from policy statements to system-specific evidence.",
+      "current_workaround": "Manual questionnaires, security review spreadsheets, legal review, and ad hoc evidence collection.",
+      "repo_proof_to_show": "Enterprise trust pack, AI action inventory, claim consistency validation, source freshness report.",
+      "prelaunch_offer": "Procurement-readiness preview: show the evidence packet and ask which controls would block a pilot.",
+      "outreach_angle": "We are preparing evidence-first AI decision support; your feedback can shape the procurement packet before launch.",
+      "willingness_signal": "AI governance ownership, third-party risk workflows, and procurement-control budgets.",
+      "confidence": 4,
+      "source_ids": [
+        "nist-ai-rmf",
+        "nist-genai-profile",
+        "cisa-secure-by-demand"
+      ]
+    },
+    {
+      "rank": 8,
+      "segment": "Investment research, macro strategy, and policy-intelligence teams",
+      "target_roles": "Head of macro research, policy strategy lead, investment research director",
+      "primary_niche": "Governed forecasting and research workflow",
+      "buyer_pain": "Research teams need to convert event evidence into explicit assumptions, probabilities, and reviewer-approved decision notes.",
+      "trigger": "Markets repricing geopolitical, rate, policy, and AI uncertainty.",
+      "current_workaround": "Research portals, analyst notes, Bloomberg/FactSet workflows, spreadsheets, and informal forecast logs.",
+      "repo_proof_to_show": "Forecast registry, evidence sources dashboard, strategist brief, pre-resolution capture kit.",
+      "prelaunch_offer": "One-macro-question pilot: evidence brief plus forecast assumptions and resolution criteria.",
+      "outreach_angle": "We are testing whether explicit forecast governance improves the handoff from research to investment decision.",
+      "willingness_signal": "Existing spend on data, research, and risk analytics.",
+      "confidence": 3,
+      "source_ids": [
+        "forecastbench-about",
+        "tradeweb-icd-treasury-2026"
+      ]
+    },
+    {
+      "rank": 9,
+      "segment": "Executive education and corporate learning programs",
+      "target_roles": "Executive education director, corporate learning lead, strategy faculty lead",
+      "primary_niche": "Negotiation and strategic reasoning training",
+      "buyer_pain": "Training programs need applied strategic reasoning exercises with measurable debriefs and modern AI governance caveats.",
+      "trigger": "Executives need practical decision training for volatility, AI use, and negotiation under uncertainty.",
+      "current_workaround": "Case studies, workshops, simulation exercises, and coaching programs.",
+      "repo_proof_to_show": "Negotiation Dojo, Game Tree Builder, strategy simulator, pilot outcome measurement kit.",
+      "prelaunch_offer": "Workshop pilot: one facilitated exercise with debrief rubric and participant feedback capture.",
+      "outreach_angle": "This is a training pilot around structured reasoning, not a production decision system.",
+      "willingness_signal": "Training budgets, paid executive programs, and custom workshop spend.",
+      "confidence": 3,
+      "source_ids": [
+        "bcg-geopolitical-muscle-2026",
+        "nist-ai-rmf"
+      ]
+    },
+    {
+      "rank": 10,
+      "segment": "Product, risk, and strategy teams inside AI-first startups",
+      "target_roles": "Founder, product strategy lead, model evaluation lead, risk lead",
+      "primary_niche": "Governed forecasting and research workflow",
+      "buyer_pain": "AI-first teams need a lightweight way to show reasoning quality, calibration discipline, and human-review controls before enterprise buyers ask.",
+      "trigger": "Need to sell AI products into regulated or enterprise buyers with stronger evidence packaging.",
+      "current_workaround": "Internal eval docs, ad hoc prompt logs, manual model comparison, and generic security questionnaires.",
+      "repo_proof_to_show": "Forecast governance, AI action policy, evidence source dashboard, claim consistency validation.",
+      "prelaunch_offer": "Evidence-pack review: use the MVP workflow to organize one decision-eval story for their own buyer conversation.",
+      "outreach_angle": "We are testing whether governed forecast/evidence workflows help AI teams pass buyer diligence sooner.",
+      "willingness_signal": "Enterprise sales pressure and urgent need for proof artifacts.",
+      "confidence": 3,
+      "source_ids": [
+        "forecastbench-docs",
+        "nist-genai-profile"
+      ]
+    }
+  ],
+  "target_account_sequence": [
+    {
+      "sequence_rank": 1,
+      "account_name": "GAO Center for Strategic Foresight",
+      "website": "https://www.gao.gov/about/what-gao-does/audit-role/csf/",
+      "buyer_role": "Strategic foresight director or federal program-analysis lead",
+      "niche": "Enterprise/public-sector strategic decision intelligence",
+      "recommended_segment": "Corporate strategy, geopolitical risk, and CEO-office teams at global companies",
+      "first_touch_template_id": "public-sector-foresight",
+      "proof_to_show": "Console to strategist brief to human-review and forecast-draft handoff.; commercial-confidence-gate-2026-06-06.md; commercial-launch-readiness-2026-06-06.md",
+      "outreach_angle": "Ask whether evidence-to-decision workflow maps to their real planning process.",
+      "status": "researched_not_contacted_prelaunch",
+      "next_action": "Review for conflicts/sensitivity, then send founder-led relevance-check message.",
+      "claim_boundary": "No buyer-validation, hosted-live, enterprise-ready, or accuracy claim until post-contact evidence is logged and validators pass."
+    },
+    {
+      "sequence_rank": 2,
+      "account_name": "UK Government Office for Science Futures and Foresight",
+      "website": "https://www.gov.uk/government/groups/futures-and-foresight",
+      "buyer_role": "Futures, foresight, or horizon-scanning team lead",
+      "niche": "Enterprise/public-sector strategic decision intelligence",
+      "recommended_segment": "Corporate strategy, geopolitical risk, and CEO-office teams at global companies",
+      "first_touch_template_id": "public-sector-foresight",
+      "proof_to_show": "Actor/countermove brief plus review state and forecast-governance caveats.; commercial-confidence-gate-2026-06-06.md; commercial-launch-readiness-2026-06-06.md",
+      "outreach_angle": "Ask whether evidence-to-decision workflow maps to their real planning process.",
+      "status": "researched_not_contacted_prelaunch",
+      "next_action": "Review for conflicts/sensitivity, then send founder-led relevance-check message.",
+      "claim_boundary": "No buyer-validation, hosted-live, enterprise-ready, or accuracy claim until post-contact evidence is logged and validators pass."
+    },
+    {
+      "sequence_rank": 3,
+      "account_name": "OECD Strategic Foresight Unit / Government Foresight Community",
+      "website": "https://www.oecd.org/strategic-foresight/",
+      "buyer_role": "Strategic foresight unit lead or GFC program contact",
+      "niche": "Enterprise/public-sector strategic decision intelligence",
+      "recommended_segment": "Corporate strategy, geopolitical risk, and CEO-office teams at global companies",
+      "first_touch_template_id": "public-sector-foresight",
+      "proof_to_show": "Public-sector scenario brief with transparent uncertainty and policy trade-off questions.; commercial-confidence-gate-2026-06-06.md; commercial-launch-readiness-2026-06-06.md",
+      "outreach_angle": "Ask whether evidence-to-decision workflow maps to their real planning process.",
+      "status": "researched_not_contacted_prelaunch",
+      "next_action": "Review for conflicts/sensitivity, then send founder-led relevance-check message.",
+      "claim_boundary": "No buyer-validation, hosted-live, enterprise-ready, or accuracy claim until post-contact evidence is logged and validators pass."
+    },
+    {
+      "sequence_rank": 4,
+      "account_name": "Policy Horizons Canada",
+      "website": "https://horizons.service.canada.ca/en/home/index.shtml",
+      "buyer_role": "Foresight analyst or policy innovation lead",
+      "niche": "Enterprise/public-sector strategic decision intelligence",
+      "recommended_segment": "Corporate strategy, geopolitical risk, and CEO-office teams at global companies",
+      "first_touch_template_id": "public-sector-foresight",
+      "proof_to_show": "Evidence bundle and audience-specific briefing for a policy uncertainty.; commercial-confidence-gate-2026-06-06.md; commercial-launch-readiness-2026-06-06.md",
+      "outreach_angle": "Ask whether evidence-to-decision workflow maps to their real planning process.",
+      "status": "researched_not_contacted_prelaunch",
+      "next_action": "Review for conflicts/sensitivity, then send founder-led relevance-check message.",
+      "claim_boundary": "No buyer-validation, hosted-live, enterprise-ready, or accuracy claim until post-contact evidence is logged and validators pass."
+    },
+    {
+      "sequence_rank": 5,
+      "account_name": "Atlantic Council GeoStrategy Initiative",
+      "website": "https://www.atlanticcouncil.org/our-programs/foresight-strategy-and-risks-initiative/",
+      "buyer_role": "Foresight, strategy, or program lead",
+      "niche": "Executive and analyst briefing layer",
+      "recommended_segment": "Think tanks, geopolitical research institutes, and analyst programs",
+      "first_touch_template_id": "corporate-strategy-risk",
+      "proof_to_show": "Analyst briefing layer plus forecast-draft governance for a Global Foresight scenario.; commercial-confidence-gate-2026-06-06.md; commercial-launch-readiness-2026-06-06.md",
+      "outreach_angle": "Ask whether analyst review and reusable executive brief artifacts reduce briefing friction.",
+      "status": "researched_not_contacted_prelaunch",
+      "next_action": "Review for conflicts/sensitivity, then send founder-led relevance-check message.",
+      "claim_boundary": "No buyer-validation, hosted-live, enterprise-ready, or accuracy claim until post-contact evidence is logged and validators pass."
+    },
+    {
+      "sequence_rank": 6,
+      "account_name": "CSIS Futures Lab",
+      "website": "https://www.csis.org/programs/futures-lab?f%5B0%5D=topics%3A845",
+      "buyer_role": "Futures Lab or computational social science lead",
+      "niche": "Executive and analyst briefing layer",
+      "recommended_segment": "Think tanks, geopolitical research institutes, and analyst programs",
+      "first_touch_template_id": "corporate-strategy-risk",
+      "proof_to_show": "Game-tree or countermove reasoning path with analyst review and forecast handoff.; commercial-confidence-gate-2026-06-06.md; commercial-launch-readiness-2026-06-06.md",
+      "outreach_angle": "Ask whether analyst review and reusable executive brief artifacts reduce briefing friction.",
+      "status": "researched_not_contacted_prelaunch",
+      "next_action": "Review for conflicts/sensitivity, then send founder-led relevance-check message.",
+      "claim_boundary": "No buyer-validation, hosted-live, enterprise-ready, or accuracy claim until post-contact evidence is logged and validators pass."
+    },
+    {
+      "sequence_rank": 7,
+      "account_name": "World Economic Forum Strategic Intelligence",
+      "website": "https://www.weforum.org/focus/strategic-intelligence/",
+      "buyer_role": "Strategic Intelligence partnerships or content lead",
+      "niche": "Enterprise/public-sector strategic decision intelligence",
+      "recommended_segment": "Corporate strategy, geopolitical risk, and CEO-office teams at global companies",
+      "first_touch_template_id": "public-sector-foresight",
+      "proof_to_show": "Differentiated layer: evidence-to-actor-reasoning-to-forecast draft, not trend-map replacement.; commercial-confidence-gate-2026-06-06.md; commercial-launch-readiness-2026-06-06.md",
+      "outreach_angle": "Ask whether evidence-to-decision workflow maps to their real planning process.",
+      "status": "researched_not_contacted_prelaunch",
+      "next_action": "Review for conflicts/sensitivity, then send founder-led relevance-check message.",
+      "claim_boundary": "No buyer-validation, hosted-live, enterprise-ready, or accuracy claim until post-contact evidence is logged and validators pass."
+    },
+    {
+      "sequence_rank": 8,
+      "account_name": "World Economic Forum Global Risks Initiative",
+      "website": "https://initiatives.weforum.org/global-risks/home",
+      "buyer_role": "Global risks program, community, or report team",
+      "niche": "Geopolitical risk radar and scenario monitor",
+      "recommended_segment": "Corporate treasury and finance risk teams",
+      "first_touch_template_id": "treasury-finance-risk",
+      "proof_to_show": "Global-risk issue brief with source provenance, actor map, and forecast-draft scoring plan.; commercial-confidence-gate-2026-06-06.md; commercial-launch-readiness-2026-06-06.md",
+      "outreach_angle": "Ask whether they need a faster path from external risk trigger to decision-ready scenario.",
+      "status": "researched_not_contacted_prelaunch",
+      "next_action": "Review for conflicts/sensitivity, then send founder-led relevance-check message.",
+      "claim_boundary": "No buyer-validation, hosted-live, enterprise-ready, or accuracy claim until post-contact evidence is logged and validators pass."
+    },
+    {
+      "sequence_rank": 9,
+      "account_name": "Metaculus FutureEval",
+      "website": "https://www.metaculus.com/futureeval/",
+      "buyer_role": "Forecasting evaluation or services lead",
+      "niche": "Governed forecasting and research workflow",
+      "recommended_segment": "Forecasting research, AI evaluation, and model-risk teams",
+      "first_touch_template_id": "forecasting-evaluation",
+      "proof_to_show": "Calibration ledger plus benchmark-comparison artifact, clearly marked sample-only until real data exists.; commercial-confidence-gate-2026-06-06.md; commercial-launch-readiness-2026-06-06.md",
+      "outreach_angle": "Ask for critique of the forecast-governance protocol before any accuracy claim is made.",
+      "status": "researched_not_contacted_prelaunch",
+      "next_action": "Review for conflicts/sensitivity, then send founder-led relevance-check message.",
+      "claim_boundary": "No buyer-validation, hosted-live, enterprise-ready, or accuracy claim until post-contact evidence is logged and validators pass."
+    },
+    {
+      "sequence_rank": 10,
+      "account_name": "Michigan Ross Executive Education strategic decision-making program",
+      "website": "https://michiganross.umich.edu/sites/default/files/media/documents/2025/07/Michigan%20Ross%20Strategic%20Decision%20Making_07142025.pdf",
+      "buyer_role": "Executive education program director or corporate learning lead",
+      "niche": "Negotiation and strategic reasoning training",
+      "recommended_segment": "Executive education and corporate learning programs",
+      "first_touch_template_id": "executive-education",
+      "proof_to_show": "Negotiation Dojo and game-tree module with manager-ready debriefs.; commercial-confidence-gate-2026-06-06.md; commercial-launch-readiness-2026-06-06.md",
+      "outreach_angle": "Ask whether a structured reasoning exercise with measurable debriefs fits their program.",
+      "status": "researched_not_contacted_prelaunch",
+      "next_action": "Review for conflicts/sensitivity, then send founder-led relevance-check message.",
+      "claim_boundary": "No buyer-validation, hosted-live, enterprise-ready, or accuracy claim until post-contact evidence is logged and validators pass."
+    }
+  ],
+  "campaign_phases": [
+    {
+      "phase": "0-7 days",
+      "name": "Prelaunch proof-pack freeze",
+      "objective": "Freeze buyer-safe language, choose first target segment, and prepare assets without making buyer-validation or accuracy claims.",
+      "actions": [
+        "Use pilot-only language from the claim consistency report.",
+        "Select one primary segment and two backup segments from the target segment table.",
+        "Attach one proof asset per outreach email: pilot offer, route proof, forecast protocol, or enterprise trust pack.",
+        "Prepare a 10-account founder-led outreach queue from the selected target slate."
+      ],
+      "exit_criteria": "Segment selected, outreach copy approved, CRM/call sheet ready, and unsupported claims remain zero."
+    },
+    {
+      "phase": "8-21 days",
+      "name": "Relevance-check outreach",
+      "objective": "Run low-friction relevance checks before asking for demos or pilots.",
+      "actions": [
+        "Send 30-50 hand-selected emails/LinkedIn messages across the top 3 segments.",
+        "Ask for a 15-minute relevance check, not a purchase decision.",
+        "Log role, current workaround, objection, and whether the workflow maps to a real decision process.",
+        "Avoid automated bulk outreach until messaging sensitivity and buyer roles are confirmed."
+      ],
+      "exit_criteria": "At least 10 replies or 10 completed relevance checks logged, with segment-specific objections captured."
+    },
+    {
+      "phase": "22-45 days",
+      "name": "Discovery and demo loop",
+      "objective": "Convert relevance into structured discovery calls and buyer-safe MVP demos.",
+      "actions": [
+        "Run 10 discovery calls using the buyer call sheet.",
+        "Show only one workflow matched to the buyer segment.",
+        "Ask for current workflow, decision event, value metric, switching barrier, and proof needed for a paid pilot.",
+        "Rerun buyer input validation and buyer proof gate after real rows are added."
+      ],
+      "exit_criteria": "10 completed calls, 3 qualified follow-ups, and at least 1 paid-pilot/LOI/procurement-path signal if buyer validation is to be claimed."
+    },
+    {
+      "phase": "46-75 days",
+      "name": "Private MVP pilot",
+      "objective": "Run narrow pilots for the strongest segment without broad commercial-ready claims.",
+      "actions": [
+        "Limit each pilot to one question, one workflow, one outcome metric, and one reviewer.",
+        "Capture baseline current process, time-to-brief, quality signal, and decision usefulness.",
+        "Attach hosted proof and redacted logs before any hosted-live claims.",
+        "Track every forecast as pre-resolution until outcome scoring is possible."
+      ],
+      "exit_criteria": "At least 2-3 pilots with documented workflow outcomes and no unsupported claim upgrades."
+    },
+    {
+      "phase": "76-90 days",
+      "name": "Paid-pilot conversion",
+      "objective": "Convert strongest validated segment into a paid pilot or LOI while preserving proof boundaries.",
+      "actions": [
+        "Offer a paid pilot around one measurable outcome and one proof boundary.",
+        "Use objection evidence to refine pricing, onboarding, and support needs.",
+        "Package only verified outcomes into a case-study-style proof note after buyer permission.",
+        "Rerun commercial confidence, claim consistency, buyer proof, hosted proof, and forecast scoring gates."
+      ],
+      "exit_criteria": "One paid-pilot/LOI/procurement-path signal or a clear decision to pivot segment priority."
+    }
+  ],
+  "email_templates": [
+    {
+      "id": "corporate-strategy-risk",
+      "segment": "Corporate strategy, geopolitical risk, and CEO-office teams",
+      "subject": "Relevance check: turning geopolitical risk into decision-ready briefs",
+      "body": "Hi {{first_name}},\n\nI am preparing a private MVP pilot for teams that already track geopolitical risk but still have to manually turn it into decision options, assumptions, and reviewable forecast drafts.\n\nThe narrow test: take one live strategic uncertainty your team already cares about and produce an evidence bundle, actor/countermove map, reviewer notes, and pre-resolution forecast register.\n\nThis is prelaunch and pilot-only; we are not claiming verified prediction accuracy or enterprise deployment readiness yet.\n\nWould you be open to a 15-minute relevance check to tell me whether this workflow maps to a real planning gap on your side?"
+    },
+    {
+      "id": "treasury-finance-risk",
+      "segment": "Corporate treasury and finance risk teams",
+      "subject": "Quick relevance check: geopolitical scenario workflow for treasury decisions",
+      "body": "Hi {{first_name}},\n\nTreasury teams seem to be dealing with faster geopolitical shocks, liquidity questions, and early AI workflow adoption. I am testing a prelaunch workflow that turns one external risk trigger into scenario assumptions, decision options, and a reviewer-visible evidence trail.\n\nThe MVP pilot would stay narrow: one risk question, one decision context, one briefing output, and no claim of forecast accuracy until outcomes are scored.\n\nCould I ask for 15 minutes to check whether this would be useful for treasury or finance risk teams like yours?"
+    },
+    {
+      "id": "public-sector-foresight",
+      "segment": "Public-sector foresight, policy planning, and horizon-scanning units",
+      "subject": "Foresight workflow relevance check: evidence, assumptions, and uncertainty",
+      "body": "Hi {{first_name}},\n\nI am preparing a private MVP pilot for public-sector foresight teams that need transparent uncertainty, policy trade-offs, and human-reviewable AI assistance.\n\nThe workflow is not a black-box predictor. It packages evidence, assumptions, actor/countermove reasoning, and forecast-governance caveats for one policy uncertainty.\n\nWould a 15-minute relevance check be useful to see whether this fits your foresight or horizon-scanning process?"
+    },
+    {
+      "id": "forecasting-evaluation",
+      "segment": "Forecasting research, AI evaluation, and model-risk teams",
+      "subject": "Protocol review: governed forecast workflow before accuracy claims",
+      "body": "Hi {{first_name}},\n\nI am testing a prelaunch workflow for forecast evidence governance: pre-resolution capture, explicit resolution criteria, leakage review, baselines, and reviewer notes.\n\nThe point is not to claim model superiority. The point is to see whether the protocol is useful before real outcomes resolve and before any scoring claim is made.\n\nWould you be open to a short protocol review conversation? I would value a hard critique from someone who thinks about forecasting evaluation."
+    },
+    {
+      "id": "executive-education",
+      "segment": "Executive education and corporate learning programs",
+      "subject": "Pilot idea: strategic reasoning exercise with measurable debriefs",
+      "body": "Hi {{first_name}},\n\nI am preparing a prelaunch training pilot that combines negotiation/game-tree exercises, scenario reasoning, and forecast discipline into a structured debrief.\n\nIt is positioned as training, not a production decision system: one exercise, one rubric, participant feedback, and clear AI-use caveats.\n\nCould I ask for 15 minutes to check whether this kind of workshop pilot would fit executive education or corporate learning buyers?"
+    }
+  ],
+  "linkedin_templates": [
+    {
+      "id": "relevance-check",
+      "use_case": "First-touch LinkedIn note",
+      "text": "Hi {{first_name}}, I am preparing a prelaunch pilot for teams that turn geopolitical/AI uncertainty into decision briefs and forecastable assumptions. It is pilot-only, not an accuracy claim. Could I ask for a quick relevance check?"
+    },
+    {
+      "id": "foresight-public-sector",
+      "use_case": "Public-sector foresight note",
+      "text": "Hi {{first_name}}, I am testing a human-reviewable foresight workflow: evidence, assumptions, actor reasoning, and uncertainty caveats for one policy question. Would your team be a reasonable group to sanity-check the pilot?"
+    },
+    {
+      "id": "forecast-protocol",
+      "use_case": "Forecasting/evaluation note",
+      "text": "Hi {{first_name}}, I am building a governed forecast-evidence workflow with pre-resolution capture and leakage review. Before any accuracy claims, I would value a protocol critique. Open to a 15-minute review?"
+    }
+  ],
+  "demo_narrative": [
+    {
+      "minute": "0:00-0:30",
+      "step": "Buyer workflow anchor",
+      "talk_track": "Start with the buyer current workflow: what question is stuck, which decision depends on it, and what evidence they already collect."
+    },
+    {
+      "minute": "0:30-1:15",
+      "step": "Evidence and uncertainty",
+      "talk_track": "Show how the MVP gathers sources, marks uncertainty, and keeps claim boundaries visible instead of presenting a magic answer."
+    },
+    {
+      "minute": "1:15-2:15",
+      "step": "Reasoning and review",
+      "talk_track": "Walk through actor/countermove reasoning, forecast draft, human-review state, and what a reviewer can accept, reject, or send back."
+    },
+    {
+      "minute": "2:15-3:00",
+      "step": "Measurable pilot ask",
+      "talk_track": "Close on one pilot metric: time-to-brief, decision usefulness, objection quality, or pre-resolution forecast capture. State clearly that buyer validation and accuracy proof require the pilot evidence loop."
+    }
+  ],
+  "objection_handling": [
+    {
+      "objection": "We already use risk intelligence tools.",
+      "response": "Keep those tools. This pilot tests the workflow after information intake: turning one uncertainty into assumptions, decision options, reviewer notes, and a scoreable forecast draft."
+    },
+    {
+      "objection": "Can you prove prediction accuracy?",
+      "response": "Not prelaunch. The honest offer is evaluation readiness: pre-resolution capture, baselines, leakage review, and resolved-outcome scoring once real events resolve."
+    },
+    {
+      "objection": "Is this secure enough for enterprise use?",
+      "response": "Not for broad enterprise deployment claims yet. The prelaunch packet can show current security/AI-governance evidence and the exact controls still required before production use."
+    },
+    {
+      "objection": "Can this integrate with our stack?",
+      "response": "For MVP, avoid integration dependency. Run a guided pilot using exported evidence and a narrow workflow; integration becomes a later requirement after value is proven."
+    },
+    {
+      "objection": "This sounds like consulting, not software.",
+      "response": "The first pilot is founder-led to validate the workflow. The software value is repeatable evidence capture, review state, forecast governance, and reusable decision artifacts."
+    },
+    {
+      "objection": "Who is the buyer?",
+      "response": "Start with teams already paying for risk intelligence, foresight, advisory, treasury tooling, or executive training. The outreach sequence is designed to test which buyer owns the budget."
+    }
+  ],
+  "proof_boundary": "This prelaunch GTM kit completes market segmentation, target approach, outreach copy, phase plan, and proof-pack selection that can be obtained before launch. It is not live outreach, buyer validation, willingness-to-pay proof, hosted/live proof, enterprise procurement approval, or prediction-accuracy proof.",
+  "acceptance_gates": [
+    {
+      "gate": "top_five_niches_clear",
+      "status": "passed",
+      "evidence": "5/5 top-five niches loaded from the pilot offer pack.",
+      "proof_bucket": "repo_artifact"
+    },
+    {
+      "gate": "current_market_sources_attached",
+      "status": "passed",
+      "evidence": "8 current market/framework/forecasting sources attached to segment rationale.",
+      "proof_bucket": "current_research"
+    },
+    {
+      "gate": "segment_map_complete",
+      "status": "passed",
+      "evidence": "10 target segments ranked by buyer pain, urgency, proof fit, reachable buyer, and willingness-to-pay signal.",
+      "proof_bucket": "repo_artifact"
+    },
+    {
+      "gate": "named_prelaunch_target_sequence_ready",
+      "status": "passed",
+      "evidence": "10 selected target accounts loaded; 5/5 priority niches covered.",
+      "proof_bucket": "repo_artifact"
+    },
+    {
+      "gate": "outreach_templates_ready",
+      "status": "passed",
+      "evidence": "5 email templates and 3 LinkedIn templates prepared with pilot-only language.",
+      "proof_bucket": "repo_artifact"
+    },
+    {
+      "gate": "phase_plan_ready",
+      "status": "passed",
+      "evidence": "5 phase plan rows cover proof-pack freeze, relevance checks, discovery, private pilots, and paid-pilot conversion.",
+      "proof_bucket": "repo_artifact"
+    },
+    {
+      "gate": "prelaunch_claim_boundary_preserved",
+      "status": "passed",
+      "evidence": "The kit is complete for founder-led prelaunch outreach, but explicitly does not claim buyer validation, hosted-live operation, enterprise readiness, or prediction accuracy.",
+      "proof_bucket": "repo_artifact"
+    }
+  ]
+}

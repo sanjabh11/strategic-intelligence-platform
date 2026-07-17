@@ -1,0 +1,280 @@
+{
+  "schema_version": "forecast-claim-governance-v1",
+  "generated_at": "2026-06-06T14:21:36.973Z",
+  "status": "forecast_claim_governance_ready_not_accuracy_proof",
+  "source": {
+    "calibration_readiness": "docs/launch-readiness/calibration-readiness-audit-2026-06-06.json",
+    "calibration_ledger": "docs/launch-readiness/resolved-forecast-calibration-ledger-2026-06-06.json",
+    "benchmark_comparison": "docs/launch-readiness/forecast-benchmark-comparison-2026-06-06.json",
+    "scoring_validation": "docs/launch-readiness/forecast-scoring-evidence-validation-2026-06-06.json",
+    "scoring_validation_status": "forecast_scoring_evidence_validation_sample_only_not_claim_proof",
+    "accuracy_intake_kit": "docs/launch-readiness/accuracy-evidence-intake-kit-2026-06-06.json",
+    "accuracy_input_validation": "docs/launch-readiness/accuracy-evidence-input-validation-2026-06-06.json",
+    "accuracy_input_validation_status": "accuracy_input_validation_ready_no_real_rows",
+    "forecast_evaluation_protocol": "docs/launch-readiness/forecast-evaluation-protocol-2026-06-06.json",
+    "leakage_review_validation": "docs/launch-readiness/forecast-leakage-review-validation-2026-06-06.json",
+    "leakage_review_validation_status": "forecast_leakage_review_validation_ready_no_real_forecast_rows",
+    "commercial_confidence_gate": "docs/launch-readiness/commercial-confidence-gate-2026-06-06.json",
+    "accuracy_dimension_status": "claim_governance_ready_real_data_missing",
+    "accuracy_dimension_score_percent": 35
+  },
+  "proof_boundary": {
+    "proves": [
+      "Internal claim-governance rules and acceptance thresholds are explicit.",
+      "Current sample fixtures are kept separate from buyer-facing accuracy proof.",
+      "World-class prediction language has active release holds until real evidence exists."
+    ],
+    "does_not_prove": [
+      "Prediction accuracy on real buyer or production outcomes.",
+      "Resolved-outcome calibration on an owner-approved export.",
+      "Hosted calibration or hosted evaluation-table security.",
+      "External benchmark superiority over human, community, pro, or AI baselines.",
+      "Buyer acceptance, willingness to pay, or world-class prediction performance."
+    ]
+  },
+  "summary": {
+    "protocol_stage_count": 8,
+    "metric_count": 6,
+    "claim_tier_count": 4,
+    "acceptance_gate_count": 6,
+    "input_validation_valid_forecast_count": 0,
+    "input_validation_valid_baseline_count": 0,
+    "input_validation_release_hold_count": 6,
+    "input_validation_ready_for_scoring": false,
+    "leakage_review_ready_control_count": 0,
+    "leakage_review_required_control_count": 8,
+    "leakage_review_valid_forecast_count": 0,
+    "leakage_review_valid_baseline_count": 0,
+    "leakage_review_unresolved_issue_total": 0,
+    "leakage_review_high_or_critical_risk_count": 0,
+    "leakage_review_release_hold_count": 5,
+    "leakage_review_ready_for_accuracy_claim_review": false,
+    "leakage_review_passed": false,
+    "scoring_validation_included_point_count": 30,
+    "scoring_validation_max_source_sample_size": 6,
+    "scoring_validation_baseline_count": 3,
+    "scoring_validation_comparison_count": 15,
+    "scoring_validation_release_hold_count": 7,
+    "scoring_output_ready_for_claim_review": false,
+    "governance_acceptance_threshold_count": 5,
+    "current_accuracy_score_percent": 35,
+    "real_resolved_outcome_count": 0,
+    "real_baseline_comparison_count": 0,
+    "sample_ledger_point_count": 30,
+    "sample_benchmark_comparison_count": 15,
+    "release_hold_count": 7,
+    "approved_world_class_claim": false
+  },
+  "current_source_alignment": [
+    {
+      "source": "ForecastBench",
+      "url": "https://www.forecastbench.org/about/",
+      "alignment": "Use future-event, contamination-resistant forecast capture and human comparison groups before any world-class AI forecasting claim."
+    },
+    {
+      "source": "ForecastBench research paper",
+      "url": "https://arxiv.org/abs/2409.19839",
+      "alignment": "Treat leakage avoidance and expert/human benchmark comparison as scientific evaluation requirements."
+    },
+    {
+      "source": "Metaculus FutureEval",
+      "url": "https://www.metaculus.com/futureeval/",
+      "alignment": "Continuously updated AI forecasting benchmarks compare AI forecasts with human and bot baselines over resolved real-world questions."
+    },
+    {
+      "source": "Metaculus FutureEval methodology",
+      "url": "https://www.metaculus.com/futureeval/methodology/",
+      "alignment": "Use high-quality decision-relevant questions, scoring rules, and temporal controls before market-facing AI accuracy claims."
+    },
+    {
+      "source": "NIST AI Risk Management Framework",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "alignment": "Map forecast claims to governed measurement and managed-risk evidence, not unqualified promotional language."
+    }
+  ],
+  "claim_governance_rules": [
+    {
+      "rule": "world_class_hold",
+      "requirement": "Do not use world-class accurate predictions language unless every world-class acceptance gate passes with real resolved outcomes, real baselines, hosted proof, and owner approval.",
+      "current_status": "active_hold"
+    },
+    {
+      "rule": "sample_fixture_boundary",
+      "requirement": "Sample fixtures prove mechanics only and cannot support buyer-facing accuracy, superiority, or reliability claims.",
+      "current_status": "mechanics_present_claim_blocked"
+    },
+    {
+      "rule": "input_validation_before_scoring",
+      "requirement": "Resolved forecast and baseline inputs must pass schema, timestamp, source, sample-size, placeholder, and comparability checks before calibration or benchmark scoring can support any market claim.",
+      "current_status": "blocked_input_validation_not_ready"
+    },
+    {
+      "rule": "scoring_output_validation",
+      "requirement": "Calibration ledger and benchmark comparison outputs must pass sample-size, reliability-bin, baseline-source, input-validation, and leakage-review gates before accuracy claim review.",
+      "current_status": "blocked_scoring_validation_not_ready"
+    },
+    {
+      "rule": "pre_resolution_registration",
+      "requirement": "Every scored forecast must be timestamped before resolution with pre-registered outcome criteria, exclusion rules, source_id, and workflow version.",
+      "current_status": "blocked_real_data_missing"
+    },
+    {
+      "rule": "baseline_comparability",
+      "requirement": "Baseline comparisons must use the same questions and timestamps, or a documented comparable mapping with source URLs and leakage review.",
+      "current_status": "blocked_real_baselines_missing"
+    },
+    {
+      "rule": "calibration_reporting",
+      "requirement": "Report Brier score, Brier skill versus baseline, reliability bins, sample size, coverage/exclusions, and caveats together.",
+      "current_status": "protocol_ready_not_executed"
+    },
+    {
+      "rule": "slice_and_failure_reporting",
+      "requirement": "Report domain slices, weak slices, exclusions, leakage flags, and representative misses before broad market claims.",
+      "current_status": "blocked_leakage_review_missing"
+    },
+    {
+      "rule": "hosted_security_boundary",
+      "requirement": "Hosted calibration and evaluation-table security proof must exist before operational buyer claims.",
+      "current_status": "blocked_hosted_security_proof_missing"
+    }
+  ],
+  "acceptance_thresholds": [
+    {
+      "gate": "engineering_fixture_mechanics",
+      "required_evidence": "Sample ledger, sample benchmark comparison, forecast evaluation protocol, and accuracy intake kit are generated and JSON-valid.",
+      "current_status": "pass_mechanics_only",
+      "allowed_claim": "Forecast scoring and benchmark-comparison mechanics exist locally.",
+      "prohibited_claim": "The app is accurate, superior, calibrated in production, or world-class."
+    },
+    {
+      "gate": "scoring_output_validation",
+      "required_evidence": "Forecast scoring validator passes against approved calibration ledger, benchmark comparison, input validation, and leakage review artifacts.",
+      "current_status": "blocked_scoring_validation_not_ready",
+      "allowed_claim": "Scoring outputs are ready for owner claim review.",
+      "prohibited_claim": "Sample scoring outputs prove prediction accuracy or benchmark superiority."
+    },
+    {
+      "gate": "pilot_internal_accuracy_claim",
+      "required_evidence": "At least 50 owner-approved pre-resolution resolved outcomes or an owner-approved smaller pilot sample with explicit caveat; Brier score, reliability bins, coverage/exclusion report, leakage review, and comparison with trivial/internal baselines.",
+      "current_status": "blocked_real_data_missing",
+      "allowed_claim": "Internal pilot accuracy has been measured on the named sample.",
+      "prohibited_claim": "External superiority or world-class prediction accuracy."
+    },
+    {
+      "gate": "external_benchmark_aware_claim",
+      "required_evidence": "At least 100 owner-approved resolved outcomes or a reviewer-approved benchmark sample; real human/community/pro/external baseline mapping; leakage/contamination review; confidence intervals or bootstrap caveats.",
+      "current_status": "blocked_real_benchmark_missing",
+      "allowed_claim": "Compares against named external baselines on the documented sample.",
+      "prohibited_claim": "Generalized best-in-world prediction claims."
+    },
+    {
+      "gate": "world_class_prediction_claim",
+      "required_evidence": "Repeated benchmark superiority across decision-relevant domains, independent review, real comparable human/community/pro baselines, calibration reliability, hosted/RLS/security proof, and approved buyer-safe claim language.",
+      "current_status": "blocked_multiple_independent_proofs_missing",
+      "allowed_claim": "No world-class claim is currently allowed.",
+      "prohibited_claim": "World-class accurate predictions."
+    }
+  ],
+  "release_holds": [
+    {
+      "hold": "accuracy_input_validation_not_passed",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "Validated owner-approved forecast and baseline inputs with pre-resolution timestamps, resolution criteria, exclusion review, source URLs, and comparable baseline metadata."
+    },
+    {
+      "hold": "real_resolved_outcomes_missing",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "Owner-approved export of pre-resolution forecasts and resolved outcomes."
+    },
+    {
+      "hold": "real_baselines_missing",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "Comparable human/community/pro/market or external baselines with source URLs and timestamps."
+    },
+    {
+      "hold": "leakage_review_missing",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "Adversarial leakage/contamination review for scored forecasts and baseline mapping is not ready; docs/launch-readiness/forecast-leakage-review-validation-2026-06-06.json status is forecast_leakage_review_validation_ready_no_real_forecast_rows with 0/8 controls ready and 5 active validation holds."
+    },
+    {
+      "hold": "forecast_scoring_validation_not_passed",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "Forecast scoring evidence validation is not ready; docs/launch-readiness/forecast-scoring-evidence-validation-2026-06-06.json status is forecast_scoring_evidence_validation_sample_only_not_claim_proof with 7 active holds."
+    },
+    {
+      "hold": "hosted_calibration_and_security_missing",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "Hosted calibration smoke, RLS/evaluation-table proof, and redacted hosted evidence."
+    },
+    {
+      "hold": "claim_language_not_owner_approved",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "Owner-approved claim tier and copy review before external use."
+    }
+  ],
+  "required_owner_inputs": [
+    "Approve or edit the minimum sample size and pilot caveat threshold.",
+    "Provide an owner-approved resolved forecast export made before resolution.",
+    "Provide real comparable baseline rows or approve a documented comparable mapping.",
+    "Run accuracy input validation and clear row-level schema, timestamp, source, sample-size, placeholder, and comparability issues before scoring.",
+    "Fill and pass the leakage/contamination review register for pre-resolution timestamps, source cutoffs, retrieval cutoffs, baseline comparability, benchmark contamination, training/evaluation overlap, ambiguous outcomes, and claim-tier copy boundaries.",
+    "Run forecast scoring evidence validation after calibration ledger and benchmark comparison outputs are generated.",
+    "Identify resolution-source URLs and exclusion rules for every scored question.",
+    "Approve hosted calibration/security smoke scope before operational buyer claims.",
+    "Approve the exact market language tier before outreach or buyer decks."
+  ],
+  "next_commands_after_owner_data": [
+    "npm run audit:accuracy:validate-inputs -- --forecast-csv <owner-approved-resolved-export.csv> --baseline-csv <owner-approved-baseline.csv> --json-output docs/launch-readiness/accuracy-evidence-input-validation-approved-<date>.json --md-output docs/launch-readiness/accuracy-evidence-input-validation-approved-<date>.md --csv-output docs/launch-readiness/accuracy-evidence-input-validation-checklist-approved-<date>.csv --min-sample-size 50",
+    "npm run audit:forecast:leakage-review -- --register docs/launch-readiness/forecast-leakage-review-register-2026-06-06.csv --accuracy-input-validation docs/launch-readiness/accuracy-evidence-input-validation-2026-06-06.json --forecast-claim-governance docs/launch-readiness/forecast-claim-governance-2026-06-06.json --json-output docs/launch-readiness/forecast-leakage-review-validation-2026-06-06.json --md-output docs/launch-readiness/forecast-leakage-review-validation-2026-06-06.md --csv-output docs/launch-readiness/forecast-leakage-review-validation-checklist-2026-06-06.csv --update-evidence",
+    "npm run audit:calibration:ledger -- --input <owner-approved-resolved-export.json-or-csv> --source-mode approved_export --output docs/launch-readiness/resolved-forecast-calibration-ledger-2026-06-06.json --min-sample-size 50 --bins 5",
+    "npm run audit:forecast:benchmark -- --ledger docs/launch-readiness/resolved-forecast-calibration-ledger-2026-06-06.json --baseline <owner-approved-baseline.json> --output docs/launch-readiness/forecast-benchmark-comparison-2026-06-06.json",
+    "npm run audit:forecast:validate-scoring -- --calibration-ledger docs/launch-readiness/resolved-forecast-calibration-ledger-2026-06-06.json --benchmark-comparison docs/launch-readiness/forecast-benchmark-comparison-2026-06-06.json --accuracy-input-validation docs/launch-readiness/accuracy-evidence-input-validation-2026-06-06.json --leakage-review-validation docs/launch-readiness/forecast-leakage-review-validation-2026-06-06.json --forecast-claim-governance docs/launch-readiness/forecast-claim-governance-2026-06-06.json --json-output docs/launch-readiness/forecast-scoring-evidence-validation-2026-06-06.json --md-output docs/launch-readiness/forecast-scoring-evidence-validation-2026-06-06.md --csv-output docs/launch-readiness/forecast-scoring-evidence-validation-checklist-2026-06-06.csv --update-evidence",
+    "npm run audit:forecast:claim-governance -- --json-output docs/launch-readiness/forecast-claim-governance-2026-06-06.json --md-output docs/launch-readiness/forecast-claim-governance-2026-06-06.md --csv-output docs/launch-readiness/forecast-claim-governance-checklist-2026-06-06.csv",
+    "npm run audit:commercial:confidence -- --json-output docs/launch-readiness/commercial-confidence-gate-2026-06-06.json --md-output docs/launch-readiness/commercial-confidence-gate-2026-06-06.md"
+  ],
+  "checklist": [
+    {
+      "gate": "engineering_fixture_mechanics",
+      "required_evidence": "Sample ledger, sample benchmark comparison, forecast evaluation protocol, and accuracy intake kit are generated and JSON-valid.",
+      "current_status": "pass_mechanics_only",
+      "allowed_claim": "Forecast scoring and benchmark-comparison mechanics exist locally.",
+      "prohibited_claim": "The app is accurate, superior, calibrated in production, or world-class."
+    },
+    {
+      "gate": "scoring_output_validation",
+      "required_evidence": "Forecast scoring validator passes against approved calibration ledger, benchmark comparison, input validation, and leakage review artifacts.",
+      "current_status": "blocked_scoring_validation_not_ready",
+      "allowed_claim": "Scoring outputs are ready for owner claim review.",
+      "prohibited_claim": "Sample scoring outputs prove prediction accuracy or benchmark superiority."
+    },
+    {
+      "gate": "pilot_internal_accuracy_claim",
+      "required_evidence": "At least 50 owner-approved pre-resolution resolved outcomes or an owner-approved smaller pilot sample with explicit caveat; Brier score, reliability bins, coverage/exclusion report, leakage review, and comparison with trivial/internal baselines.",
+      "current_status": "blocked_real_data_missing",
+      "allowed_claim": "Internal pilot accuracy has been measured on the named sample.",
+      "prohibited_claim": "External superiority or world-class prediction accuracy."
+    },
+    {
+      "gate": "external_benchmark_aware_claim",
+      "required_evidence": "At least 100 owner-approved resolved outcomes or a reviewer-approved benchmark sample; real human/community/pro/external baseline mapping; leakage/contamination review; confidence intervals or bootstrap caveats.",
+      "current_status": "blocked_real_benchmark_missing",
+      "allowed_claim": "Compares against named external baselines on the documented sample.",
+      "prohibited_claim": "Generalized best-in-world prediction claims."
+    },
+    {
+      "gate": "world_class_prediction_claim",
+      "required_evidence": "Repeated benchmark superiority across decision-relevant domains, independent review, real comparable human/community/pro baselines, calibration reliability, hosted/RLS/security proof, and approved buyer-safe claim language.",
+      "current_status": "blocked_multiple_independent_proofs_missing",
+      "allowed_claim": "No world-class claim is currently allowed.",
+      "prohibited_claim": "World-class accurate predictions."
+    }
+  ]
+}

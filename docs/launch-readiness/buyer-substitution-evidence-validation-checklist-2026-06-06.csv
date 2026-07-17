@@ -1,0 +1,10 @@
+gate,status,proof_bucket,evidence
+substitution_protocol_ready,passed,repo_artifact,Kit status=buyer_substitution_proof_kit_ready_not_buyer_proof; substitution_protocol_ready=true.
+substitution_sheet_schema_present,passed,repo_artifact,Substitution sheet includes 28 required columns.
+real_substitution_calls_present,open_no_real_substitution_calls,owner_input,0 real substitution rows loaded; 30 research/template rows ignored as proof.
+row_quality_validation,open_no_real_substitution_calls,owner_input,0 row-level errors and 0 warnings in substitution sheet.
+completed_substitution_calls,open_no_real_substitution_calls,owner_input,0 valid completed substitution calls; required 10.
+completed_niche_coverage,open_no_real_substitution_calls,owner_input,0 niches with valid completed substitution calls; required 5.
+qualified_substitution_outcomes,open_no_real_substitution_calls,owner_input,0 valid qualified substitution outcomes; required 3.
+commitment_path_signal,open_no_real_substitution_calls,owner_input,"0 paid-pilot, LOI, procurement-path, or equivalent commitment rows; required 1."
+claim_boundary_preserved,passed,repo_artifact,"Rows are checked for prohibited claims such as world-class, commercial-ready, buyer-validated, replacement, parity, or enterprise-ready."

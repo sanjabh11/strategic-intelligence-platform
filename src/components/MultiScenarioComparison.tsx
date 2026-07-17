@@ -74,7 +74,7 @@ const MultiScenarioComparison: React.FC<MultiScenarioComparisonProps> = ({
       switch (sortBy) {
         case 'score': return b.strategic_score - a.strategic_score;
         case 'stability': return b.equilibrium?.stability - a.equilibrium?.stability;
-        case 'processing_time': return a.processing_stats?.processing_time_ms - b.processing_stats?.processing_time_ms;
+        case 'processing_time': return (a.processing_stats?.processing_time_ms || 0) - (b.processing_stats?.processing_time_ms || 0);
         case 'diversity': return (b.processing_stats?.stability_score || 0) - (a.processing_stats?.stability_score || 0);
         default: return 0;
       }

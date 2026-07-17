@@ -1,0 +1,257 @@
+{
+  "schema_version": "buyer-proof-gate-v1",
+  "generated_at": "2026-06-07T03:14:19.597Z",
+  "status": "buyer_proof_gate_ready_not_buyer_validation",
+  "source": {
+    "buyer_validation_targets": "docs/launch-readiness/buyer-validation-targets-2026-06-06.json",
+    "buyer_discovery_kit": "docs/launch-readiness/buyer-discovery-kit-2026-06-06.json",
+    "buyer_validation_crm": "docs/launch-readiness/buyer-validation-crm-template-2026-06-06.csv",
+    "buyer_discovery_call_sheet": "docs/launch-readiness/buyer-discovery-call-sheet-2026-06-06.csv",
+    "buyer_evidence_validation": "docs/launch-readiness/buyer-evidence-input-validation-2026-06-06.json",
+    "buyer_evidence_validation_status": "buyer_evidence_input_validation_ready_no_real_interactions",
+    "pilot_offer_pack": "docs/launch-readiness/pilot-offer-pack-2026-06-06.json",
+    "enterprise_trust_pack": "docs/launch-readiness/enterprise-trust-pack-2026-06-06.json",
+    "forecast_claim_governance": "docs/launch-readiness/forecast-claim-governance-2026-06-06.json",
+    "commercial_confidence_gate": "docs/launch-readiness/commercial-confidence-gate-2026-06-06.json",
+    "buyer_dimension_status": "buyer_execution_ready_substitution_evidence_gate_no_real_calls",
+    "buyer_dimension_score_percent": 25
+  },
+  "proof_boundary": {
+    "proves": [
+      "Buyer-validation acceptance thresholds and release holds are explicit.",
+      "Target slate, discovery scripts, and capture fields are ready for owner-approved outreach.",
+      "Research/template/not-contacted rows are excluded from buyer proof."
+    ],
+    "does_not_prove": [
+      "Completed buyer discovery.",
+      "Willingness to pay.",
+      "LOI, paid-pilot, procurement-path, or referenceable buyer evidence.",
+      "Hosted operational proof, enterprise-security proof, or prediction-accuracy proof."
+    ]
+  },
+  "summary": {
+    "named_target_count": 20,
+    "selected_target_count": 10,
+    "crm_row_count": 5,
+    "call_sheet_row_count": 10,
+    "research_or_template_row_count": 15,
+    "contacted_or_replied_row_count": 0,
+    "completed_call_count": 0,
+    "completed_call_with_required_fields_count": 0,
+    "valid_completed_call_count_after_input_validation": 0,
+    "valid_outcome_capture_count_after_input_validation": 0,
+    "qualified_followup_count": 0,
+    "valid_qualified_followup_count_after_input_validation": 0,
+    "paid_pilot_loi_or_procurement_signal_count": 0,
+    "valid_commitment_signal_count_after_input_validation": 0,
+    "rejected_or_disqualified_count": 0,
+    "security_or_procurement_blocker_count": 0,
+    "accuracy_or_benchmark_blocker_count": 0,
+    "buyer_evidence_validation_release_hold_count": 6,
+    "buyer_evidence_ready_for_proof_gate": false,
+    "release_hold_count": 7,
+    "buyer_validation_score_percent": 25,
+    "buyer_validation_verified": false
+  },
+  "current_source_alignment": [
+    {
+      "source": "Y Combinator Essential Startup Advice",
+      "url": "https://www.ycombinator.com/blog/ycs-essential-startup-advice/",
+      "alignment": "First customers require direct customer understanding, manual work, and real usage signals before scaling."
+    },
+    {
+      "source": "Gartner GenAI for Procurement, 2025",
+      "url": "https://www.gartner.com/en/newsroom/press-releases/2025-07-30-gartner-says-generative-ai-for-procurement-has-entered-the-trough-of-disillusionment",
+      "alignment": "Enterprise AI pilots must address desired business outcomes, data quality, skepticism, and adoption resistance."
+    },
+    {
+      "source": "Gartner AI-enabled machine buyers, 2025",
+      "url": "https://www.gartner.com/en/documents/7022998",
+      "alignment": "Procurement-facing AI claims need explicit security, accuracy, and ethics evidence before broader automation or buying-system trust."
+    },
+    {
+      "source": "Tradeweb ICD Portal Client Survey 2026",
+      "url": "https://www.tradeweb.com/newsroom/media-center/news-releases/geopolitical-risk-concerns-surge-for-corporate-treasurers-according-to-2026-tradeweb-icd-portal-client-survey/",
+      "alignment": "Geopolitical risk is a live buyer concern, but concern must be converted into named workflow pain and willingness-to-pay proof."
+    },
+    {
+      "source": "McKinsey CFO geopolitical uncertainty survey, 2026",
+      "url": "https://www.mckinsey.com.br/en/capabilities/strategy-and-corporate-finance/our-insights/cfos-have-been-concerned-about-geopolitical-impacts-for-months",
+      "alignment": "CFO concern supports the wedge around monitoring and scenario planning, but does not replace buyer discovery."
+    }
+  ],
+  "acceptance_gates": [
+    {
+      "gate": "target_slate_defined",
+      "required_evidence": "At least 10 source-backed targets and one buyer-safe pilot offer packet.",
+      "current_status": "pass_readiness_only",
+      "allowed_claim": "A source-backed target slate and pilot offer are ready for owner-approved discovery.",
+      "prohibited_claim": "Buyer validation or willingness to pay has been proven."
+    },
+    {
+      "gate": "capture_schema_ready",
+      "required_evidence": "CRM/call-sheet fields include role, proof shown, objection, next action, willingness-to-pay signal, pilot outcome capture, security/procurement blocker, accuracy blocker, and evidence quality.",
+      "current_status": "pass_readiness_only",
+      "allowed_claim": "Buyer evidence capture is operationally ready.",
+      "prohibited_claim": "Research rows, templates, or not-contacted rows are buyer evidence."
+    },
+    {
+      "gate": "buyer_evidence_input_validation",
+      "required_evidence": "CRM and call-sheet rows pass schema, status, signal, completed-call, evidence-quality, and claim-boundary validation.",
+      "current_status": "blocked_input_validation_not_ready",
+      "allowed_claim": "Buyer evidence input rows are ready for buyer proof-gate review.",
+      "prohibited_claim": "Unvalidated buyer rows prove market pull."
+    },
+    {
+      "gate": "completed_discovery_loop",
+      "required_evidence": "10 completed discovery calls with required fields filled.",
+      "current_status": "blocked_completed_calls_missing",
+      "allowed_claim": "The completed call loop has been run on the named sample.",
+      "prohibited_claim": "Desk research is enough to validate market pull."
+    },
+    {
+      "gate": "qualified_followup_signal",
+      "required_evidence": "3 qualified follow-ups with buyer role, proof shown, objection, and next action.",
+      "current_status": "blocked_followups_missing",
+      "allowed_claim": "Multiple prospects requested credible next steps.",
+      "prohibited_claim": "Generic interest or curiosity-only replies prove demand."
+    },
+    {
+      "gate": "paid_pilot_loi_or_procurement_signal",
+      "required_evidence": "1 paid-pilot, LOI, or procurement-path conversation.",
+      "current_status": "blocked_commitment_signal_missing",
+      "allowed_claim": "At least one commitment path exists and can be reviewed.",
+      "prohibited_claim": "Willingness to pay is proven without a commitment-path signal."
+    },
+    {
+      "gate": "objection_pattern_and_offer_decision",
+      "required_evidence": "Completed calls produce repeated objection patterns and a decision to keep, narrow, or change the top niche offer.",
+      "current_status": "blocked_real_objections_missing",
+      "allowed_claim": "Buyer feedback has informed the next positioning decision.",
+      "prohibited_claim": "A static offer packet is buyer-informed without recorded objections."
+    },
+    {
+      "gate": "public_claim_and_reference_boundary",
+      "required_evidence": "Owner-approved external-shareable references, redacted buyer evidence, and buyer-safe claim language.",
+      "current_status": "blocked_owner_approval_and_references_missing",
+      "allowed_claim": "No external buyer reference claim is currently allowed.",
+      "prohibited_claim": "Named buyer traction, referenceability, or public-sector validation."
+    }
+  ],
+  "release_holds": [
+    {
+      "hold": "buyer_evidence_input_validation_not_passed",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "Buyer CRM/call-sheet input validation passes with completed calls, qualified follow-ups, commitment-path signals, and claim-boundary checks."
+    },
+    {
+      "hold": "completed_discovery_calls_missing",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "10 completed calls with required buyer-evidence fields."
+    },
+    {
+      "hold": "pilot_outcome_capture_missing",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "10 completed calls with baseline/current-workflow value, pilot outcome or expected delta, quality signal, buyer decision event, and outcome evidence notes."
+    },
+    {
+      "hold": "qualified_followups_missing",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "3 qualified follow-ups beyond curiosity-only interest."
+    },
+    {
+      "hold": "paid_pilot_loi_or_procurement_signal_missing",
+      "severity": "P1",
+      "status": "active",
+      "evidence_needed": "1 paid-pilot, LOI, or procurement-path signal."
+    },
+    {
+      "hold": "buyer_objection_pattern_missing",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "Recorded objections and no-fit reasons from completed calls."
+    },
+    {
+      "hold": "buyer_reference_and_claim_language_not_approved",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "Owner-approved redacted buyer evidence and external-shareable claim language."
+    }
+  ],
+  "required_owner_inputs": [
+    "Approve or edit the 10-target discovery slate before any outreach.",
+    "Approve the pilot offer language and no-world-class-prediction boundary.",
+    "Run or authorize discovery calls; store real outcomes or redacted identifiers.",
+    "Mark each buyer signal as none, curiosity-only, qualified follow-up, paid-pilot discussion, LOI discussion, or procurement path.",
+    "Approve what buyer evidence can be shared externally."
+  ],
+  "next_commands_after_buyer_data": [
+    "Fill docs/launch-readiness/buyer-discovery-call-sheet-2026-06-06.csv after owner-approved calls.",
+    "Fill docs/launch-readiness/buyer-validation-crm-template-2026-06-06.csv with completed buyer outcomes or redacted identifiers.",
+    "npm run audit:buyer:validate-inputs -- --json-output docs/launch-readiness/buyer-evidence-input-validation-2026-06-06.json --md-output docs/launch-readiness/buyer-evidence-input-validation-2026-06-06.md --csv-output docs/launch-readiness/buyer-evidence-input-validation-checklist-2026-06-06.csv",
+    "npm run audit:buyer:proof-gate -- --json-output docs/launch-readiness/buyer-proof-gate-2026-06-06.json --md-output docs/launch-readiness/buyer-proof-gate-2026-06-06.md --csv-output docs/launch-readiness/buyer-proof-gate-checklist-2026-06-06.csv",
+    "npm run audit:commercial:confidence -- --json-output docs/launch-readiness/commercial-confidence-gate-2026-06-06.json --md-output docs/launch-readiness/commercial-confidence-gate-2026-06-06.md"
+  ],
+  "checklist": [
+    {
+      "gate": "target_slate_defined",
+      "required_evidence": "At least 10 source-backed targets and one buyer-safe pilot offer packet.",
+      "current_status": "pass_readiness_only",
+      "allowed_claim": "A source-backed target slate and pilot offer are ready for owner-approved discovery.",
+      "prohibited_claim": "Buyer validation or willingness to pay has been proven."
+    },
+    {
+      "gate": "capture_schema_ready",
+      "required_evidence": "CRM/call-sheet fields include role, proof shown, objection, next action, willingness-to-pay signal, pilot outcome capture, security/procurement blocker, accuracy blocker, and evidence quality.",
+      "current_status": "pass_readiness_only",
+      "allowed_claim": "Buyer evidence capture is operationally ready.",
+      "prohibited_claim": "Research rows, templates, or not-contacted rows are buyer evidence."
+    },
+    {
+      "gate": "buyer_evidence_input_validation",
+      "required_evidence": "CRM and call-sheet rows pass schema, status, signal, completed-call, evidence-quality, and claim-boundary validation.",
+      "current_status": "blocked_input_validation_not_ready",
+      "allowed_claim": "Buyer evidence input rows are ready for buyer proof-gate review.",
+      "prohibited_claim": "Unvalidated buyer rows prove market pull."
+    },
+    {
+      "gate": "completed_discovery_loop",
+      "required_evidence": "10 completed discovery calls with required fields filled.",
+      "current_status": "blocked_completed_calls_missing",
+      "allowed_claim": "The completed call loop has been run on the named sample.",
+      "prohibited_claim": "Desk research is enough to validate market pull."
+    },
+    {
+      "gate": "qualified_followup_signal",
+      "required_evidence": "3 qualified follow-ups with buyer role, proof shown, objection, and next action.",
+      "current_status": "blocked_followups_missing",
+      "allowed_claim": "Multiple prospects requested credible next steps.",
+      "prohibited_claim": "Generic interest or curiosity-only replies prove demand."
+    },
+    {
+      "gate": "paid_pilot_loi_or_procurement_signal",
+      "required_evidence": "1 paid-pilot, LOI, or procurement-path conversation.",
+      "current_status": "blocked_commitment_signal_missing",
+      "allowed_claim": "At least one commitment path exists and can be reviewed.",
+      "prohibited_claim": "Willingness to pay is proven without a commitment-path signal."
+    },
+    {
+      "gate": "objection_pattern_and_offer_decision",
+      "required_evidence": "Completed calls produce repeated objection patterns and a decision to keep, narrow, or change the top niche offer.",
+      "current_status": "blocked_real_objections_missing",
+      "allowed_claim": "Buyer feedback has informed the next positioning decision.",
+      "prohibited_claim": "A static offer packet is buyer-informed without recorded objections."
+    },
+    {
+      "gate": "public_claim_and_reference_boundary",
+      "required_evidence": "Owner-approved external-shareable references, redacted buyer evidence, and buyer-safe claim language.",
+      "current_status": "blocked_owner_approval_and_references_missing",
+      "allowed_claim": "No external buyer reference claim is currently allowed.",
+      "prohibited_claim": "Named buyer traction, referenceability, or public-sector validation."
+    }
+  ]
+}

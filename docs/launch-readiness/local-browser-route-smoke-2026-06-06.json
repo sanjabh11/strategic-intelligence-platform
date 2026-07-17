@@ -1,0 +1,203 @@
+{
+  "schema_version": "local-browser-route-smoke-v1",
+  "generated_at": "2026-07-16T18:31:57.125Z",
+  "source_mode": "local_preview_full_beta_labs_bypass_mocked_placeholder_supabase",
+  "base_url": "http://127.0.0.1:4188",
+  "proof_bucket": "local",
+  "hosted_live_proof": false,
+  "route_count": 7,
+  "rendered_count": 0,
+  "auth_gate_expected_count": 0,
+  "rendered_or_expected_auth_gate_count": 0,
+  "failed_count": 7,
+  "render_problem_count": 0,
+  "runtime_console_error_count": 0,
+  "placeholder_network_error_count": 0,
+  "all_top_niche_routes_ready": false,
+  "auth_gated_routes": [],
+  "credential_free_authenticated_routes": [
+    "/war-room"
+  ],
+  "credential_free_authenticated_route_count": 0,
+  "browser_plugin_findings": [
+    {
+      "id": "in_app_browser_multi_route_timeout",
+      "status": "observed",
+      "finding": "The in-app Browser connected and loaded /console after visibility retry, but multi-route capture timed out when creating or reusing browser-use pages.",
+      "impact": "Use repo-native Playwright for durable repeatable local route proof until the in-app Browser attach issue is cleared."
+    },
+    {
+      "id": "local_null_supabase_console_check",
+      "status": "mitigated_local_only",
+      "finding": "The local-mode null Supabase auth crash is guarded in StrategyConsole, PersonalLifeCoach, and getUserAuthHeaders.",
+      "impact": "VITE_LOCAL_ANALYZE=true can be used for focused local page-load checks, but it still does not prove hosted/live behavior."
+    }
+  ],
+  "routes": [
+    {
+      "id": "enterprise_decision_console",
+      "niche": "Enterprise/public-sector strategic decision intelligence",
+      "path": "/console",
+      "expected_signal": "Strategy Console",
+      "expected_status": "rendered",
+      "url": "http://127.0.0.1:4188/console",
+      "started_at": "2026-07-16T18:31:56.524Z",
+      "finished_at": "2026-07-16T18:31:56.543Z",
+      "status": "failed",
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4188/console\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:4188/console\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "console_errors": [],
+      "page_errors": [],
+      "request_failures": [
+        {
+          "url": "http://127.0.0.1:4188/console",
+          "error": "net::ERR_CONNECTION_REFUSED"
+        }
+      ],
+      "console_error_count": 0,
+      "runtime_console_error_count": 0,
+      "placeholder_network_error_count": 0
+    },
+    {
+      "id": "governed_forecast_registry",
+      "niche": "Governed forecasting and research workflow",
+      "path": "/forecasts",
+      "expected_signal": "Forecast Registry",
+      "expected_status": "rendered",
+      "url": "http://127.0.0.1:4188/forecasts",
+      "started_at": "2026-07-16T18:31:56.614Z",
+      "finished_at": "2026-07-16T18:31:56.620Z",
+      "status": "failed",
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4188/forecasts\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:4188/forecasts\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "console_errors": [],
+      "page_errors": [],
+      "request_failures": [
+        {
+          "url": "http://127.0.0.1:4188/forecasts",
+          "error": "net::ERR_CONNECTION_REFUSED"
+        }
+      ],
+      "console_error_count": 0,
+      "runtime_console_error_count": 0,
+      "placeholder_network_error_count": 0
+    },
+    {
+      "id": "geopolitical_risk_radar",
+      "niche": "Geopolitical risk radar/scenario monitor",
+      "path": "/insights",
+      "expected_signal": "Live Geopolitical Intelligence",
+      "expected_status": "rendered",
+      "url": "http://127.0.0.1:4188/insights",
+      "started_at": "2026-07-16T18:31:56.691Z",
+      "finished_at": "2026-07-16T18:31:56.696Z",
+      "status": "failed",
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4188/insights\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:4188/insights\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "console_errors": [],
+      "page_errors": [],
+      "request_failures": [
+        {
+          "url": "http://127.0.0.1:4188/insights",
+          "error": "net::ERR_CONNECTION_REFUSED"
+        }
+      ],
+      "console_error_count": 0,
+      "runtime_console_error_count": 0,
+      "placeholder_network_error_count": 0
+    },
+    {
+      "id": "executive_briefing_auth_gate",
+      "niche": "Executive/analyst briefing layer",
+      "path": "/war-room",
+      "expected_signal": "War Room requires sign-in",
+      "expected_status": "auth_gate_expected",
+      "url": "http://127.0.0.1:4188/war-room",
+      "started_at": "2026-07-16T18:31:56.780Z",
+      "finished_at": "2026-07-16T18:31:56.787Z",
+      "status": "failed",
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4188/war-room\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:4188/war-room\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "console_errors": [],
+      "page_errors": [],
+      "request_failures": [
+        {
+          "url": "http://127.0.0.1:4188/war-room",
+          "error": "net::ERR_CONNECTION_REFUSED"
+        }
+      ],
+      "console_error_count": 0,
+      "runtime_console_error_count": 0,
+      "placeholder_network_error_count": 0
+    },
+    {
+      "id": "executive_briefing_workflow",
+      "niche": "Executive/analyst briefing layer",
+      "path": "/war-room",
+      "expected_signal": "Corporate War Room",
+      "expected_status": "rendered",
+      "auth_fixture": "enterprise",
+      "url": "http://127.0.0.1:4188/war-room",
+      "started_at": "2026-07-16T18:31:56.877Z",
+      "finished_at": "2026-07-16T18:31:56.898Z",
+      "status": "failed",
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4188/war-room\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:4188/war-room\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "console_errors": [],
+      "page_errors": [],
+      "request_failures": [
+        {
+          "url": "http://127.0.0.1:4188/war-room",
+          "error": "net::ERR_CONNECTION_REFUSED"
+        }
+      ],
+      "console_error_count": 0,
+      "runtime_console_error_count": 0,
+      "placeholder_network_error_count": 0
+    },
+    {
+      "id": "negotiation_training",
+      "niche": "Negotiation and strategic reasoning training",
+      "path": "/labs/negotiation",
+      "expected_signal": "Negotiation Dojo",
+      "expected_status": "rendered",
+      "url": "http://127.0.0.1:4188/labs/negotiation",
+      "started_at": "2026-07-16T18:31:56.995Z",
+      "finished_at": "2026-07-16T18:31:57.001Z",
+      "status": "failed",
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4188/labs/negotiation\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:4188/labs/negotiation\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "console_errors": [],
+      "page_errors": [],
+      "request_failures": [
+        {
+          "url": "http://127.0.0.1:4188/labs/negotiation",
+          "error": "net::ERR_CONNECTION_REFUSED"
+        }
+      ],
+      "console_error_count": 0,
+      "runtime_console_error_count": 0,
+      "placeholder_network_error_count": 0
+    },
+    {
+      "id": "game_tree_training",
+      "niche": "Negotiation and strategic reasoning training",
+      "path": "/labs/game-tree",
+      "expected_signal": "Sequential Game Studio",
+      "expected_status": "rendered",
+      "url": "http://127.0.0.1:4188/labs/game-tree",
+      "started_at": "2026-07-16T18:31:57.073Z",
+      "finished_at": "2026-07-16T18:31:57.079Z",
+      "status": "failed",
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4188/labs/game-tree\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:4188/labs/game-tree\", waiting until \"domcontentloaded\"\u001b[22m\n",
+      "console_errors": [],
+      "page_errors": [],
+      "request_failures": [
+        {
+          "url": "http://127.0.0.1:4188/labs/game-tree",
+          "error": "net::ERR_CONNECTION_REFUSED"
+        }
+      ],
+      "console_error_count": 0,
+      "runtime_console_error_count": 0,
+      "placeholder_network_error_count": 0
+    }
+  ],
+  "superseded": true,
+  "superseded_by": "docs/launch-readiness/local-browser-route-smoke-2026-07-17.json",
+  "superseded_reason": "June smoke run failed with 7 ERR_CONNECTION_REFUSED failures due to wrong env var (VITE_BYPASS_LABS_AND_GOLD instead of VITE_LABS_GOLD_BYPASS). July run passed 7/7 with correct env vars."
+}

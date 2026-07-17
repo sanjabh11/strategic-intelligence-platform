@@ -54,7 +54,7 @@ const testScenarios = [
     audience: 'researcher',
     expected: {
       evidence_backed: true,
-      retrieval_sources: ['perplexity', 'uncomtrade', 'worldbank', 'gdelt']
+      retrieval_sources: ['exa', 'worldbank', 'gdelt']
     }
   },
   {
@@ -63,7 +63,7 @@ const testScenarios = [
     audience: 'researcher',
     expected: {
       evidence_backed: true,
-      perplexity_sources: '>=1',
+      exa_sources: '>=1',
       other_sources: '>=2'
     }
   }
@@ -187,26 +187,26 @@ function validateResponse(testCase, result) {
     }
   }
 
-  // Test 5: Perplexity sources
-  if (testCase.expected.perplexity_sources) {
+  // Test 5: Exa sources
+  if (testCase.expected.exa_sources) {
     const actualSources = provenance.retrieval_sources || [];
-    const perplexityCount = actualSources.filter(s => s === 'perplexity').length;
-    const expectedCount = testCase.expected.perplexity_sources;
+    const exaCount = actualSources.filter(s => s === 'exa').length;
+    const expectedCount = testCase.expected.exa_sources;
     
     if (expectedCount.includes('>=')) {
       const minCount = parseInt(expectedCount.replace('>=', ''));
-      if (perplexityCount < minCount) {
+      if (exaCount < minCount) {
         validation.passed = false;
-        validation.failures.push(`Perplexity sources too low: expected >=${minCount}, got ${perplexityCount}`);
+        validation.failures.push(`Exa sources too low: expected >=${minCount}, got ${exaCount}`);
       }
     }
-    validation.metrics.perplexity_sources = perplexityCount;
+    validation.metrics.exa_sources = exaCount;
   }
 
   // Test 6: Other sources
   if (testCase.expected.other_sources) {
     const actualSources = provenance.retrieval_sources || [];
-    const otherCount = actualSources.filter(s => s !== 'perplexity').length;
+    const otherCount = actualSources.filter(s => s !== 'exa').length;
     const expectedCount = testCase.expected.other_sources;
     
     if (expectedCount.includes('>=')) {
@@ -269,7 +269,7 @@ async function runTests() {
     'Cache bypass working': testResults.details.some(d => d.metrics?.cache_hit === false),
     'Retrieval count >= 1 for real-time queries': testResults.details.some(d => d.metrics?.retrieval_count >= 1),
     'Evidence-backed rate >= 85%': (testResults.details.filter(d => d.metrics?.evidence_backed).length / testResults.details.length) >= 0.85,
-    'Perplexity sources present': testResults.details.some(d => d.metrics?.perplexity_sources >= 1),
+    'Exa sources present': testResults.details.some(d => d.metrics?.exa_sources >= 1),
     'Multiple data sources': testResults.details.some(d => d.metrics?.retrieval_sources?.length >= 3)
   };
 

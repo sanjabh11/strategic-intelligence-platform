@@ -1,0 +1,2338 @@
+{
+  "generated_at": "2026-06-06T17:05:24.789Z",
+  "repo": "/Users/sanjayb/minimax/strategic-intelligence-platform",
+  "scope": "static migration policy audit; does not prove currently deployed Supabase policies",
+  "summary": {
+    "migration_file_count": 57,
+    "rls_enabled_table_count": 99,
+    "policy_count": 186,
+    "finding_count": 162,
+    "severity_counts": {
+      "P1": 78,
+      "P2": 81,
+      "P3": 3
+    },
+    "p1_table_count": 44
+  },
+  "rls_tables": [
+    {
+      "file": "supabase/migrations/20250102184612_0008_evidence_collective.sql",
+      "line": 113,
+      "table": "evidence_sources"
+    },
+    {
+      "file": "supabase/migrations/20250102184612_0008_evidence_collective.sql",
+      "line": 114,
+      "table": "evidence_citations"
+    },
+    {
+      "file": "supabase/migrations/20250102184612_0008_evidence_collective.sql",
+      "line": 115,
+      "table": "collaborative_sessions"
+    },
+    {
+      "file": "supabase/migrations/20250102184612_0008_evidence_collective.sql",
+      "line": 116,
+      "table": "session_participants"
+    },
+    {
+      "file": "supabase/migrations/20250102184612_0008_evidence_collective.sql",
+      "line": 117,
+      "table": "collective_insights"
+    },
+    {
+      "file": "supabase/migrations/20250102184612_0008_evidence_collective.sql",
+      "line": 118,
+      "table": "insight_reactions"
+    },
+    {
+      "file": "supabase/migrations/20250102184612_0008_evidence_collective.sql",
+      "line": 119,
+      "table": "belief_evolution_log"
+    },
+    {
+      "file": "supabase/migrations/20250102184612_0008_evidence_collective.sql",
+      "line": 120,
+      "table": "collaborative_messages"
+    },
+    {
+      "file": "supabase/migrations/20250102184613_0007_quantum_table_schema.sql",
+      "line": 46,
+      "table": "quantum_strategic_states"
+    },
+    {
+      "file": "supabase/migrations/20250102184613_0007_quantum_table_schema.sql",
+      "line": 47,
+      "table": "strategic_patterns"
+    },
+    {
+      "file": "supabase/migrations/20250102184613_0007_quantum_table_schema.sql",
+      "line": 48,
+      "table": "belief_networks"
+    },
+    {
+      "file": "supabase/migrations/20250304_0001_create_users_table.sql",
+      "line": 23,
+      "table": "analysis_runs"
+    },
+    {
+      "file": "supabase/migrations/20250304_0001_create_users_table.sql",
+      "line": 33,
+      "table": "users"
+    },
+    {
+      "file": "supabase/migrations/20250304_0001_create_users_table.sql",
+      "line": 47,
+      "table": "human_reviews"
+    },
+    {
+      "file": "supabase/migrations/20250826_0001_init.sql",
+      "line": 33,
+      "table": "analysis_runs"
+    },
+    {
+      "file": "supabase/migrations/20250826_0001_init.sql",
+      "line": 34,
+      "table": "analysis_features"
+    },
+    {
+      "file": "supabase/migrations/20250826_0001_init.sql",
+      "line": 35,
+      "table": "patterns"
+    },
+    {
+      "file": "supabase/migrations/20250902184558_0004_jobs.sql",
+      "line": 15,
+      "table": "analysis_jobs"
+    },
+    {
+      "file": "supabase/migrations/20250902184559_0005_recursive.sql",
+      "line": 20,
+      "table": "analysis_trajectories"
+    },
+    {
+      "file": "supabase/migrations/20250902184559_0005_recursive.sql",
+      "line": 21,
+      "table": "agent_beliefs"
+    },
+    {
+      "file": "supabase/migrations/20250902184600_0006_collective.sql",
+      "line": 20,
+      "table": "shared_strategies"
+    },
+    {
+      "file": "supabase/migrations/20250902184600_0006_collective.sql",
+      "line": 21,
+      "table": "community_metrics"
+    },
+    {
+      "file": "supabase/migrations/20250904_0010_extend_analysis_runs_for_audience.sql",
+      "line": 91,
+      "table": "human_reviews"
+    },
+    {
+      "file": "supabase/migrations/20250904_0010_extend_analysis_runs_for_audience.sql",
+      "line": 92,
+      "table": "asset_storage"
+    },
+    {
+      "file": "supabase/migrations/20250904_0010_extend_analysis_runs_for_audience.sql",
+      "line": 93,
+      "table": "users"
+    },
+    {
+      "file": "supabase/migrations/20250904_0010_extend_analysis_runs_for_audience.sql",
+      "line": 94,
+      "table": "game_definitions"
+    },
+    {
+      "file": "supabase/migrations/20250904_0010_extend_analysis_runs_for_audience.sql",
+      "line": 124,
+      "table": "schema_failures"
+    },
+    {
+      "file": "supabase/migrations/20250904_0010_extend_analysis_runs_for_audience.sql",
+      "line": 132,
+      "table": "retrievals"
+    },
+    {
+      "file": "supabase/migrations/20250904_0010_extend_analysis_runs_for_audience.sql",
+      "line": 140,
+      "table": "user_overrides"
+    },
+    {
+      "file": "supabase/migrations/20250904_0010_extend_analysis_runs_for_audience.sql",
+      "line": 141,
+      "table": "simulation_runs"
+    },
+    {
+      "file": "supabase/migrations/20250906110000_add_retrieval_cache_ph4.sql",
+      "line": 27,
+      "table": "retrieval_cache"
+    },
+    {
+      "file": "supabase/migrations/20250906110000_add_retrieval_cache_ph4.sql",
+      "line": 28,
+      "table": "circuit_breaker"
+    },
+    {
+      "file": "supabase/migrations/20250906140000_add_rate_limits.sql",
+      "line": 20,
+      "table": "rate_limit_tracking"
+    },
+    {
+      "file": "supabase/migrations/20250907110000_observability_tables.sql",
+      "line": 13,
+      "table": "third_party_noise"
+    },
+    {
+      "file": "supabase/migrations/20250907110000_observability_tables.sql",
+      "line": 32,
+      "table": "monitoring_alerts"
+    },
+    {
+      "file": "supabase/migrations/20250907110000_observability_tables.sql",
+      "line": 52,
+      "table": "rpc_errors"
+    },
+    {
+      "file": "supabase/migrations/20250918100000_information_value_analysis.sql",
+      "line": 15,
+      "table": "information_value_analysis"
+    },
+    {
+      "file": "supabase/migrations/20250918110000_advanced_services_tables.sql",
+      "line": 91,
+      "table": "strategy_success_analysis"
+    },
+    {
+      "file": "supabase/migrations/20250918110000_advanced_services_tables.sql",
+      "line": 92,
+      "table": "strategy_outcomes"
+    },
+    {
+      "file": "supabase/migrations/20250918110000_advanced_services_tables.sql",
+      "line": 93,
+      "table": "scale_invariant_adaptations"
+    },
+    {
+      "file": "supabase/migrations/20250918110000_advanced_services_tables.sql",
+      "line": 94,
+      "table": "temporal_optimization_results"
+    },
+    {
+      "file": "supabase/migrations/20250918110000_advanced_services_tables.sql",
+      "line": 95,
+      "table": "outcome_forecasting_results"
+    },
+    {
+      "file": "supabase/migrations/20250918110000_advanced_services_tables.sql",
+      "line": 96,
+      "table": "dynamic_recalibration_results"
+    },
+    {
+      "file": "supabase/migrations/20250918110000_advanced_services_tables.sql",
+      "line": 97,
+      "table": "cross_domain_transfer_results"
+    },
+    {
+      "file": "supabase/migrations/20250918110000_advanced_services_tables.sql",
+      "line": 98,
+      "table": "third_party_noise"
+    },
+    {
+      "file": "supabase/migrations/20250918110000_advanced_services_tables.sql",
+      "line": 99,
+      "table": "monitoring_alerts"
+    },
+    {
+      "file": "supabase/migrations/20251005120000_competition_innovations.sql",
+      "line": 369,
+      "table": "life_decisions"
+    },
+    {
+      "file": "supabase/migrations/20251005120000_competition_innovations.sql",
+      "line": 370,
+      "table": "disputes"
+    },
+    {
+      "file": "supabase/migrations/20251005120000_competition_innovations.sql",
+      "line": 371,
+      "table": "matching_participants"
+    },
+    {
+      "file": "supabase/migrations/20251005120000_competition_innovations.sql",
+      "line": 372,
+      "table": "matches"
+    },
+    {
+      "file": "supabase/migrations/20251005120000_competition_innovations.sql",
+      "line": 373,
+      "table": "cooperation_campaigns"
+    },
+    {
+      "file": "supabase/migrations/20251005120000_competition_innovations.sql",
+      "line": 374,
+      "table": "campaign_participants"
+    },
+    {
+      "file": "supabase/migrations/20251005120000_competition_innovations.sql",
+      "line": 375,
+      "table": "strategic_dna_profiles"
+    },
+    {
+      "file": "supabase/migrations/20251005120000_competition_innovations.sql",
+      "line": 376,
+      "table": "debiasing_interventions"
+    },
+    {
+      "file": "supabase/migrations/20251006100000_realtime_features.sql",
+      "line": 261,
+      "table": "real_time_events"
+    },
+    {
+      "file": "supabase/migrations/20251006100000_realtime_features.sql",
+      "line": 262,
+      "table": "strategy_outcomes"
+    },
+    {
+      "file": "supabase/migrations/20251006100000_realtime_features.sql",
+      "line": 263,
+      "table": "multiplayer_sessions"
+    },
+    {
+      "file": "supabase/migrations/20251006100000_realtime_features.sql",
+      "line": 264,
+      "table": "multiplayer_participants"
+    },
+    {
+      "file": "supabase/migrations/20251006100000_realtime_features.sql",
+      "line": 265,
+      "table": "temporal_forecasts"
+    },
+    {
+      "file": "supabase/migrations/20251006100000_realtime_features.sql",
+      "line": 266,
+      "table": "signaling_recommendations"
+    },
+    {
+      "file": "supabase/migrations/20251006100000_realtime_features.sql",
+      "line": 267,
+      "table": "domain_specific_patterns"
+    },
+    {
+      "file": "supabase/migrations/20251212100000_subscription_tiers.sql",
+      "line": 207,
+      "table": "user_subscriptions"
+    },
+    {
+      "file": "supabase/migrations/20251212100000_subscription_tiers.sql",
+      "line": 208,
+      "table": "tier_limits"
+    },
+    {
+      "file": "supabase/migrations/20251212100000_subscription_tiers.sql",
+      "line": 209,
+      "table": "usage_tracking"
+    },
+    {
+      "file": "supabase/migrations/20251212110000_lms_classrooms.sql",
+      "line": 228,
+      "table": "lti_platforms"
+    },
+    {
+      "file": "supabase/migrations/20251212110000_lms_classrooms.sql",
+      "line": 229,
+      "table": "lti_sessions"
+    },
+    {
+      "file": "supabase/migrations/20251212110000_lms_classrooms.sql",
+      "line": 230,
+      "table": "classrooms"
+    },
+    {
+      "file": "supabase/migrations/20251212110000_lms_classrooms.sql",
+      "line": 231,
+      "table": "classroom_members"
+    },
+    {
+      "file": "supabase/migrations/20251212110000_lms_classrooms.sql",
+      "line": 232,
+      "table": "classroom_assignments"
+    },
+    {
+      "file": "supabase/migrations/20251212110000_lms_classrooms.sql",
+      "line": 233,
+      "table": "assignment_submissions"
+    },
+    {
+      "file": "supabase/migrations/20251212120000_enterprise_sso.sql",
+      "line": 289,
+      "table": "organizations"
+    },
+    {
+      "file": "supabase/migrations/20251212120000_enterprise_sso.sql",
+      "line": 290,
+      "table": "sso_providers"
+    },
+    {
+      "file": "supabase/migrations/20251212120000_enterprise_sso.sql",
+      "line": 291,
+      "table": "organization_members"
+    },
+    {
+      "file": "supabase/migrations/20251212120000_enterprise_sso.sql",
+      "line": 292,
+      "table": "forecasts"
+    },
+    {
+      "file": "supabase/migrations/20251212120000_enterprise_sso.sql",
+      "line": 293,
+      "table": "forecast_predictions"
+    },
+    {
+      "file": "supabase/migrations/20251212120000_enterprise_sso.sql",
+      "line": 294,
+      "table": "forecast_scores"
+    },
+    {
+      "file": "supabase/migrations/20251213000000_eliminate_mock_data.sql",
+      "line": 27,
+      "table": "strategy_outcomes"
+    },
+    {
+      "file": "supabase/migrations/20251213000000_eliminate_mock_data.sql",
+      "line": 134,
+      "table": "marketplace_scenarios"
+    },
+    {
+      "file": "supabase/migrations/20251213000000_eliminate_mock_data.sql",
+      "line": 241,
+      "table": "user_bias_profiles"
+    },
+    {
+      "file": "supabase/migrations/20251213000000_eliminate_mock_data.sql",
+      "line": 298,
+      "table": "warroom_sessions"
+    },
+    {
+      "file": "supabase/migrations/20251213010000_monetization_features.sql",
+      "line": 40,
+      "table": "monte_carlo_simulations"
+    },
+    {
+      "file": "supabase/migrations/20251213010000_monetization_features.sql",
+      "line": 41,
+      "table": "trading_signals"
+    },
+    {
+      "file": "supabase/migrations/20251213020000_whop_integration.sql",
+      "line": 29,
+      "table": "whop_users"
+    },
+    {
+      "file": "supabase/migrations/20251213020000_whop_integration.sql",
+      "line": 145,
+      "table": "feature_usage"
+    },
+    {
+      "file": "supabase/migrations/20260429000100_whitebox_release_governance.sql",
+      "line": 129,
+      "table": "whitebox_release_state"
+    },
+    {
+      "file": "supabase/migrations/20260429000100_whitebox_release_governance.sql",
+      "line": 130,
+      "table": "whitebox_release_evaluations"
+    },
+    {
+      "file": "supabase/migrations/20260429000100_whitebox_release_governance.sql",
+      "line": 131,
+      "table": "whitebox_release_decisions"
+    },
+    {
+      "file": "supabase/migrations/20260430000100_warroom_memory.sql",
+      "line": 79,
+      "table": "warroom_decision_logs"
+    },
+    {
+      "file": "supabase/migrations/20260430000100_warroom_memory.sql",
+      "line": 80,
+      "table": "warroom_assumptions"
+    },
+    {
+      "file": "supabase/migrations/20260430000100_warroom_memory.sql",
+      "line": 81,
+      "table": "warroom_scenario_versions"
+    },
+    {
+      "file": "supabase/migrations/20260430000100_warroom_memory.sql",
+      "line": 82,
+      "table": "warroom_comments"
+    },
+    {
+      "file": "supabase/migrations/20260430000200_classroom_workflow_policies.sql",
+      "line": 3,
+      "table": "classroom_activity"
+    },
+    {
+      "file": "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql",
+      "line": 187,
+      "table": "calibration_models"
+    },
+    {
+      "file": "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql",
+      "line": 188,
+      "table": "ontology_entities"
+    },
+    {
+      "file": "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql",
+      "line": 189,
+      "table": "ontology_aliases"
+    },
+    {
+      "file": "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql",
+      "line": 190,
+      "table": "retrievals"
+    },
+    {
+      "file": "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql",
+      "line": 191,
+      "table": "retrieval_entity_links"
+    },
+    {
+      "file": "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql",
+      "line": 192,
+      "table": "drift_signals"
+    },
+    {
+      "file": "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql",
+      "line": 193,
+      "table": "whitebox_experiment_state"
+    },
+    {
+      "file": "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql",
+      "line": 194,
+      "table": "whitebox_experiment_evaluations"
+    },
+    {
+      "file": "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql",
+      "line": 195,
+      "table": "shadow_model_registry"
+    },
+    {
+      "file": "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql",
+      "line": 196,
+      "table": "shadow_predictions"
+    },
+    {
+      "file": "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql",
+      "line": 197,
+      "table": "entity_graph_nodes"
+    },
+    {
+      "file": "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql",
+      "line": 198,
+      "table": "entity_graph_edges"
+    },
+    {
+      "file": "supabase/migrations/20260501000110_ml_internal_job_schedules.sql",
+      "line": 12,
+      "table": "internal_runtime_config"
+    },
+    {
+      "file": "supabase/migrations/20260501000120_ml_orchestration_remediation.sql",
+      "line": 73,
+      "table": "ml_job_queue"
+    },
+    {
+      "file": "supabase/migrations/20260501000120_ml_orchestration_remediation.sql",
+      "line": 174,
+      "table": "drift_refresh_cooldowns"
+    }
+  ],
+  "findings": [
+    {
+      "severity": "P1",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "collaborative_sessions",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_anon_sessions ON collaborative_sessions FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250102184612_0008_evidence_collective.sql",
+      "line": 135,
+      "policy": "read_anon_sessions"
+    },
+    {
+      "severity": "P1",
+      "issue": "sensitive_table_read_without_identity_predicate",
+      "reason": "Sensitive table read policy does not show a clear identity, role, status, or ownership predicate.",
+      "table": "collaborative_sessions",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_anon_sessions ON collaborative_sessions FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250102184612_0008_evidence_collective.sql",
+      "line": 135,
+      "policy": "read_anon_sessions"
+    },
+    {
+      "severity": "P1",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "session_participants",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_anon_participants ON session_participants FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250102184612_0008_evidence_collective.sql",
+      "line": 138,
+      "policy": "read_anon_participants"
+    },
+    {
+      "severity": "P1",
+      "issue": "sensitive_table_read_without_identity_predicate",
+      "reason": "Sensitive table read policy does not show a clear identity, role, status, or ownership predicate.",
+      "table": "session_participants",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_anon_participants ON session_participants FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250102184612_0008_evidence_collective.sql",
+      "line": 138,
+      "policy": "read_anon_participants"
+    },
+    {
+      "severity": "P1",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "collaborative_messages",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_anon_messages ON collaborative_messages FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250102184612_0008_evidence_collective.sql",
+      "line": 147,
+      "policy": "read_anon_messages"
+    },
+    {
+      "severity": "P1",
+      "issue": "sensitive_table_read_without_identity_predicate",
+      "reason": "Sensitive table read policy does not show a clear identity, role, status, or ownership predicate.",
+      "table": "collaborative_messages",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_anon_messages ON collaborative_messages FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250102184612_0008_evidence_collective.sql",
+      "line": 147,
+      "policy": "read_anon_messages"
+    },
+    {
+      "severity": "P1",
+      "issue": "anonymous_write_check",
+      "reason": "Anonymous writes are accepted for this table.",
+      "table": "evidence_sources",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY insert_anon_evidence ON evidence_sources FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250102184612_0008_evidence_collective.sql",
+      "line": 154,
+      "policy": "insert_anon_evidence"
+    },
+    {
+      "severity": "P1",
+      "issue": "anonymous_write_check",
+      "reason": "Anonymous writes are accepted for this table.",
+      "table": "evidence_citations",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY insert_anon_citations ON evidence_citations FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250102184612_0008_evidence_collective.sql",
+      "line": 155,
+      "policy": "insert_anon_citations"
+    },
+    {
+      "severity": "P1",
+      "issue": "anonymous_write_check",
+      "reason": "Anonymous writes are accepted for this table.",
+      "table": "collaborative_sessions",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY insert_anon_sessions ON collaborative_sessions FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250102184612_0008_evidence_collective.sql",
+      "line": 156,
+      "policy": "insert_anon_sessions"
+    },
+    {
+      "severity": "P1",
+      "issue": "anonymous_write_check",
+      "reason": "Anonymous writes are accepted for this table.",
+      "table": "session_participants",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY insert_anon_participants ON session_participants FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250102184612_0008_evidence_collective.sql",
+      "line": 157,
+      "policy": "insert_anon_participants"
+    },
+    {
+      "severity": "P1",
+      "issue": "anonymous_write_check",
+      "reason": "Anonymous writes are accepted for this table.",
+      "table": "collective_insights",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY insert_anon_insights ON collective_insights FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250102184612_0008_evidence_collective.sql",
+      "line": 158,
+      "policy": "insert_anon_insights"
+    },
+    {
+      "severity": "P1",
+      "issue": "anonymous_write_check",
+      "reason": "Anonymous writes are accepted for this table.",
+      "table": "insight_reactions",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY insert_anon_reactions ON insight_reactions FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250102184612_0008_evidence_collective.sql",
+      "line": 159,
+      "policy": "insert_anon_reactions"
+    },
+    {
+      "severity": "P1",
+      "issue": "anonymous_write_check",
+      "reason": "Anonymous writes are accepted for this table.",
+      "table": "collaborative_messages",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY insert_anon_messages ON collaborative_messages FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250102184612_0008_evidence_collective.sql",
+      "line": 160,
+      "policy": "insert_anon_messages"
+    },
+    {
+      "severity": "P1",
+      "issue": "anonymous_write_check",
+      "reason": "Anonymous writes are accepted for this table.",
+      "table": "quantum_strategic_states",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY insert_anon_qss ON public.quantum_strategic_states FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250102184613_0007_quantum_table_schema.sql",
+      "line": 62,
+      "policy": "insert_anon_qss"
+    },
+    {
+      "severity": "P1",
+      "issue": "anonymous_write_check",
+      "reason": "Anonymous writes are accepted for this table.",
+      "table": "strategic_patterns",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY insert_anon_patterns ON public.strategic_patterns FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250102184613_0007_quantum_table_schema.sql",
+      "line": 74,
+      "policy": "insert_anon_patterns"
+    },
+    {
+      "severity": "P1",
+      "issue": "anonymous_write_check",
+      "reason": "Anonymous writes are accepted for this table.",
+      "table": "belief_networks",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY insert_anon_beliefs ON public.belief_networks FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250102184613_0007_quantum_table_schema.sql",
+      "line": 86,
+      "policy": "insert_anon_beliefs"
+    },
+    {
+      "severity": "P1",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "analysis_runs",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_anon_runs ON public.analysis_runs FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250304_0001_create_users_table.sql",
+      "line": 54,
+      "policy": "read_anon_runs"
+    },
+    {
+      "severity": "P1",
+      "issue": "sensitive_table_read_without_identity_predicate",
+      "reason": "Sensitive table read policy does not show a clear identity, role, status, or ownership predicate.",
+      "table": "analysis_runs",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_anon_runs ON public.analysis_runs FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250304_0001_create_users_table.sql",
+      "line": 54,
+      "policy": "read_anon_runs"
+    },
+    {
+      "severity": "P1",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "users",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_users_public ON public.users FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250304_0001_create_users_table.sql",
+      "line": 58,
+      "policy": "read_users_public"
+    },
+    {
+      "severity": "P1",
+      "issue": "sensitive_table_read_without_identity_predicate",
+      "reason": "Sensitive table read policy does not show a clear identity, role, status, or ownership predicate.",
+      "table": "users",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_users_public ON public.users FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250304_0001_create_users_table.sql",
+      "line": 58,
+      "policy": "read_users_public"
+    },
+    {
+      "severity": "P1",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "human_reviews",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_human_reviews ON public.human_reviews FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250304_0001_create_users_table.sql",
+      "line": 62,
+      "policy": "read_human_reviews"
+    },
+    {
+      "severity": "P1",
+      "issue": "sensitive_table_read_without_identity_predicate",
+      "reason": "Sensitive table read policy does not show a clear identity, role, status, or ownership predicate.",
+      "table": "human_reviews",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_human_reviews ON public.human_reviews FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250304_0001_create_users_table.sql",
+      "line": 62,
+      "policy": "read_human_reviews"
+    },
+    {
+      "severity": "P1",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "analysis_runs",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_anon_runs ON analysis_runs FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250826_0001_init.sql",
+      "line": 43,
+      "policy": "read_anon_runs"
+    },
+    {
+      "severity": "P1",
+      "issue": "sensitive_table_read_without_identity_predicate",
+      "reason": "Sensitive table read policy does not show a clear identity, role, status, or ownership predicate.",
+      "table": "analysis_runs",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_anon_runs ON analysis_runs FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250826_0001_init.sql",
+      "line": 43,
+      "policy": "read_anon_runs"
+    },
+    {
+      "severity": "P1",
+      "issue": "policy_grants_to_public_role",
+      "reason": "Policy explicitly targets the public role.",
+      "table": "analysis_runs",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY insert_service_role_runs ON public.analysis_runs FOR INSERT TO public WITH CHECK (auth.role() = 'service_role');",
+      "file": "supabase/migrations/20250902184556_0002_write_policies.sql",
+      "line": 9,
+      "policy": "insert_service_role_runs"
+    },
+    {
+      "severity": "P1",
+      "issue": "policy_grants_to_public_role",
+      "reason": "Policy explicitly targets the public role.",
+      "table": "analysis_features",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY insert_service_role_features ON public.analysis_features FOR INSERT TO public WITH CHECK (auth.role() = 'service_role');",
+      "file": "supabase/migrations/20250902184556_0002_write_policies.sql",
+      "line": 17,
+      "policy": "insert_service_role_features"
+    },
+    {
+      "severity": "P1",
+      "issue": "anonymous_write_check",
+      "reason": "Anonymous writes are accepted for this table.",
+      "table": "analysis_runs",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY mvp_insert_anon_runs ON public.analysis_runs FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250902184557_0003_mvp_anon_insert.sql",
+      "line": 10,
+      "policy": "mvp_insert_anon_runs"
+    },
+    {
+      "severity": "P1",
+      "issue": "anonymous_write_check",
+      "reason": "Anonymous writes are accepted for this table.",
+      "table": "analysis_features",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY mvp_insert_anon_features ON public.analysis_features FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250902184557_0003_mvp_anon_insert.sql",
+      "line": 18,
+      "policy": "mvp_insert_anon_features"
+    },
+    {
+      "severity": "P1",
+      "issue": "anonymous_write_check",
+      "reason": "Anonymous writes are accepted for this table.",
+      "table": "analysis_jobs",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY mvp_insert_anon_jobs ON public.analysis_jobs FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250902184558_0004_jobs.sql",
+      "line": 28,
+      "policy": "mvp_insert_anon_jobs"
+    },
+    {
+      "severity": "P1",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "analysis_jobs",
+      "operation": "UPDATE",
+      "statement": "CREATE POLICY mvp_update_anon_jobs ON public.analysis_jobs FOR UPDATE USING (true) WITH CHECK (true);",
+      "file": "supabase/migrations/20250902184558_0004_jobs.sql",
+      "line": 36,
+      "policy": "mvp_update_anon_jobs"
+    },
+    {
+      "severity": "P1",
+      "issue": "anonymous_write_check",
+      "reason": "Anonymous writes are accepted for this table.",
+      "table": "analysis_trajectories",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY mvp_insert_anon_trajectories ON public.analysis_trajectories FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250902184559_0005_recursive.sql",
+      "line": 38,
+      "policy": "mvp_insert_anon_trajectories"
+    },
+    {
+      "severity": "P1",
+      "issue": "anonymous_write_check",
+      "reason": "Anonymous writes are accepted for this table.",
+      "table": "agent_beliefs",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY mvp_insert_anon_beliefs ON public.agent_beliefs FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250902184559_0005_recursive.sql",
+      "line": 43,
+      "policy": "mvp_insert_anon_beliefs"
+    },
+    {
+      "severity": "P1",
+      "issue": "anonymous_write_check",
+      "reason": "Anonymous writes are accepted for this table.",
+      "table": "shared_strategies",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY mvp_insert_anon_shared ON public.shared_strategies FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250902184600_0006_collective.sql",
+      "line": 38,
+      "policy": "mvp_insert_anon_shared"
+    },
+    {
+      "severity": "P1",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "human_reviews",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_human_reviews ON public.human_reviews FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250904_0010_extend_analysis_runs_for_audience.sql",
+      "line": 99,
+      "policy": "read_human_reviews"
+    },
+    {
+      "severity": "P1",
+      "issue": "sensitive_table_read_without_identity_predicate",
+      "reason": "Sensitive table read policy does not show a clear identity, role, status, or ownership predicate.",
+      "table": "human_reviews",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_human_reviews ON public.human_reviews FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250904_0010_extend_analysis_runs_for_audience.sql",
+      "line": 99,
+      "policy": "read_human_reviews"
+    },
+    {
+      "severity": "P1",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "asset_storage",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_asset_storage ON public.asset_storage FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250904_0010_extend_analysis_runs_for_audience.sql",
+      "line": 102,
+      "policy": "read_asset_storage"
+    },
+    {
+      "severity": "P1",
+      "issue": "sensitive_table_read_without_identity_predicate",
+      "reason": "Sensitive table read policy does not show a clear identity, role, status, or ownership predicate.",
+      "table": "asset_storage",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_asset_storage ON public.asset_storage FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250904_0010_extend_analysis_runs_for_audience.sql",
+      "line": 102,
+      "policy": "read_asset_storage"
+    },
+    {
+      "severity": "P1",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "users",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_users ON public.users FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250904_0010_extend_analysis_runs_for_audience.sql",
+      "line": 105,
+      "policy": "read_users"
+    },
+    {
+      "severity": "P1",
+      "issue": "sensitive_table_read_without_identity_predicate",
+      "reason": "Sensitive table read policy does not show a clear identity, role, status, or ownership predicate.",
+      "table": "users",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_users ON public.users FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250904_0010_extend_analysis_runs_for_audience.sql",
+      "line": 105,
+      "policy": "read_users"
+    },
+    {
+      "severity": "P1",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "schema_failures",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_schema_failures ON public.schema_failures FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250904_0010_extend_analysis_runs_for_audience.sql",
+      "line": 128,
+      "policy": "read_schema_failures"
+    },
+    {
+      "severity": "P1",
+      "issue": "sensitive_table_read_without_identity_predicate",
+      "reason": "Sensitive table read policy does not show a clear identity, role, status, or ownership predicate.",
+      "table": "schema_failures",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_schema_failures ON public.schema_failures FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250904_0010_extend_analysis_runs_for_audience.sql",
+      "line": 128,
+      "policy": "read_schema_failures"
+    },
+    {
+      "severity": "P1",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "retrievals",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_retrievals ON public.retrievals FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250904_0010_extend_analysis_runs_for_audience.sql",
+      "line": 136,
+      "policy": "read_retrievals"
+    },
+    {
+      "severity": "P1",
+      "issue": "sensitive_table_read_without_identity_predicate",
+      "reason": "Sensitive table read policy does not show a clear identity, role, status, or ownership predicate.",
+      "table": "retrievals",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_retrievals ON public.retrievals FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250904_0010_extend_analysis_runs_for_audience.sql",
+      "line": 136,
+      "policy": "read_retrievals"
+    },
+    {
+      "severity": "P1",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "retrieval_cache",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_retrieval_cache ON public.retrieval_cache FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250906110000_add_retrieval_cache_ph4.sql",
+      "line": 30,
+      "policy": "read_retrieval_cache"
+    },
+    {
+      "severity": "P1",
+      "issue": "sensitive_table_read_without_identity_predicate",
+      "reason": "Sensitive table read policy does not show a clear identity, role, status, or ownership predicate.",
+      "table": "retrieval_cache",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_retrieval_cache ON public.retrieval_cache FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250906110000_add_retrieval_cache_ph4.sql",
+      "line": 30,
+      "policy": "read_retrieval_cache"
+    },
+    {
+      "severity": "P1",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "monitoring_alerts",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_monitoring_alerts ON public.monitoring_alerts FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250907110000_observability_tables.sql",
+      "line": 36,
+      "policy": "read_monitoring_alerts"
+    },
+    {
+      "severity": "P1",
+      "issue": "sensitive_table_read_without_identity_predicate",
+      "reason": "Sensitive table read policy does not show a clear identity, role, status, or ownership predicate.",
+      "table": "monitoring_alerts",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_monitoring_alerts ON public.monitoring_alerts FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250907110000_observability_tables.sql",
+      "line": 36,
+      "policy": "read_monitoring_alerts"
+    },
+    {
+      "severity": "P1",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "rpc_errors",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_rpc_errors ON public.rpc_errors FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250907110000_observability_tables.sql",
+      "line": 56,
+      "policy": "read_rpc_errors"
+    },
+    {
+      "severity": "P1",
+      "issue": "sensitive_table_read_without_identity_predicate",
+      "reason": "Sensitive table read policy does not show a clear identity, role, status, or ownership predicate.",
+      "table": "rpc_errors",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_rpc_errors ON public.rpc_errors FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250907110000_observability_tables.sql",
+      "line": 56,
+      "policy": "read_rpc_errors"
+    },
+    {
+      "severity": "P1",
+      "issue": "anonymous_write_check",
+      "reason": "Anonymous writes are accepted for this table.",
+      "table": "information_value_analysis",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY insert_anon_info_value ON information_value_analysis FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250918100000_information_value_analysis.sql",
+      "line": 19,
+      "policy": "insert_anon_info_value"
+    },
+    {
+      "severity": "P1",
+      "issue": "anonymous_write_check",
+      "reason": "Anonymous writes are accepted for this table.",
+      "table": "strategy_success_analysis",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY insert_anon_success_analysis ON strategy_success_analysis FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250918110000_advanced_services_tables.sql",
+      "line": 109,
+      "policy": "insert_anon_success_analysis"
+    },
+    {
+      "severity": "P1",
+      "issue": "anonymous_write_check",
+      "reason": "Anonymous writes are accepted for this table.",
+      "table": "strategy_outcomes",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY insert_anon_outcomes ON strategy_outcomes FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250918110000_advanced_services_tables.sql",
+      "line": 117,
+      "policy": "insert_anon_outcomes"
+    },
+    {
+      "severity": "P1",
+      "issue": "anonymous_write_check",
+      "reason": "Anonymous writes are accepted for this table.",
+      "table": "scale_invariant_adaptations",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY insert_anon_adaptations ON scale_invariant_adaptations FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250918110000_advanced_services_tables.sql",
+      "line": 125,
+      "policy": "insert_anon_adaptations"
+    },
+    {
+      "severity": "P1",
+      "issue": "anonymous_write_check",
+      "reason": "Anonymous writes are accepted for this table.",
+      "table": "temporal_optimization_results",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY insert_anon_temporal ON temporal_optimization_results FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250918110000_advanced_services_tables.sql",
+      "line": 133,
+      "policy": "insert_anon_temporal"
+    },
+    {
+      "severity": "P1",
+      "issue": "anonymous_write_check",
+      "reason": "Anonymous writes are accepted for this table.",
+      "table": "outcome_forecasting_results",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY insert_anon_forecasting ON outcome_forecasting_results FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250918110000_advanced_services_tables.sql",
+      "line": 141,
+      "policy": "insert_anon_forecasting"
+    },
+    {
+      "severity": "P1",
+      "issue": "anonymous_write_check",
+      "reason": "Anonymous writes are accepted for this table.",
+      "table": "dynamic_recalibration_results",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY insert_anon_recalibration ON dynamic_recalibration_results FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250918110000_advanced_services_tables.sql",
+      "line": 149,
+      "policy": "insert_anon_recalibration"
+    },
+    {
+      "severity": "P1",
+      "issue": "anonymous_write_check",
+      "reason": "Anonymous writes are accepted for this table.",
+      "table": "cross_domain_transfer_results",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY insert_anon_transfer ON cross_domain_transfer_results FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250918110000_advanced_services_tables.sql",
+      "line": 157,
+      "policy": "insert_anon_transfer"
+    },
+    {
+      "severity": "P1",
+      "issue": "anonymous_write_check",
+      "reason": "Anonymous writes are accepted for this table.",
+      "table": "third_party_noise",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY insert_anon_noise ON third_party_noise FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250918110000_advanced_services_tables.sql",
+      "line": 165,
+      "policy": "insert_anon_noise"
+    },
+    {
+      "severity": "P1",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "monitoring_alerts",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_anon_alerts ON monitoring_alerts FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250918110000_advanced_services_tables.sql",
+      "line": 170,
+      "policy": "read_anon_alerts"
+    },
+    {
+      "severity": "P1",
+      "issue": "sensitive_table_read_without_identity_predicate",
+      "reason": "Sensitive table read policy does not show a clear identity, role, status, or ownership predicate.",
+      "table": "monitoring_alerts",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_anon_alerts ON monitoring_alerts FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250918110000_advanced_services_tables.sql",
+      "line": 170,
+      "policy": "read_anon_alerts"
+    },
+    {
+      "severity": "P1",
+      "issue": "anonymous_write_check",
+      "reason": "Anonymous writes are accepted for this table.",
+      "table": "monitoring_alerts",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY insert_anon_alerts ON monitoring_alerts FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250918110000_advanced_services_tables.sql",
+      "line": 173,
+      "policy": "insert_anon_alerts"
+    },
+    {
+      "severity": "P1",
+      "issue": "sensitive_table_read_without_identity_predicate",
+      "reason": "Sensitive table read policy does not show a clear identity, role, status, or ownership predicate.",
+      "table": "warroom_decision_logs",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY \"Authenticated users can read warroom decision logs\" ON public.warroom_decision_logs FOR SELECT USING (auth.role() = 'authenticated');",
+      "file": "supabase/migrations/20260430000100_warroom_memory.sql",
+      "line": 84,
+      "policy": "Authenticated users can read warroom decision logs"
+    },
+    {
+      "severity": "P1",
+      "issue": "sensitive_table_read_without_identity_predicate",
+      "reason": "Sensitive table read policy does not show a clear identity, role, status, or ownership predicate.",
+      "table": "warroom_assumptions",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY \"Authenticated users can read warroom assumptions\" ON public.warroom_assumptions FOR SELECT USING (auth.role() = 'authenticated');",
+      "file": "supabase/migrations/20260430000100_warroom_memory.sql",
+      "line": 101,
+      "policy": "Authenticated users can read warroom assumptions"
+    },
+    {
+      "severity": "P1",
+      "issue": "sensitive_table_read_without_identity_predicate",
+      "reason": "Sensitive table read policy does not show a clear identity, role, status, or ownership predicate.",
+      "table": "warroom_scenario_versions",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY \"Authenticated users can read warroom scenario versions\" ON public.warroom_scenario_versions FOR SELECT USING (auth.role() = 'authenticated');",
+      "file": "supabase/migrations/20260430000100_warroom_memory.sql",
+      "line": 118,
+      "policy": "Authenticated users can read warroom scenario versions"
+    },
+    {
+      "severity": "P1",
+      "issue": "sensitive_table_read_without_identity_predicate",
+      "reason": "Sensitive table read policy does not show a clear identity, role, status, or ownership predicate.",
+      "table": "warroom_comments",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY \"Authenticated users can read warroom comments\" ON public.warroom_comments FOR SELECT USING (auth.role() = 'authenticated');",
+      "file": "supabase/migrations/20260430000100_warroom_memory.sql",
+      "line": 135,
+      "policy": "Authenticated users can read warroom comments"
+    },
+    {
+      "severity": "P1",
+      "issue": "sensitive_table_read_without_identity_predicate",
+      "reason": "Sensitive table read policy does not show a clear identity, role, status, or ownership predicate.",
+      "table": "classrooms",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY classrooms_select ON public.classrooms FOR SELECT USING (public.classroom_can_view(id));",
+      "file": "supabase/migrations/20260430123000_fix_classroom_policy_recursion.sql",
+      "line": 102,
+      "policy": "classrooms_select"
+    },
+    {
+      "severity": "P1",
+      "issue": "sensitive_table_read_without_identity_predicate",
+      "reason": "Sensitive table read policy does not show a clear identity, role, status, or ownership predicate.",
+      "table": "classroom_assignments",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY assignments_select ON public.classroom_assignments FOR SELECT USING (public.classroom_can_view(classroom_id));",
+      "file": "supabase/migrations/20260430123000_fix_classroom_policy_recursion.sql",
+      "line": 149,
+      "policy": "assignments_select"
+    },
+    {
+      "severity": "P1",
+      "issue": "sensitive_table_read_without_identity_predicate",
+      "reason": "Sensitive table read policy does not show a clear identity, role, status, or ownership predicate.",
+      "table": "classroom_activity",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY classroom_activity_select ON public.classroom_activity FOR SELECT USING (public.classroom_can_view(classroom_id));",
+      "file": "supabase/migrations/20260430123000_fix_classroom_policy_recursion.sql",
+      "line": 197,
+      "policy": "classroom_activity_select"
+    },
+    {
+      "severity": "P1",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "retrievals",
+      "operation": "SELECT",
+      "statement": "create policy read_retrievals on public.retrievals for select using (true);",
+      "file": "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql",
+      "line": 212,
+      "policy": "read_retrievals"
+    },
+    {
+      "severity": "P1",
+      "issue": "sensitive_table_read_without_identity_predicate",
+      "reason": "Sensitive table read policy does not show a clear identity, role, status, or ownership predicate.",
+      "table": "retrievals",
+      "operation": "SELECT",
+      "statement": "create policy read_retrievals on public.retrievals for select using (true);",
+      "file": "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql",
+      "line": 212,
+      "policy": "read_retrievals"
+    },
+    {
+      "severity": "P1",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "retrieval_entity_links",
+      "operation": "SELECT",
+      "statement": "create policy read_retrieval_entity_links on public.retrieval_entity_links for select using (true);",
+      "file": "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql",
+      "line": 215,
+      "policy": "read_retrieval_entity_links"
+    },
+    {
+      "severity": "P1",
+      "issue": "sensitive_table_read_without_identity_predicate",
+      "reason": "Sensitive table read policy does not show a clear identity, role, status, or ownership predicate.",
+      "table": "retrieval_entity_links",
+      "operation": "SELECT",
+      "statement": "create policy read_retrieval_entity_links on public.retrieval_entity_links for select using (true);",
+      "file": "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql",
+      "line": 215,
+      "policy": "read_retrieval_entity_links"
+    },
+    {
+      "severity": "P1",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "whitebox_experiment_state",
+      "operation": "SELECT",
+      "statement": "create policy read_whitebox_experiment_state on public.whitebox_experiment_state for select using (true);",
+      "file": "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql",
+      "line": 221,
+      "policy": "read_whitebox_experiment_state"
+    },
+    {
+      "severity": "P1",
+      "issue": "sensitive_table_read_without_identity_predicate",
+      "reason": "Sensitive table read policy does not show a clear identity, role, status, or ownership predicate.",
+      "table": "whitebox_experiment_state",
+      "operation": "SELECT",
+      "statement": "create policy read_whitebox_experiment_state on public.whitebox_experiment_state for select using (true);",
+      "file": "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql",
+      "line": 221,
+      "policy": "read_whitebox_experiment_state"
+    },
+    {
+      "severity": "P1",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "whitebox_experiment_evaluations",
+      "operation": "SELECT",
+      "statement": "create policy read_whitebox_experiment_evaluations on public.whitebox_experiment_evaluations for select using (true);",
+      "file": "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql",
+      "line": 224,
+      "policy": "read_whitebox_experiment_evaluations"
+    },
+    {
+      "severity": "P1",
+      "issue": "sensitive_table_read_without_identity_predicate",
+      "reason": "Sensitive table read policy does not show a clear identity, role, status, or ownership predicate.",
+      "table": "whitebox_experiment_evaluations",
+      "operation": "SELECT",
+      "statement": "create policy read_whitebox_experiment_evaluations on public.whitebox_experiment_evaluations for select using (true);",
+      "file": "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql",
+      "line": 224,
+      "policy": "read_whitebox_experiment_evaluations"
+    },
+    {
+      "severity": "P1",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "retrieval_provider_runs",
+      "operation": "SELECT",
+      "statement": "create policy read_retrieval_provider_runs on public.retrieval_provider_runs for select using (true);",
+      "file": "supabase/migrations/20260502000200_retrieval_provider_recovery.sql",
+      "line": 37,
+      "policy": "read_retrieval_provider_runs"
+    },
+    {
+      "severity": "P1",
+      "issue": "sensitive_table_read_without_identity_predicate",
+      "reason": "Sensitive table read policy does not show a clear identity, role, status, or ownership predicate.",
+      "table": "retrieval_provider_runs",
+      "operation": "SELECT",
+      "statement": "create policy read_retrieval_provider_runs on public.retrieval_provider_runs for select using (true);",
+      "file": "supabase/migrations/20260502000200_retrieval_provider_recovery.sql",
+      "line": 37,
+      "policy": "read_retrieval_provider_runs"
+    },
+    {
+      "severity": "P2",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "evidence_sources",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_anon_evidence ON evidence_sources FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250102184612_0008_evidence_collective.sql",
+      "line": 127,
+      "policy": "read_anon_evidence"
+    },
+    {
+      "severity": "P2",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "evidence_citations",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_anon_citations ON evidence_citations FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250102184612_0008_evidence_collective.sql",
+      "line": 130,
+      "policy": "read_anon_citations"
+    },
+    {
+      "severity": "P2",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "collective_insights",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_anon_insights ON collective_insights FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250102184612_0008_evidence_collective.sql",
+      "line": 141,
+      "policy": "read_anon_insights"
+    },
+    {
+      "severity": "P2",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "insight_reactions",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_anon_reactions ON insight_reactions FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250102184612_0008_evidence_collective.sql",
+      "line": 144,
+      "policy": "read_anon_reactions"
+    },
+    {
+      "severity": "P2",
+      "issue": "write_without_obvious_identity_predicate",
+      "reason": "Write policy does not show an obvious identity, role, or owner predicate.",
+      "table": "evidence_sources",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY insert_anon_evidence ON evidence_sources FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250102184612_0008_evidence_collective.sql",
+      "line": 154,
+      "policy": "insert_anon_evidence"
+    },
+    {
+      "severity": "P2",
+      "issue": "write_without_obvious_identity_predicate",
+      "reason": "Write policy does not show an obvious identity, role, or owner predicate.",
+      "table": "evidence_citations",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY insert_anon_citations ON evidence_citations FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250102184612_0008_evidence_collective.sql",
+      "line": 155,
+      "policy": "insert_anon_citations"
+    },
+    {
+      "severity": "P2",
+      "issue": "write_without_obvious_identity_predicate",
+      "reason": "Write policy does not show an obvious identity, role, or owner predicate.",
+      "table": "collaborative_sessions",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY insert_anon_sessions ON collaborative_sessions FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250102184612_0008_evidence_collective.sql",
+      "line": 156,
+      "policy": "insert_anon_sessions"
+    },
+    {
+      "severity": "P2",
+      "issue": "write_without_obvious_identity_predicate",
+      "reason": "Write policy does not show an obvious identity, role, or owner predicate.",
+      "table": "session_participants",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY insert_anon_participants ON session_participants FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250102184612_0008_evidence_collective.sql",
+      "line": 157,
+      "policy": "insert_anon_participants"
+    },
+    {
+      "severity": "P2",
+      "issue": "write_without_obvious_identity_predicate",
+      "reason": "Write policy does not show an obvious identity, role, or owner predicate.",
+      "table": "collective_insights",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY insert_anon_insights ON collective_insights FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250102184612_0008_evidence_collective.sql",
+      "line": 158,
+      "policy": "insert_anon_insights"
+    },
+    {
+      "severity": "P2",
+      "issue": "write_without_obvious_identity_predicate",
+      "reason": "Write policy does not show an obvious identity, role, or owner predicate.",
+      "table": "insight_reactions",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY insert_anon_reactions ON insight_reactions FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250102184612_0008_evidence_collective.sql",
+      "line": 159,
+      "policy": "insert_anon_reactions"
+    },
+    {
+      "severity": "P2",
+      "issue": "write_without_obvious_identity_predicate",
+      "reason": "Write policy does not show an obvious identity, role, or owner predicate.",
+      "table": "collaborative_messages",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY insert_anon_messages ON collaborative_messages FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250102184612_0008_evidence_collective.sql",
+      "line": 160,
+      "policy": "insert_anon_messages"
+    },
+    {
+      "severity": "P2",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "quantum_strategic_states",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_anon_qss ON quantum_strategic_states FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250102184613_0007_quantum_table_schema.sql",
+      "line": 57,
+      "policy": "read_anon_qss"
+    },
+    {
+      "severity": "P2",
+      "issue": "write_without_obvious_identity_predicate",
+      "reason": "Write policy does not show an obvious identity, role, or owner predicate.",
+      "table": "quantum_strategic_states",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY insert_anon_qss ON public.quantum_strategic_states FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250102184613_0007_quantum_table_schema.sql",
+      "line": 62,
+      "policy": "insert_anon_qss"
+    },
+    {
+      "severity": "P2",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "strategic_patterns",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_anon_patterns ON strategic_patterns FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250102184613_0007_quantum_table_schema.sql",
+      "line": 69,
+      "policy": "read_anon_patterns"
+    },
+    {
+      "severity": "P2",
+      "issue": "write_without_obvious_identity_predicate",
+      "reason": "Write policy does not show an obvious identity, role, or owner predicate.",
+      "table": "strategic_patterns",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY insert_anon_patterns ON public.strategic_patterns FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250102184613_0007_quantum_table_schema.sql",
+      "line": 74,
+      "policy": "insert_anon_patterns"
+    },
+    {
+      "severity": "P2",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "belief_networks",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_anon_beliefs ON belief_networks FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250102184613_0007_quantum_table_schema.sql",
+      "line": 81,
+      "policy": "read_anon_beliefs"
+    },
+    {
+      "severity": "P2",
+      "issue": "write_without_obvious_identity_predicate",
+      "reason": "Write policy does not show an obvious identity, role, or owner predicate.",
+      "table": "belief_networks",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY insert_anon_beliefs ON public.belief_networks FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250102184613_0007_quantum_table_schema.sql",
+      "line": 86,
+      "policy": "insert_anon_beliefs"
+    },
+    {
+      "severity": "P2",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "analysis_features",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_anon_features ON analysis_features FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250826_0001_init.sql",
+      "line": 49,
+      "policy": "read_anon_features"
+    },
+    {
+      "severity": "P2",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "patterns",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_anon_patterns ON patterns FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250826_0001_init.sql",
+      "line": 55,
+      "policy": "read_anon_patterns"
+    },
+    {
+      "severity": "P2",
+      "issue": "write_without_obvious_identity_predicate",
+      "reason": "Write policy does not show an obvious identity, role, or owner predicate.",
+      "table": "analysis_runs",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY mvp_insert_anon_runs ON public.analysis_runs FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250902184557_0003_mvp_anon_insert.sql",
+      "line": 10,
+      "policy": "mvp_insert_anon_runs"
+    },
+    {
+      "severity": "P2",
+      "issue": "write_without_obvious_identity_predicate",
+      "reason": "Write policy does not show an obvious identity, role, or owner predicate.",
+      "table": "analysis_features",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY mvp_insert_anon_features ON public.analysis_features FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250902184557_0003_mvp_anon_insert.sql",
+      "line": 18,
+      "policy": "mvp_insert_anon_features"
+    },
+    {
+      "severity": "P2",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "analysis_jobs",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_anon_jobs ON analysis_jobs FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250902184558_0004_jobs.sql",
+      "line": 22,
+      "policy": "read_anon_jobs"
+    },
+    {
+      "severity": "P2",
+      "issue": "write_without_obvious_identity_predicate",
+      "reason": "Write policy does not show an obvious identity, role, or owner predicate.",
+      "table": "analysis_jobs",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY mvp_insert_anon_jobs ON public.analysis_jobs FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250902184558_0004_jobs.sql",
+      "line": 28,
+      "policy": "mvp_insert_anon_jobs"
+    },
+    {
+      "severity": "P2",
+      "issue": "write_without_obvious_identity_predicate",
+      "reason": "Write policy does not show an obvious identity, role, or owner predicate.",
+      "table": "analysis_jobs",
+      "operation": "UPDATE",
+      "statement": "CREATE POLICY mvp_update_anon_jobs ON public.analysis_jobs FOR UPDATE USING (true) WITH CHECK (true);",
+      "file": "supabase/migrations/20250902184558_0004_jobs.sql",
+      "line": 36,
+      "policy": "mvp_update_anon_jobs"
+    },
+    {
+      "severity": "P2",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "analysis_trajectories",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_anon_trajectories ON analysis_trajectories FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250902184559_0005_recursive.sql",
+      "line": 28,
+      "policy": "read_anon_trajectories"
+    },
+    {
+      "severity": "P2",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "agent_beliefs",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_anon_beliefs ON agent_beliefs FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250902184559_0005_recursive.sql",
+      "line": 33,
+      "policy": "read_anon_beliefs"
+    },
+    {
+      "severity": "P2",
+      "issue": "write_without_obvious_identity_predicate",
+      "reason": "Write policy does not show an obvious identity, role, or owner predicate.",
+      "table": "analysis_trajectories",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY mvp_insert_anon_trajectories ON public.analysis_trajectories FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250902184559_0005_recursive.sql",
+      "line": 38,
+      "policy": "mvp_insert_anon_trajectories"
+    },
+    {
+      "severity": "P2",
+      "issue": "write_without_obvious_identity_predicate",
+      "reason": "Write policy does not show an obvious identity, role, or owner predicate.",
+      "table": "agent_beliefs",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY mvp_insert_anon_beliefs ON public.agent_beliefs FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250902184559_0005_recursive.sql",
+      "line": 43,
+      "policy": "mvp_insert_anon_beliefs"
+    },
+    {
+      "severity": "P2",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "shared_strategies",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_anon_shared ON shared_strategies FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250902184600_0006_collective.sql",
+      "line": 28,
+      "policy": "read_anon_shared"
+    },
+    {
+      "severity": "P2",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "community_metrics",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_anon_metrics ON community_metrics FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250902184600_0006_collective.sql",
+      "line": 33,
+      "policy": "read_anon_metrics"
+    },
+    {
+      "severity": "P2",
+      "issue": "write_without_obvious_identity_predicate",
+      "reason": "Write policy does not show an obvious identity, role, or owner predicate.",
+      "table": "shared_strategies",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY mvp_insert_anon_shared ON public.shared_strategies FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250902184600_0006_collective.sql",
+      "line": 38,
+      "policy": "mvp_insert_anon_shared"
+    },
+    {
+      "severity": "P2",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "game_definitions",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_game_definitions ON public.game_definitions FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250904_0010_extend_analysis_runs_for_audience.sql",
+      "line": 108,
+      "policy": "read_game_definitions"
+    },
+    {
+      "severity": "P2",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "circuit_breaker",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_circuit_breaker ON public.circuit_breaker FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250906110000_add_retrieval_cache_ph4.sql",
+      "line": 31,
+      "policy": "read_circuit_breaker"
+    },
+    {
+      "severity": "P2",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "rate_limit_tracking",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_rate_limit_tracking ON public.rate_limit_tracking FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250906140000_add_rate_limits.sql",
+      "line": 21,
+      "policy": "read_rate_limit_tracking"
+    },
+    {
+      "severity": "P2",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "third_party_noise",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_third_party_noise ON public.third_party_noise FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250907110000_observability_tables.sql",
+      "line": 17,
+      "policy": "read_third_party_noise"
+    },
+    {
+      "severity": "P2",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "information_value_analysis",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_anon_info_value ON information_value_analysis FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250918100000_information_value_analysis.sql",
+      "line": 18,
+      "policy": "read_anon_info_value"
+    },
+    {
+      "severity": "P2",
+      "issue": "write_without_obvious_identity_predicate",
+      "reason": "Write policy does not show an obvious identity, role, or owner predicate.",
+      "table": "information_value_analysis",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY insert_anon_info_value ON information_value_analysis FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250918100000_information_value_analysis.sql",
+      "line": 19,
+      "policy": "insert_anon_info_value"
+    },
+    {
+      "severity": "P2",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "strategy_success_analysis",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_anon_success_analysis ON strategy_success_analysis FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250918110000_advanced_services_tables.sql",
+      "line": 106,
+      "policy": "read_anon_success_analysis"
+    },
+    {
+      "severity": "P2",
+      "issue": "write_without_obvious_identity_predicate",
+      "reason": "Write policy does not show an obvious identity, role, or owner predicate.",
+      "table": "strategy_success_analysis",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY insert_anon_success_analysis ON strategy_success_analysis FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250918110000_advanced_services_tables.sql",
+      "line": 109,
+      "policy": "insert_anon_success_analysis"
+    },
+    {
+      "severity": "P2",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "strategy_outcomes",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_anon_outcomes ON strategy_outcomes FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250918110000_advanced_services_tables.sql",
+      "line": 114,
+      "policy": "read_anon_outcomes"
+    },
+    {
+      "severity": "P2",
+      "issue": "write_without_obvious_identity_predicate",
+      "reason": "Write policy does not show an obvious identity, role, or owner predicate.",
+      "table": "strategy_outcomes",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY insert_anon_outcomes ON strategy_outcomes FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250918110000_advanced_services_tables.sql",
+      "line": 117,
+      "policy": "insert_anon_outcomes"
+    },
+    {
+      "severity": "P2",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "scale_invariant_adaptations",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_anon_adaptations ON scale_invariant_adaptations FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250918110000_advanced_services_tables.sql",
+      "line": 122,
+      "policy": "read_anon_adaptations"
+    },
+    {
+      "severity": "P2",
+      "issue": "write_without_obvious_identity_predicate",
+      "reason": "Write policy does not show an obvious identity, role, or owner predicate.",
+      "table": "scale_invariant_adaptations",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY insert_anon_adaptations ON scale_invariant_adaptations FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250918110000_advanced_services_tables.sql",
+      "line": 125,
+      "policy": "insert_anon_adaptations"
+    },
+    {
+      "severity": "P2",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "temporal_optimization_results",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_anon_temporal ON temporal_optimization_results FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250918110000_advanced_services_tables.sql",
+      "line": 130,
+      "policy": "read_anon_temporal"
+    },
+    {
+      "severity": "P2",
+      "issue": "write_without_obvious_identity_predicate",
+      "reason": "Write policy does not show an obvious identity, role, or owner predicate.",
+      "table": "temporal_optimization_results",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY insert_anon_temporal ON temporal_optimization_results FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250918110000_advanced_services_tables.sql",
+      "line": 133,
+      "policy": "insert_anon_temporal"
+    },
+    {
+      "severity": "P2",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "outcome_forecasting_results",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_anon_forecasting ON outcome_forecasting_results FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250918110000_advanced_services_tables.sql",
+      "line": 138,
+      "policy": "read_anon_forecasting"
+    },
+    {
+      "severity": "P2",
+      "issue": "write_without_obvious_identity_predicate",
+      "reason": "Write policy does not show an obvious identity, role, or owner predicate.",
+      "table": "outcome_forecasting_results",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY insert_anon_forecasting ON outcome_forecasting_results FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250918110000_advanced_services_tables.sql",
+      "line": 141,
+      "policy": "insert_anon_forecasting"
+    },
+    {
+      "severity": "P2",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "dynamic_recalibration_results",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_anon_recalibration ON dynamic_recalibration_results FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250918110000_advanced_services_tables.sql",
+      "line": 146,
+      "policy": "read_anon_recalibration"
+    },
+    {
+      "severity": "P2",
+      "issue": "write_without_obvious_identity_predicate",
+      "reason": "Write policy does not show an obvious identity, role, or owner predicate.",
+      "table": "dynamic_recalibration_results",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY insert_anon_recalibration ON dynamic_recalibration_results FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250918110000_advanced_services_tables.sql",
+      "line": 149,
+      "policy": "insert_anon_recalibration"
+    },
+    {
+      "severity": "P2",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "cross_domain_transfer_results",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_anon_transfer ON cross_domain_transfer_results FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250918110000_advanced_services_tables.sql",
+      "line": 154,
+      "policy": "read_anon_transfer"
+    },
+    {
+      "severity": "P2",
+      "issue": "write_without_obvious_identity_predicate",
+      "reason": "Write policy does not show an obvious identity, role, or owner predicate.",
+      "table": "cross_domain_transfer_results",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY insert_anon_transfer ON cross_domain_transfer_results FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250918110000_advanced_services_tables.sql",
+      "line": 157,
+      "policy": "insert_anon_transfer"
+    },
+    {
+      "severity": "P2",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "third_party_noise",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_anon_noise ON third_party_noise FOR SELECT USING (true);",
+      "file": "supabase/migrations/20250918110000_advanced_services_tables.sql",
+      "line": 162,
+      "policy": "read_anon_noise"
+    },
+    {
+      "severity": "P2",
+      "issue": "write_without_obvious_identity_predicate",
+      "reason": "Write policy does not show an obvious identity, role, or owner predicate.",
+      "table": "third_party_noise",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY insert_anon_noise ON third_party_noise FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250918110000_advanced_services_tables.sql",
+      "line": 165,
+      "policy": "insert_anon_noise"
+    },
+    {
+      "severity": "P2",
+      "issue": "write_without_obvious_identity_predicate",
+      "reason": "Write policy does not show an obvious identity, role, or owner predicate.",
+      "table": "monitoring_alerts",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY insert_anon_alerts ON monitoring_alerts FOR INSERT WITH CHECK (auth.role() = 'anon');",
+      "file": "supabase/migrations/20250918110000_advanced_services_tables.sql",
+      "line": 173,
+      "policy": "insert_anon_alerts"
+    },
+    {
+      "severity": "P2",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "cooperation_campaigns",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY \"Anyone can view cooperation campaigns\" ON cooperation_campaigns FOR SELECT USING (true);",
+      "file": "supabase/migrations/20251005120000_competition_innovations.sql",
+      "line": 421,
+      "policy": "Anyone can view cooperation campaigns"
+    },
+    {
+      "severity": "P2",
+      "issue": "write_without_obvious_identity_predicate",
+      "reason": "Write policy does not show an obvious identity, role, or owner predicate.",
+      "table": "campaign_participants",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY \"Anyone can join campaigns\" ON campaign_participants FOR INSERT WITH CHECK (true);",
+      "file": "supabase/migrations/20251005120000_competition_innovations.sql",
+      "line": 425,
+      "policy": "Anyone can join campaigns"
+    },
+    {
+      "severity": "P2",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "real_time_events",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY \"Public read real-time events\" ON real_time_events FOR SELECT USING (true);",
+      "file": "supabase/migrations/20251006100000_realtime_features.sql",
+      "line": 270,
+      "policy": "Public read real-time events"
+    },
+    {
+      "severity": "P2",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "strategy_outcomes",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY \"Public read strategy outcomes\" ON strategy_outcomes FOR SELECT USING (true);",
+      "file": "supabase/migrations/20251006100000_realtime_features.sql",
+      "line": 275,
+      "policy": "Public read strategy outcomes"
+    },
+    {
+      "severity": "P2",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "multiplayer_sessions",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY \"Users can view their multiplayer sessions\" ON multiplayer_sessions FOR SELECT USING (true);",
+      "file": "supabase/migrations/20251006100000_realtime_features.sql",
+      "line": 280,
+      "policy": "Users can view their multiplayer sessions"
+    },
+    {
+      "severity": "P2",
+      "issue": "write_without_obvious_identity_predicate",
+      "reason": "Write policy does not show an obvious identity, role, or owner predicate.",
+      "table": "multiplayer_sessions",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY \"Users can create multiplayer sessions\" ON multiplayer_sessions FOR INSERT WITH CHECK (true);",
+      "file": "supabase/migrations/20251006100000_realtime_features.sql",
+      "line": 284,
+      "policy": "Users can create multiplayer sessions"
+    },
+    {
+      "severity": "P2",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "multiplayer_participants",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY \"Users can view participants in their sessions\" ON multiplayer_participants FOR SELECT USING (true);",
+      "file": "supabase/migrations/20251006100000_realtime_features.sql",
+      "line": 288,
+      "policy": "Users can view participants in their sessions"
+    },
+    {
+      "severity": "P2",
+      "issue": "write_without_obvious_identity_predicate",
+      "reason": "Write policy does not show an obvious identity, role, or owner predicate.",
+      "table": "multiplayer_participants",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY \"Users can join as participants\" ON multiplayer_participants FOR INSERT WITH CHECK (true);",
+      "file": "supabase/migrations/20251006100000_realtime_features.sql",
+      "line": 292,
+      "policy": "Users can join as participants"
+    },
+    {
+      "severity": "P2",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "temporal_forecasts",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY \"Public read temporal forecasts\" ON temporal_forecasts FOR SELECT USING (true);",
+      "file": "supabase/migrations/20251006100000_realtime_features.sql",
+      "line": 297,
+      "policy": "Public read temporal forecasts"
+    },
+    {
+      "severity": "P2",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "signaling_recommendations",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY \"Public read signaling recommendations\" ON signaling_recommendations FOR SELECT USING (true);",
+      "file": "supabase/migrations/20251006100000_realtime_features.sql",
+      "line": 302,
+      "policy": "Public read signaling recommendations"
+    },
+    {
+      "severity": "P2",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "forecast_scores",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY scores_select ON public.forecast_scores FOR SELECT USING (true);",
+      "file": "supabase/migrations/20251212120000_enterprise_sso.sql",
+      "line": 341,
+      "policy": "scores_select"
+    },
+    {
+      "severity": "P2",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "strategy_outcomes",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY \"Public read access to strategy outcomes\" ON strategy_outcomes FOR SELECT USING (true);",
+      "file": "supabase/migrations/20251213000000_eliminate_mock_data.sql",
+      "line": 38,
+      "policy": "Public read access to strategy outcomes"
+    },
+    {
+      "severity": "P2",
+      "issue": "write_without_obvious_identity_predicate",
+      "reason": "Write policy does not show an obvious identity, role, or owner predicate.",
+      "table": "strategy_outcomes",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY \"Authenticated users can insert outcomes\" ON strategy_outcomes FOR INSERT TO authenticated WITH CHECK (true);",
+      "file": "supabase/migrations/20251213000000_eliminate_mock_data.sql",
+      "line": 49,
+      "policy": "Authenticated users can insert outcomes"
+    },
+    {
+      "severity": "P2",
+      "issue": "write_without_obvious_identity_predicate",
+      "reason": "Write policy does not show an obvious identity, role, or owner predicate.",
+      "table": "classroom_members",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY members_insert ON public.classroom_members FOR INSERT TO authenticated WITH CHECK (public.classroom_can_manage(classroom_id));",
+      "file": "supabase/migrations/20260430123000_fix_classroom_policy_recursion.sql",
+      "line": 133,
+      "policy": "members_insert"
+    },
+    {
+      "severity": "P2",
+      "issue": "write_without_obvious_identity_predicate",
+      "reason": "Write policy does not show an obvious identity, role, or owner predicate.",
+      "table": "classroom_members",
+      "operation": "UPDATE",
+      "statement": "CREATE POLICY members_update ON public.classroom_members FOR UPDATE TO authenticated USING (public.classroom_can_manage(classroom_id)) WITH CHECK (public.classroom_can_manage(classroom_id));",
+      "file": "supabase/migrations/20260430123000_fix_classroom_policy_recursion.sql",
+      "line": 138,
+      "policy": "members_update"
+    },
+    {
+      "severity": "P2",
+      "issue": "write_without_obvious_identity_predicate",
+      "reason": "Write policy does not show an obvious identity, role, or owner predicate.",
+      "table": "classroom_assignments",
+      "operation": "INSERT",
+      "statement": "CREATE POLICY assignments_insert ON public.classroom_assignments FOR INSERT TO authenticated WITH CHECK (public.classroom_can_manage(classroom_id));",
+      "file": "supabase/migrations/20260430123000_fix_classroom_policy_recursion.sql",
+      "line": 153,
+      "policy": "assignments_insert"
+    },
+    {
+      "severity": "P2",
+      "issue": "write_without_obvious_identity_predicate",
+      "reason": "Write policy does not show an obvious identity, role, or owner predicate.",
+      "table": "classroom_assignments",
+      "operation": "UPDATE",
+      "statement": "CREATE POLICY assignments_update ON public.classroom_assignments FOR UPDATE TO authenticated USING (public.classroom_can_manage(classroom_id)) WITH CHECK (public.classroom_can_manage(classroom_id));",
+      "file": "supabase/migrations/20260430123000_fix_classroom_policy_recursion.sql",
+      "line": 158,
+      "policy": "assignments_update"
+    },
+    {
+      "severity": "P2",
+      "issue": "write_without_obvious_identity_predicate",
+      "reason": "Write policy does not show an obvious identity, role, or owner predicate.",
+      "table": "classroom_assignments",
+      "operation": "DELETE",
+      "statement": "CREATE POLICY assignments_delete ON public.classroom_assignments FOR DELETE TO authenticated USING (public.classroom_can_manage(classroom_id));",
+      "file": "supabase/migrations/20260430123000_fix_classroom_policy_recursion.sql",
+      "line": 164,
+      "policy": "assignments_delete"
+    },
+    {
+      "severity": "P2",
+      "issue": "write_without_obvious_identity_predicate",
+      "reason": "Write policy does not show an obvious identity, role, or owner predicate.",
+      "table": "assignment_submissions",
+      "operation": "UPDATE",
+      "statement": "CREATE POLICY submissions_update_instructor ON public.assignment_submissions FOR UPDATE TO authenticated USING (public.classroom_assignment_can_manage(assignment_id)) WITH CHECK (public.classroom_assignment_can_manage(assignment_id));",
+      "file": "supabase/migrations/20260430123000_fix_classroom_policy_recursion.sql",
+      "line": 188,
+      "policy": "submissions_update_instructor"
+    },
+    {
+      "severity": "P2",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "calibration_models",
+      "operation": "SELECT",
+      "statement": "create policy read_calibration_models on public.calibration_models for select using (true);",
+      "file": "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql",
+      "line": 203,
+      "policy": "read_calibration_models"
+    },
+    {
+      "severity": "P2",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "ontology_entities",
+      "operation": "SELECT",
+      "statement": "create policy read_ontology_entities on public.ontology_entities for select using (true);",
+      "file": "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql",
+      "line": 206,
+      "policy": "read_ontology_entities"
+    },
+    {
+      "severity": "P2",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "ontology_aliases",
+      "operation": "SELECT",
+      "statement": "create policy read_ontology_aliases on public.ontology_aliases for select using (true);",
+      "file": "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql",
+      "line": 209,
+      "policy": "read_ontology_aliases"
+    },
+    {
+      "severity": "P2",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "drift_signals",
+      "operation": "SELECT",
+      "statement": "create policy read_drift_signals on public.drift_signals for select using (true);",
+      "file": "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql",
+      "line": 218,
+      "policy": "read_drift_signals"
+    },
+    {
+      "severity": "P2",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "shadow_model_registry",
+      "operation": "SELECT",
+      "statement": "create policy read_shadow_model_registry on public.shadow_model_registry for select using (true);",
+      "file": "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql",
+      "line": 227,
+      "policy": "read_shadow_model_registry"
+    },
+    {
+      "severity": "P2",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "shadow_predictions",
+      "operation": "SELECT",
+      "statement": "create policy read_shadow_predictions on public.shadow_predictions for select using (true);",
+      "file": "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql",
+      "line": 230,
+      "policy": "read_shadow_predictions"
+    },
+    {
+      "severity": "P2",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "entity_graph_nodes",
+      "operation": "SELECT",
+      "statement": "create policy read_entity_graph_nodes on public.entity_graph_nodes for select using (true);",
+      "file": "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql",
+      "line": 233,
+      "policy": "read_entity_graph_nodes"
+    },
+    {
+      "severity": "P2",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "entity_graph_edges",
+      "operation": "SELECT",
+      "statement": "create policy read_entity_graph_edges on public.entity_graph_edges for select using (true);",
+      "file": "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql",
+      "line": 236,
+      "policy": "read_entity_graph_edges"
+    },
+    {
+      "severity": "P3",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "domain_specific_patterns",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY \"Public read domain patterns\" ON domain_specific_patterns FOR SELECT USING (true);",
+      "file": "supabase/migrations/20251006100000_realtime_features.sql",
+      "line": 307,
+      "policy": "Public read domain patterns"
+    },
+    {
+      "severity": "P3",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "tier_limits",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY read_tier_limits ON public.tier_limits FOR SELECT USING (true);",
+      "file": "supabase/migrations/20251212100000_subscription_tiers.sql",
+      "line": 225,
+      "policy": "read_tier_limits"
+    },
+    {
+      "severity": "P3",
+      "issue": "unconditional_using_true",
+      "reason": "Policy permits access without an ownership, role, status, or tenant predicate.",
+      "table": "marketplace_scenarios",
+      "operation": "SELECT",
+      "statement": "CREATE POLICY \"Public read marketplace scenarios\" ON marketplace_scenarios FOR SELECT USING (true);",
+      "file": "supabase/migrations/20251213000000_eliminate_mock_data.sql",
+      "line": 145,
+      "policy": "Public read marketplace scenarios"
+    }
+  ]
+}

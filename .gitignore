@@ -69,3 +69,5 @@ Thumbs.db
 Desktop.ini
 # Local Netlify folder
 .netlify
+.tools/
+.fastembed_cache/

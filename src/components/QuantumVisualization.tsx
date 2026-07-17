@@ -146,7 +146,7 @@ const QuantumVisualization: React.FC<QuantumVisualizationProps> = ({
           <div className="bg-slate-700 p-4 rounded-lg text-center">
             <div className="text-blue-400 text-xl font-mono">
               {superpositionData.length > 0 ?
-                ((superpositionData.reduce((sum, item) => sum + item.probability, 0) / superpositionData.length).toFixed(1)) :
+                ((superpositionData.reduce((sum, item) => sum + (item?.probability || 0), 0) / superpositionData.length).toFixed(1)) :
                 'N/A'
               }%
             </div>
@@ -155,7 +155,7 @@ const QuantumVisualization: React.FC<QuantumVisualizationProps> = ({
           <div className="bg-slate-700 p-4 rounded-lg text-center">
             <div className="text-emerald-400 text-xl font-mono">
               {superpositionData.length > 0 ?
-                Math.max(...superpositionData.map(d => d.amplitude)).toFixed(2) :
+                Math.max(...superpositionData.map(d => d?.amplitude || 0)).toFixed(2) :
                 'N/A'
               }
             </div>

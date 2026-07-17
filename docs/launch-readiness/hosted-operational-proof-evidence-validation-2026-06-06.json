@@ -1,0 +1,580 @@
+{
+  "schema_version": "hosted-operational-evidence-validation-v1",
+  "generated_at": "2026-06-06T17:13:32.157Z",
+  "status": "hosted_operational_evidence_validation_ready_no_hosted_runs",
+  "proof_boundary": "This artifact validates hosted smoke evidence rows for deploy binding, HTTPS hosted URL, log/screenshot attachment, redaction, core route/API coverage, and claim boundaries. It is not prediction-accuracy proof, buyer validation, enterprise security proof, legal/privacy approval, or commercial-ready proof.",
+  "source": {
+    "register": "docs/launch-readiness/hosted-operational-proof-evidence-template-2026-06-06.csv",
+    "register_template_created": false,
+    "hosted_proof_kit": "docs/launch-readiness/hosted-operational-proof-kit-2026-06-06.json",
+    "hosted_proof_kit_status": "hosted_proof_kit_ready_not_hosted_proof",
+    "expected_smoke_count": 12
+  },
+  "summary": {
+    "register_row_count": 12,
+    "expected_smoke_count": 12,
+    "executed_smoke_count": 0,
+    "passed_smoke_count": 0,
+    "buyer_claim_allowed_count": 0,
+    "redaction_verified_count": 0,
+    "log_evidence_present_count": 0,
+    "log_evidence_exists_count": 0,
+    "screenshot_evidence_present_count": 0,
+    "screenshot_evidence_exists_count": 0,
+    "core_coverage_group_count": 7,
+    "core_coverage_ready_count": 0,
+    "row_issue_count": 0,
+    "row_error_count": 0,
+    "active_release_hold_count": 5,
+    "ready_for_buyer_safe_hosted_claims": false,
+    "hosted_operational_claim_allowed": false,
+    "commercial_ready_claim_allowed": false,
+    "world_class_prediction_claim_allowed": false
+  },
+  "required_columns": [
+    "smoke_id",
+    "claim_checked",
+    "npm_script",
+    "command",
+    "script_path",
+    "script_exists",
+    "run_status",
+    "hosted_url",
+    "deploy_id_or_commit",
+    "run_timestamp",
+    "operator",
+    "log_path",
+    "screenshot_path",
+    "console_errors",
+    "network_errors",
+    "failure_class",
+    "redaction_verified",
+    "buyer_claim_allowed",
+    "notes"
+  ],
+  "allowed_values": {
+    "run_status": [
+      "",
+      "blocked",
+      "failed",
+      "not_run",
+      "passed",
+      "passed_with_caveats"
+    ],
+    "failure_class": [
+      "",
+      "auth_or_session",
+      "deploy_drift",
+      "evidence_capture",
+      "network_or_cors",
+      "none",
+      "other",
+      "owner_approval_missing",
+      "payment_or_entitlement",
+      "product_behavior",
+      "provider_reliability",
+      "schema_or_rls",
+      "secret_or_config"
+    ],
+    "boolean_fields": [
+      "yes",
+      "no",
+      "true",
+      "false",
+      "1",
+      "0"
+    ]
+  },
+  "core_coverage": [
+    {
+      "group": "hosted_access",
+      "smoke_ids": [
+        "hosted_access_preflight"
+      ],
+      "reason": "Binds the run to an observable hosted project and redacted access state.",
+      "status": "open",
+      "missing_smoke_ids": [
+        "hosted_access_preflight"
+      ]
+    },
+    {
+      "group": "auth_and_entitlements",
+      "smoke_ids": [
+        "hosted_auth_and_entitlements"
+      ],
+      "reason": "Covers account, entitlement, and webhook rejection proof.",
+      "status": "open",
+      "missing_smoke_ids": [
+        "hosted_auth_and_entitlements"
+      ]
+    },
+    {
+      "group": "schema_preflight",
+      "smoke_ids": [
+        "hosted_schema_preflight"
+      ],
+      "reason": "Checks the hosted schema needed for premium workflows.",
+      "status": "open",
+      "missing_smoke_ids": [
+        "hosted_schema_preflight"
+      ]
+    },
+    {
+      "group": "strategist_console",
+      "smoke_ids": [
+        "hosted_strategist_console"
+      ],
+      "reason": "Covers the primary strategic decision-intelligence route.",
+      "status": "open",
+      "missing_smoke_ids": [
+        "hosted_strategist_console"
+      ]
+    },
+    {
+      "group": "geopolitical_insights",
+      "smoke_ids": [
+        "hosted_insights_gdelt"
+      ],
+      "reason": "Covers the geopolitical-risk radar wedge with provider-mode evidence.",
+      "status": "open",
+      "missing_smoke_ids": [
+        "hosted_insights_gdelt"
+      ]
+    },
+    {
+      "group": "retrieval_and_analyze",
+      "smoke_ids": [
+        "hosted_retrieval_and_evidence",
+        "hosted_analyze_evidence_canaries"
+      ],
+      "reason": "Covers evidence retrieval and evidence-backed analysis canaries.",
+      "status": "open",
+      "missing_smoke_ids": [
+        "hosted_retrieval_and_evidence",
+        "hosted_analyze_evidence_canaries"
+      ]
+    },
+    {
+      "group": "payment_and_pricing",
+      "smoke_ids": [
+        "hosted_payment_and_pricing"
+      ],
+      "reason": "Covers buyer-facing pricing, payment, and entitlement claims.",
+      "status": "open",
+      "missing_smoke_ids": [
+        "hosted_payment_and_pricing"
+      ]
+    }
+  ],
+  "smoke_rows": [
+    {
+      "smoke_id": "hosted_access_preflight",
+      "claim_checked": "Hosted Supabase and function-management access is observable for proof capture.",
+      "npm_script": "diag:hosted:access",
+      "script_path": "scripts/hosted-access-preflight.sh",
+      "script_exists": true,
+      "actual_script_exists": true,
+      "run_status": "not_run",
+      "hosted_url_present": false,
+      "hosted_url_valid": false,
+      "deploy_id_or_commit_present": false,
+      "run_timestamp_valid": false,
+      "operator_present": false,
+      "log_path_present": false,
+      "log_path_exists": false,
+      "screenshot_path_present": false,
+      "screenshot_path_exists": false,
+      "console_errors": null,
+      "network_errors": null,
+      "failure_class": "",
+      "redaction_verified": false,
+      "buyer_claim_allowed": false,
+      "row_error_count": 0,
+      "ready": false
+    },
+    {
+      "smoke_id": "hosted_function_drift",
+      "claim_checked": "Hosted edge-function surface matches the repo-backed launch surface.",
+      "npm_script": "diag:functions:hosted",
+      "script_path": "scripts/hosted-function-drift.mjs",
+      "script_exists": true,
+      "actual_script_exists": true,
+      "run_status": "not_run",
+      "hosted_url_present": false,
+      "hosted_url_valid": false,
+      "deploy_id_or_commit_present": false,
+      "run_timestamp_valid": false,
+      "operator_present": false,
+      "log_path_present": false,
+      "log_path_exists": false,
+      "screenshot_path_present": false,
+      "screenshot_path_exists": false,
+      "console_errors": null,
+      "network_errors": null,
+      "failure_class": "",
+      "redaction_verified": false,
+      "buyer_claim_allowed": false,
+      "row_error_count": 0,
+      "ready": false
+    },
+    {
+      "smoke_id": "hosted_auth_and_entitlements",
+      "claim_checked": "Hosted auth, entitlement tables, and webhook rejection behavior are proof-captured.",
+      "npm_script": "diag:auth:hosted",
+      "script_path": "scripts/hosted-auth-diagnostics.mjs",
+      "script_exists": true,
+      "actual_script_exists": true,
+      "run_status": "not_run",
+      "hosted_url_present": false,
+      "hosted_url_valid": false,
+      "deploy_id_or_commit_present": false,
+      "run_timestamp_valid": false,
+      "operator_present": false,
+      "log_path_present": false,
+      "log_path_exists": false,
+      "screenshot_path_present": false,
+      "screenshot_path_exists": false,
+      "console_errors": null,
+      "network_errors": null,
+      "failure_class": "",
+      "redaction_verified": false,
+      "buyer_claim_allowed": false,
+      "row_error_count": 0,
+      "ready": false
+    },
+    {
+      "smoke_id": "hosted_schema_preflight",
+      "claim_checked": "Hosted database schema contains the tables required by the premium workflow.",
+      "npm_script": "smoke:schema:hosted",
+      "script_path": "scripts/hosted-schema-preflight.mjs",
+      "script_exists": true,
+      "actual_script_exists": true,
+      "run_status": "not_run",
+      "hosted_url_present": false,
+      "hosted_url_valid": false,
+      "deploy_id_or_commit_present": false,
+      "run_timestamp_valid": false,
+      "operator_present": false,
+      "log_path_present": false,
+      "log_path_exists": false,
+      "screenshot_path_present": false,
+      "screenshot_path_exists": false,
+      "console_errors": null,
+      "network_errors": null,
+      "failure_class": "",
+      "redaction_verified": false,
+      "buyer_claim_allowed": false,
+      "row_error_count": 0,
+      "ready": false
+    },
+    {
+      "smoke_id": "hosted_strategist_console",
+      "claim_checked": "Hosted strategist route can produce governed, evidence-aware analysis with provider diagnostics.",
+      "npm_script": "smoke:strategist:hosted",
+      "script_path": "scripts/hosted-strategist-smoke.mjs",
+      "script_exists": true,
+      "actual_script_exists": true,
+      "run_status": "not_run",
+      "hosted_url_present": false,
+      "hosted_url_valid": false,
+      "deploy_id_or_commit_present": false,
+      "run_timestamp_valid": false,
+      "operator_present": false,
+      "log_path_present": false,
+      "log_path_exists": false,
+      "screenshot_path_present": false,
+      "screenshot_path_exists": false,
+      "console_errors": null,
+      "network_errors": null,
+      "failure_class": "",
+      "redaction_verified": false,
+      "buyer_claim_allowed": false,
+      "row_error_count": 0,
+      "ready": false
+    },
+    {
+      "smoke_id": "hosted_researcher_advanced",
+      "claim_checked": "Hosted researcher workflow can run advanced frameworks with hydrator/export/notebook proof.",
+      "npm_script": "smoke:researcher:advanced:hosted",
+      "script_path": "scripts/hosted-researcher-advanced-smoke.mjs",
+      "script_exists": true,
+      "actual_script_exists": true,
+      "run_status": "not_run",
+      "hosted_url_present": false,
+      "hosted_url_valid": false,
+      "deploy_id_or_commit_present": false,
+      "run_timestamp_valid": false,
+      "operator_present": false,
+      "log_path_present": false,
+      "log_path_exists": false,
+      "screenshot_path_present": false,
+      "screenshot_path_exists": false,
+      "console_errors": null,
+      "network_errors": null,
+      "failure_class": "",
+      "redaction_verified": false,
+      "buyer_claim_allowed": false,
+      "row_error_count": 0,
+      "ready": false
+    },
+    {
+      "smoke_id": "hosted_insights_gdelt",
+      "claim_checked": "Hosted geopolitical radar can use non-simulated GDELT/provider diagnostics.",
+      "npm_script": "smoke:insights:hosted",
+      "script_path": "scripts/hosted-insights-smoke.mjs",
+      "script_exists": true,
+      "actual_script_exists": true,
+      "run_status": "not_run",
+      "hosted_url_present": false,
+      "hosted_url_valid": false,
+      "deploy_id_or_commit_present": false,
+      "run_timestamp_valid": false,
+      "operator_present": false,
+      "log_path_present": false,
+      "log_path_exists": false,
+      "screenshot_path_present": false,
+      "screenshot_path_exists": false,
+      "console_errors": null,
+      "network_errors": null,
+      "failure_class": "",
+      "redaction_verified": false,
+      "buyer_claim_allowed": false,
+      "row_error_count": 0,
+      "ready": false
+    },
+    {
+      "smoke_id": "hosted_warroom_collaboration",
+      "claim_checked": "Hosted war-room collaboration can create and verify decision, assumption, scenario, and comment rows.",
+      "npm_script": "smoke:warroom:hosted",
+      "script_path": "scripts/hosted-warroom-smoke.mjs",
+      "script_exists": true,
+      "actual_script_exists": true,
+      "run_status": "not_run",
+      "hosted_url_present": false,
+      "hosted_url_valid": false,
+      "deploy_id_or_commit_present": false,
+      "run_timestamp_valid": false,
+      "operator_present": false,
+      "log_path_present": false,
+      "log_path_exists": false,
+      "screenshot_path_present": false,
+      "screenshot_path_exists": false,
+      "console_errors": null,
+      "network_errors": null,
+      "failure_class": "",
+      "redaction_verified": false,
+      "buyer_claim_allowed": false,
+      "row_error_count": 0,
+      "ready": false
+    },
+    {
+      "smoke_id": "hosted_classroom_training",
+      "claim_checked": "Hosted classroom/training lane can create instructor/student flow and assignment evidence.",
+      "npm_script": "smoke:classroom:hosted",
+      "script_path": "scripts/hosted-classroom-smoke.mjs",
+      "script_exists": true,
+      "actual_script_exists": true,
+      "run_status": "not_run",
+      "hosted_url_present": false,
+      "hosted_url_valid": false,
+      "deploy_id_or_commit_present": false,
+      "run_timestamp_valid": false,
+      "operator_present": false,
+      "log_path_present": false,
+      "log_path_exists": false,
+      "screenshot_path_present": false,
+      "screenshot_path_exists": false,
+      "console_errors": null,
+      "network_errors": null,
+      "failure_class": "",
+      "redaction_verified": false,
+      "buyer_claim_allowed": false,
+      "row_error_count": 0,
+      "ready": false
+    },
+    {
+      "smoke_id": "hosted_payment_and_pricing",
+      "claim_checked": "Hosted pricing, Stripe webhook, and entitlement proof are captured without live payment mutation.",
+      "npm_script": "proof:stripe:hosted",
+      "script_path": "scripts/hosted-stripe-proof.mjs",
+      "script_exists": true,
+      "actual_script_exists": true,
+      "run_status": "not_run",
+      "hosted_url_present": false,
+      "hosted_url_valid": false,
+      "deploy_id_or_commit_present": false,
+      "run_timestamp_valid": false,
+      "operator_present": false,
+      "log_path_present": false,
+      "log_path_exists": false,
+      "screenshot_path_present": false,
+      "screenshot_path_exists": false,
+      "console_errors": null,
+      "network_errors": null,
+      "failure_class": "",
+      "redaction_verified": false,
+      "buyer_claim_allowed": false,
+      "row_error_count": 0,
+      "ready": false
+    },
+    {
+      "smoke_id": "hosted_retrieval_and_evidence",
+      "claim_checked": "Hosted evidence retrieval grows retrieval artifacts and avoids low-source fallback.",
+      "npm_script": "smoke:retrieval:hosted",
+      "script_path": "scripts/retrieval-provider-smoke.mjs",
+      "script_exists": true,
+      "actual_script_exists": true,
+      "run_status": "not_run",
+      "hosted_url_present": false,
+      "hosted_url_valid": false,
+      "deploy_id_or_commit_present": false,
+      "run_timestamp_valid": false,
+      "operator_present": false,
+      "log_path_present": false,
+      "log_path_exists": false,
+      "screenshot_path_present": false,
+      "screenshot_path_exists": false,
+      "console_errors": null,
+      "network_errors": null,
+      "failure_class": "",
+      "redaction_verified": false,
+      "buyer_claim_allowed": false,
+      "row_error_count": 0,
+      "ready": false
+    },
+    {
+      "smoke_id": "hosted_analyze_evidence_canaries",
+      "claim_checked": "Hosted analyze-engine produces evidence-backed analysis across geopolitical and commodity canaries.",
+      "npm_script": "smoke:analyze:evidence:hosted",
+      "script_path": "scripts/analyze-engine-evidence-smoke.mjs",
+      "script_exists": true,
+      "actual_script_exists": true,
+      "run_status": "not_run",
+      "hosted_url_present": false,
+      "hosted_url_valid": false,
+      "deploy_id_or_commit_present": false,
+      "run_timestamp_valid": false,
+      "operator_present": false,
+      "log_path_present": false,
+      "log_path_exists": false,
+      "screenshot_path_present": false,
+      "screenshot_path_exists": false,
+      "console_errors": null,
+      "network_errors": null,
+      "failure_class": "",
+      "redaction_verified": false,
+      "buyer_claim_allowed": false,
+      "row_error_count": 0,
+      "ready": false
+    }
+  ],
+  "acceptance_gates": [
+    {
+      "gate": "register_schema_present",
+      "status": "passed",
+      "evidence": "Register schema includes 19 required columns.",
+      "proof_bucket": "repo_artifact"
+    },
+    {
+      "gate": "all_proof_kit_rows_present",
+      "status": "passed",
+      "evidence": "12 register rows loaded for 12 proof-kit smoke rows.",
+      "proof_bucket": "repo_artifact"
+    },
+    {
+      "gate": "hosted_runs_present",
+      "status": "open_no_hosted_runs",
+      "evidence": "0 executed hosted rows loaded; 0 passed or caveated-pass rows loaded.",
+      "proof_bucket": "hosted_live"
+    },
+    {
+      "gate": "row_quality_validation",
+      "status": "open_no_hosted_runs",
+      "evidence": "0 row-level errors and 0 warnings across hosted evidence register.",
+      "proof_bucket": "hosted_live"
+    },
+    {
+      "gate": "redaction_review",
+      "status": "open_no_hosted_runs",
+      "evidence": "0/0 executed rows marked redaction_verified.",
+      "proof_bucket": "hosted_live"
+    },
+    {
+      "gate": "evidence_artifacts_attached",
+      "status": "open_no_hosted_runs",
+      "evidence": "0/0 passed rows have existing log_path or owner_supplied_external; 0/0 screenshot references exist or are external.",
+      "proof_bucket": "hosted_live"
+    },
+    {
+      "gate": "core_route_api_coverage",
+      "status": "open_no_hosted_runs",
+      "evidence": "0/7 core hosted coverage groups passed with buyer-claim-ready rows.",
+      "proof_bucket": "hosted_live"
+    },
+    {
+      "gate": "claim_boundary_preserved",
+      "status": "passed",
+      "evidence": "Rows are checked for unsupported hosted, commercial-ready, enterprise-ready, and prediction-accuracy language.",
+      "proof_bucket": "repo_artifact"
+    }
+  ],
+  "row_issues": [],
+  "release_holds": [
+    {
+      "hold": "hosted_runs_present",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "0 executed hosted rows loaded; 0 passed or caveated-pass rows loaded."
+    },
+    {
+      "hold": "row_quality_validation",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "0 row-level errors and 0 warnings across hosted evidence register."
+    },
+    {
+      "hold": "redaction_review",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "0/0 executed rows marked redaction_verified."
+    },
+    {
+      "hold": "evidence_artifacts_attached",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "0/0 passed rows have existing log_path or owner_supplied_external; 0/0 screenshot references exist or are external."
+    },
+    {
+      "hold": "core_route_api_coverage",
+      "severity": "P2",
+      "status": "active",
+      "evidence_needed": "0/7 core hosted coverage groups passed with buyer-claim-ready rows."
+    }
+  ],
+  "current_source_alignment": [
+    {
+      "source": "OWASP Web Security Testing Guide",
+      "url": "https://owasp.org/www-project-web-security-testing-guide/",
+      "alignment": "Hosted proof should be tied to deployment-relevant testing, mapped entry points, and recorded evidence rather than broad live-site claims."
+    },
+    {
+      "source": "OWASP Application Security Verification Standard",
+      "url": "https://owasp.org/www-project-application-security-verification-standard/",
+      "alignment": "Buyer-facing application security claims need requirement-level verification evidence, not only a smoke-plan template."
+    },
+    {
+      "source": "NIST SSDF SP 800-218",
+      "url": "https://csrc.nist.gov/pubs/sp/800/218/final",
+      "alignment": "Secure software release claims should be backed by repeatable verification evidence and vulnerability-response boundaries."
+    },
+    {
+      "source": "CISA Secure by Demand Guide",
+      "url": "https://www.cisa.gov/sites/default/files/2024-08/SecureByDemandGuide_080624_508c.pdf",
+      "alignment": "Procurement buyers should receive structured, non-secret supplier evidence and clear current-proof boundaries."
+    }
+  ],
+  "next_commands_after_owner_data": [
+    "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:hosted:validate-evidence -- --register docs/launch-readiness/hosted-operational-proof-evidence-template-2026-06-06.csv --hosted-proof-kit docs/launch-readiness/hosted-operational-proof-kit-2026-06-06.json --json-output docs/launch-readiness/hosted-operational-proof-evidence-validation-2026-06-06.json --md-output docs/launch-readiness/hosted-operational-proof-evidence-validation-2026-06-06.md --csv-output docs/launch-readiness/hosted-operational-proof-evidence-validation-checklist-2026-06-06.csv --update-evidence",
+    "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:commercial:confidence"
+  ]
+}

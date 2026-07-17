@@ -6,7 +6,7 @@ interface QuotaUsage {
   windowStart: number;
   windowEnd: number;
   serviceUsage: {
-    perplexity: number;
+    exa: number;
     gemini: number;
     openai: number;
   };
@@ -15,7 +15,7 @@ interface QuotaUsage {
 interface QuotaLimits {
   totalRequests: number;
   perService: {
-    perplexity: number;
+    exa: number;
     gemini: number;
     openai: number;
   };
@@ -25,15 +25,37 @@ interface QuotaLimits {
 const DEFAULT_LIMITS: QuotaLimits = {
   totalRequests: 100,
   perService: {
-    perplexity: 50,
+    exa: 50,
     gemini: 100,
     openai: 100
   },
   windowMinutes: 60
 };
 
+function createDefaultServiceUsage(): QuotaUsage['serviceUsage'] {
+  return { exa: 0, gemini: 0, openai: 0 };
+}
+
+function normalizeServiceUsage(serviceUsage: unknown): QuotaUsage['serviceUsage'] {
+  const raw = typeof serviceUsage === 'object' && serviceUsage !== null ? serviceUsage as Record<string, unknown> : {};
+  const legacyPerplexity = typeof raw.perplexity === 'number' ? raw.perplexity : 0;
+
+  return {
+    exa: typeof raw.exa === 'number' ? raw.exa : legacyPerplexity,
+    gemini: typeof raw.gemini === 'number' ? raw.gemini : 0,
+    openai: typeof raw.openai === 'number' ? raw.openai : 0
+  };
+}
+
 export const useQuotaTracking = (userId?: string, customLimits?: Partial<QuotaLimits>) => {
-  const limits = { ...DEFAULT_LIMITS, ...customLimits };
+  const limits = {
+    ...DEFAULT_LIMITS,
+    ...customLimits,
+    perService: {
+      ...DEFAULT_LIMITS.perService,
+      ...(customLimits?.perService || {})
+    }
+  };
 
   const [usage, setUsage] = useState<QuotaUsage>(() => {
     const saved = localStorage.getItem(`quota_usage_${userId || 'anonymous'}`);
@@ -48,10 +70,14 @@ export const useQuotaTracking = (userId?: string, customLimits?: Partial<QuotaLi
             totalRequests: 0,
             windowStart: now,
             windowEnd: now + (limits.windowMinutes * 60 * 1000),
-            serviceUsage: { perplexity: 0, gemini: 0, openai: 0 }
+            serviceUsage: createDefaultServiceUsage()
           };
         }
-        return parsed;
+        return {
+          ...parsed,
+          userId,
+          serviceUsage: normalizeServiceUsage(parsed.serviceUsage)
+        };
       } catch (e) {
         console.warn('Failed to parse quota usage from localStorage');
       }
@@ -61,7 +87,7 @@ export const useQuotaTracking = (userId?: string, customLimits?: Partial<QuotaLi
       totalRequests: 0,
       windowStart: Date.now(),
       windowEnd: Date.now() + (limits.windowMinutes * 60 * 1000),
-      serviceUsage: { perplexity: 0, gemini: 0, openai: 0 }
+      serviceUsage: createDefaultServiceUsage()
     };
   });
 
@@ -131,7 +157,7 @@ export const useQuotaTracking = (userId?: string, customLimits?: Partial<QuotaLi
       totalRequests: 0,
       windowStart: Date.now(),
       windowEnd: Date.now() + (limits.windowMinutes * 60 * 1000),
-      serviceUsage: { perplexity: 0, gemini: 0, openai: 0 }
+      serviceUsage: createDefaultServiceUsage()
     });
   }, [userId, limits]);
 

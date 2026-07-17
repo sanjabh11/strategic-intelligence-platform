@@ -5,6 +5,7 @@
 import React, { ReactNode } from 'react';
 import { Lock, Zap, Crown, Sparkles, ArrowRight, Check } from 'lucide-react';
 import { useSubscription, SubscriptionTier, TierLimits } from '../hooks/useSubscription';
+import { isLabsAndGoldBypassEnabled } from '../lib/accessOverrides';
 
 interface SubscriptionGateProps {
   feature: keyof TierLimits;
@@ -16,16 +17,16 @@ interface SubscriptionGateProps {
 
 const TIER_COLORS: Record<SubscriptionTier, string> = {
   free: 'from-slate-500 to-slate-600',
-  analyst: 'from-blue-500 to-blue-600',
   pro: 'from-purple-500 to-purple-600',
+  elite: 'from-amber-500 to-amber-600',
   enterprise: 'from-amber-500 to-amber-600',
   academic: 'from-green-500 to-green-600'
 };
 
 const TIER_ICONS: Record<SubscriptionTier, React.ElementType> = {
   free: Lock,
-  analyst: Zap,
   pro: Sparkles,
+  elite: Crown,
   enterprise: Crown,
   academic: Sparkles
 };
@@ -60,7 +61,7 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({
   const requiredTier = needsUpgradeFor(feature);
   const tierInfo = allTiers.find(t => t.tier === requiredTier);
   const TierIcon = requiredTier ? TIER_ICONS[requiredTier] : Lock;
-  const tierGradient = requiredTier ? TIER_COLORS[requiredTier] : TIER_COLORS.analyst;
+  const tierGradient = requiredTier ? TIER_COLORS[requiredTier] : TIER_COLORS.pro;
 
   return (
     <div className="relative">
@@ -141,9 +142,11 @@ export const SubscriptionGate: React.FC<SubscriptionGateProps> = ({
 
 // Feature-specific gate components for common use cases
 export const GoldModuleGate: React.FC<{ children: ReactNode; userId?: string }> = ({ children, userId }) => (
-  <SubscriptionGate feature="canAccessGoldModule" userId={userId}>
-    {children}
-  </SubscriptionGate>
+  isLabsAndGoldBypassEnabled ? <>{children}</> : (
+    <SubscriptionGate feature="canAccessGoldModule" userId={userId}>
+      {children}
+    </SubscriptionGate>
+  )
 );
 
 export const SequentialGamesGate: React.FC<{ children: ReactNode; userId?: string }> = ({ children, userId }) => (

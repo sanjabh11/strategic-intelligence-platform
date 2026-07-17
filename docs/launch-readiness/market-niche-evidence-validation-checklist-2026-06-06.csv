@@ -1,0 +1,11 @@
+gate,status,proof_bucket,evidence
+five_niche_sequence_present,passed,repo_artifact,5/5 required niches present; offer sequence length 5.
+source_alignment_present,passed,repo_artifact,8 pilot-pack source alignments and 13 current research anchors attached.
+substitution_matrix_present,passed,repo_artifact,5 substitute/competitor rows loaded; 5/5 required niches have substitute coverage.
+niche_proof_assets_and_boundaries_present,passed,repo_artifact,"5/5 niches have buyer job, proof assets, sale boundary, and substitute coverage."
+buyer_safe_claim_language_preserved,passed,repo_artifact,"0 prohibited claim patterns found in pilot offer name, promise, or allowed claims."
+local_route_proof_present,passed,local,5/5 niches have local route signals; local artifact status local_route_proof_ready_not_hosted_proof; hosted_live_proof=false.
+hosted_live_proof_absent_boundary_preserved,passed,hosted_live,Hosted validation status hosted_operational_evidence_validation_ready_no_hosted_runs; ready_for_buyer_safe_hosted_claims=false.
+buyer_validation_absent_boundary_preserved,passed,owner_input,Buyer validation verified=false; buyer evidence ready=false; completed calls 0.
+accuracy_claim_blocked,passed,owner_input,Scoring status forecast_scoring_evidence_validation_sample_only_not_claim_proof; scoring_ready=false; accuracy_claim_allowed=false; world_class_prediction_claim_allowed=false.
+enterprise_ready_claim_blocked,passed,owner_input,Enterprise procurement status enterprise_procurement_gate_ready_not_owner_approved_or_security_proof; enterprise_ready=false.

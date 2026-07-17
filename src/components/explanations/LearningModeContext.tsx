@@ -41,7 +41,7 @@ export const LearningModeProvider: React.FC<LearningModeProviderProps> = ({ chil
   }, [isLearningMode]);
 
   const toggleLearningMode = () => {
-    setIsLearningMode(prev => !prev);
+    setIsLearningMode((prev: any) => !prev);
   };
 
   const setLearningMode = (enabled: boolean) => {
@@ -84,6 +84,10 @@ export const WelcomeMessage: React.FC = () => {
   const { isFirstVisit, markVisited, setLearningMode } = useLearningMode();
   const [isVisible, setIsVisible] = useState(isFirstVisit);
 
+  useEffect(() => {
+    setIsVisible(isFirstVisit);
+  }, [isFirstVisit]);
+
   if (!isVisible) return null;
 
   const handleEnableLearningMode = () => {
@@ -98,34 +102,36 @@ export const WelcomeMessage: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
-      <div className="bg-slate-800 border border-slate-600 rounded-xl p-6 max-w-md mx-auto">
-        <div className="text-center">
-          <div className="text-2xl mb-4">👋</div>
-          <h3 className="text-xl font-semibold text-white mb-3">Welcome to Strategic Intelligence!</h3>
-          <p className="text-slate-300 mb-6">
-            This platform uses advanced game theory to analyze strategic situations. 
-            Would you like to enable <strong>Learning Mode</strong> to see helpful explanations for all charts and concepts?
-          </p>
-          
-          <div className="flex space-x-3 justify-center">
-            <button
-              onClick={handleEnableLearningMode}
-              className="px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-500 transition-colors"
-            >
-              Yes, help me learn!
-            </button>
-            <button
-              onClick={handleSkip}
-              className="px-4 py-2 bg-slate-600 text-slate-300 rounded-lg hover:bg-slate-500 transition-colors"
-            >
-              Skip for now
-            </button>
+    <div className="pointer-events-none fixed bottom-4 right-4 z-40 max-w-sm p-4">
+      <div className="pointer-events-auto rounded-2xl border border-slate-600 bg-slate-800/95 p-5 shadow-2xl backdrop-blur">
+        <div className="flex items-start gap-3">
+          <div className="text-2xl leading-none">👋</div>
+          <div className="flex-1">
+            <h3 className="text-lg font-semibold text-white">Welcome to Strategic Intelligence</h3>
+            <p className="mt-2 text-sm leading-6 text-slate-300">
+              Turn on <strong>Learning Mode</strong> if you want chart and concept explanations while you explore.
+              This prompt stays out of the way so you can keep navigating the product.
+            </p>
+
+            <div className="mt-4 flex flex-wrap gap-3">
+              <button
+                onClick={handleEnableLearningMode}
+                className="rounded-lg bg-cyan-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-cyan-500"
+              >
+                Enable Learning Mode
+              </button>
+              <button
+                onClick={handleSkip}
+                className="rounded-lg bg-slate-700 px-4 py-2 text-sm text-slate-300 transition-colors hover:bg-slate-600"
+              >
+                Dismiss
+              </button>
+            </div>
+
+            <p className="mt-3 text-xs text-slate-400">
+              You can toggle Learning Mode later from the header at any time.
+            </p>
           </div>
-          
-          <p className="text-xs text-slate-400 mt-4">
-            You can always toggle Learning Mode later using the button in the header.
-          </p>
         </div>
       </div>
     </div>

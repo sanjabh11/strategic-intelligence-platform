@@ -4,7 +4,7 @@
 // Sensitivity analysis runner - performs parameter perturbations (n=10, ±10%) and creates tornado summary
 // Endpoint: POST /worker/jobs (job type: sensitivity)
 
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { createClient } from 'npm:@supabase/supabase-js@2'
 import { computeEVs } from "./evEngine.ts";
 
 // --- Environment helpers ---

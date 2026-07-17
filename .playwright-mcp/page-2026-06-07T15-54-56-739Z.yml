@@ -1,0 +1,85 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - navigation [ref=e4]:
+      - generic [ref=e6]:
+        - generic [ref=e7]:
+          - link "Strategy Console" [ref=e8] [cursor=pointer]:
+            - /url: /console
+            - img [ref=e9]
+            - generic [ref=e19]: Strategy Console
+          - 'button "Learning Mode: OFF" [ref=e21] [cursor=pointer]':
+            - img [ref=e22]
+            - text: "Learning Mode: OFF"
+        - generic [ref=e25]:
+          - link "Console" [ref=e26] [cursor=pointer]:
+            - /url: /console
+            - img [ref=e27]
+            - text: Console
+          - link "Templates" [ref=e29] [cursor=pointer]:
+            - /url: /templates
+            - img [ref=e30]
+            - text: Templates
+          - link "Forecasts" [ref=e33] [cursor=pointer]:
+            - /url: /forecasts
+            - img [ref=e34]
+            - text: Forecasts
+    - main [ref=e37]:
+      - generic [ref=e40]:
+        - generic [ref=e42]:
+          - generic [ref=e43]:
+            - img [ref=e44]
+            - generic [ref=e48]:
+              - heading "Forecast Registry" [level=2] [ref=e49]
+              - paragraph [ref=e50]: Public predictions powered by game theory
+          - button "Leaderboard" [ref=e52] [cursor=pointer]:
+            - img [ref=e53]
+            - text: Leaderboard
+        - generic [ref=e56]:
+          - generic [ref=e57]:
+            - img [ref=e58]
+            - textbox "Search forecasts..." [ref=e61]
+          - generic [ref=e62]:
+            - button "All" [ref=e63] [cursor=pointer]:
+              - img [ref=e64]
+              - text: All
+            - button "Geopolitical" [ref=e67] [cursor=pointer]:
+              - img [ref=e68]
+              - text: Geopolitical
+            - button "Financial" [ref=e71] [cursor=pointer]:
+              - img [ref=e72]
+              - text: Financial
+            - button "Technology" [ref=e75] [cursor=pointer]:
+              - img [ref=e76]
+              - text: Technology
+            - button "Economic" [ref=e78] [cursor=pointer]:
+              - img [ref=e79]
+              - text: Economic
+            - button "Social" [ref=e81] [cursor=pointer]:
+              - img [ref=e82]
+              - text: Social
+          - generic [ref=e87] [cursor=pointer]:
+            - checkbox "Show Resolved" [ref=e88]
+            - text: Show Resolved
+        - generic [ref=e90]:
+          - img [ref=e91]
+          - paragraph [ref=e94]: No live forecasts are published yet.
+          - paragraph [ref=e95]: "This beta stays truthful: the public registry only shows real forecasts after they have been created and published. Use templates or the strategy console to explore the workflow while the first live forecasts are still being prepared."
+          - generic [ref=e96]:
+            - button "Browse Templates" [ref=e97] [cursor=pointer]
+            - button "Open Strategy Console" [ref=e98] [cursor=pointer]
+    - contentinfo [ref=e99]:
+      - generic [ref=e101]:
+        - paragraph [ref=e102]: Strategy Console - Evidence-Backed Strategic Analysis
+        - paragraph [ref=e103]: Real citations. Real simulations. Real clarity.
+  - generic [ref=e105]:
+    - generic [ref=e106]: 👋
+    - generic [ref=e107]:
+      - heading "Welcome to Strategic Intelligence" [level=3] [ref=e108]
+      - paragraph [ref=e109]:
+        - text: Turn on
+        - strong [ref=e110]: Learning Mode
+        - text: if you want chart and concept explanations while you explore. This prompt stays out of the way so you can keep navigating the product.
+      - generic [ref=e111]:
+        - button "Enable Learning Mode" [ref=e112] [cursor=pointer]
+        - button "Dismiss" [ref=e113] [cursor=pointer]
+      - paragraph [ref=e114]: You can toggle Learning Mode later from the header at any time.

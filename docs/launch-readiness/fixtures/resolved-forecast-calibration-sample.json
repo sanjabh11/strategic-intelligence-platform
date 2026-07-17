@@ -1,0 +1,339 @@
+{
+  "data_mode": "sample_fixture",
+  "purpose": "Small deterministic fixture for verifying calibration-ledger scoring math. This is not live product accuracy evidence.",
+  "forecasts": [
+    {
+      "id": "sample-forecast-001",
+      "title": "Sample: escalation contained by review date",
+      "question": "Will the escalation remain contained by the stated review date?",
+      "current_probability": 0.68,
+      "is_resolved": true,
+      "resolution_outcome": "yes",
+      "resolved_at": "2026-02-01T00:00:00Z",
+      "game_theory_model": {
+        "multi_agent_forecast": {
+          "question": {
+            "questionType": "binary"
+          },
+          "panel": {
+            "disagreementIndex": 0.14
+          },
+          "metadata": {
+            "evidenceCount": 5
+          },
+          "consensus": {
+            "activePolicy": "role_weighted",
+            "champion": {
+              "policyId": "role_weighted",
+              "label": "Role-Weighted Champion",
+              "probability": 0.68,
+              "confidence": 0.72,
+              "method": "role-weighted consensus"
+            },
+            "challengers": [
+              {
+                "id": "equal_weight",
+                "label": "Equal-Weight Challenger",
+                "probability": 0.62,
+                "confidence": 0.68,
+                "method": "simple mean"
+              },
+              {
+                "id": "skeptic_adjusted",
+                "label": "Skeptic-Adjusted Challenger",
+                "probability": 0.57,
+                "confidence": 0.64,
+                "method": "champion minus disagreement penalty"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "sample-forecast-002",
+      "title": "Sample: policy shock by review date",
+      "question": "Will a major policy shock occur by the stated review date?",
+      "current_probability": 0.41,
+      "is_resolved": true,
+      "resolution_outcome": "no",
+      "resolved_at": "2026-02-08T00:00:00Z",
+      "game_theory_model": {
+        "multi_agent_forecast": {
+          "question": {
+            "questionType": "binary"
+          },
+          "panel": {
+            "disagreementIndex": 0.19
+          },
+          "metadata": {
+            "evidenceCount": 4
+          },
+          "consensus": {
+            "activePolicy": "role_weighted",
+            "champion": {
+              "policyId": "role_weighted",
+              "label": "Role-Weighted Champion",
+              "probability": 0.41,
+              "confidence": 0.66,
+              "method": "role-weighted consensus"
+            },
+            "challengers": [
+              {
+                "id": "equal_weight",
+                "label": "Equal-Weight Challenger",
+                "probability": 0.46,
+                "confidence": 0.63,
+                "method": "simple mean"
+              },
+              {
+                "id": "skeptic_adjusted",
+                "label": "Skeptic-Adjusted Challenger",
+                "probability": 0.34,
+                "confidence": 0.61,
+                "method": "champion minus disagreement penalty"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "sample-forecast-003",
+      "title": "Sample: commodity disruption by quarter end",
+      "question": "Will a commodity disruption exceed the stated threshold by quarter end?",
+      "current_probability": 0.74,
+      "is_resolved": true,
+      "resolution_outcome": "yes",
+      "resolved_at": "2026-03-01T00:00:00Z",
+      "game_theory_model": {
+        "multi_agent_forecast": {
+          "question": {
+            "questionType": "binary"
+          },
+          "panel": {
+            "disagreementIndex": 0.1
+          },
+          "metadata": {
+            "evidenceCount": 6
+          },
+          "consensus": {
+            "activePolicy": "role_weighted",
+            "champion": {
+              "policyId": "role_weighted",
+              "label": "Role-Weighted Champion",
+              "probability": 0.74,
+              "confidence": 0.76,
+              "method": "role-weighted consensus"
+            },
+            "challengers": [
+              {
+                "id": "equal_weight",
+                "label": "Equal-Weight Challenger",
+                "probability": 0.7,
+                "confidence": 0.7,
+                "method": "simple mean"
+              },
+              {
+                "id": "skeptic_adjusted",
+                "label": "Skeptic-Adjusted Challenger",
+                "probability": 0.63,
+                "confidence": 0.66,
+                "method": "champion minus disagreement penalty"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "sample-forecast-004",
+      "title": "Sample: market stabilization by review date",
+      "question": "Will the market stabilize by the stated review date?",
+      "current_probability": 0.36,
+      "is_resolved": true,
+      "resolution_outcome": "no",
+      "resolved_at": "2026-03-15T00:00:00Z",
+      "game_theory_model": {
+        "multi_agent_forecast": {
+          "question": {
+            "questionType": "binary"
+          },
+          "panel": {
+            "disagreementIndex": 0.21
+          },
+          "metadata": {
+            "evidenceCount": 4
+          },
+          "consensus": {
+            "activePolicy": "role_weighted",
+            "champion": {
+              "policyId": "role_weighted",
+              "label": "Role-Weighted Champion",
+              "probability": 0.36,
+              "confidence": 0.64,
+              "method": "role-weighted consensus"
+            },
+            "challengers": [
+              {
+                "id": "equal_weight",
+                "label": "Equal-Weight Challenger",
+                "probability": 0.39,
+                "confidence": 0.6,
+                "method": "simple mean"
+              },
+              {
+                "id": "skeptic_adjusted",
+                "label": "Skeptic-Adjusted Challenger",
+                "probability": 0.29,
+                "confidence": 0.58,
+                "method": "champion minus disagreement penalty"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "sample-forecast-005",
+      "title": "Sample: supply chain recovery by review date",
+      "question": "Will the supply chain recover by the stated review date?",
+      "current_probability": 0.58,
+      "is_resolved": true,
+      "resolution_outcome": "no",
+      "resolved_at": "2026-04-01T00:00:00Z",
+      "game_theory_model": {
+        "multi_agent_forecast": {
+          "question": {
+            "questionType": "binary"
+          },
+          "panel": {
+            "disagreementIndex": 0.24
+          },
+          "metadata": {
+            "evidenceCount": 3
+          },
+          "consensus": {
+            "activePolicy": "role_weighted",
+            "champion": {
+              "policyId": "role_weighted",
+              "label": "Role-Weighted Champion",
+              "probability": 0.58,
+              "confidence": 0.59,
+              "method": "role-weighted consensus"
+            },
+            "challengers": [
+              {
+                "id": "equal_weight",
+                "label": "Equal-Weight Challenger",
+                "probability": 0.52,
+                "confidence": 0.56,
+                "method": "simple mean"
+              },
+              {
+                "id": "skeptic_adjusted",
+                "label": "Skeptic-Adjusted Challenger",
+                "probability": 0.44,
+                "confidence": 0.54,
+                "method": "champion minus disagreement penalty"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "sample-forecast-006",
+      "title": "Sample: budget vote passes by deadline",
+      "question": "Will the budget vote pass by the stated deadline?",
+      "current_probability": 0.82,
+      "is_resolved": true,
+      "resolution_outcome": "yes",
+      "resolved_at": "2026-04-18T00:00:00Z",
+      "game_theory_model": {
+        "multi_agent_forecast": {
+          "question": {
+            "questionType": "binary"
+          },
+          "panel": {
+            "disagreementIndex": 0.08
+          },
+          "metadata": {
+            "evidenceCount": 7
+          },
+          "consensus": {
+            "activePolicy": "role_weighted",
+            "champion": {
+              "policyId": "role_weighted",
+              "label": "Role-Weighted Champion",
+              "probability": 0.82,
+              "confidence": 0.8,
+              "method": "role-weighted consensus"
+            },
+            "challengers": [
+              {
+                "id": "equal_weight",
+                "label": "Equal-Weight Challenger",
+                "probability": 0.76,
+                "confidence": 0.73,
+                "method": "simple mean"
+              },
+              {
+                "id": "skeptic_adjusted",
+                "label": "Skeptic-Adjusted Challenger",
+                "probability": 0.71,
+                "confidence": 0.7,
+                "method": "champion minus disagreement penalty"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "sample-forecast-007",
+      "title": "Sample: unresolved row should be excluded",
+      "question": "Will the unresolved sample be excluded?",
+      "current_probability": 0.61,
+      "is_resolved": false,
+      "resolution_outcome": null
+    }
+  ],
+  "forecast_predictions": [
+    {
+      "forecast_id": "sample-forecast-001",
+      "user_id": "sample-user-a",
+      "probability": 0.7
+    },
+    {
+      "forecast_id": "sample-forecast-001",
+      "user_id": "sample-user-b",
+      "probability": 0.64
+    },
+    {
+      "forecast_id": "sample-forecast-002",
+      "user_id": "sample-user-a",
+      "probability": 0.44
+    },
+    {
+      "forecast_id": "sample-forecast-003",
+      "user_id": "sample-user-c",
+      "probability": 0.78
+    },
+    {
+      "forecast_id": "sample-forecast-004",
+      "user_id": "sample-user-a",
+      "probability": 0.33
+    },
+    {
+      "forecast_id": "sample-forecast-005",
+      "user_id": "sample-user-b",
+      "probability": 0.55
+    },
+    {
+      "forecast_id": "sample-forecast-006",
+      "user_id": "sample-user-c",
+      "probability": 0.84
+    }
+  ]
+}

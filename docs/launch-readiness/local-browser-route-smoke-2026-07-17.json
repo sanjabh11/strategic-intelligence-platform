@@ -1,0 +1,685 @@
+{
+  "schema_version": "local-browser-route-smoke-v1",
+  "generated_at": "2026-07-17T03:40:05.889Z",
+  "source_mode": "local_preview_full_beta_labs_bypass_mocked_placeholder_supabase",
+  "base_url": "http://127.0.0.1:4188",
+  "proof_bucket": "local",
+  "hosted_live_proof": false,
+  "route_count": 7,
+  "rendered_count": 6,
+  "auth_gate_expected_count": 1,
+  "rendered_or_expected_auth_gate_count": 7,
+  "failed_count": 0,
+  "render_problem_count": 0,
+  "runtime_console_error_count": 0,
+  "placeholder_network_error_count": 0,
+  "all_top_niche_routes_ready": true,
+  "auth_gated_routes": [
+    "/war-room"
+  ],
+  "credential_free_authenticated_routes": [
+    "/war-room"
+  ],
+  "credential_free_authenticated_route_count": 1,
+  "browser_plugin_findings": [
+    {
+      "id": "in_app_browser_multi_route_timeout",
+      "status": "observed",
+      "finding": "The in-app Browser connected and loaded /console after visibility retry, but multi-route capture timed out when creating or reusing browser-use pages.",
+      "impact": "Use repo-native Playwright for durable repeatable local route proof until the in-app Browser attach issue is cleared."
+    },
+    {
+      "id": "local_null_supabase_console_check",
+      "status": "mitigated_local_only",
+      "finding": "The local-mode null Supabase auth crash is guarded in StrategyConsole, PersonalLifeCoach, and getUserAuthHeaders.",
+      "impact": "VITE_LOCAL_ANALYZE=true can be used for focused local page-load checks, but it still does not prove hosted/live behavior."
+    }
+  ],
+  "routes": [
+    {
+      "id": "enterprise_decision_console",
+      "niche": "Enterprise/public-sector strategic decision intelligence",
+      "path": "/console",
+      "expected_signal": "Strategy Console",
+      "expected_status": "rendered",
+      "url": "http://127.0.0.1:4188/console",
+      "started_at": "2026-07-17T03:39:55.439Z",
+      "finished_at": "2026-07-17T03:39:57.203Z",
+      "status": "rendered",
+      "document_status": 200,
+      "page": {
+        "title": "",
+        "url": "http://127.0.0.1:4188/console",
+        "pathname": "/console",
+        "headings": [
+          "New to Strategy Console?",
+          "Fast path",
+          "Strategy Console",
+          "Welcome to Strategic Intelligence"
+        ],
+        "nav_links": [
+          {
+            "text": "Strategy Console",
+            "href": "/console"
+          },
+          {
+            "text": "Console",
+            "href": "/console"
+          },
+          {
+            "text": "Labs",
+            "href": "/labs"
+          },
+          {
+            "text": "Templates",
+            "href": "/templates"
+          },
+          {
+            "text": "Forecasts",
+            "href": "/forecasts"
+          },
+          {
+            "text": "Pricing",
+            "href": "/pricing"
+          }
+        ],
+        "buttons": [
+          "Learning Mode: OFF",
+          "Don't show again",
+          "Get Started",
+          "Strategic Analysis",
+          "Strategist",
+          "Tech Giants AI Safety Coordination...",
+          "Semiconductor Supply Chain Strategy...",
+          "Climate Policy Coordination...",
+          "Advanced analysis settings (1 selected)Keep the flagship path simple and open these only when needed",
+          "Run Analysis",
+          "Enable Learning Mode",
+          "Dismiss"
+        ],
+        "paragraphs": [
+          "Start with one question, run the analysis, then open deeper evidence or governance only when you need it.",
+          "Real citations from verified sources \u2014 every claim traceable",
+          "Recursive equilibrium, quantum strategies, forecasting & more",
+          "Student, researcher, teacher - get explanations that fit you",
+          "Turn complex questions into defensible, structured insights",
+          "Enter a strategic situation with multiple actors and choices",
+          "Choose from baseline to advanced quantum and forecasting",
+          "Get evidence-backed equilibria, strategies, and predictions",
+          "Run evidence-backed strategic analysis in seconds. Real citations. Real simulations. Real clarity.",
+          "Strategic Intelligence Platform \u2014 Evidence-Backed Strategic Analysis",
+          "Real citations. Real simulations. Real clarity.",
+          "AI-generated analysis for research and educational purposes. Verify all outputs before making decisions.",
+          "Turn on Learning Mode if you want chart and concept explanations while you explore. This prompt stays out of the way so you can keep navigating the product.",
+          "You can toggle Learning Mode later from the header at any time."
+        ],
+        "visible_text_sample": "Skip to main contentStrategy ConsoleLearning Mode: OFFConsoleLabsTemplatesForecastsPricingNew to Strategy Console?Start with one question, run the analysis, then open deeper evidence or governance only when you need it.Evidence-Backed AnalysisReal citations from verified sources \u2014 every claim traceableMultiple Analysis EnginesRecursive equilibrium, quantum strategies, forecasting & moreAudience-Tailored ViewsStudent, researcher, teacher - get explanations that fit youStrategic ClarityTurn complex questions into defensible, structured insightsFast path1Describe Your ScenarioEnter a strategic situation with multiple actors and choices2Select Analysis EnginesChoose from baseline to advanced quantum and forecasting3Run AnalysisGet evidence-backed equilibria, strategies, and predictionsNeed concept explanations later? Learning Mode stays available in the header.Don't show againGet StartedStrategy ConsoleRun evidence-backed strategic analysis in seconds. Real citations. Real simulations. Real clarity.Strategic AnalysisStrategistDescribe your strategic scenarioTry:Tech Giants AI Safety Coordination...Semiconductor Supply Chain Strategy...Climate Policy Coordination...Evidence RetrievalActiveReal citations from Exa, Crossref, GDELT, Firecrawl, and official data providersAdvanced analysis settings (1 selected)Keep the flagship path simple and open these only when neededRun AnalysisStrategic Intelligence Platform \u2014 Evidence-Backed Strategic AnalysisReal citations. Real simulations. Real clarity.AI-generated analysis for research and educational purposes. Verify all outputs before making decisions.Request Demo\u00b7Terms of Service\u00b7Privacy Policy\ud83d\udc4bWelcome to Strategic IntelligenceTurn on Learning Mode if you want chart and concept explanations while you explore. This prompt stays out o",
+        "body_text_length": 1939,
+        "has_root": true,
+        "root_child_count": 2,
+        "blank_page": false,
+        "shows_error_boundary": false,
+        "expected_signal": "Strategy Console",
+        "expected_signal_found": true,
+        "auth_gate_found": false,
+        "expected_auth_gate": false
+      },
+      "console_errors": [],
+      "page_errors": [],
+      "request_failures": [],
+      "console_error_count": 0,
+      "runtime_console_error_count": 0,
+      "placeholder_network_error_count": 0,
+      "screenshot": "/Users/sanjayb/minimax/strategic-intelligence-platform/docs/launch-readiness/browser-route-smoke-2026-07-17/enterprise_decision_console.png"
+    },
+    {
+      "id": "governed_forecast_registry",
+      "niche": "Governed forecasting and research workflow",
+      "path": "/forecasts",
+      "expected_signal": "Forecast Registry",
+      "expected_status": "rendered",
+      "url": "http://127.0.0.1:4188/forecasts",
+      "started_at": "2026-07-17T03:39:57.322Z",
+      "finished_at": "2026-07-17T03:39:58.765Z",
+      "status": "rendered",
+      "document_status": 200,
+      "page": {
+        "title": "",
+        "url": "http://127.0.0.1:4188/forecasts",
+        "pathname": "/forecasts",
+        "headings": [
+          "Forecast Registry",
+          "Welcome to Strategic Intelligence"
+        ],
+        "nav_links": [
+          {
+            "text": "Strategy Console",
+            "href": "/console"
+          },
+          {
+            "text": "Console",
+            "href": "/console"
+          },
+          {
+            "text": "Labs",
+            "href": "/labs"
+          },
+          {
+            "text": "Templates",
+            "href": "/templates"
+          },
+          {
+            "text": "Forecasts",
+            "href": "/forecasts"
+          },
+          {
+            "text": "Pricing",
+            "href": "/pricing"
+          }
+        ],
+        "buttons": [
+          "Learning Mode: OFF",
+          "Leaderboard",
+          "All",
+          "Geopolitical",
+          "Financial",
+          "Technology",
+          "Economic",
+          "Social",
+          "Browse Templates",
+          "Open Strategy Console",
+          "Enable Learning Mode",
+          "Dismiss"
+        ],
+        "paragraphs": [
+          "Public predictions powered by game theory",
+          "No live forecasts are published yet.",
+          "This beta stays truthful: the public registry only shows real forecasts after they have been created and published. Use templates or the strategy console to explore the workflow while the first live forecasts are still being prepared.",
+          "Strategic Intelligence Platform \u2014 Evidence-Backed Strategic Analysis",
+          "Real citations. Real simulations. Real clarity.",
+          "AI-generated analysis for research and educational purposes. Verify all outputs before making decisions.",
+          "Turn on Learning Mode if you want chart and concept explanations while you explore. This prompt stays out of the way so you can keep navigating the product.",
+          "You can toggle Learning Mode later from the header at any time."
+        ],
+        "visible_text_sample": "Skip to main contentStrategy ConsoleLearning Mode: OFFConsoleLabsTemplatesForecastsPricingForecast RegistryPublic predictions powered by game theoryLeaderboardAllGeopoliticalFinancialTechnologyEconomicSocialShow ResolvedNo live forecasts are published yet.This beta stays truthful: the public registry only shows real forecasts after they have been created and published. Use templates or the strategy console to explore the workflow while the first live forecasts are still being prepared.Browse TemplatesOpen Strategy ConsoleStrategic Intelligence Platform \u2014 Evidence-Backed Strategic AnalysisReal citations. Real simulations. Real clarity.AI-generated analysis for research and educational purposes. Verify all outputs before making decisions.Request Demo\u00b7Terms of Service\u00b7Privacy Policy\ud83d\udc4bWelcome to Strategic IntelligenceTurn on Learning Mode if you want chart and concept explanations while you explore. This prompt stays out of the way so you can keep navigating the product.Enable Learning ModeDismissYou can toggle Learning Mode later from the header at any time.",
+        "body_text_length": 1071,
+        "has_root": true,
+        "root_child_count": 2,
+        "blank_page": false,
+        "shows_error_boundary": false,
+        "expected_signal": "Forecast Registry",
+        "expected_signal_found": true,
+        "auth_gate_found": false,
+        "expected_auth_gate": false
+      },
+      "console_errors": [],
+      "page_errors": [],
+      "request_failures": [],
+      "console_error_count": 0,
+      "runtime_console_error_count": 0,
+      "placeholder_network_error_count": 0,
+      "screenshot": "/Users/sanjayb/minimax/strategic-intelligence-platform/docs/launch-readiness/browser-route-smoke-2026-07-17/governed_forecast_registry.png"
+    },
+    {
+      "id": "geopolitical_risk_radar",
+      "niche": "Geopolitical risk radar/scenario monitor",
+      "path": "/insights",
+      "expected_signal": "Live Geopolitical Intelligence",
+      "expected_status": "rendered",
+      "url": "http://127.0.0.1:4188/insights",
+      "started_at": "2026-07-17T03:39:58.871Z",
+      "finished_at": "2026-07-17T03:40:00.472Z",
+      "status": "rendered",
+      "document_status": 200,
+      "page": {
+        "title": "",
+        "url": "http://127.0.0.1:4188/insights",
+        "pathname": "/insights",
+        "headings": [
+          "Live Geopolitical Intelligence",
+          "7-Day Strategic Trend",
+          "What Matters Now",
+          "Filters",
+          "Strategic Scenarios (1)",
+          "Similar Scenarios in Past 50 Years",
+          "Welcome to Strategic Intelligence"
+        ],
+        "nav_links": [
+          {
+            "text": "Strategy Console",
+            "href": "/console"
+          },
+          {
+            "text": "Console",
+            "href": "/console"
+          },
+          {
+            "text": "Labs",
+            "href": "/labs"
+          },
+          {
+            "text": "Templates",
+            "href": "/templates"
+          },
+          {
+            "text": "Forecasts",
+            "href": "/forecasts"
+          },
+          {
+            "text": "Pricing",
+            "href": "/pricing"
+          }
+        ],
+        "buttons": [
+          "Learning Mode: OFF",
+          "Retry feed",
+          "Brief in Console",
+          "Priority",
+          "Newest",
+          "More",
+          "Simulate",
+          "Brief in Console",
+          "Enable Learning Mode",
+          "Dismiss"
+        ],
+        "paragraphs": [
+          "Real-time strategic scenarios from GDELT with game theory analysis",
+          "Scenario quality and freshness are determined by the upstream geopolitical feed and are labeled here before you rely on any signal.",
+          "Cooperation",
+          "Conflict",
+          "Priority-ranked issues for immediate strategist follow-up.",
+          "Energy regulator and Utility operator are in a coordination dynamic: Local route-smoke scenario for the geopolitical dashboard.. This remains a monitor-level development. Watch for high strategic value actor interaction with downstream policy and market implications and consider coordinate evidence collection and escalation timing..",
+          "High strategic value actor interaction with downstream policy and market implications",
+          "Priority-ranked signals. Use the console handoff to turn a live event into a strategist brief and governed forecast draft.",
+          "Local route-smoke scenario for the geopolitical dashboard.",
+          "No historical data available for this pattern yet.",
+          "Data is being collected from World Bank indicators.",
+          "Historical analysis based on 50+ years of economic indicators including GDP growth, trade volumes, governance metrics, and conflict resolution outcomes.",
+          "Strategic Intelligence Platform \u2014 Evidence-Backed Strategic Analysis",
+          "Real citations. Real simulations. Real clarity.",
+          "AI-generated analysis for research and educational purposes. Verify all outputs before making decisions.",
+          "Turn on Learning Mode if you want chart and concept explanations while you explore. This prompt stays out of the way so you can keep navigating the product.",
+          "You can toggle Learning Mode later from the header at any time."
+        ],
+        "visible_text_sample": "Skip to main contentStrategy ConsoleLearning Mode: OFFConsoleLabsTemplatesForecastsPricingLive Geopolitical IntelligenceReal-time strategic scenarios from GDELT with game theory analysisLast updated: Jul 17, 2026 09:09 \u2022 1 scenarios \u2022 Updates every 5 minutesDegraded feedFeed degradedScenario quality and freshness are determined by the upstream geopolitical feed and are labeled here before you rely on any signal.Retry feedLast successful refresh: Jul 17, 2026 09:09Beta trust note: Signals are degraded and should be treated as monitoring prompts, not decisive briefs.Provider statuslocal-route-smokegdelt: mocked-local7-Day Strategic TrendJun 0600.951.92.853.8CooperationConflictWhat Matters NowPriority-ranked issues for immediate strategist follow-up.Energy regulator \u2194 Utility operator49Energy regulator and Utility operator are in a coordination dynamic: Local route-smoke scenario for the geopolitical dashboard.. This remains a monitor-level development. Watch for high strategic value actor interaction with downstream policy and market implications and consider coordinate evidence collection and escalation timing..High strategic value actor interaction with downstream policy and market implicationsmonitorBrief in ConsoleFiltersSearchRegionAll RegionsAsia-PacificEuropeMiddle EastAmericasAfricaGame TypeAll TypesCoordination GameConflict GamePrisoner's DilemmaBargaining GameSortPriorityNewestStrategic Scenarios (1)Priority-ranked signals. Use the console handoff to turn a live event into a strategist brief and governed forecast draft.Energy regulator\u2194Utility operatorCOORDINATION GAMEmonitorPriority 49Cross-region / unclassifiedLocal route-smoke scenario for the geopolitical dashboard.Watch ReasonHigh strategic value actor interaction with downstream policy and market implicati",
+        "body_text_length": 3428,
+        "has_root": true,
+        "root_child_count": 2,
+        "blank_page": false,
+        "shows_error_boundary": false,
+        "expected_signal": "Live Geopolitical Intelligence",
+        "expected_signal_found": true,
+        "auth_gate_found": false,
+        "expected_auth_gate": false
+      },
+      "console_errors": [],
+      "page_errors": [],
+      "request_failures": [],
+      "console_error_count": 0,
+      "runtime_console_error_count": 0,
+      "placeholder_network_error_count": 0,
+      "screenshot": "/Users/sanjayb/minimax/strategic-intelligence-platform/docs/launch-readiness/browser-route-smoke-2026-07-17/geopolitical_risk_radar.png"
+    },
+    {
+      "id": "executive_briefing_auth_gate",
+      "niche": "Executive/analyst briefing layer",
+      "path": "/war-room",
+      "expected_signal": "War Room requires sign-in",
+      "expected_status": "auth_gate_expected",
+      "url": "http://127.0.0.1:4188/war-room",
+      "started_at": "2026-07-17T03:40:00.536Z",
+      "finished_at": "2026-07-17T03:40:01.573Z",
+      "status": "auth_gate_expected",
+      "document_status": 200,
+      "page": {
+        "title": "",
+        "url": "http://127.0.0.1:4188/war-room",
+        "pathname": "/war-room",
+        "headings": [
+          "War Room requires sign-in",
+          "Welcome to Strategic Intelligence"
+        ],
+        "nav_links": [
+          {
+            "text": "Strategy Console",
+            "href": "/console"
+          },
+          {
+            "text": "Console",
+            "href": "/console"
+          },
+          {
+            "text": "Labs",
+            "href": "/labs"
+          },
+          {
+            "text": "Templates",
+            "href": "/templates"
+          },
+          {
+            "text": "Forecasts",
+            "href": "/forecasts"
+          },
+          {
+            "text": "Pricing",
+            "href": "/pricing"
+          }
+        ],
+        "buttons": [
+          "Learning Mode: OFF",
+          "Enable Learning Mode",
+          "Dismiss"
+        ],
+        "paragraphs": [
+          "Use the war room to preserve strategist briefs, linked forecasts, assumptions, and scenario versions as shared team memory.",
+          "Strategic Intelligence Platform \u2014 Evidence-Backed Strategic Analysis",
+          "Real citations. Real simulations. Real clarity.",
+          "AI-generated analysis for research and educational purposes. Verify all outputs before making decisions.",
+          "Turn on Learning Mode if you want chart and concept explanations while you explore. This prompt stays out of the way so you can keep navigating the product.",
+          "You can toggle Learning Mode later from the header at any time."
+        ],
+        "visible_text_sample": "Skip to main contentStrategy ConsoleLearning Mode: OFFConsoleLabsTemplatesForecastsPricingWar Room requires sign-inUse the war room to preserve strategist briefs, linked forecasts, assumptions, and scenario versions as shared team memory.Sign in to continueStrategic Intelligence Platform \u2014 Evidence-Backed Strategic AnalysisReal citations. Real simulations. Real clarity.AI-generated analysis for research and educational purposes. Verify all outputs before making decisions.Request Demo\u00b7Terms of Service\u00b7Privacy Policy\ud83d\udc4bWelcome to Strategic IntelligenceTurn on Learning Mode if you want chart and concept explanations while you explore. This prompt stays out of the way so you can keep navigating the product.Enable Learning ModeDismissYou can toggle Learning Mode later from the header at any time.",
+        "body_text_length": 801,
+        "has_root": true,
+        "root_child_count": 2,
+        "blank_page": false,
+        "shows_error_boundary": false,
+        "expected_signal": "War Room requires sign-in",
+        "expected_signal_found": true,
+        "auth_gate_found": true,
+        "expected_auth_gate": true
+      },
+      "console_errors": [],
+      "page_errors": [],
+      "request_failures": [],
+      "console_error_count": 0,
+      "runtime_console_error_count": 0,
+      "placeholder_network_error_count": 0,
+      "screenshot": "/Users/sanjayb/minimax/strategic-intelligence-platform/docs/launch-readiness/browser-route-smoke-2026-07-17/executive_briefing_auth_gate.png"
+    },
+    {
+      "id": "executive_briefing_workflow",
+      "niche": "Executive/analyst briefing layer",
+      "path": "/war-room",
+      "expected_signal": "Corporate War Room",
+      "expected_status": "rendered",
+      "auth_fixture": "enterprise",
+      "url": "http://127.0.0.1:4188/war-room",
+      "started_at": "2026-07-17T03:40:01.672Z",
+      "finished_at": "2026-07-17T03:40:03.474Z",
+      "status": "rendered",
+      "document_status": 200,
+      "page": {
+        "title": "",
+        "url": "http://127.0.0.1:4188/war-room",
+        "pathname": "/war-room",
+        "headings": [
+          "Corporate War Room",
+          "Create a session",
+          "Existing sessions",
+          "Welcome to Strategic Intelligence"
+        ],
+        "nav_links": [
+          {
+            "text": "Strategy Console",
+            "href": "/console"
+          },
+          {
+            "text": "Console",
+            "href": "/console"
+          },
+          {
+            "text": "Insights",
+            "href": "/insights"
+          },
+          {
+            "text": "Commodities",
+            "href": "/commodities"
+          },
+          {
+            "text": "Labs",
+            "href": "/labs"
+          },
+          {
+            "text": "Templates",
+            "href": "/templates"
+          },
+          {
+            "text": "Forecasts",
+            "href": "/forecasts"
+          },
+          {
+            "text": "Classrooms",
+            "href": "/classrooms"
+          },
+          {
+            "text": "War Room",
+            "href": "/war-room"
+          },
+          {
+            "text": "Pricing",
+            "href": "/pricing"
+          },
+          {
+            "text": "Reviews",
+            "href": "/reviews"
+          },
+          {
+            "text": "System",
+            "href": "/system"
+          }
+        ],
+        "buttons": [
+          "Learning Mode: OFF",
+          "Tech Market EntryStress-test how an incumbent and a new entrant sequence moves around pricing, partnerships, and response timing.standard 45 min 3 teams 6 rounds",
+          "Hostile Acquisition DefenseCapture board actions, white-knight options, shareholder pressure, and regulatory escalations as a live team scenario.Enterprise 60 min 4 teams 8 rounds",
+          "Digital Disruption ResponseTrack sequential moves when an incumbent faces an aggressive challenger and must decide whether to defend, partner, or pivot.standard 30 min 2 teams 4 rounds",
+          "Airline Pricing WarModel retaliatory pricing, capacity discipline, and alliance behavior under incomplete information.Enterprise 45 min 3 teams 5 rounds",
+          "Local Proof Executive Briefing SessionCritical infrastructure supply disruptionlobby",
+          "Enable Learning Mode",
+          "Dismiss"
+        ],
+        "paragraphs": [
+          "Shared team memory for strategist briefs, linked forecasts, assumptions, and scenario versions.",
+          "Strategic Intelligence Platform \u2014 Evidence-Backed Strategic Analysis",
+          "Real citations. Real simulations. Real clarity.",
+          "AI-generated analysis for research and educational purposes. Verify all outputs before making decisions.",
+          "Turn on Learning Mode if you want chart and concept explanations while you explore. This prompt stays out of the way so you can keep navigating the product.",
+          "You can toggle Learning Mode later from the header at any time."
+        ],
+        "visible_text_sample": "Skip to main contentStrategy ConsoleLearning Mode: OFFConsoleInsightsCommoditiesLabsTemplatesForecastsClassroomsWar RoomPricingReviewsSystemCorporate War RoomShared team memory for strategist briefs, linked forecasts, assumptions, and scenario versions.EnterpriseCreate a sessionTech Market EntryStress-test how an incumbent and a new entrant sequence moves around pricing, partnerships, and response timing.standard 45 min 3 teams 6 roundsHostile Acquisition DefenseCapture board actions, white-knight options, shareholder pressure, and regulatory escalations as a live team scenario.Enterprise 60 min 4 teams 8 roundsDigital Disruption ResponseTrack sequential moves when an incumbent faces an aggressive challenger and must decide whether to defend, partner, or pivot.standard 30 min 2 teams 4 roundsAirline Pricing WarModel retaliatory pricing, capacity discipline, and alliance behavior under incomplete information.Enterprise 45 min 3 teams 5 roundsExisting sessionsLocal Proof Executive Briefing SessionCritical infrastructure supply disruptionlobbyStrategic Intelligence Platform \u2014 Evidence-Backed Strategic AnalysisReal citations. Real simulations. Real clarity.AI-generated analysis for research and educational purposes. Verify all outputs before making decisions.Request Demo\u00b7Terms of Service\u00b7Privacy Policy\ud83d\udc4bWelcome to Strategic IntelligenceTurn on Learning Mode if you want chart and concept explanations while you explore. This prompt stays out of the way so you can keep navigating the product.Enable Learning ModeDismissYou can toggle Learning Mode later from the header at any time.",
+        "body_text_length": 1600,
+        "has_root": true,
+        "root_child_count": 2,
+        "blank_page": false,
+        "shows_error_boundary": false,
+        "expected_signal": "Corporate War Room",
+        "expected_signal_found": true,
+        "auth_gate_found": false,
+        "expected_auth_gate": false
+      },
+      "console_errors": [],
+      "page_errors": [],
+      "request_failures": [],
+      "console_error_count": 0,
+      "runtime_console_error_count": 0,
+      "placeholder_network_error_count": 0,
+      "screenshot": "/Users/sanjayb/minimax/strategic-intelligence-platform/docs/launch-readiness/browser-route-smoke-2026-07-17/executive_briefing_workflow.png"
+    },
+    {
+      "id": "negotiation_training",
+      "niche": "Negotiation and strategic reasoning training",
+      "path": "/labs/negotiation",
+      "expected_signal": "Negotiation Dojo",
+      "expected_status": "rendered",
+      "url": "http://127.0.0.1:4188/labs/negotiation",
+      "started_at": "2026-07-17T03:40:03.527Z",
+      "finished_at": "2026-07-17T03:40:04.663Z",
+      "status": "rendered",
+      "document_status": 200,
+      "page": {
+        "title": "",
+        "url": "http://127.0.0.1:4188/labs/negotiation",
+        "pathname": "/labs/negotiation",
+        "headings": [
+          "Negotiation Dojo",
+          "Corporate Procurement",
+          "Enterprise Software",
+          "Welcome to Strategic Intelligence"
+        ],
+        "nav_links": [
+          {
+            "text": "Strategy Console",
+            "href": "/console"
+          },
+          {
+            "text": "Console",
+            "href": "/console"
+          },
+          {
+            "text": "Labs",
+            "href": "/labs"
+          },
+          {
+            "text": "Templates",
+            "href": "/templates"
+          },
+          {
+            "text": "Forecasts",
+            "href": "/forecasts"
+          },
+          {
+            "text": "Pricing",
+            "href": "/pricing"
+          }
+        ],
+        "buttons": [
+          "Learning Mode: OFF",
+          "Enable Learning Mode",
+          "Dismiss"
+        ],
+        "paragraphs": [
+          "Procurement and enterprise-software negotiation drills with structured coaching artifacts.",
+          "Run realistic commercial negotiations, pressure-test BATNA usage, then review a manager-ready debrief covering concession discipline, ZOPA capture, and missed value.",
+          "A critical supplier announced a 12% price increase. You need to contain the increase and trade for service or volume commitments only if necessary.",
+          "A consulting vendor is quoting premium implementation rates. You need to narrow scope, secure training support, and avoid runaway change-order risk.",
+          "Supply is tight and the supplier knows it. You need to secure allocation while negotiating lead times, payment terms, and service-level commitments.",
+          "You are consolidating vendors and can move spend to a preferred provider. Use that leverage to push for price, exit flexibility, and transition support.",
+          "Your team must renew a platform contract, but finance cut the budget. You need a lower annual commit plus better renewal flexibility.",
+          "You are buying 100 seats of a new SaaS tool. The vendor is pushing list pricing, but you can trade contract length and rollout speed.",
+          "Strategic Intelligence Platform \u2014 Evidence-Backed Strategic Analysis",
+          "Real citations. Real simulations. Real clarity.",
+          "AI-generated analysis for research and educational purposes. Verify all outputs before making decisions.",
+          "Turn on Learning Mode if you want chart and concept explanations while you explore. This prompt stays out of the way so you can keep navigating the product.",
+          "You can toggle Learning Mode later from the header at any time."
+        ],
+        "visible_text_sample": "Skip to main contentStrategy ConsoleLearning Mode: OFFConsoleLabsTemplatesForecastsPricingNegotiation DojoProcurement and enterprise-software negotiation drills with structured coaching artifacts.What this module trainsRun realistic commercial negotiations, pressure-test BATNA usage, then review a manager-ready debrief covering concession discipline, ZOPA capture, and missed value.Corporate ProcurementVendor Annual Price Increase PushbackmediumA critical supplier announced a 12% price increase. You need to contain the increase and trade for service or volume commitments only if necessary.Primary goalLimit the increase and avoid giving away terms for free.You: Procurement Category ManagerCounterparty: Vendor Account ManagerBATNA: You can shift 35% of volume to a secondary supplier within 90 days.Implementation Services Scope and Rate NegotiationhardA consulting vendor is quoting premium implementation rates. You need to narrow scope, secure training support, and avoid runaway change-order risk.Primary goalReduce scope cost while protecting training and implementation quality.You: Transformation Program ManagerCounterparty: Implementation DirectorBATNA: An internal delivery partner can absorb phase two if the vendor will not narrow scope.Strategic Sourcing in a Constrained Supply MarkethardSupply is tight and the supplier knows it. You need to secure allocation while negotiating lead times, payment terms, and service-level commitments.Primary goalProtect allocation and timing while containing price escalation.You: Head of Strategic SourcingCounterparty: Supplier Commercial LeadBATNA: Secondary suppliers cover only half your demand and carry worse lead times.Vendor Consolidation and Migration LeveragemediumYou are consolidating vendors and can move spend to a preferred pro",
+        "body_text_length": 3513,
+        "has_root": true,
+        "root_child_count": 2,
+        "blank_page": false,
+        "shows_error_boundary": false,
+        "expected_signal": "Negotiation Dojo",
+        "expected_signal_found": true,
+        "auth_gate_found": false,
+        "expected_auth_gate": false
+      },
+      "console_errors": [],
+      "page_errors": [],
+      "request_failures": [],
+      "console_error_count": 0,
+      "runtime_console_error_count": 0,
+      "placeholder_network_error_count": 0,
+      "screenshot": "/Users/sanjayb/minimax/strategic-intelligence-platform/docs/launch-readiness/browser-route-smoke-2026-07-17/negotiation_training.png"
+    },
+    {
+      "id": "game_tree_training",
+      "niche": "Negotiation and strategic reasoning training",
+      "path": "/labs/game-tree",
+      "expected_signal": "Sequential Game Studio",
+      "expected_status": "rendered",
+      "url": "http://127.0.0.1:4188/labs/game-tree",
+      "started_at": "2026-07-17T03:40:04.716Z",
+      "finished_at": "2026-07-17T03:40:05.854Z",
+      "status": "rendered",
+      "document_status": 200,
+      "page": {
+        "title": "",
+        "url": "http://127.0.0.1:4188/labs/game-tree",
+        "pathname": "/labs/game-tree",
+        "headings": [
+          "Sequential Game Studio",
+          "Studio Templates",
+          "Players",
+          "Game Tree",
+          "Welcome to Strategic Intelligence"
+        ],
+        "nav_links": [
+          {
+            "text": "Strategy Console",
+            "href": "/console"
+          },
+          {
+            "text": "Console",
+            "href": "/console"
+          },
+          {
+            "text": "Labs",
+            "href": "/labs"
+          },
+          {
+            "text": "Templates",
+            "href": "/templates"
+          },
+          {
+            "text": "Forecasts",
+            "href": "/forecasts"
+          },
+          {
+            "text": "Pricing",
+            "href": "/pricing"
+          }
+        ],
+        "buttons": [
+          "Learning Mode: OFF",
+          "Vendor renewal under switching leveragecommodity procurementTest whether an incumbent supplier should hold firm or accommodate when the buyer has a credible migration path.Next test: Test whether the buyer should credibly threaten a phased migration rather than an immediate full switch.",
+          "Constrained supply allocation sequencecommodity procurementTest whether the buyer should concede deposit timing early to secure allocation or hold for better terms.Next test: Test whether offering demand visibility instead of a larger deposit preserves more buyer surplus.",
+          "Entry deterrence and accommodation testcompetitive strategyTest whether the incumbent\u2019s threat to fight entry survives backward induction.Next test: Test whether the incumbent can commit to a cost-reducing defensive move before entry.",
+          "Tariff retaliation sequencegeopoliticalTest whether a state should escalate or seek a negotiated climbdown after a tariff shock.Next test: Test whether a symbolic response can preserve deterrence without triggering a full retaliatory round.",
+          "Regulatory escalation and settlementcompetitive strategyTest whether a regulated firm should settle early or force a regulator into a costly escalation path.Next test: Test whether an early partial settlement weakens the regulator\u2019s incentive to escalate.",
+          "Bargaining under incomplete informationenterprise negotiationTest whether a buyer should make a tough early ask or probe for type first when the seller\u2019s flexibility is uncertain.Next test: Test whether a diagnostic question followed by a smaller ask dominates a blunt ultimatum.",
+          "Add Player",
+          "Solve for SPE",
+          "Enable Learning Mode",
+          "Dismiss"
+        ],
+        "paragraphs": [
+          "Template-driven countermove planning for extensive-form games",
+          "Strategic Intelligence Platform \u2014 Evidence-Backed Strategic Analysis",
+          "Real citations. Real simulations. Real clarity.",
+          "AI-generated analysis for research and educational purposes. Verify all outputs before making decisions.",
+          "Turn on Learning Mode if you want chart and concept explanations while you explore. This prompt stays out of the way so you can keep navigating the product.",
+          "You can toggle Learning Mode later from the header at any time."
+        ],
+        "visible_text_sample": "Skip to main contentStrategy ConsoleLearning Mode: OFFConsoleLabsTemplatesForecastsPricingSequential Game StudioTemplate-driven countermove planning for extensive-form gamesStudio TemplatesVendor renewal under switching leveragecommodity procurementTest whether an incumbent supplier should hold firm or accommodate when the buyer has a credible migration path.Next test: Test whether the buyer should credibly threaten a phased migration rather than an immediate full switch.Constrained supply allocation sequencecommodity procurementTest whether the buyer should concede deposit timing early to secure allocation or hold for better terms.Next test: Test whether offering demand visibility instead of a larger deposit preserves more buyer surplus.Entry deterrence and accommodation testcompetitive strategyTest whether the incumbent\u2019s threat to fight entry survives backward induction.Next test: Test whether the incumbent can commit to a cost-reducing defensive move before entry.Tariff retaliation sequencegeopoliticalTest whether a state should escalate or seek a negotiated climbdown after a tariff shock.Next test: Test whether a symbolic response can preserve deterrence without triggering a full retaliatory round.Regulatory escalation and settlementcompetitive strategyTest whether a regulated firm should settle early or force a regulator into a costly escalation path.Next test: Test whether an early partial settlement weakens the regulator\u2019s incentive to escalate.Bargaining under incomplete informationenterprise negotiationTest whether a buyer should make a tough early ask or probe for type first when the seller\u2019s flexibility is uncertain.Next test: Test whether a diagnostic question followed by a smaller ask dominates a blunt ultimatum.PlayersAdd PlayerGame TreePlayer 1Player 1So",
+        "body_text_length": 2355,
+        "has_root": true,
+        "root_child_count": 2,
+        "blank_page": false,
+        "shows_error_boundary": false,
+        "expected_signal": "Sequential Game Studio",
+        "expected_signal_found": true,
+        "auth_gate_found": false,
+        "expected_auth_gate": false
+      },
+      "console_errors": [],
+      "page_errors": [],
+      "request_failures": [],
+      "console_error_count": 0,
+      "runtime_console_error_count": 0,
+      "placeholder_network_error_count": 0,
+      "screenshot": "/Users/sanjayb/minimax/strategic-intelligence-platform/docs/launch-readiness/browser-route-smoke-2026-07-17/game_tree_training.png"
+    }
+  ],
+  "proof_date": "2026-07-17"
+}

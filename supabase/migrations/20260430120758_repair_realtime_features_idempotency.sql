@@ -1,0 +1,25 @@
+drop index if exists public.idx_realtime_events_source;
+drop index if exists public.idx_realtime_events_type;
+drop index if exists public.idx_realtime_events_timestamp;
+drop index if exists public.idx_strategy_outcomes_pattern;
+drop index if exists public.idx_strategy_outcomes_success;
+drop index if exists public.idx_strategy_outcomes_source;
+drop index if exists public.idx_multiplayer_sessions_status;
+drop index if exists public.idx_multiplayer_sessions_game_type;
+drop index if exists public.idx_multiplayer_participants_session;
+drop index if exists public.idx_temporal_forecasts_run;
+drop index if exists public.idx_temporal_forecasts_urgency;
+drop index if exists public.idx_signaling_recs_run;
+drop index if exists public.idx_signaling_recs_type;
+drop index if exists public.idx_domain_patterns_domain;
+drop index if exists public.idx_domain_patterns_success;
+
+drop policy if exists "Public read real-time events" on public.real_time_events;
+drop policy if exists "Public read strategy outcomes" on public.strategy_outcomes;
+drop policy if exists "Users can view their multiplayer sessions" on public.multiplayer_sessions;
+drop policy if exists "Users can create multiplayer sessions" on public.multiplayer_sessions;
+drop policy if exists "Users can view participants in their sessions" on public.multiplayer_participants;
+drop policy if exists "Users can join as participants" on public.multiplayer_participants;
+drop policy if exists "Public read temporal forecasts" on public.temporal_forecasts;
+drop policy if exists "Public read signaling recommendations" on public.signaling_recommendations;
+drop policy if exists "Public read domain patterns" on public.domain_specific_patterns;

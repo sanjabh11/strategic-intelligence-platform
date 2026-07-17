@@ -1,32 +1,67 @@
-// Stripe Checkout Session Creator
-// Edge Function to create Stripe checkout sessions for academic users
-// Fallback payment method for .edu email addresses
-
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@14.5.0";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { buildCorsHeaders, getAuthenticatedUser, jsonResponse } from "../_shared/auth.ts";
+import { isStripeTierAllowed, normalizeCanonicalTier } from "../_shared/monetization.ts";
 
 const corsHeaders = {
-    "Access-Control-Allow-Origin": "*",
+    ...buildCorsHeaders(),
     "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
-// Price IDs - configure these in Stripe Dashboard
-const TIER_PRICE_MAP: Record<string, string> = {
-    'academic': Deno.env.get('STRIPE_ACADEMIC_PRICE_ID') || 'price_academic_monthly',
-    'pro': Deno.env.get('STRIPE_PRO_PRICE_ID') || 'price_pro_monthly',
-    'elite': Deno.env.get('STRIPE_ELITE_PRICE_ID') || 'price_elite_monthly',
-    'enterprise': Deno.env.get('STRIPE_ENTERPRISE_PRICE_ID') || 'price_enterprise_monthly'
+const TIER_PRICE_ENV_MAP: Record<string, string> = {
+    academic: "STRIPE_ACADEMIC_PRICE_ID",
+    pro: "STRIPE_PRO_PRICE_ID",
+    elite: "STRIPE_ELITE_PRICE_ID",
+    enterprise: "STRIPE_ENTERPRISE_PRICE_ID",
 };
 
-serve(async (req: Request) => {
-    // Handle CORS preflight
+const EDU_DOMAINS = ['.edu', '.ac.uk', '.edu.au', '.edu.in', '.ac.nz', '.edu.sg'];
+
+function isAcademicEmail(email: string) {
+    const lowered = email.toLowerCase();
+    return EDU_DOMAINS.some((domain) => lowered.endsWith(domain));
+}
+
+function sanitizeRedirectUrl(candidate: string | undefined, fallbackPath: string, origin: string) {
+    const fallback = new URL(fallbackPath, origin);
+    if (!candidate) return fallback.toString();
+
+    try {
+        const parsed = new URL(candidate);
+        if (parsed.origin !== origin) {
+            return fallback.toString();
+        }
+        return parsed.toString();
+    } catch {
+        return fallback.toString();
+    }
+}
+
+function getStripePriceIdForTier(tier: string) {
+    const envKey = TIER_PRICE_ENV_MAP[tier];
+    if (!envKey) {
+        throw new Error(`Unsupported Stripe tier: ${tier}`);
+    }
+
+    const priceId = Deno.env.get(envKey);
+    if (!priceId) {
+        throw new Error(`${envKey} is not configured`);
+    }
+
+    return priceId;
+}
+
+Deno.serve(async (req: Request) => {
     if (req.method === "OPTIONS") {
         return new Response(null, { headers: corsHeaders });
     }
 
     try {
+        const user = await getAuthenticatedUser(req);
+        if (!user) {
+            return jsonResponse(401, { error: "Authentication required" }, corsHeaders);
+        }
+
         const stripeSecretKey = Deno.env.get("STRIPE_SECRET_KEY");
         if (!stripeSecretKey) {
             throw new Error("Stripe secret key not configured");
@@ -37,32 +72,38 @@ serve(async (req: Request) => {
             httpClient: Stripe.createFetchHttpClient(),
         });
 
-        const { email, tier, successUrl, cancelUrl } = await req.json();
+        const payload = await req.json();
+        const requestedEmail = typeof payload?.email === "string" ? payload.email.toLowerCase() : "";
+        const tier = normalizeCanonicalTier(payload?.tier);
+        const userEmail = user.email?.toLowerCase() || "";
 
-        // Validate academic email
-        const eduDomains = ['.edu', '.ac.uk', '.edu.au', '.edu.in', '.ac.nz', '.edu.sg'];
-        const isAcademic = eduDomains.some(domain => email.toLowerCase().endsWith(domain));
-
-        if (tier === 'academic' && !isAcademic) {
-            return new Response(
-                JSON.stringify({ error: "Academic pricing requires a .edu email address" }),
-                { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-            );
+        if (!userEmail) {
+            return jsonResponse(400, { error: "Authenticated user is missing an email address" }, corsHeaders);
         }
 
-        const priceId = TIER_PRICE_MAP[tier];
-        if (!priceId) {
-            return new Response(
-                JSON.stringify({ error: "Invalid tier" }),
-                { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-            );
+        if (requestedEmail && requestedEmail !== userEmail) {
+            return jsonResponse(403, { error: "Authenticated user email does not match checkout email" }, corsHeaders);
         }
 
-        // Create Stripe checkout session
+        if (!isStripeTierAllowed(tier)) {
+            return jsonResponse(403, { error: "Stripe checkout is not enabled for this tier" }, corsHeaders);
+        }
+
+        if (tier === "academic" && !isAcademicEmail(userEmail)) {
+            return jsonResponse(400, { error: "Academic pricing requires a .edu email address" }, corsHeaders);
+        }
+
+        const priceId = getStripePriceIdForTier(tier);
+
+        const requestOrigin = req.headers.get("origin") || Deno.env.get("APP_URL") || "http://localhost:5173";
+        const successUrl = sanitizeRedirectUrl(payload?.successUrl, "/checkout/stripe?success=true&session_id={CHECKOUT_SESSION_ID}", requestOrigin);
+        const cancelUrl = sanitizeRedirectUrl(payload?.cancelUrl, "/pricing", requestOrigin);
+
         const session = await stripe.checkout.sessions.create({
             mode: 'subscription',
             payment_method_types: ['card'],
-            customer_email: email,
+            customer_email: userEmail,
+            client_reference_id: user.id,
             line_items: [
                 {
                     price: priceId,
@@ -74,33 +115,30 @@ serve(async (req: Request) => {
             allow_promotion_codes: true,
             billing_address_collection: 'required',
             metadata: {
+                user_id: user.id,
                 tier,
-                email,
-                is_academic: isAcademic ? 'true' : 'false'
+                email: userEmail,
+                price_id: priceId,
+                is_academic: tier === 'academic' ? 'true' : 'false'
             },
             subscription_data: {
                 metadata: {
+                    user_id: user.id,
                     tier,
-                    is_academic: isAcademic ? 'true' : 'false'
+                    email: userEmail,
+                    price_id: priceId,
+                    is_academic: tier === 'academic' ? 'true' : 'false'
                 }
             }
         });
 
-        return new Response(
-            JSON.stringify({
-                sessionId: session.id,
-                url: session.url
-            }),
-            {
-                status: 200,
-                headers: { ...corsHeaders, "Content-Type": "application/json" }
-            }
-        );
+        return jsonResponse(200, {
+            sessionId: session.id,
+            url: session.url
+        }, corsHeaders);
     } catch (error) {
         console.error("Stripe checkout error:", error);
-        return new Response(
-            JSON.stringify({ error: error.message }),
-            { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
+        const message = error instanceof Error ? error.message : "Unknown error";
+        return jsonResponse(500, { error: message }, corsHeaders);
     }
 });

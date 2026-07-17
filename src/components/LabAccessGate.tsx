@@ -11,6 +11,7 @@ interface LabAccessGateProps {
   description: string;
   children: React.ReactNode;
   overrideActive?: boolean;
+  requiredTier?: 'free' | 'pro' | 'elite' | 'enterprise';
 }
 
 const LabAccessGate: React.FC<LabAccessGateProps> = ({

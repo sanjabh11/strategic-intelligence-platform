@@ -1,0 +1,10 @@
+gate,status,evidence,proof_bucket
+scoring_artifacts_present,passed,Calibration ledger exists=true; benchmark comparison exists=true.,repo_artifact
+approved_export_used,open_sample_or_no_real_scoring,Calibration ledger mode is sample_fixture; approved_export or approved_owner_export is required for claim review.,owner_input
+ledger_commercial_status_usable,open_sample_or_no_real_scoring,Calibration ledger commercial_claim_status=not_launch_proof; max source sample size 6/25.,repo_artifact
+scoring_sample_size_and_reliability_bins,open_sample_or_no_real_scoring,0/5 sources meet sample-size and reliability-bin requirements; included points=30.,repo_artifact
+benchmark_comparison_usable,open_sample_or_no_real_scoring,Benchmark status=sample_only_not_launch_proof; baselines=3; comparisons=15.,repo_artifact
+baseline_source_and_comparability_present,open_sample_or_no_real_scoring,0/3 baselines have source URLs and positive sample sizes.,owner_input
+accuracy_inputs_validated_before_scoring,open_sample_or_no_real_scoring,"Accuracy input validation status=accuracy_input_validation_ready_no_real_rows with 0 valid forecasts, 0 valid baselines, and 6 active holds.",owner_input
+leakage_review_passed_before_claim_review,open_sample_or_no_real_scoring,Leakage review status=forecast_leakage_review_validation_ready_no_real_forecast_rows; ready controls 0/8; active holds 5.,owner_input
+claim_language_still_blocked,passed,Forecast claim governance approved_world_class_claim=false.,repo_artifact

@@ -2,7 +2,7 @@
 // Hero-style analysis interface aligned with Whop monetization strategy
 // Central prompt + "Run Analysis" CTA + Engine selection + Tier gating
 
-import React, { Suspense, useState, useEffect, useMemo } from 'react';
+import React, { Suspense, useState, useEffect, useMemo, useCallback } from 'react';
 import {
   Brain, Zap, Sparkles, Crown, Play, ChevronDown, ChevronUp,
   FileText, Search, Loader2, CheckCircle2, AlertCircle, Clock,
@@ -15,7 +15,7 @@ import { assessForecastReadiness, assessPublishGovernance, buildGovernanceSummar
 import type { AudienceAnalysisData } from '../types/audience-views';
 import { ENDPOINTS, getAuthHeaders, getUserAuthHeaders, isLocalPreviewOrigin, supabase } from '../lib/supabase';
 import WelcomeToConsole from './WelcomeToConsole';
-import { normalizeStrategistResponse, type StrategistAnalysis } from '../lib/strategistContract';
+import { normalizeAdvancedGameOutputs, normalizeStrategistResponse, type StrategistAnalysis } from '../lib/strategistContract';
 import { buildEnterpriseEvidenceBundle, buildEnterpriseWorkflowStatus } from '../lib/enterpriseWorkflow';
 import type { WarRoomRouteState } from '../lib/warRoom';
 import { labelCalibrationStatus } from '../../shared/mlAdvisory';
@@ -27,6 +27,7 @@ import {
   routeCitizenQuestion,
   type ClarificationQuestionId,
   type ClarificationState,
+  type QuestionContextPayload,
   type QuestionIntakeResponse,
 } from '../../shared/publicForecasting';
 
@@ -119,6 +120,7 @@ const StrategistBriefPanel = React.lazy(() => import('./StrategistBriefPanel').t
 const EnterpriseBriefingPanel = React.lazy(() => import('./EnterpriseBriefingPanel').then((module) => ({ default: module.EnterpriseBriefingPanel })));
 const MultiAgentForecastPanel = React.lazy(() => import('./MultiAgentForecastPanel'));
 const EvidenceSourcesDashboard = React.lazy(() => import('./EvidenceSourcesDashboard'));
+const AdvancedFrameworkSummaryCard = React.lazy(() => import('./game-theory/AdvancedFrameworkSummaryCard'));
 
 const lazySectionFallback = (
   <div className="rounded-xl border border-slate-700 bg-slate-800/80 p-4 text-sm text-slate-400">
@@ -215,12 +217,14 @@ const StrategyConsole: React.FC = () => {
   useEffect(() => {
     let active = true;
 
-    async function syncAuthState() {
-      if (!supabase) {
-        if (active) setHasAuthenticatedSession(false);
-        return;
-      }
+    if (!supabase) {
+      setHasAuthenticatedSession(false);
+      return () => {
+        active = false;
+      };
+    }
 
+    async function syncAuthState() {
       const { data } = await supabase.auth.getSession();
       if (active) {
         setHasAuthenticatedSession(Boolean(data.session?.access_token));
@@ -229,7 +233,7 @@ const StrategyConsole: React.FC = () => {
 
     void syncAuthState();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
       setHasAuthenticatedSession(Boolean(session?.access_token));
     });
 
@@ -264,8 +268,8 @@ const StrategyConsole: React.FC = () => {
     }).intent;
   }, [prompt, publicBetaAnonymous]);
   const cachedClarificationAnswers = useMemo(
-    () => getCachedQuestionContext(promptIntentGuess),
-    [promptIntentGuess]
+    () => getCachedQuestionContext(prompt),
+    [prompt]
   );
   const effectiveClarificationAnswers = useMemo(
     () => ({ ...clarificationAnswers }),
@@ -276,7 +280,7 @@ const StrategyConsole: React.FC = () => {
       prompt,
       questionIntake?.question_context || {
         intent: promptIntentGuess || 'generic_public_analysis',
-        answers: effectiveClarificationAnswers,
+        answers: effectiveClarificationAnswers as Record<string, string>,
         clarification_status: questionIntake?.status || 'ready',
         completeness_score: questionIntake?.question_context?.completeness_score || 0,
         asked_question_ids: clarificationProgress.askedQuestionIds || [],
@@ -286,7 +290,7 @@ const StrategyConsole: React.FC = () => {
         unresolved_dimensions: questionIntake?.question_context?.unresolved_dimensions || [],
         question_cluster: questionIntake?.question_context?.question_cluster || 'Public strategic forecast',
         required_inputs: questionIntake?.question_context?.required_inputs || [],
-      }
+      } as QuestionContextPayload
     ),
     [prompt, questionIntake, promptIntentGuess, effectiveClarificationAnswers, clarificationProgress]
   );
@@ -371,7 +375,7 @@ const StrategyConsole: React.FC = () => {
 
         const response = await fetch(ENDPOINTS.QUESTION_INTAKE, {
           method: 'POST',
-          headers: getAuthHeaders(),
+          headers: await getUserAuthHeaders(),
           body: JSON.stringify({
             prompt,
             known_context: {
@@ -449,8 +453,8 @@ const StrategyConsole: React.FC = () => {
 
   useEffect(() => {
     if (!questionIntake || questionIntake.status !== 'ready') return;
-    persistQuestionContext(questionIntake.intent, effectiveClarificationAnswers);
-  }, [questionIntake, effectiveClarificationAnswers]);
+    persistQuestionContext(prompt, undefined, effectiveClarificationAnswers, promptIntentGuess || undefined);
+  }, [questionIntake, effectiveClarificationAnswers, prompt, promptIntentGuess]);
 
   const inferForecastCategory = (text: string): 'geopolitical' | 'financial' | 'technology' | 'economic' | 'social' | 'other' => {
     const lower = text.toLowerCase();
@@ -479,7 +483,7 @@ const StrategyConsole: React.FC = () => {
     return (firstSentence || 'Strategic decision brief').slice(0, 120);
   };
 
-  const buildStrategistDescription = () => {
+  const buildStrategistDescription = useCallback(() => {
     const scenarioText = analysis?.scenario_text || prompt;
     const summaryText = analysis?.summary?.text || audienceData?.summary?.text || '';
     const retrievalCount = analysis?.retrievals?.length || analysis?.retrieval_count || 0;
@@ -496,9 +500,9 @@ const StrategyConsole: React.FC = () => {
         : null,
       `Evidence count: ${retrievalCount}. ${evidenceStatus}`
     ].filter(Boolean).join('\n\n');
-  };
+  }, [analysis, prompt, audienceData]);
 
-  const buildStrategistEvidenceContext = () => {
+  const buildStrategistEvidenceContext = useCallback(() => {
     const retrievalEvidence = (analysis?.retrievals || []).slice(0, 8).map((retrieval, index) => ({
       id: retrieval.id || `retrieval_${index + 1}`,
       label: retrieval.title || retrieval.url || `Source ${index + 1}`,
@@ -523,15 +527,15 @@ const StrategyConsole: React.FC = () => {
     }];
 
     return [...scenarioEvidence, ...retrievalEvidence, ...summaryEvidence];
-  };
+  }, [analysis, prompt, audienceData]);
 
-  const buildEvidenceBundle = () => buildEnterpriseEvidenceBundle({
+  const buildEvidenceBundle = useCallback(() => buildEnterpriseEvidenceBundle({
     analysis,
     scenarioText: analysis?.scenario_text || prompt,
     strategist: strategistBrief
-  });
+  }), [analysis, prompt, strategistBrief]);
 
-  const buildForecastDraft = (): ForecastGovernanceDraft & {
+  const buildForecastDraft = useCallback((): ForecastGovernanceDraft & {
     description: string;
     category: 'geopolitical' | 'financial' | 'technology' | 'economic' | 'social' | 'other';
   } | null => {
@@ -594,7 +598,7 @@ const StrategyConsole: React.FC = () => {
         } : null
       }
     };
-  };
+  }, [analysis, prompt, strategistBrief, analysisRunId, buildEvidenceBundle]);
 
   const handleCreateForecastDraft = () => {
     const draft = buildForecastDraft();
@@ -609,12 +613,12 @@ const StrategyConsole: React.FC = () => {
 
     const state: WarRoomRouteState = {
       decisionLogDraft: {
-        title: strategistBrief.recommendation.primary_action.replace(/_/g, ' '),
+        title: strategistBrief.recommendation.primary_action?.replace(/_/g, ' ') ?? 'pending',
         summary: strategistBrief.executive_summary,
         sourceSurface: 'strategist_brief',
         strategistBrief,
-        linkedForecastId: null,
-        linkedForecastTitle: analysis?.multiAgentForecast?.question.title || null
+        linkedForecastId: undefined,
+        linkedForecastTitle: analysis?.multiAgentForecast?.question.title || undefined
       }
     };
 
@@ -762,7 +766,7 @@ const StrategyConsole: React.FC = () => {
     return () => {
       cancelled = true;
     };
-  }, [status, analysis, analysisRunId, prompt, strategistBrief, strategistRequestKey, audienceData, hasAuthenticatedSession]);
+  }, [status, analysis, analysisRunId, prompt, strategistBrief, strategistRequestKey, audienceData, hasAuthenticatedSession, buildStrategistDescription, buildStrategistEvidenceContext]);
 
   const handleCopyStrategistBrief = async () => {
     if (!strategistBrief) return;
@@ -938,7 +942,7 @@ const StrategyConsole: React.FC = () => {
     const scenarioText = activeQuestionContext.normalized_prompt
       || appendPublicQuestionContext(prompt, effectiveClarificationAnswers);
 
-    persistQuestionContext(activeQuestionContext.intent, effectiveClarificationAnswers);
+    persistQuestionContext(prompt, undefined, effectiveClarificationAnswers, activeQuestionContext.intent || undefined);
 
     await runAnalysis({
       scenario_text: scenarioText,
@@ -955,7 +959,7 @@ const StrategyConsole: React.FC = () => {
     });
   };
 
-  const workflowDraft = useMemo(() => buildForecastDraft(), [analysis, analysisRunId, prompt, strategistBrief]);
+  const workflowDraft = useMemo(() => buildForecastDraft(), [buildForecastDraft]);
   const workflowDraftReadiness = useMemo(
     () => (workflowDraft ? assessForecastReadiness(workflowDraft) : null),
     [workflowDraft]
@@ -965,7 +969,7 @@ const StrategyConsole: React.FC = () => {
       ? assessPublishGovernance(workflowDraft, workflowDraftReadiness, {
           status: analysisReviewState.status,
           reviewReason: analysisReviewState.reviewReason,
-          evidenceBacked: analysisReviewState.evidenceBacked,
+          evidenceBacked: analysisReviewState.evidenceBacked ?? null,
           createdAt: analysisReviewState.createdAt,
           loading: analysisReviewState.loading
         })
@@ -979,7 +983,7 @@ const StrategyConsole: React.FC = () => {
       reviewState: {
         status: analysisReviewState.status,
         reviewReason: analysisReviewState.reviewReason,
-        evidenceBacked: analysisReviewState.evidenceBacked,
+        evidenceBacked: analysisReviewState.evidenceBacked ?? null,
         createdAt: analysisReviewState.createdAt,
         loading: analysisReviewState.loading
       },
@@ -994,7 +998,7 @@ const StrategyConsole: React.FC = () => {
       reviewState: {
         status: analysisReviewState.status,
         reviewReason: analysisReviewState.reviewReason,
-        evidenceBacked: analysisReviewState.evidenceBacked,
+        evidenceBacked: analysisReviewState.evidenceBacked ?? undefined,
         createdAt: analysisReviewState.createdAt,
         loading: analysisReviewState.loading
       },
@@ -1119,7 +1123,7 @@ const StrategyConsole: React.FC = () => {
       return {
         title: 'What could change this call?',
         body: publicAnswer.what_could_change_it,
-        detail: publicAnswer.watch_factors[0] || publicAnswer.what_to_do_next,
+        detail: (publicAnswer.watch_factors ?? [])[0] || publicAnswer.what_to_do_next,
       };
     }
 
@@ -1294,6 +1298,11 @@ const StrategyConsole: React.FC = () => {
 
   const currentStatus = statusConfig[status];
   const StatusIcon = currentStatus.icon;
+  const advancedFrameworkOutputs =
+    strategistBrief?.advanced_game_outputs
+    || (audienceData?.audience === 'researcher'
+      ? normalizeAdvancedGameOutputs((audienceData.data as any)?.simulation_results?.advanced_frameworks)
+      : undefined);
 
   // Increment run count after successful analysis
   useEffect(() => {
@@ -1302,7 +1311,7 @@ const StrategyConsole: React.FC = () => {
       setAnalysisRunCount(newCount);
       localStorage.setItem('strategy-console-run-count', newCount.toString());
     }
-  }, [status]);
+  }, [status, analysisRunCount]);
 
   return (
     <div className="min-h-screen bg-slate-900">
@@ -1440,9 +1449,9 @@ const StrategyConsole: React.FC = () => {
                             onChange={(event) => setClarificationAnswers((current) => ({ ...current, [entry.id]: event.target.value }))}
                             className="w-full rounded-xl border border-slate-600 bg-slate-900 px-4 py-3 text-sm text-white focus:border-cyan-500 focus:outline-none"
                           >
-                            <option value="">Select {entry.label.toLowerCase()}</option>
+                            <option value="">Select {(entry.label ?? entry.prompt).toLowerCase()}</option>
                             {entry.options?.map((option) => (
-                              <option key={option} value={option}>{option}</option>
+                              <option key={String(option)} value={String(option)}>{String(option)}</option>
                             ))}
                           </select>
                         ) : (
@@ -1454,13 +1463,13 @@ const StrategyConsole: React.FC = () => {
                             className="w-full rounded-xl border border-slate-600 bg-slate-900 px-4 py-3 text-sm text-white placeholder-slate-500 focus:border-cyan-500 focus:outline-none"
                           />
                         )}
-                        {!effectiveClarificationAnswers[entry.id] && cachedClarificationAnswers[entry.id] && (
+                        {!effectiveClarificationAnswers[entry.id] && cachedClarificationAnswers?.answers?.[entry.id] && (
                           <button
                             type="button"
-                            onClick={() => setClarificationAnswers((current) => ({ ...current, [entry.id]: cachedClarificationAnswers[entry.id] || '' }))}
+                            onClick={() => setClarificationAnswers((current) => ({ ...current, [entry.id]: cachedClarificationAnswers?.answers?.[entry.id] || '' }))}
                             className="mt-2 rounded-full border border-cyan-500/20 bg-cyan-500/10 px-3 py-1 text-[11px] text-cyan-200 hover:bg-cyan-500/15"
                           >
-                            Use recent context: {cachedClarificationAnswers[entry.id]}
+                            Use recent context: {cachedClarificationAnswers?.answers?.[entry.id]}
                           </button>
                         )}
                         <div className="mt-2 text-xs leading-5 text-slate-400">
@@ -1682,6 +1691,9 @@ const StrategyConsole: React.FC = () => {
         {/* Results Section */}
         {analysis && status === 'completed' && (
           <div className="mt-8 space-y-6">
+            <Suspense fallback={lazySectionFallback}>
+              <AdvancedFrameworkSummaryCard outputs={advancedFrameworkOutputs} />
+            </Suspense>
             {publicEvidenceGateActive ? (
               <div className="rounded-2xl border border-amber-500/20 bg-amber-500/5 p-6">
                 <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
@@ -1774,9 +1786,9 @@ const StrategyConsole: React.FC = () => {
                     <div className="mt-4 rounded-xl border border-slate-700 bg-slate-900/60 px-4 py-3">
                       <div className="text-[11px] uppercase tracking-wide text-slate-500">Context locked for this answer</div>
                       <div className="mt-1 text-sm text-slate-200">{publicAnswer.clarification_summary}</div>
-                      {publicAnswer.context_locked_fields.length > 0 && (
+                      {(publicAnswer.context_locked_fields ?? []).length > 0 && (
                         <div className="mt-3 flex flex-wrap gap-2 text-xs text-slate-300">
-                          {publicAnswer.context_locked_fields.map((field) => (
+                          {(publicAnswer.context_locked_fields ?? []).map((field) => (
                             <span key={field} className="rounded-full border border-slate-700 bg-slate-950/70 px-3 py-1">
                               {field}
                             </span>

@@ -3,15 +3,17 @@
 // Part of Monetization Strategy - Key conversion page
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
-  Check, X, Zap, Crown, Sparkles, GraduationCap, 
-  ArrowRight, Shield, Clock, Users, BarChart3, 
+  Check, X, Zap, Crown, Sparkles, GraduationCap,
+  ArrowRight, Shield, Clock, Users, BarChart3,
   Download, Globe, Brain, Target
 } from 'lucide-react';
-import { useSubscription, SubscriptionTier } from '../hooks/useSubscription';
+import { useSubscription } from '../hooks/useSubscription';
+import { PRICING_TIERS as CANONICAL_TIERS, ACADEMIC_TIER } from '../lib/whop-config';
 
 interface PricingTier {
-  id: SubscriptionTier;
+  id: string;
   name: string;
   description: string;
   priceMonthly: number;
@@ -52,69 +54,69 @@ const PRICING_TIERS: PricingTier[] = [
     cta: 'Get Started Free'
   },
   {
-    id: 'analyst',
-    name: 'Analyst',
-    description: 'For retail investors and financial analysts',
-    priceMonthly: 29,
-    priceYearly: 290,
+    id: 'pro',
+    name: 'Pro',
+    description: 'For consultants and serious analysts',
+    priceMonthly: 19,
+    priceYearly: 190,
     icon: Zap,
     color: 'blue',
     features: [
       { name: '50 analyses per day', included: true },
-      { name: 'Up to 4x4 matrices', included: true },
+      { name: 'Up to 5x5 matrices', included: true },
       { name: 'Advanced equilibrium computation', included: true },
-      { name: '20 scenario templates', included: true },
-      { name: 'Email support', included: true },
-      { name: 'Gold Game Module', included: true, highlight: true },
-      { name: 'Monte Carlo simulations', included: true, highlight: true },
-      { name: 'Real-time gold/market data', included: true, highlight: true },
-      { name: 'Export to CSV', included: true },
+      { name: 'Full evidence retrieval', included: true },
+      { name: '1,000 Monte Carlo iterations', included: true },
+      { name: 'Bias Profile Dashboard', included: true, highlight: true },
+      { name: 'Negotiation Dojo', included: true, highlight: true },
+      { name: 'PDF export', included: true },
+      { name: 'Scenario Marketplace access', included: true },
       { name: 'API access', included: false },
     ],
-    cta: 'Start Analyst Trial'
+    cta: 'Start Pro Trial'
   },
   {
-    id: 'pro',
-    name: 'Professional',
-    description: 'For consultants and researchers',
-    priceMonthly: 79,
-    priceYearly: 790,
+    id: 'elite',
+    name: 'Elite',
+    description: 'For power users and forecasters',
+    priceMonthly: 49,
+    priceYearly: 490,
     icon: Sparkles,
     color: 'purple',
     popular: true,
     features: [
-      { name: '200 analyses per day', included: true },
+      { name: 'Unlimited analyses', included: true },
       { name: 'Up to 10x10 matrices', included: true },
       { name: 'All equilibrium methods', included: true },
-      { name: '100 scenario templates', included: true },
+      { name: '10,000 Monte Carlo iterations', included: true },
+      { name: 'Gold Forecasting Module', included: true, highlight: true },
+      { name: 'Live Intel Dashboard', included: true, highlight: true },
+      { name: 'Corporate War Room', included: true, highlight: true },
+      { name: 'API access', included: true, highlight: true },
       { name: 'Priority support', included: true },
-      { name: 'Gold Game Module', included: true },
-      { name: 'Sequential game trees', included: true, highlight: true },
-      { name: 'PDF report generation', included: true, highlight: true },
-      { name: 'Export to Python/R', included: true, highlight: true },
-      { name: 'API access (1000 calls/mo)', included: true, highlight: true },
+      { name: 'Trading Signals', included: true },
     ],
-    cta: 'Start Pro Trial'
+    cta: 'Start Elite Trial'
   },
   {
     id: 'enterprise',
     name: 'Enterprise',
     description: 'For organizations and institutions',
-    priceMonthly: 500,
-    priceYearly: 5000,
+    priceMonthly: 199,
+    priceYearly: 1990,
     icon: Crown,
     color: 'amber',
     features: [
-      { name: 'Unlimited analyses', included: true },
-      { name: 'Unlimited matrix size', included: true },
-      { name: 'Custom equilibrium solvers', included: true },
-      { name: 'All templates + custom', included: true },
-      { name: 'Dedicated support', included: true },
-      { name: 'All modules included', included: true },
-      { name: 'White-label reports', included: true, highlight: true },
-      { name: 'SSO integration', included: true, highlight: true },
-      { name: 'Private deployment option', included: true, highlight: true },
-      { name: 'Unlimited API access', included: true, highlight: true },
+      { name: 'Unlimited everything', included: true },
+      { name: 'White-label reporting scoping', included: true, highlight: true },
+      { name: 'SSO integration readiness review', included: true, highlight: true },
+      { name: 'Custom integration scoping', included: true, highlight: true },
+      { name: 'Named launch support contact', included: true },
+      { name: 'Pilot SLA requirements review', included: true },
+      { name: 'Custom training module scoping', included: true },
+      { name: 'Private scenario library', included: true },
+      { name: 'Team collaboration (10 seats)', included: true },
+      { name: 'Audit-log and compliance review', included: true, highlight: true },
     ],
     cta: 'Contact Sales'
   },
@@ -122,20 +124,20 @@ const PRICING_TIERS: PricingTier[] = [
     id: 'academic',
     name: 'Academic',
     description: 'Special pricing for educators & students',
-    priceMonthly: 0,
-    priceYearly: 0,
+    priceMonthly: 34,
+    priceYearly: 340,
     icon: GraduationCap,
     color: 'green',
     features: [
-      { name: '100 analyses per day', included: true },
-      { name: 'Up to 6x6 matrices', included: true },
-      { name: 'Educational equilibrium modes', included: true },
-      { name: '50 scenario templates', included: true },
-      { name: 'Email support', included: true },
-      { name: 'Gold Game Module', included: true },
-      { name: 'Sequential games', included: true },
+      { name: 'Unlimited analyses', included: true },
+      { name: 'Up to 10x10 matrices', included: true },
+      { name: 'All equilibrium methods', included: true },
+      { name: '10,000 Monte Carlo iterations', included: true },
+      { name: 'Gold Forecasting Module', included: true },
+      { name: 'LMS integration support', included: true, highlight: true },
+      { name: 'Classroom mode', included: true, highlight: true },
       { name: 'PDF report generation', included: true },
-      { name: 'Classroom collaboration', included: true, highlight: true },
+      { name: '30% academic discount (.edu only)', included: true },
       { name: 'Requires .edu verification', included: 'Required' },
     ],
     cta: 'Apply for Academic'
@@ -161,11 +163,12 @@ const FEATURE_CATEGORIES = [
   {
     name: 'Support & Security',
     icon: Shield,
-    features: ['support', 'SSO', 'White-label']
+    features: ['support', 'review gates', 'audit trail']
   }
 ];
 
 const PricingPage: React.FC = () => {
+  const navigate = useNavigate();
   const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'yearly'>('yearly');
   const { currentTier, loading } = useSubscription();
 
@@ -184,15 +187,15 @@ const PricingPage: React.FC = () => {
     if (tier.id === 'enterprise') {
       window.open('mailto:sales@strategicintelligence.com?subject=Enterprise Inquiry', '_blank');
     } else if (tier.id === 'academic') {
-      window.open('/academic-application', '_blank');
+      navigate('/academic-application');
+    } else if (tier.id === 'free') {
+      navigate('/signup');
     } else {
-      // In production, redirect to Stripe Checkout
-      const priceId = billingPeriod === 'yearly' 
-        ? `price_${tier.id}_yearly`
-        : `price_${tier.id}_monthly`;
-      console.log(`Initiating checkout for ${priceId}`);
-      // window.location.href = `/api/checkout?price_id=${priceId}`;
-      alert(`Checkout for ${tier.name} (${billingPeriod}) - Integration pending`);
+      // Redirect to Whop checkout for paid tiers
+      const whopPlanId = billingPeriod === 'yearly'
+        ? `plan_${tier.id}_yearly`
+        : `plan_${tier.id}_monthly`;
+      window.location.href = `https://whop.com/checkout/${whopPlanId}/`;
     }
   };
 
@@ -367,14 +370,14 @@ const PricingPage: React.FC = () => {
             <div>
               <h3 className="font-semibold text-white mb-2">Is there a free trial?</h3>
               <p className="text-sm text-slate-400">
-                Yes! Analyst and Pro plans include a 14-day free trial. No credit card required.
+                Yes! Pro and Elite plans include a 14-day free trial. No credit card required.
                 Cancel anytime during the trial.
               </p>
             </div>
             <div>
               <h3 className="font-semibold text-white mb-2">How does academic pricing work?</h3>
               <p className="text-sm text-slate-400">
-                Students and educators with a valid .edu email get free access to Pro-level features.
+                Students and educators with a valid .edu email get 30% off Elite-level features ($34/mo).
                 Apply with your institutional email for verification.
               </p>
             </div>
@@ -394,7 +397,7 @@ const PricingPage: React.FC = () => {
             </div>
             <div className="flex items-center gap-2">
               <Users className="w-5 h-5" />
-              <span className="text-sm">10,000+ Users</span>
+              <span className="text-sm">Evidence-gated workflows</span>
             </div>
           </div>
         </div>

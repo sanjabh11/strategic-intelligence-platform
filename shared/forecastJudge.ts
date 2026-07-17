@@ -300,7 +300,7 @@ export function assessJudgeVerdict(
   if (judgeResult.verdict === 'adjusted_up' || judgeResult.verdict === 'adjusted_down') {
     return {
       shouldAdjust: true,
-      severity: judgeResult.disagreementWithChampion > config.maxDisagreement * 0.5 ? 'minor' : 'none',
+      severity: judgeResult.disagreementWithChampion > 0 ? 'minor' : 'none',
     }
   }
 

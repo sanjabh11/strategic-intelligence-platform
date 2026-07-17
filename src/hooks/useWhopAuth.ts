@@ -3,7 +3,7 @@
 // Supports both Whop and Stripe (academic) checkout flows
 
 import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '../lib/supabase';
+import { isLocalMode, supabase } from '../lib/supabase';
 import {
     PRICING_TIERS,
     ACADEMIC_TIER,
@@ -64,6 +64,13 @@ export function useWhopAuth(): UseWhopAuthReturn {
 
     // Fetch current user session
     const fetchSession = useCallback(async () => {
+        if (!supabase || isLocalMode) {
+            setSession(null);
+            setLoading(false);
+            setError(null);
+            return;
+        }
+
         try {
             setLoading(true);
             setError(null);
@@ -98,7 +105,7 @@ export function useWhopAuth(): UseWhopAuthReturn {
             // Determine tier
             const tierId = whopUser?.subscription_tier || subscription?.tier || 'free';
             const tier = getTierById(tierId) || PRICING_TIERS[0];
-            const isAcademicUser = isAcademicEmail(user.email || '');
+            const isAcademicUser = tierId === 'academic';
 
             setSession({
                 userId: user.id,
@@ -122,6 +129,11 @@ export function useWhopAuth(): UseWhopAuthReturn {
 
     // Initialize on mount
     useEffect(() => {
+        if (!supabase || isLocalMode) {
+            setLoading(false);
+            return;
+        }
+
         fetchSession();
 
         // Listen for auth changes
@@ -136,6 +148,11 @@ export function useWhopAuth(): UseWhopAuthReturn {
 
     // Login with Whop OAuth
     const loginWithWhop = useCallback(() => {
+        if (!supabase || isLocalMode) {
+            setError('Supabase auth is not configured in this environment.');
+            return;
+        }
+
         const state = crypto.randomUUID();
         sessionStorage.setItem('whop_auth_state', state);
         window.location.href = getWhopAuthUrl(state);
@@ -143,17 +160,33 @@ export function useWhopAuth(): UseWhopAuthReturn {
 
     // Login with Stripe (for academic users)
     const loginWithStripe = useCallback(async (email: string) => {
+        if (!supabase || isLocalMode) {
+            setError('Supabase auth is not configured in this environment.');
+            return;
+        }
+
         if (!isAcademicEmail(email)) {
             setError('Stripe checkout is only available for academic (.edu) email addresses');
             return;
         }
 
-        // Redirect to Stripe checkout
-        window.location.href = `/checkout/stripe?email=${encodeURIComponent(email)}&tier=academic`;
-    }, []);
+        const next = `/checkout/stripe?email=${encodeURIComponent(email)}&tier=academic`;
+
+        if (!session?.userId) {
+            window.location.href = `/signup?email=${encodeURIComponent(email)}&next=${encodeURIComponent(next)}`;
+            return;
+        }
+
+        window.location.href = next;
+    }, [session?.userId]);
 
     // Logout
     const logout = useCallback(async () => {
+        if (!supabase || isLocalMode) {
+            setSession(null);
+            return;
+        }
+
         await supabase.auth.signOut();
         setSession(null);
     }, []);

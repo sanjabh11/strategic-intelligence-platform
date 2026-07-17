@@ -3,7 +3,17 @@
 -- Created: December 12, 2025
 
 -- Subscription tiers enum
-CREATE TYPE subscription_tier AS ENUM ('free', 'analyst', 'pro', 'enterprise', 'academic');
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_type
+    WHERE typname = 'subscription_tier'
+  ) THEN
+    CREATE TYPE subscription_tier AS ENUM ('free', 'analyst', 'pro', 'enterprise', 'academic');
+  END IF;
+END
+$$;
 
 -- User subscriptions table
 CREATE TABLE IF NOT EXISTS public.user_subscriptions (
@@ -198,24 +208,49 @@ ALTER TABLE public.user_subscriptions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.tier_limits ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.usage_tracking ENABLE ROW LEVEL SECURITY;
 
--- Users can read their own subscriptions
-CREATE POLICY read_own_subscription ON public.user_subscriptions
-  FOR SELECT USING (auth.uid() = user_id);
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies
+    WHERE schemaname = 'public' AND tablename = 'user_subscriptions' AND policyname = 'read_own_subscription'
+  ) THEN
+    CREATE POLICY read_own_subscription ON public.user_subscriptions
+      FOR SELECT USING (auth.uid() = user_id);
+  END IF;
 
--- Everyone can read tier limits
-CREATE POLICY read_tier_limits ON public.tier_limits
-  FOR SELECT USING (true);
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies
+    WHERE schemaname = 'public' AND tablename = 'tier_limits' AND policyname = 'read_tier_limits'
+  ) THEN
+    CREATE POLICY read_tier_limits ON public.tier_limits
+      FOR SELECT USING (true);
+  END IF;
 
--- Users can read their own usage
-CREATE POLICY read_own_usage ON public.usage_tracking
-  FOR SELECT USING (auth.uid() = user_id);
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies
+    WHERE schemaname = 'public' AND tablename = 'usage_tracking' AND policyname = 'read_own_usage'
+  ) THEN
+    CREATE POLICY read_own_usage ON public.usage_tracking
+      FOR SELECT USING (auth.uid() = user_id);
+  END IF;
 
--- Service role can manage all
-CREATE POLICY service_manage_subscriptions ON public.user_subscriptions
-  FOR ALL USING (auth.role() = 'service_role');
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies
+    WHERE schemaname = 'public' AND tablename = 'user_subscriptions' AND policyname = 'service_manage_subscriptions'
+  ) THEN
+    CREATE POLICY service_manage_subscriptions ON public.user_subscriptions
+      FOR ALL USING (auth.role() = 'service_role');
+  END IF;
 
-CREATE POLICY service_manage_usage ON public.usage_tracking
-  FOR ALL USING (auth.role() = 'service_role');
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies
+    WHERE schemaname = 'public' AND tablename = 'usage_tracking' AND policyname = 'service_manage_usage'
+  ) THEN
+    CREATE POLICY service_manage_usage ON public.usage_tracking
+      FOR ALL USING (auth.role() = 'service_role');
+  END IF;
+END
+$$;
 
 -- Grant permissions
 GRANT EXECUTE ON FUNCTION public.get_user_tier(uuid) TO authenticated, service_role;

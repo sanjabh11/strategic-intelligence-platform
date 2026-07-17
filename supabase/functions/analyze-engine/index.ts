@@ -4,6 +4,15 @@
 // Endpoint: POST /functions/v1/analyze-engine
 // Returns JSON-only response with analysis or clear error
 //
+// TODO (M4-T3): This file is ~5000 lines and should be refactored into modules:
+//   - _shared/llm-sanitizer.ts  (sanitizeLlmOutput, ~900 lines)
+//   - _shared/ev-computation.ts (computeExpectedValues, computeSensitivityAnalysis)
+//   - _shared/llm-callers.ts    (callGemini, callOpenAI, callXAI, callOpenRouter)
+//   - _shared/prompt-builder.ts (buildPrompt, audience templates)
+//   - _shared/numeric-passage.ts (enforceNumericPassages)
+//   - _shared/schema-validator.ts (AJV setup and schemas)
+// Refactoring deferred until Deno test harness is available to verify no regressions.
+//
 // ENV (required):
 // SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
 // EXA_API_KEY
@@ -26,6 +35,8 @@ import { buildFunctionUrl } from "../_shared/function-url.ts";
 import { DEFAULT_PROMPT_POLICY_ID, DEFAULT_RETRIEVAL_POLICY_ID, buildConstraintChecks, deriveEntityRefs, fetchLatestDriftSignal, maybeCallMlService } from "../_shared/ml-platform.ts";
 import { prepareAnalysisArtifactPersistence } from "../_shared/analysis-artifacts.ts";
 import {
+import { withAuth, getAuthenticatedUser } from '../_shared/auth.ts'
+import { checkRateLimit, logApiUsage, rateLimitResponse } from '../_shared/rate-limiter.ts'
   buildFrameworkEnvelope,
   coerceAdvancedFrameworkEnvelope,
   isPlainObject,
@@ -2713,7 +2724,7 @@ const handler = async (req: Request): Promise<Response> => {
     console.log(`[preflight] origin=${req.headers.get('origin') || 'unknown'} allow_headers=Content-Type, Authorization, apikey, X-Client-Info`)
     return new Response('ok', {
       headers: {
-        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Origin': Deno.env.get('ALLOWED_ORIGIN') || Deno.env.get('APP_URL') || 'null',
         'Access-Control-Allow-Methods': 'POST, OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type, Authorization, apikey, X-Client-Info'
       }
@@ -2722,12 +2733,21 @@ const handler = async (req: Request): Promise<Response> => {
   if (req.method !== 'POST') {
     return new Response(JSON.stringify({ ok: false, error: 'method_not_allowed' }), {
       status: 405,
-      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Access-Control-Expose-Headers': 'Content-Type' }
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': Deno.env.get('ALLOWED_ORIGIN') || Deno.env.get('APP_URL') || 'null', 'Access-Control-Expose-Headers': 'Content-Type' }
     })
   }
 
   const start = Date.now()
   const canExposeProviderDiagnostics = hasPrivilegedDiagnosticsAccess(req)
+
+  // Rate limit check
+  const authUser = await getAuthenticatedUser(req)
+  if (authUser) {
+    const rateLimit = await checkRateLimit(authUser.id, 'analyze-engine')
+    if (!rateLimit.allowed) return rateLimitResponse(rateLimit.retryAfterSeconds)
+    await logApiUsage(authUser.id, 'analyze-engine')
+  }
+
   try {
     const requestBody = await req.json().catch(() => ({}))
     const request_id = requestBody.request_id ?? uuid()
@@ -2810,7 +2830,7 @@ const handler = async (req: Request): Promise<Response> => {
   if (!rawScenarioText) {
     return new Response(JSON.stringify({ ok: false, error: "missing_scenario_text" }), {
       status: 400,
-      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': Deno.env.get('ALLOWED_ORIGIN') || Deno.env.get('APP_URL') || 'null' }
     })
   }
 
@@ -2853,7 +2873,7 @@ const handler = async (req: Request): Promise<Response> => {
         question_context,
       }), {
         status: 400,
-        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': Deno.env.get('ALLOWED_ORIGIN') || Deno.env.get('APP_URL') || 'null' }
       })
     }
 
@@ -2864,7 +2884,7 @@ const handler = async (req: Request): Promise<Response> => {
         rejections: sanitizedAdvancedGameInputs.rejections,
       }), {
         status: 400,
-        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': Deno.env.get('ALLOWED_ORIGIN') || Deno.env.get('APP_URL') || 'null' }
       })
     }
 
@@ -2881,7 +2901,7 @@ const handler = async (req: Request): Promise<Response> => {
       message: `Audience must be one of: ${validAudiences.join(', ')}`
     }), {
       status: 400,
-      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': Deno.env.get('ALLOWED_ORIGIN') || Deno.env.get('APP_URL') || 'null' }
     })
   }
 
@@ -3000,7 +3020,7 @@ const handler = async (req: Request): Promise<Response> => {
         status: 'processing',
       }), {
         status: 202,
-        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Access-Control-Expose-Headers': 'Content-Type' }
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': Deno.env.get('ALLOWED_ORIGIN') || Deno.env.get('APP_URL') || 'null', 'Access-Control-Expose-Headers': 'Content-Type' }
       })
     }
 
@@ -3203,7 +3223,7 @@ const handler = async (req: Request): Promise<Response> => {
           }
         }), {
           status: 200,
-          headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+          headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': Deno.env.get('ALLOWED_ORIGIN') || Deno.env.get('APP_URL') || 'null' }
         })
       }
       retrievals = []
@@ -3283,7 +3303,7 @@ Produce educational analysis in JSON format.`
           }
         }), {
           status: 200,
-          headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+          headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': Deno.env.get('ALLOWED_ORIGIN') || Deno.env.get('APP_URL') || 'null' }
         })
       }
     }
@@ -3297,7 +3317,7 @@ Produce educational analysis in JSON format.`
       required_minimum: 3
     }), {
       status: 200,
-      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': Deno.env.get('ALLOWED_ORIGIN') || Deno.env.get('APP_URL') || 'null' }
     })
   }
 
@@ -3603,7 +3623,7 @@ Return a single JSON object with these top-level keys:
       }
     }), {
       status: 200,
-      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Access-Control-Expose-Headers': 'Content-Type' }
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': Deno.env.get('ALLOWED_ORIGIN') || Deno.env.get('APP_URL') || 'null', 'Access-Control-Expose-Headers': 'Content-Type' }
     })
   }
 
@@ -4039,7 +4059,7 @@ Return a single JSON object with these top-level keys:
             provenance: { model: modelUsed, fallback_used: fallbackUsed, llm_duration_ms: llmDurationMs }
           }), {
             status: 200,
-            headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Access-Control-Expose-Headers': 'Content-Type' }
+            headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': Deno.env.get('ALLOWED_ORIGIN') || Deno.env.get('APP_URL') || 'null', 'Access-Control-Expose-Headers': 'Content-Type' }
           })
         } else {
           const errorId = uuid()
@@ -4057,7 +4077,7 @@ Return a single JSON object with these top-level keys:
             provider_attempts: canExposeProviderDiagnostics ? providerAttempts : undefined,
           }), {
             status: 502,
-            headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Access-Control-Expose-Headers': 'Content-Type' }
+            headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': Deno.env.get('ALLOWED_ORIGIN') || Deno.env.get('APP_URL') || 'null', 'Access-Control-Expose-Headers': 'Content-Type' }
           })
         }
       }
@@ -4277,7 +4297,7 @@ Return a single JSON object with these top-level keys:
             provenance: { model: modelUsed, fallback_used: fallbackUsed, llm_duration_ms: llmDurationMs }
           }), {
             status: 200,
-            headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Access-Control-Expose-Headers': 'Content-Type' }
+            headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': Deno.env.get('ALLOWED_ORIGIN') || Deno.env.get('APP_URL') || 'null', 'Access-Control-Expose-Headers': 'Content-Type' }
           })
         } else {
           const errorId = uuid()
@@ -4294,7 +4314,7 @@ Return a single JSON object with these top-level keys:
             provider_attempts: canExposeProviderDiagnostics ? providerAttempts : undefined,
           }), {
             status: 422,
-            headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Access-Control-Expose-Headers': 'Content-Type' }
+            headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': Deno.env.get('ALLOWED_ORIGIN') || Deno.env.get('APP_URL') || 'null', 'Access-Control-Expose-Headers': 'Content-Type' }
           })
         }
       }
@@ -4525,7 +4545,7 @@ Return a single JSON object with these top-level keys:
       error_id: errorId
     }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': Deno.env.get('ALLOWED_ORIGIN') || Deno.env.get('APP_URL') || 'null' }
     })
   }
 
@@ -4980,7 +5000,7 @@ Return a single JSON object with these top-level keys:
     console.log(`[${request_id}] stage=complete, duration=${totalDuration}ms, with_cors=true`)
     return new Response(JSON.stringify(resp), {
       status: 200,
-      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Access-Control-Expose-Headers': 'Content-Type' }
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': Deno.env.get('ALLOWED_ORIGIN') || Deno.env.get('APP_URL') || 'null', 'Access-Control-Expose-Headers': 'Content-Type' }
     })
   } catch (unhandled: any) {
     const rid = uuid()
@@ -4988,9 +5008,9 @@ Return a single JSON object with these top-level keys:
     await logRpcError(null, rid, `unhandled_exception: ${String(unhandled?.message ?? unhandled)}`)
     return new Response(JSON.stringify({ ok: false, error: 'unhandled_exception', error_id: rid }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Access-Control-Expose-Headers': 'Content-Type' }
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': Deno.env.get('ALLOWED_ORIGIN') || Deno.env.get('APP_URL') || 'null', 'Access-Control-Expose-Headers': 'Content-Type' }
     })
   }
 }
 
-Deno.serve(handler)
+Deno.serve(withAuth(handler))

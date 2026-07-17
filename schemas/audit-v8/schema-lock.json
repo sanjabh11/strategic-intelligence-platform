@@ -1,0 +1,15 @@
+{
+  "skill": "ecc-niche-positioning-audit",
+  "schema_version": "v8",
+  "schema_draft": "https://json-schema.org/draft/2020-12/schema",
+  "imported_at": "2026-07-17",
+  "source_root": "~/.codex/skills/ecc-niche-positioning-audit",
+  "files": {
+    "artifact.schema.json": "436f5c1ba5e0e5a051aae5f7425dc569c4ad04a79a381ae8fba54d10ffca46d6",
+    "evidence-corpus.schema.json": "cafa1282eeffd499c529088131f252cec5ed71c7d316077d58ce5cba89d1f804",
+    "experiment.schema.json": "f610f791c37a060a6bae0f4b2e15c60c8068fa99b0da2ef51966a140726f79e4",
+    "hypothesis.schema.json": "268343c5206ff06e3bee81d302d5ba35350ba081caddfd9b4badff9b5555c4e5",
+    "state.schema.json": "094802bd0be62f7069b7539aef081a8fe7c55542587c6d66465d6f1bf3d4d2b2"
+  },
+  "external_validator_sha256": "d084ec8470fdfc2c8e83f618d148c82aa5d307b101c2b7ad23990adcbaec9f67"
+}

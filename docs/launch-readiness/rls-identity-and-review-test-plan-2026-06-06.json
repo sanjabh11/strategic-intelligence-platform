@@ -1,0 +1,504 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-06-06T17:08:22.206Z",
+  "source": {
+    "classification_register": "docs/launch-readiness/rls-table-classification-register-2026-06-06.json",
+    "supabase_docs_basis": [
+      "Supabase CLI: supabase test db runs pgTAP tests on local or linked projects",
+      "Supabase docs: RLS tests should authenticate seeded personas and assert positive and negative visibility/write cases"
+    ],
+    "production_state_verified": false,
+    "owner_classification_verified": false,
+    "test_execution_verified": false
+  },
+  "domain": "identity_and_review",
+  "commercial_security_status": "acceptance_tests_planned_not_executed",
+  "proof_boundary": "This is a static acceptance-test plan and pgTAP template. It does not apply RLS migrations, start Supabase, connect to hosted Supabase, or prove current deployed policy behavior.",
+  "summary": {
+    "table_count": 5,
+    "p1_table_count": 5,
+    "persona_count": 6,
+    "test_case_count": 27,
+    "open_schema_gap_count": 1,
+    "expected_initial_result": "fail_or_incomplete_before_owner_approved_rls_remediation",
+    "runnable_after": [
+      "owner approves table classifications and public exceptions",
+      "current hosted/local policy state is inspected",
+      "narrow identity_and_review RLS migration is drafted",
+      "test seed helpers are created or Supabase tests helpers are installed",
+      "supabase test db runs locally and, after approval, against linked project"
+    ]
+  },
+  "recommended_commands_after_approval": [
+    "supabase test new identity_and_review_rls --template pgtap",
+    "supabase test db supabase/tests/identity_and_review_rls.test.sql --local",
+    "supabase test db supabase/tests/identity_and_review_rls.test.sql --linked"
+  ],
+  "personas": [
+    {
+      "id": "anon",
+      "role": "anon",
+      "purpose": "Prove anonymous users cannot read or write private identity/review rows."
+    },
+    {
+      "id": "owner_user",
+      "role": "authenticated",
+      "purpose": "Prove the row owner can read and write only their own permitted rows."
+    },
+    {
+      "id": "unrelated_user",
+      "role": "authenticated",
+      "purpose": "Prove a different authenticated user cannot read or mutate private rows."
+    },
+    {
+      "id": "assigned_reviewer",
+      "role": "authenticated",
+      "purpose": "Prove reviewer access is limited to review-queue or explicitly assigned review rows."
+    },
+    {
+      "id": "admin",
+      "role": "authenticated",
+      "purpose": "Prove admin/reviewer override paths are explicit and role-bound."
+    },
+    {
+      "id": "service_role",
+      "role": "service_role",
+      "purpose": "Prove trusted edge functions and jobs can seed/manage rows without granting public policies."
+    }
+  ],
+  "open_schema_gaps": [
+    {
+      "table": "schema_failures",
+      "gap": "no durable owner column in current migration; add analysis_run_id/user_id or restrict to admin/service-role only"
+    }
+  ],
+  "tables": [
+    {
+      "table": "analysis_runs",
+      "priority": "P1",
+      "finding_count": 7,
+      "p1_finding_count": 6,
+      "issue_types": [
+        "anonymous_write_check",
+        "policy_grants_to_public_role",
+        "sensitive_table_read_without_identity_predicate",
+        "unconditional_using_true",
+        "write_without_obvious_identity_predicate"
+      ],
+      "operations": [
+        "INSERT",
+        "SELECT"
+      ],
+      "data_category": "authenticated_user_or_review_data",
+      "recommended_visibility": "owner_reviewer_service_role_only",
+      "owner_model_to_confirm": "user_id, created_by, reviewer assignment, or service role",
+      "owner_path": "public.analysis_runs.user_id = auth.uid()",
+      "reviewer_path": "status in ('needs_review', 'under_review') and get_user_role() in ('reviewer', 'admin')",
+      "service_role_path": "auth.role() = 'service_role'",
+      "minimum_seed": "owner private run, unrelated private run, review-queue run, completed public-exception candidate",
+      "direct_public_exception": "only if an owner-approved published/redacted status is introduced; completed alone is not enough for enterprise-private rows",
+      "open_schema_gap": false,
+      "source_locations": [
+        "supabase/migrations/20250304_0001_create_users_table.sql:54",
+        "supabase/migrations/20250826_0001_init.sql:43",
+        "supabase/migrations/20250902184556_0002_write_policies.sql:9",
+        "supabase/migrations/20250902184557_0003_mvp_anon_insert.sql:10"
+      ],
+      "test_cases": [
+        {
+          "case_id": "analysis_runs.anon_select_denied",
+          "persona": "anon",
+          "operation": "SELECT",
+          "expected": "zero private rows visible",
+          "assertion": "results_eq count from analysis_runs visible to anon is 0",
+          "maps_to_issue_types": [
+            "policy_grants_to_public_role",
+            "sensitive_table_read_without_identity_predicate",
+            "unconditional_using_true"
+          ]
+        },
+        {
+          "case_id": "analysis_runs.unrelated_authenticated_select_denied",
+          "persona": "unrelated_user",
+          "operation": "SELECT",
+          "expected": "zero owner/private rows visible",
+          "assertion": "results_eq count from analysis_runs for unrelated authenticated user is 0",
+          "maps_to_issue_types": [
+            "policy_grants_to_public_role",
+            "sensitive_table_read_without_identity_predicate",
+            "unconditional_using_true"
+          ]
+        },
+        {
+          "case_id": "analysis_runs.owner_path_allowed",
+          "persona": "owner_user",
+          "operation": "SELECT",
+          "expected": "owner-visible row count is 1",
+          "assertion": "results_eq count from analysis_runs for owner is 1",
+          "maps_to_issue_types": [
+            "required_positive_owner_path"
+          ]
+        },
+        {
+          "case_id": "analysis_runs.reviewer_path_limited",
+          "persona": "assigned_reviewer",
+          "operation": "SELECT",
+          "expected": "reviewer sees only approved review-queue or assigned rows",
+          "assertion": "results_eq reviewer-visible rows from analysis_runs match approved review seed only",
+          "maps_to_issue_types": [
+            "required_positive_reviewer_path"
+          ]
+        },
+        {
+          "case_id": "analysis_runs.service_role_path_allowed",
+          "persona": "service_role",
+          "operation": "INSERT",
+          "expected": "service role can perform trusted setup/edge-function operation",
+          "assertion": "lives_ok service-role operation for analysis_runs",
+          "maps_to_issue_types": [
+            "required_service_role_path"
+          ]
+        },
+        {
+          "case_id": "analysis_runs.anon_insert_denied",
+          "persona": "anon",
+          "operation": "INSERT",
+          "expected": "insert rejected by RLS",
+          "assertion": "throws_ok anon insert into analysis_runs with SQLSTATE 42501",
+          "maps_to_issue_types": [
+            "anonymous_write_check",
+            "anonymous_non_select_policy"
+          ]
+        },
+        {
+          "case_id": "analysis_runs.unrelated_authenticated_write_denied",
+          "persona": "unrelated_user",
+          "operation": "INSERT/UPDATE",
+          "expected": "write rejected unless row owner or approved reviewer/service role",
+          "assertion": "throws_ok unrelated authenticated write to analysis_runs with SQLSTATE 42501",
+          "maps_to_issue_types": [
+            "write_without_obvious_identity_predicate"
+          ]
+        }
+      ]
+    },
+    {
+      "table": "human_reviews",
+      "priority": "P1",
+      "finding_count": 4,
+      "p1_finding_count": 4,
+      "issue_types": [
+        "sensitive_table_read_without_identity_predicate",
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "data_category": "authenticated_user_or_review_data",
+      "recommended_visibility": "owner_reviewer_service_role_only",
+      "owner_model_to_confirm": "user_id, created_by, reviewer assignment, or service role",
+      "owner_path": "review owner through analysis_runs.user_id, plus reviewer_id when the actor is the assigned reviewer",
+      "reviewer_path": "get_user_role() in ('reviewer', 'admin') and reviewer_id::uuid = auth.uid() for writes",
+      "service_role_path": "auth.role() = 'service_role'",
+      "minimum_seed": "review linked to owner run, review linked to unrelated run, assigned reviewer, unassigned reviewer",
+      "direct_public_exception": "none by default",
+      "open_schema_gap": false,
+      "source_locations": [
+        "supabase/migrations/20250304_0001_create_users_table.sql:62",
+        "supabase/migrations/20250904_0010_extend_analysis_runs_for_audience.sql:99"
+      ],
+      "test_cases": [
+        {
+          "case_id": "human_reviews.anon_select_denied",
+          "persona": "anon",
+          "operation": "SELECT",
+          "expected": "zero private rows visible",
+          "assertion": "results_eq count from human_reviews visible to anon is 0",
+          "maps_to_issue_types": [
+            "sensitive_table_read_without_identity_predicate",
+            "unconditional_using_true"
+          ]
+        },
+        {
+          "case_id": "human_reviews.unrelated_authenticated_select_denied",
+          "persona": "unrelated_user",
+          "operation": "SELECT",
+          "expected": "zero owner/private rows visible",
+          "assertion": "results_eq count from human_reviews for unrelated authenticated user is 0",
+          "maps_to_issue_types": [
+            "sensitive_table_read_without_identity_predicate",
+            "unconditional_using_true"
+          ]
+        },
+        {
+          "case_id": "human_reviews.owner_path_allowed",
+          "persona": "owner_user",
+          "operation": "SELECT",
+          "expected": "owner-visible row count is 1",
+          "assertion": "results_eq count from human_reviews for owner is 1",
+          "maps_to_issue_types": [
+            "required_positive_owner_path"
+          ]
+        },
+        {
+          "case_id": "human_reviews.reviewer_path_limited",
+          "persona": "assigned_reviewer",
+          "operation": "SELECT",
+          "expected": "reviewer sees only approved review-queue or assigned rows",
+          "assertion": "results_eq reviewer-visible rows from human_reviews match approved review seed only",
+          "maps_to_issue_types": [
+            "required_positive_reviewer_path"
+          ]
+        },
+        {
+          "case_id": "human_reviews.service_role_path_allowed",
+          "persona": "service_role",
+          "operation": "SELECT",
+          "expected": "service role can perform trusted setup/edge-function operation",
+          "assertion": "lives_ok service-role operation for human_reviews",
+          "maps_to_issue_types": [
+            "required_service_role_path"
+          ]
+        }
+      ]
+    },
+    {
+      "table": "users",
+      "priority": "P1",
+      "finding_count": 4,
+      "p1_finding_count": 4,
+      "issue_types": [
+        "sensitive_table_read_without_identity_predicate",
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "data_category": "authenticated_user_or_review_data",
+      "recommended_visibility": "owner_reviewer_service_role_only",
+      "owner_model_to_confirm": "user_id, created_by, reviewer assignment, or service role",
+      "owner_path": "public.users.auth_id = auth.uid()",
+      "reviewer_path": "security-definer role lookup only; direct reviewer reads need owner approval and column minimization",
+      "service_role_path": "auth.role() = 'service_role'",
+      "minimum_seed": "owner user row, unrelated user row, reviewer user row, admin user row",
+      "direct_public_exception": "none by default",
+      "open_schema_gap": false,
+      "source_locations": [
+        "supabase/migrations/20250304_0001_create_users_table.sql:58",
+        "supabase/migrations/20250904_0010_extend_analysis_runs_for_audience.sql:105"
+      ],
+      "test_cases": [
+        {
+          "case_id": "users.anon_select_denied",
+          "persona": "anon",
+          "operation": "SELECT",
+          "expected": "zero private rows visible",
+          "assertion": "results_eq count from users visible to anon is 0",
+          "maps_to_issue_types": [
+            "sensitive_table_read_without_identity_predicate",
+            "unconditional_using_true"
+          ]
+        },
+        {
+          "case_id": "users.unrelated_authenticated_select_denied",
+          "persona": "unrelated_user",
+          "operation": "SELECT",
+          "expected": "zero owner/private rows visible",
+          "assertion": "results_eq count from users for unrelated authenticated user is 0",
+          "maps_to_issue_types": [
+            "sensitive_table_read_without_identity_predicate",
+            "unconditional_using_true"
+          ]
+        },
+        {
+          "case_id": "users.owner_path_allowed",
+          "persona": "owner_user",
+          "operation": "SELECT",
+          "expected": "owner-visible row count is 1",
+          "assertion": "results_eq count from users for owner is 1",
+          "maps_to_issue_types": [
+            "required_positive_owner_path"
+          ]
+        },
+        {
+          "case_id": "users.reviewer_path_limited",
+          "persona": "assigned_reviewer",
+          "operation": "SELECT",
+          "expected": "reviewer sees only approved review-queue or assigned rows",
+          "assertion": "results_eq reviewer-visible rows from users match approved review seed only",
+          "maps_to_issue_types": [
+            "required_positive_reviewer_path"
+          ]
+        },
+        {
+          "case_id": "users.service_role_path_allowed",
+          "persona": "service_role",
+          "operation": "SELECT",
+          "expected": "service role can perform trusted setup/edge-function operation",
+          "assertion": "lives_ok service-role operation for users",
+          "maps_to_issue_types": [
+            "required_service_role_path"
+          ]
+        }
+      ]
+    },
+    {
+      "table": "asset_storage",
+      "priority": "P1",
+      "finding_count": 2,
+      "p1_finding_count": 2,
+      "issue_types": [
+        "sensitive_table_read_without_identity_predicate",
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "data_category": "authenticated_user_or_review_data",
+      "recommended_visibility": "owner_reviewer_service_role_only",
+      "owner_model_to_confirm": "user_id, created_by, reviewer assignment, or service role",
+      "owner_path": "asset owner through analysis_runs.user_id",
+      "reviewer_path": "reviewer/admin only for assets linked to review-queue runs if owner-approved",
+      "service_role_path": "auth.role() = 'service_role'",
+      "minimum_seed": "asset linked to owner run, asset linked to unrelated run, asset linked to review-queue run",
+      "direct_public_exception": "only via explicit published/redacted asset workflow",
+      "open_schema_gap": false,
+      "source_locations": [
+        "supabase/migrations/20250904_0010_extend_analysis_runs_for_audience.sql:102"
+      ],
+      "test_cases": [
+        {
+          "case_id": "asset_storage.anon_select_denied",
+          "persona": "anon",
+          "operation": "SELECT",
+          "expected": "zero private rows visible",
+          "assertion": "results_eq count from asset_storage visible to anon is 0",
+          "maps_to_issue_types": [
+            "sensitive_table_read_without_identity_predicate",
+            "unconditional_using_true"
+          ]
+        },
+        {
+          "case_id": "asset_storage.unrelated_authenticated_select_denied",
+          "persona": "unrelated_user",
+          "operation": "SELECT",
+          "expected": "zero owner/private rows visible",
+          "assertion": "results_eq count from asset_storage for unrelated authenticated user is 0",
+          "maps_to_issue_types": [
+            "sensitive_table_read_without_identity_predicate",
+            "unconditional_using_true"
+          ]
+        },
+        {
+          "case_id": "asset_storage.owner_path_allowed",
+          "persona": "owner_user",
+          "operation": "SELECT",
+          "expected": "owner-visible row count is 1",
+          "assertion": "results_eq count from asset_storage for owner is 1",
+          "maps_to_issue_types": [
+            "required_positive_owner_path"
+          ]
+        },
+        {
+          "case_id": "asset_storage.reviewer_path_limited",
+          "persona": "assigned_reviewer",
+          "operation": "SELECT",
+          "expected": "reviewer sees only approved review-queue or assigned rows",
+          "assertion": "results_eq reviewer-visible rows from asset_storage match approved review seed only",
+          "maps_to_issue_types": [
+            "required_positive_reviewer_path"
+          ]
+        },
+        {
+          "case_id": "asset_storage.service_role_path_allowed",
+          "persona": "service_role",
+          "operation": "SELECT",
+          "expected": "service role can perform trusted setup/edge-function operation",
+          "assertion": "lives_ok service-role operation for asset_storage",
+          "maps_to_issue_types": [
+            "required_service_role_path"
+          ]
+        }
+      ]
+    },
+    {
+      "table": "schema_failures",
+      "priority": "P1",
+      "finding_count": 2,
+      "p1_finding_count": 2,
+      "issue_types": [
+        "sensitive_table_read_without_identity_predicate",
+        "unconditional_using_true"
+      ],
+      "operations": [
+        "SELECT"
+      ],
+      "data_category": "authenticated_user_or_review_data",
+      "recommended_visibility": "owner_reviewer_service_role_only",
+      "owner_model_to_confirm": "user_id, created_by, reviewer assignment, or service role",
+      "owner_path": "no durable owner column in current migration; add analysis_run_id/user_id or restrict to admin/service-role only",
+      "reviewer_path": "admin/reviewer read only if failure metadata is redacted and owner-approved",
+      "service_role_path": "auth.role() = 'service_role'",
+      "minimum_seed": "private validation failure with request_id, owner-linked failure after schema update, unrelated failure",
+      "direct_public_exception": "none by default",
+      "open_schema_gap": true,
+      "source_locations": [
+        "supabase/migrations/20250904_0010_extend_analysis_runs_for_audience.sql:128"
+      ],
+      "test_cases": [
+        {
+          "case_id": "schema_failures.anon_select_denied",
+          "persona": "anon",
+          "operation": "SELECT",
+          "expected": "zero private rows visible",
+          "assertion": "results_eq count from schema_failures visible to anon is 0",
+          "maps_to_issue_types": [
+            "sensitive_table_read_without_identity_predicate",
+            "unconditional_using_true"
+          ]
+        },
+        {
+          "case_id": "schema_failures.unrelated_authenticated_select_denied",
+          "persona": "unrelated_user",
+          "operation": "SELECT",
+          "expected": "zero owner/private rows visible",
+          "assertion": "results_eq count from schema_failures for unrelated authenticated user is 0",
+          "maps_to_issue_types": [
+            "sensitive_table_read_without_identity_predicate",
+            "unconditional_using_true"
+          ]
+        },
+        {
+          "case_id": "schema_failures.owner_path_allowed",
+          "persona": "owner_user",
+          "operation": "SELECT",
+          "expected": "blocked until owner path exists",
+          "assertion": "schema prerequisite before owner read test for schema_failures",
+          "maps_to_issue_types": [
+            "required_positive_owner_path"
+          ]
+        },
+        {
+          "case_id": "schema_failures.reviewer_path_limited",
+          "persona": "assigned_reviewer",
+          "operation": "SELECT",
+          "expected": "reviewer sees only approved review-queue or assigned rows",
+          "assertion": "results_eq reviewer-visible rows from schema_failures match approved review seed only",
+          "maps_to_issue_types": [
+            "required_positive_reviewer_path"
+          ]
+        },
+        {
+          "case_id": "schema_failures.service_role_path_allowed",
+          "persona": "service_role",
+          "operation": "SELECT",
+          "expected": "service role can perform trusted setup/edge-function operation",
+          "assertion": "lives_ok service-role operation for schema_failures",
+          "maps_to_issue_types": [
+            "required_service_role_path"
+          ]
+        }
+      ]
+    }
+  ]
+}

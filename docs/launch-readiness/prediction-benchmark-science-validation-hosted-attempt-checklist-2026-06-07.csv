@@ -1,0 +1,12 @@
+gate,status,proof_bucket,evidence
+current_scientific_framework_sources_attached,passed,repo_artifact,5 current forecasting/evaluation source anchors attached.
+forecast_protocol_complete,passed,repo_artifact,8 protocol stages present; missing=none.
+proper_scoring_metric_suite_present,passed,repo_artifact,6 metrics present; missing=none.
+claim_tiers_and_governance_thresholds_present,passed,repo_artifact,4 claim tiers and 5 governance thresholds present.
+owner_approved_resolved_outcomes_present,open_no_real_resolved_outcomes,owner_input,0 valid resolved forecasts from input validation; 0 real resolved outcomes in claim governance.
+real_comparable_baselines_present,open_no_real_comparable_baselines,owner_input,0 valid baselines; 0 real baseline comparisons; 0/0 benchmark baselines have source URLs and sample sizes.
+sample_size_and_reliability_bins_ready,open_sample_only_or_underpowered,owner_input,ledger mode=sample_fixture; ledger status=not_launch_proof; max source sample size=6/25; reliability-ready sources=0; sample_only=true.
+leakage_and_contamination_review_passed,open_leakage_review_not_ready,owner_input,0/8 leakage controls ready; leakage_review_passed=false.
+benchmark_comparison_usable,open_benchmark_not_claim_proof,owner_input,scoring_ready=false; benchmark_status=missing; comparisons=15; source-backed baselines=0/3.
+hosted_and_rls_evaluation_boundary_ready,open_hosted_or_security_boundary_not_ready,hosted_live,hosted_ready=false; rls_tenant_isolation_proof_ready=false.
+accuracy_claim_language_still_blocked,passed,repo_artifact,accuracy_claim_allowed=false; world_class_prediction_claim_allowed=false.

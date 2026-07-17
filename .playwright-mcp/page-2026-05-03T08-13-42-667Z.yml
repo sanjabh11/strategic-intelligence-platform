@@ -1,0 +1,318 @@
+- generic [ref=e3]:
+  - navigation [ref=e4]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - link "Strategy Console" [ref=e8] [cursor=pointer]:
+          - /url: /console
+          - img [ref=e9]
+          - generic [ref=e19]: Strategy Console
+        - 'button "Learning Mode: OFF" [ref=e21] [cursor=pointer]':
+          - img [ref=e22]
+          - text: "Learning Mode: OFF"
+      - generic [ref=e25]:
+        - link "Console" [ref=e26] [cursor=pointer]:
+          - /url: /console
+          - img [ref=e27]
+          - text: Console
+        - link "Templates" [ref=e29] [cursor=pointer]:
+          - /url: /templates
+          - img [ref=e30]
+          - text: Templates
+        - link "Forecasts" [ref=e33] [cursor=pointer]:
+          - /url: /forecasts
+          - img [ref=e34]
+          - text: Forecasts
+  - main [ref=e37]:
+    - generic [ref=e40]:
+      - generic [ref=e42]:
+        - generic [ref=e43]:
+          - img [ref=e44]
+          - generic [ref=e48]:
+            - heading "Forecast Registry" [level=2] [ref=e49]
+            - paragraph [ref=e50]: Public predictions powered by game theory
+        - button "Leaderboard" [ref=e52] [cursor=pointer]:
+          - img [ref=e53]
+          - text: Leaderboard
+      - generic [ref=e56]:
+        - generic [ref=e57]:
+          - img [ref=e58]
+          - textbox "Search forecasts..." [ref=e61]
+        - generic [ref=e62]:
+          - button "All" [ref=e63] [cursor=pointer]:
+            - img [ref=e64]
+            - text: All
+          - button "Geopolitical" [ref=e67] [cursor=pointer]:
+            - img [ref=e68]
+            - text: Geopolitical
+          - button "Financial" [ref=e71] [cursor=pointer]:
+            - img [ref=e72]
+            - text: Financial
+          - button "Technology" [ref=e75] [cursor=pointer]:
+            - img [ref=e76]
+            - text: Technology
+          - button "Economic" [ref=e78] [cursor=pointer]:
+            - img [ref=e79]
+            - text: Economic
+          - button "Social" [ref=e81] [cursor=pointer]:
+            - img [ref=e82]
+            - text: Social
+        - generic [ref=e87] [cursor=pointer]:
+          - checkbox "Show Resolved" [ref=e88]
+          - text: Show Resolved
+      - generic [ref=e107]:
+        - generic [ref=e109] [cursor=pointer]:
+          - generic [ref=e111]: financial
+          - heading "Will the focal strategic outcome described in the scenario occur within 14 days?" [level=3] [ref=e112]
+          - generic [ref=e113]:
+            - generic [ref=e114]: Review not requested
+            - generic [ref=e115]: Evidence not verified
+          - generic [ref=e117]: Analysis-linked
+          - generic [ref=e119]:
+            - generic [ref=e120]: Community Probability
+            - generic [ref=e121]: 57%
+          - generic [ref=e124]:
+            - generic [ref=e125]:
+              - generic [ref=e126]:
+                - img [ref=e127]
+                - text: "1"
+              - generic [ref=e132]:
+                - img [ref=e133]
+                - text: "0"
+            - generic [ref=e136]:
+              - img [ref=e137]
+              - text: 5/17/2026
+        - generic [ref=e140] [cursor=pointer]:
+          - generic [ref=e142]: economic
+          - heading "Will the focal strategic variable move materially in the forecast direction within 14 days?" [level=3] [ref=e143]
+          - generic [ref=e144]:
+            - generic [ref=e145]: Review not requested
+            - generic [ref=e146]: Evidence not verified
+          - generic [ref=e148]: Analysis-linked
+          - generic [ref=e150]:
+            - generic [ref=e151]: Community Probability
+            - generic [ref=e152]: 53%
+          - generic [ref=e155]:
+            - generic [ref=e156]:
+              - generic [ref=e157]:
+                - img [ref=e158]
+                - text: "1"
+              - generic [ref=e163]:
+                - img [ref=e164]
+                - text: "0"
+            - generic [ref=e167]:
+              - img [ref=e168]
+              - text: 5/17/2026
+        - generic [ref=e171] [cursor=pointer]:
+          - generic [ref=e173]: financial
+          - heading "Will the focal strategic outcome described in the scenario occur within 14 days?" [level=3] [ref=e174]
+          - generic [ref=e175]:
+            - generic [ref=e176]: Review not requested
+            - generic [ref=e177]: Evidence not verified
+          - generic [ref=e179]: Analysis-linked
+          - generic [ref=e181]:
+            - generic [ref=e182]: Community Probability
+            - generic [ref=e183]: 56%
+          - generic [ref=e186]:
+            - generic [ref=e187]:
+              - generic [ref=e188]:
+                - img [ref=e189]
+                - text: "1"
+              - generic [ref=e194]:
+                - img [ref=e195]
+                - text: "0"
+            - generic [ref=e198]:
+              - img [ref=e199]
+              - text: 5/17/2026
+        - generic [ref=e202] [cursor=pointer]:
+          - generic [ref=e204]: financial
+          - heading "Will the focal strategic outcome described in the scenario occur within 14 days?" [level=3] [ref=e205]
+          - generic [ref=e206]:
+            - generic [ref=e207]: Review not requested
+            - generic [ref=e208]: Evidence not verified
+          - generic [ref=e210]: Analysis-linked
+          - generic [ref=e212]:
+            - generic [ref=e213]: Community Probability
+            - generic [ref=e214]: 61%
+          - generic [ref=e217]:
+            - generic [ref=e218]:
+              - generic [ref=e219]:
+                - img [ref=e220]
+                - text: "1"
+              - generic [ref=e225]:
+                - img [ref=e226]
+                - text: "0"
+            - generic [ref=e229]:
+              - img [ref=e230]
+              - text: 5/17/2026
+        - generic [ref=e233] [cursor=pointer]:
+          - generic [ref=e235]: economic
+          - heading "Will the focal strategic outcome described in the scenario occur within 14 days?" [level=3] [ref=e236]
+          - generic [ref=e237]:
+            - generic [ref=e238]: Review not requested
+            - generic [ref=e239]: Evidence not verified
+          - generic [ref=e241]: Analysis-linked
+          - generic [ref=e243]:
+            - generic [ref=e244]: Community Probability
+            - generic [ref=e245]: 55%
+          - generic [ref=e248]:
+            - generic [ref=e249]:
+              - generic [ref=e250]:
+                - img [ref=e251]
+                - text: "1"
+              - generic [ref=e256]:
+                - img [ref=e257]
+                - text: "0"
+            - generic [ref=e260]:
+              - img [ref=e261]
+              - text: 5/17/2026
+        - generic [ref=e264] [cursor=pointer]:
+          - generic [ref=e266]: financial
+          - heading "Will the focal strategic variable move materially in the forecast direction within 14 days?" [level=3] [ref=e267]
+          - generic [ref=e268]:
+            - generic [ref=e269]: Review not requested
+            - generic [ref=e270]: Evidence not verified
+          - generic [ref=e272]: Analysis-linked
+          - generic [ref=e274]:
+            - generic [ref=e275]: Community Probability
+            - generic [ref=e276]: 57%
+          - generic [ref=e279]:
+            - generic [ref=e280]:
+              - generic [ref=e281]:
+                - img [ref=e282]
+                - text: "1"
+              - generic [ref=e287]:
+                - img [ref=e288]
+                - text: "0"
+            - generic [ref=e291]:
+              - img [ref=e292]
+              - text: 5/17/2026
+        - generic [ref=e295] [cursor=pointer]:
+          - generic [ref=e297]: geopolitical
+          - heading "Will the focal strategic outcome described in the scenario occur within 14 days?" [level=3] [ref=e298]
+          - generic [ref=e299]:
+            - generic [ref=e300]: Review not requested
+            - generic [ref=e301]: Evidence not verified
+          - generic [ref=e303]: Analysis-linked
+          - generic [ref=e305]:
+            - generic [ref=e306]: Community Probability
+            - generic [ref=e307]: 59%
+          - generic [ref=e310]:
+            - generic [ref=e311]:
+              - generic [ref=e312]:
+                - img [ref=e313]
+                - text: "1"
+              - generic [ref=e318]:
+                - img [ref=e319]
+                - text: "0"
+            - generic [ref=e322]:
+              - img [ref=e323]
+              - text: 5/17/2026
+        - generic [ref=e326] [cursor=pointer]:
+          - generic [ref=e328]: geopolitical
+          - heading "Will the focal strategic outcome described in the scenario occur within 14 days?" [level=3] [ref=e329]
+          - generic [ref=e330]:
+            - generic [ref=e331]: Review not requested
+            - generic [ref=e332]: Evidence not verified
+          - generic [ref=e334]: Analysis-linked
+          - generic [ref=e336]:
+            - generic [ref=e337]: Community Probability
+            - generic [ref=e338]: 64%
+          - generic [ref=e341]:
+            - generic [ref=e342]:
+              - generic [ref=e343]:
+                - img [ref=e344]
+                - text: "1"
+              - generic [ref=e349]:
+                - img [ref=e350]
+                - text: "0"
+            - generic [ref=e353]:
+              - img [ref=e354]
+              - text: 5/17/2026
+        - generic [ref=e357] [cursor=pointer]:
+          - generic [ref=e359]: geopolitical
+          - heading "Will the focal strategic outcome described in the scenario occur within 14 days?" [level=3] [ref=e360]
+          - generic [ref=e361]:
+            - generic [ref=e362]: Review not requested
+            - generic [ref=e363]: Evidence not verified
+          - generic [ref=e365]: Analysis-linked
+          - generic [ref=e367]:
+            - generic [ref=e368]: Community Probability
+            - generic [ref=e369]: 55%
+          - generic [ref=e372]:
+            - generic [ref=e373]:
+              - generic [ref=e374]:
+                - img [ref=e375]
+                - text: "1"
+              - generic [ref=e380]:
+                - img [ref=e381]
+                - text: "0"
+            - generic [ref=e384]:
+              - img [ref=e385]
+              - text: 5/17/2026
+        - generic [ref=e388] [cursor=pointer]:
+          - generic [ref=e390]: geopolitical
+          - heading "Will the focal strategic outcome described in the scenario occur within 14 days?" [level=3] [ref=e391]
+          - generic [ref=e392]:
+            - generic [ref=e393]: Review not requested
+            - generic [ref=e394]: Evidence not verified
+          - generic [ref=e396]: Analysis-linked
+          - generic [ref=e398]:
+            - generic [ref=e399]: Community Probability
+            - generic [ref=e400]: 59%
+          - generic [ref=e403]:
+            - generic [ref=e404]:
+              - generic [ref=e405]:
+                - img [ref=e406]
+                - text: "1"
+              - generic [ref=e411]:
+                - img [ref=e412]
+                - text: "0"
+            - generic [ref=e415]:
+              - img [ref=e416]
+              - text: 5/17/2026
+        - generic [ref=e419] [cursor=pointer]:
+          - generic [ref=e421]: geopolitical
+          - heading "Will the focal strategic outcome described in the scenario occur within 14 days?" [level=3] [ref=e422]
+          - generic [ref=e423]:
+            - generic [ref=e424]: Review not requested
+            - generic [ref=e425]: Evidence not verified
+          - generic [ref=e427]: Analysis-linked
+          - generic [ref=e429]:
+            - generic [ref=e430]: Community Probability
+            - generic [ref=e431]: 59%
+          - generic [ref=e434]:
+            - generic [ref=e435]:
+              - generic [ref=e436]:
+                - img [ref=e437]
+                - text: "1"
+              - generic [ref=e442]:
+                - img [ref=e443]
+                - text: "0"
+            - generic [ref=e446]:
+              - img [ref=e447]
+              - text: 5/17/2026
+        - generic [ref=e450] [cursor=pointer]:
+          - generic [ref=e452]: geopolitical
+          - heading "Will the focal strategic outcome described in the scenario occur within 14 days?" [level=3] [ref=e453]
+          - generic [ref=e454]:
+            - generic [ref=e455]: Review not requested
+            - generic [ref=e456]: Evidence not verified
+          - generic [ref=e458]: Analysis-linked
+          - generic [ref=e460]:
+            - generic [ref=e461]: Community Probability
+            - generic [ref=e462]: 61%
+          - generic [ref=e465]:
+            - generic [ref=e466]:
+              - generic [ref=e467]:
+                - img [ref=e468]
+                - text: "1"
+              - generic [ref=e473]:
+                - img [ref=e474]
+                - text: "0"
+            - generic [ref=e477]:
+              - img [ref=e478]
+              - text: 5/17/2026
+  - contentinfo [ref=e91]:
+    - generic [ref=e93]:
+      - paragraph [ref=e94]: Strategy Console - Evidence-Backed Strategic Analysis
+      - paragraph [ref=e95]: Real citations. Real simulations. Real clarity.

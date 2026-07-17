@@ -5,7 +5,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
 
-export type SubscriptionTier = 'free' | 'analyst' | 'pro' | 'enterprise' | 'academic';
+export type SubscriptionTier = 'free' | 'pro' | 'elite' | 'enterprise' | 'academic';
+type LegacySubscriptionTier = SubscriptionTier | 'analyst' | 'basic';
 
 export interface TierLimits {
   tier: SubscriptionTier;
@@ -55,11 +56,31 @@ export interface UsageStatus {
 
 const TIER_DISPLAY_INFO: Record<SubscriptionTier, { name: string; color: string; icon: string }> = {
   free: { name: 'Free', color: 'gray', icon: '🆓' },
-  analyst: { name: 'Analyst', color: 'blue', icon: '📊' },
-  pro: { name: 'Professional', color: 'purple', icon: '⚡' },
+  pro: { name: 'Pro', color: 'purple', icon: '⚡' },
+  elite: { name: 'Elite', color: 'amber', icon: '💎' },
   enterprise: { name: 'Enterprise', color: 'gold', icon: '🏢' },
   academic: { name: 'Academic', color: 'green', icon: '🎓' }
 };
+
+export function normalizeSubscriptionTier(tier?: string | null): SubscriptionTier {
+  switch (tier as LegacySubscriptionTier | undefined) {
+    case 'basic':
+      return 'free';
+    case 'analyst':
+      return 'pro';
+    case 'elite':
+      return 'elite';
+    case 'pro':
+      return 'pro';
+    case 'enterprise':
+      return 'enterprise';
+    case 'academic':
+      return 'academic';
+    case 'free':
+    default:
+      return 'free';
+  }
+}
 
 export function useSubscription(userId?: string) {
   const [subscription, setSubscription] = useState<UserSubscription | null>(null);
@@ -94,7 +115,7 @@ export function useSubscription(userId?: string) {
         setSubscription({
           id: data.id,
           userId: data.user_id,
-          tier: data.tier as SubscriptionTier,
+          tier: normalizeSubscriptionTier(data.tier),
           status: data.status,
           currentPeriodStart: data.current_period_start,
           currentPeriodEnd: data.current_period_end,
@@ -128,32 +149,38 @@ export function useSubscription(userId?: string) {
 
       if (fetchError) throw fetchError;
 
-      const mapped = (data || []).map(row => ({
-        tier: row.tier as SubscriptionTier,
-        displayName: row.display_name,
-        priceMonthly: row.price_monthly_cents / 100,
-        priceYearly: row.price_yearly_cents / 100,
-        maxAnalysesPerDay: row.max_analyses_per_day,
-        maxMatrixSize: row.max_matrix_size,
-        maxPlayers: row.max_players,
-        maxScenariosSaved: row.max_scenarios_saved,
-        maxTemplatesAccess: row.max_templates_access,
-        canExportCsv: row.can_export_csv,
-        canExportPdf: row.can_export_pdf,
-        canUseApi: row.can_use_api,
-        canAccessGoldModule: row.can_access_gold_module,
-        canAccessSequentialGames: row.can_access_sequential_games,
-        canAccessMonteCarlo: row.can_access_monte_carlo,
-        canAccessRealTimeData: row.can_access_real_time_data,
-        canCollaborate: row.can_collaborate,
-        canCreatePrivateRooms: row.can_create_private_rooms,
-        canWhiteLabel: row.can_white_label,
-        supportLevel: row.support_level,
-        // Whop-aligned tier flags
-        canAccessLabs: row.can_access_labs ?? false,
-        canAccessForecasting: row.can_access_forecasting ?? false,
-        canAccessIntel: row.can_access_intel ?? false
-      }));
+      const mappedByTier = new Map<SubscriptionTier, TierLimits>();
+
+      for (const row of data || []) {
+        const tier = normalizeSubscriptionTier(row.tier);
+        mappedByTier.set(tier, {
+          tier,
+          displayName: tier === 'pro' ? 'Pro' : row.display_name,
+          priceMonthly: row.price_monthly_cents / 100,
+          priceYearly: row.price_yearly_cents / 100,
+          maxAnalysesPerDay: row.max_analyses_per_day,
+          maxMatrixSize: row.max_matrix_size,
+          maxPlayers: row.max_players,
+          maxScenariosSaved: row.max_scenarios_saved,
+          maxTemplatesAccess: row.max_templates_access,
+          canExportCsv: row.can_export_csv,
+          canExportPdf: row.can_export_pdf,
+          canUseApi: row.can_use_api,
+          canAccessGoldModule: row.can_access_gold_module,
+          canAccessSequentialGames: row.can_access_sequential_games,
+          canAccessMonteCarlo: row.can_access_monte_carlo,
+          canAccessRealTimeData: row.can_access_real_time_data,
+          canCollaborate: row.can_collaborate,
+          canCreatePrivateRooms: row.can_create_private_rooms,
+          canWhiteLabel: row.can_white_label,
+          supportLevel: row.support_level,
+          canAccessLabs: row.can_access_labs ?? false,
+          canAccessForecasting: row.can_access_forecasting ?? false,
+          canAccessIntel: row.can_access_intel ?? false
+        });
+      }
+
+      const mapped = Array.from(mappedByTier.values()).sort((a, b) => a.priceMonthly - b.priceMonthly);
 
       setAllTiers(mapped);
 
@@ -181,7 +208,10 @@ export function useSubscription(userId?: string) {
 
       if (rpcError) throw rpcError;
 
-      return data as UsageStatus;
+      return {
+        ...(data as UsageStatus),
+        tier: normalizeSubscriptionTier((data as UsageStatus)?.tier),
+      };
     } catch (err) {
       console.error('Error checking limit:', err);
       return { allowed: false, tier: subscription?.tier || 'free' };
@@ -203,7 +233,10 @@ export function useSubscription(userId?: string) {
 
       if (rpcError) throw rpcError;
 
-      return data as UsageStatus;
+      return {
+        ...(data as UsageStatus),
+        tier: normalizeSubscriptionTier((data as UsageStatus)?.tier),
+      };
     } catch (err) {
       console.error('Error incrementing usage:', err);
       return { allowed: false, tier: subscription?.tier || 'free' };
@@ -248,12 +281,20 @@ export function useSubscription(userId?: string) {
   useEffect(() => {
     const init = async () => {
       setLoading(true);
+      if (!userId) {
+        setSubscription(null);
+        setTierLimits(null);
+        setAllTiers([]);
+        setError(null);
+        setLoading(false);
+        return;
+      }
       await fetchSubscription();
       await fetchTierLimits();
       setLoading(false);
     };
     init();
-  }, [fetchSubscription, fetchTierLimits]);
+  }, [fetchSubscription, fetchTierLimits, userId]);
 
   // Update tier limits when subscription changes
   useEffect(() => {
@@ -262,6 +303,25 @@ export function useSubscription(userId?: string) {
       setTierLimits(limits || null);
     }
   }, [subscription, allTiers]);
+
+  useEffect(() => {
+    const handleRefresh = () => {
+      if (!userId) {
+        setSubscription(null);
+        setTierLimits(null);
+        setAllTiers([]);
+        setError(null);
+        return;
+      }
+      void fetchSubscription();
+      void fetchTierLimits();
+    };
+
+    window.addEventListener('subscription:refresh', handleRefresh);
+    return () => {
+      window.removeEventListener('subscription:refresh', handleRefresh);
+    };
+  }, [fetchSubscription, fetchTierLimits, userId]);
 
   return {
     // State
@@ -273,8 +333,8 @@ export function useSubscription(userId?: string) {
     
     // Current tier shortcuts
     currentTier: subscription?.tier || 'free',
-    isFreeTier: subscription?.tier === 'free',
-    isPaidTier: subscription?.tier !== 'free',
+    isFreeTier: (subscription?.tier || 'free') === 'free',
+    isPaidTier: (subscription?.tier || 'free') !== 'free',
     isEnterprise: subscription?.tier === 'enterprise',
     
     // Actions
@@ -287,6 +347,13 @@ export function useSubscription(userId?: string) {
     
     // Refresh
     refresh: async () => {
+      if (!userId) {
+        setSubscription(null);
+        setTierLimits(null);
+        setAllTiers([]);
+        setError(null);
+        return;
+      }
       await fetchSubscription();
       await fetchTierLimits();
     }

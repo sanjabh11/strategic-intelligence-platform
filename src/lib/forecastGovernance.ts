@@ -39,6 +39,33 @@ export interface PublishGovernanceAssessment {
   freshness: FreshnessAssessment | null;
 }
 
+export interface GovernanceSummaryField {
+  label: string;
+  tone: string;
+  detail: string;
+}
+
+export interface GovernanceSummary {
+  review_state: GovernanceSummaryField;
+  evidence_backed_state: GovernanceSummaryField;
+  freshness: FreshnessAssessment | null;
+  consensus_reliability: GovernanceSummaryField | null;
+  publish_blockers: string[];
+}
+
+interface GovernanceSummaryInput {
+  readiness?: ForecastReadinessAssessment | null;
+  governance?: PublishGovernanceAssessment | null;
+  reviewState: ForecastLinkedAnalysisState;
+  provenanceEvidenceBacked?: boolean | null;
+  consensus?: {
+    reliability?: { score?: number };
+    participantCount?: number;
+  } | null;
+  disagreementIndex?: number | null;
+  evidenceCount?: number | null;
+}
+
 export const assessForecastReadiness = (draft: ForecastGovernanceDraft): ForecastReadinessAssessment => {
   const issues: string[] = [];
   const warnings: string[] = [];
@@ -119,5 +146,132 @@ export const assessPublishGovernance = (
     reviewRequired,
     warnings,
     freshness
+  };
+};
+
+export const buildGovernanceSummary = ({
+  readiness,
+  governance,
+  reviewState,
+  provenanceEvidenceBacked,
+  consensus,
+  disagreementIndex,
+  evidenceCount
+}: GovernanceSummaryInput): GovernanceSummary => {
+  const publishBlockers = Array.from(new Set([
+    ...(governance?.blockers || []),
+    ...(governance?.reviewRequired || [])
+  ]));
+
+  const reviewStateField: GovernanceSummaryField = reviewState.loading
+    ? {
+        label: 'Checking review state',
+        tone: 'border-slate-600 bg-slate-800 text-slate-300',
+        detail: 'Linked analysis governance is still loading.'
+      }
+    : reviewState.status === 'approved'
+      ? {
+          label: 'Human-reviewed',
+          tone: 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300',
+          detail: 'The linked analysis has passed human review.'
+        }
+      : reviewState.status === 'under_review' || reviewState.status === 'needs_review'
+        ? {
+            label: 'Review pending',
+            tone: 'border-amber-500/30 bg-amber-500/10 text-amber-300',
+            detail: 'The linked analysis is still in the review queue.'
+          }
+        : reviewState.status === 'rejected'
+          ? {
+              label: 'Review rejected',
+              tone: 'border-rose-500/30 bg-rose-500/10 text-rose-300',
+              detail: 'A reviewer rejected the linked analysis and public publication should stop here.'
+            }
+          : {
+              label: 'Review not requested',
+              tone: 'border-slate-600 bg-slate-800 text-slate-300',
+              detail: 'No completed human review is recorded for the linked analysis.'
+            };
+
+  const evidenceBacked = reviewState.evidenceBacked === true || reviewState.status === 'approved' || provenanceEvidenceBacked === true;
+
+  const evidenceBackedField: GovernanceSummaryField = evidenceBacked
+    ? {
+        label: 'Evidence-backed',
+        tone: 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300',
+        detail: evidenceCount && evidenceCount < 3
+          ? `Analysis is evidence-backed, but only ${evidenceCount} evidence item${evidenceCount === 1 ? '' : 's'} are attached.`
+          : 'Evidence-backed provenance is present for the linked analysis.'
+      }
+    : evidenceCount && evidenceCount > 0
+      ? {
+          label: 'Limited evidence',
+          tone: 'border-amber-500/30 bg-amber-500/10 text-amber-300',
+          detail: `The linked analysis carries ${evidenceCount} evidence item${evidenceCount === 1 ? '' : 's'}, so trust should stay review-visible.`
+        }
+      : {
+          label: 'Evidence not verified',
+          tone: 'border-slate-600 bg-slate-800 text-slate-300',
+          detail: 'No strong evidence-backed signal is attached to the linked analysis yet.'
+        };
+
+  let consensusField: GovernanceSummaryField | null = null;
+  const reliabilityScore = typeof consensus?.reliability?.score === 'number' ? consensus.reliability.score : null;
+  const participantCount = typeof consensus?.participantCount === 'number' ? consensus.participantCount : null;
+
+  if (reliabilityScore !== null) {
+    consensusField = reliabilityScore >= 0.7
+      ? {
+          label: 'High consensus reliability',
+          tone: 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300',
+          detail: participantCount
+            ? `Weighted consensus reliability is ${(reliabilityScore * 100).toFixed(0)}% across ${participantCount} participants.`
+            : `Weighted consensus reliability is ${(reliabilityScore * 100).toFixed(0)}%.`
+        }
+      : reliabilityScore >= 0.45
+        ? {
+            label: 'Developing consensus',
+            tone: 'border-cyan-500/30 bg-cyan-500/10 text-cyan-300',
+            detail: participantCount
+              ? `Weighted consensus is still maturing across ${participantCount} participants.`
+              : 'Consensus quality is still developing.'
+          }
+        : {
+            label: 'Low consensus reliability',
+            tone: 'border-amber-500/30 bg-amber-500/10 text-amber-300',
+            detail: participantCount
+              ? `Weighted consensus is thin or unstable across ${participantCount} participants.`
+              : 'Consensus quality is too thin to lean on heavily.'
+          };
+  } else if (typeof disagreementIndex === 'number') {
+    consensusField = disagreementIndex >= 0.2
+      ? {
+          label: 'Contested engine view',
+          tone: 'border-rose-500/30 bg-rose-500/10 text-rose-300',
+          detail: 'Specialist or challenger disagreement is high, so reviewer confirmation is important.'
+        }
+      : disagreementIndex >= 0.1
+        ? {
+            label: 'Moderate disagreement',
+            tone: 'border-amber-500/30 bg-amber-500/10 text-amber-300',
+            detail: 'Consensus is directionally useful, but challenger reasoning should stay visible.'
+          }
+        : {
+            label: 'Stable engine consensus',
+            tone: 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300',
+            detail: 'Engine disagreement is low enough for a stable working draft.'
+          };
+  }
+
+  if (!governance && readiness && readiness.warnings.length > 0) {
+    publishBlockers.push(...readiness.issues);
+  }
+
+  return {
+    review_state: reviewStateField,
+    evidence_backed_state: evidenceBackedField,
+    freshness: governance?.freshness || getAnalysisFreshness(reviewState.createdAt),
+    consensus_reliability: consensusField,
+    publish_blockers: Array.from(new Set(publishBlockers))
   };
 };

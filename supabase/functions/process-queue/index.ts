@@ -4,7 +4,7 @@
 // Endpoint: POST /functions/v1/process-queue
 // Scans analysis_jobs for stuck processing > 10m and marks failed.
 
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { createClient } from 'npm:@supabase/supabase-js@2'
 
 function jsonResponse(status: number, body: unknown) {
   return new Response(JSON.stringify(body), {
@@ -13,6 +13,7 @@ function jsonResponse(status: number, body: unknown) {
   })
 }
 
+// INTERNAL: Called server-side, relies on RLS for auth
 Deno.serve(async (req) => {
   if (req.method !== 'POST') return jsonResponse(405, { ok: false, message: 'Method Not Allowed' })
   try {

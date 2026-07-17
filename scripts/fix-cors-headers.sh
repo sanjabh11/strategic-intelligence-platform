@@ -20,7 +20,7 @@ FUNCTIONS=(
   "temporal-strategy-optimization"
   "dynamic-recalibration"
   "cross-domain-transfer"
-  "evidence-retrieval"
+  "evidence-retrieval-exa"
   "firecrawl-research"
   "pattern-symmetry-mining"
   "notebook-export"

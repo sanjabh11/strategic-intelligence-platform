@@ -38,6 +38,7 @@ const HumanReview = React.lazy(() => import('./components/HumanReview'))
 const WhopPricingPage = React.lazy(() => import('./components/WhopPricingPage'))
 const NegotiationDojo = React.lazy(() => import('./components/NegotiationDojo'))
 const GameTreeBuilder = React.lazy(() => import('./components/GameTreeBuilder'))
+const StrategyArena = React.lazy(() => import('./components/StrategyArena'))
 const CorporateWarRoom = React.lazy(() => import('./components/CorporateWarRoom'))
 const StripeCheckoutPage = React.lazy(() => import('./pages/StripeCheckoutPage'))
 const SignupPage = React.lazy(() => import('./pages/SignupPage'))
@@ -134,10 +135,13 @@ const AppContent: React.FC = () => {
   const labsAndGoldBypassEnabled = isLabsAndGoldBypassEnabled
   const negotiationLab = getSurfacedLabModule('negotiation')
   const gameTreeLab = getSurfacedLabModule('game-tree')
+  const strategyArenaLab = getSurfacedLabModule('strategy-arena')
   const negotiationLabAllowedByTier = canAccessLabModule(currentTier, negotiationLab)
   const gameTreeLabAllowedByTier = canAccessLabModule(currentTier, gameTreeLab)
+  const strategyArenaLabAllowedByTier = canAccessLabModule(currentTier, strategyArenaLab)
   const canAccessNegotiationLab = negotiationLabAllowedByTier || labsAndGoldBypassEnabled
   const canAccessGameTreeLab = gameTreeLabAllowedByTier || labsAndGoldBypassEnabled
+  const canAccessStrategyArenaLab = strategyArenaLabAllowedByTier || labsAndGoldBypassEnabled
   const canAccessClassrooms = Boolean(session?.userId) && (currentTier === 'academic' || currentTier === 'enterprise' || hasFeature('canCreatePrivateRooms'))
   const canAccessWarRoom = Boolean(session?.userId) && (currentTier === 'enterprise' || hasFeature('canCollaborate'))
   const publicBetaAnonymous = publicAnalysisOnlyBeta && !hasAuthenticatedSession
@@ -254,6 +258,28 @@ const AppContent: React.FC = () => {
                   >
                     <div className="rounded-xl border border-slate-700 bg-slate-800 p-4">
                       <GameTreeBuilder userId={session?.userId} />
+                    </div>
+                  </LabAccessGate>
+                )
+            } />
+            <Route path="/labs/strategy-arena" element={
+              publicBetaAnonymous
+                ? renderExternalBetaHold(
+                    'Labs are private during this beta',
+                    'Strategy Arena IPD tournaments remain internal while the public beta focuses on curated analysis and published forecasts.',
+                    'Open Forecasts',
+                    '/forecasts'
+                  )
+                : (
+                  <LabAccessGate
+                    allowed={canAccessStrategyArenaLab}
+                    title={strategyArenaLab.name}
+                    description={strategyArenaLab.description}
+                    requiredTier={strategyArenaLab.minTier}
+                    overrideActive={labsAndGoldBypassEnabled && !strategyArenaLabAllowedByTier}
+                  >
+                    <div className="rounded-xl border border-slate-700 bg-slate-800 p-4">
+                      <StrategyArena />
                     </div>
                   </LabAccessGate>
                 )

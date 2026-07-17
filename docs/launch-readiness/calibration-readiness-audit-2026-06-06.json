@@ -1,0 +1,361 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-06-06T03:47:54.754Z",
+  "repo": {
+    "name": "strategic-intelligence-platform",
+    "path": "/Users/sanjayb/minimax/strategic-intelligence-platform"
+  },
+  "decision": "pilot-only",
+  "summary": {
+    "readiness_score_1_to_5": 4,
+    "code_primitives_present": 17,
+    "code_primitives_checked": 17,
+    "failing_code_checks": 0,
+    "open_evidence_gates": 2,
+    "confidence_statement": "Calibration and whitebox-governance primitives are present, but world-class prediction accuracy is not commercially claimable until resolved-outcome ledgers, reliability curves, hosted dry-runs, security boundaries, and benchmark comparisons are attached."
+  },
+  "requirements": [
+    {
+      "label": "TypeScript calibration fitting uses isotonic or prior-smoothed calibration.",
+      "status": "pass",
+      "evidence": "shared/mlAdvisory.ts:377",
+      "rationale": "Local and Edge code need a reusable calibration model before accuracy claims can be measured."
+    },
+    {
+      "label": "Calibration metrics include Brier loss before and after calibration.",
+      "status": "pass",
+      "evidence": "shared/mlAdvisory.ts:30",
+      "rationale": "Brier loss is the minimum scoring primitive for binary forecast credibility."
+    },
+    {
+      "label": "ML service can refresh persisted calibration models from resolved outcomes.",
+      "status": "pass",
+      "evidence": "ml-service/main.py:1281",
+      "rationale": "A production learning loop needs an operational calibration refresh endpoint."
+    },
+    {
+      "label": "ML service stores sample size and raw/calibrated Brier metrics.",
+      "status": "pass",
+      "evidence": "ml-service/main.py:402",
+      "rationale": "Calibration claims need sample-size and score metadata, not only adjusted probabilities."
+    },
+    {
+      "label": "Whitebox release helper computes Brier scores per resolved forecast variant.",
+      "status": "pass",
+      "evidence": "supabase/functions/_shared/whitebox-release.ts:266",
+      "rationale": "Consensus-policy promotion should be score-backed by resolved outcomes."
+    },
+    {
+      "label": "Promotion is blocked until a minimum resolved sample size is available.",
+      "status": "pass",
+      "evidence": "supabase/functions/_shared/whitebox-release.ts:78",
+      "rationale": "Small-sample challenger wins must not drive automatic promotion."
+    },
+    {
+      "label": "Scheduled whitebox job backfills resolved forecast evaluations.",
+      "status": "pass",
+      "evidence": "supabase/functions/whitebox-scheduled/index.ts:9",
+      "rationale": "The app needs a repeatable backfill path from resolved forecasts to evaluation rows."
+    },
+    {
+      "label": "Release evaluation endpoint summarizes challenger performance.",
+      "status": "pass",
+      "evidence": "supabase/functions/release-evaluation/index.ts:5",
+      "rationale": "Governed releases need a dry-run/evaluation surface before promotion."
+    },
+    {
+      "label": "Release promotion endpoint requires threshold evidence unless forced.",
+      "status": "pass",
+      "evidence": "supabase/functions/release-promotion/index.ts:75",
+      "rationale": "Manual or automatic policy changes need explicit gates."
+    },
+    {
+      "label": "Calibration refresh Edge function proxies authorized calls to the ML service.",
+      "status": "pass",
+      "evidence": "supabase/functions/calibration-refresh/index.ts:47",
+      "rationale": "Hosted operations need a service boundary rather than direct client writes."
+    },
+    {
+      "label": "Drift evaluation Edge function proxies authorized calls to the ML service.",
+      "status": "pass",
+      "evidence": "supabase/functions/drift-evaluate/index.ts:47",
+      "rationale": "Forecast reliability needs drift monitoring when evidence distributions shift."
+    },
+    {
+      "label": "Consensus aggregation incorporates user Brier history and reliability.",
+      "status": "pass",
+      "evidence": "supabase/functions/brier-weighted-consensus/index.ts:68",
+      "rationale": "A sellable forecast workflow needs a performance-weighted consensus lane."
+    },
+    {
+      "label": "Schema stores whitebox release state, evaluations, and decisions.",
+      "status": "pass",
+      "evidence": "supabase/migrations/20260429000100_whitebox_release_governance.sql:21",
+      "rationale": "Resolved-outcome evaluation needs durable tables, not transient logs."
+    },
+    {
+      "label": "Schema stores calibration models, drift signals, and shadow predictions.",
+      "status": "pass",
+      "evidence": "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql:7",
+      "rationale": "Calibration and drift artifacts need first-class database tables."
+    },
+    {
+      "label": "Unit tests cover prior-smoothed calibration and drift flags.",
+      "status": "pass",
+      "evidence": "tests/ml-advisory.test.ts:11",
+      "rationale": "Scientific primitives need deterministic regression coverage."
+    },
+    {
+      "label": "Whitebox tests cover challenger promotion on resolved samples.",
+      "status": "pass",
+      "evidence": "supabase/functions/_shared/whitebox-release.test.ts:56",
+      "rationale": "Release-governance logic needs direct tests for promotion decisions."
+    },
+    {
+      "label": "Resolved-outcome calibration ledger harness computes Brier metrics and reliability bins from approved exports.",
+      "status": "pass",
+      "evidence": "scripts/build-calibration-ledger.mjs:397",
+      "rationale": "Commercial accuracy claims need a repeatable report path from resolved forecast exports to calibration evidence."
+    }
+  ],
+  "evidence_gates": [
+    {
+      "gate": "resolved_outcome_sample",
+      "status": "partial",
+      "evidence": "docs/launch-readiness/resolved-forecast-calibration-ledger-2026-06-06.json verifies the ledger mechanism as a sample fixture, but is not launch proof.",
+      "required_for_commercial_claim": true,
+      "fix": "Generate a resolved forecast ledger with included/excluded question rules, sample size, Brier score, calibration status, and benchmark baseline."
+    },
+    {
+      "gate": "reliability_curve_or_bucket_report",
+      "status": "partial",
+      "evidence": "docs/launch-readiness/resolved-forecast-calibration-ledger-2026-06-06.json includes reliability bins for a sample fixture only.",
+      "required_for_commercial_claim": true,
+      "fix": "Add probability-bin reliability curves or equivalent calibration buckets for resolved binary forecasts."
+    },
+    {
+      "gate": "hosted_calibration_run",
+      "status": "open",
+      "evidence": "No hosted calibration-refresh, whitebox-scheduled, release-evaluation, or release-promotion smoke output is captured in this launch evidence set.",
+      "required_for_commercial_claim": true,
+      "fix": "After owner-approved deploy and secrets, run hosted dry-run jobs and attach logs/screenshots without exposing credentials."
+    },
+    {
+      "gate": "benchmark_comparison",
+      "status": "partial",
+      "evidence": "docs/launch-readiness/forecast-benchmark-comparison-2026-06-06.json verifies benchmark comparison mechanics with sample-only data.",
+      "required_for_commercial_claim": true,
+      "fix": "Compare app forecasts against a trivial base rate, uncalibrated model, human/community baseline where available, and a published benchmark protocol."
+    },
+    {
+      "gate": "security_boundary_for_evaluation_tables",
+      "status": "open",
+      "evidence": "RLS static audit still reports relevant P1 findings for whitebox/shadow/forecast-adjacent tables.",
+      "required_for_commercial_claim": true,
+      "fix": "Classify calibration/evaluation tables as public, authenticated, owner-bound, or service-only, then verify policies against hosted Supabase state."
+    }
+  ],
+  "ledger_reports": [
+    {
+      "path": "docs/launch-readiness/resolved-forecast-calibration-ledger-2026-06-06.json",
+      "mode": "sample_fixture",
+      "commercial_claim_status": "not_launch_proof",
+      "included_point_count": 30,
+      "max_source_sample_size": 6,
+      "minimum_sample_size": 25,
+      "sources_scored": 5,
+      "has_reliability_bins": true
+    }
+  ],
+  "benchmark_reports": [
+    {
+      "path": "docs/launch-readiness/forecast-benchmark-comparison-2026-06-06.json",
+      "commercial_benchmark_status": "sample_only_not_launch_proof",
+      "ledger_mode": "sample_fixture",
+      "comparisons_made": 15,
+      "baselines_loaded": 3,
+      "sources_compared": 5
+    }
+  ],
+  "rls_calibration_findings": {
+    "source": "docs/launch-readiness/rls-policy-audit-2026-06-06.json",
+    "status": "open_p1_findings",
+    "relevant_p1_tables": [
+      "dynamic_recalibration_results",
+      "outcome_forecasting_results",
+      "whitebox_experiment_evaluations",
+      "whitebox_experiment_state"
+    ],
+    "finding_count": 16,
+    "findings": [
+      {
+        "severity": "P1",
+        "table": "outcome_forecasting_results",
+        "issue": "anonymous_write_check",
+        "policy": "insert_anon_forecasting",
+        "file": "supabase/migrations/20250918110000_advanced_services_tables.sql",
+        "line": 141
+      },
+      {
+        "severity": "P1",
+        "table": "dynamic_recalibration_results",
+        "issue": "anonymous_write_check",
+        "policy": "insert_anon_recalibration",
+        "file": "supabase/migrations/20250918110000_advanced_services_tables.sql",
+        "line": 149
+      },
+      {
+        "severity": "P1",
+        "table": "whitebox_experiment_state",
+        "issue": "unconditional_using_true",
+        "policy": "read_whitebox_experiment_state",
+        "file": "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql",
+        "line": 221
+      },
+      {
+        "severity": "P1",
+        "table": "whitebox_experiment_state",
+        "issue": "sensitive_table_read_without_identity_predicate",
+        "policy": "read_whitebox_experiment_state",
+        "file": "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql",
+        "line": 221
+      },
+      {
+        "severity": "P1",
+        "table": "whitebox_experiment_evaluations",
+        "issue": "unconditional_using_true",
+        "policy": "read_whitebox_experiment_evaluations",
+        "file": "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql",
+        "line": 224
+      },
+      {
+        "severity": "P1",
+        "table": "whitebox_experiment_evaluations",
+        "issue": "sensitive_table_read_without_identity_predicate",
+        "policy": "read_whitebox_experiment_evaluations",
+        "file": "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql",
+        "line": 224
+      },
+      {
+        "severity": "P2",
+        "table": "outcome_forecasting_results",
+        "issue": "unconditional_using_true",
+        "policy": "read_anon_forecasting",
+        "file": "supabase/migrations/20250918110000_advanced_services_tables.sql",
+        "line": 138
+      },
+      {
+        "severity": "P2",
+        "table": "outcome_forecasting_results",
+        "issue": "write_without_obvious_identity_predicate",
+        "policy": "insert_anon_forecasting",
+        "file": "supabase/migrations/20250918110000_advanced_services_tables.sql",
+        "line": 141
+      },
+      {
+        "severity": "P2",
+        "table": "dynamic_recalibration_results",
+        "issue": "unconditional_using_true",
+        "policy": "read_anon_recalibration",
+        "file": "supabase/migrations/20250918110000_advanced_services_tables.sql",
+        "line": 146
+      },
+      {
+        "severity": "P2",
+        "table": "dynamic_recalibration_results",
+        "issue": "write_without_obvious_identity_predicate",
+        "policy": "insert_anon_recalibration",
+        "file": "supabase/migrations/20250918110000_advanced_services_tables.sql",
+        "line": 149
+      },
+      {
+        "severity": "P2",
+        "table": "temporal_forecasts",
+        "issue": "unconditional_using_true",
+        "policy": "Public read temporal forecasts",
+        "file": "supabase/migrations/20251006100000_realtime_features.sql",
+        "line": 297
+      },
+      {
+        "severity": "P2",
+        "table": "forecast_scores",
+        "issue": "unconditional_using_true",
+        "policy": "scores_select",
+        "file": "supabase/migrations/20251212120000_enterprise_sso.sql",
+        "line": 341
+      },
+      {
+        "severity": "P2",
+        "table": "calibration_models",
+        "issue": "unconditional_using_true",
+        "policy": "read_calibration_models",
+        "file": "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql",
+        "line": 203
+      },
+      {
+        "severity": "P2",
+        "table": "drift_signals",
+        "issue": "unconditional_using_true",
+        "policy": "read_drift_signals",
+        "file": "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql",
+        "line": 218
+      },
+      {
+        "severity": "P2",
+        "table": "shadow_model_registry",
+        "issue": "unconditional_using_true",
+        "policy": "read_shadow_model_registry",
+        "file": "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql",
+        "line": 227
+      },
+      {
+        "severity": "P2",
+        "table": "shadow_predictions",
+        "issue": "unconditional_using_true",
+        "policy": "read_shadow_predictions",
+        "file": "supabase/migrations/20260501000100_ml_phase1_phase2_foundation.sql",
+        "line": 230
+      }
+    ]
+  },
+  "best_practice_alignment": [
+    {
+      "framework": "ForecastBench / dynamic forecasting evaluation",
+      "alignment": "partial",
+      "repo_evidence": "Brier scoring, resolved outcome backfill, and challenger release evaluation exist.",
+      "missing": "External benchmark protocol, model/human baseline comparison, and public resolved sample report."
+    },
+    {
+      "framework": "NIST AI RMF Measure and Manage",
+      "alignment": "partial",
+      "repo_evidence": "Calibration metrics, drift signals, and release decisions create monitoring primitives.",
+      "missing": "Operational measurement report, incident thresholds, owner sign-off, and hosted monitoring proof."
+    },
+    {
+      "framework": "ISO/IEC 42001 continuous improvement",
+      "alignment": "partial",
+      "repo_evidence": "Governed promotion/hold decisions and shadow/challenger tables exist.",
+      "missing": "Named AI management process, periodic review cadence, and externally reviewable records."
+    },
+    {
+      "framework": "OWASP GenAI / CISA secure-by-design expectations",
+      "alignment": "not_ready",
+      "repo_evidence": "Local dependency audit and unsafe eval hardening are complete in the launch evidence set.",
+      "missing": "Tenant/object-boundary proof for evaluation data and hosted auth/RLS smoke checks."
+    }
+  ],
+  "top_blockers": [
+    "No approved resolved-outcome export ledger with enough samples for commercial accuracy claims.",
+    "No approved reliability curve or probability-bin calibration report.",
+    "No hosted dry-run proof for calibration refresh, whitebox scheduled backfill, release evaluation, or promotion hold.",
+    "No approved benchmark comparison against real human/community/pro/external baselines.",
+    "RLS and tenant-boundary proof for calibration/evaluation/shadow data remains unresolved."
+  ],
+  "recommended_next_actions": [
+    "Add a local resolved-forecast calibration report generator that reads only sanitized/sample data or hosted exports approved by the owner.",
+    "Use reliability bins and Brier decomposition before making any prediction-superiority claim.",
+    "Keep market copy at \"calibration-aware decision support\" until the ledger shows enough resolved outcomes.",
+    "Run hosted dry-runs only after secrets/deploy are owner-approved, and redact all credentials from evidence artifacts.",
+    "Fold calibration-adjacent RLS tables into the owner-approved policy-hardening queue."
+  ]
+}

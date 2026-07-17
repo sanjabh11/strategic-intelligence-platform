@@ -1,0 +1,153 @@
+{
+  "schema_version": "forecast-pre-resolution-capture-kit-v1",
+  "generated_at": "2026-06-06T18:01:09.736Z",
+  "status": "forecast_pre_resolution_capture_kit_ready_not_accuracy_proof",
+  "source": {
+    "forecast_execution_readiness": "docs/launch-readiness/forecast-evaluation-execution-readiness-2026-06-06.json",
+    "forecast_execution_readiness_status": "forecast_evaluation_execution_ready_for_owner_export_no_real_outcomes",
+    "execution_ready_for_owner_resolved_export": true,
+    "forecast_evaluation_protocol": "docs/launch-readiness/forecast-evaluation-protocol-2026-06-06.json",
+    "protocol_stage_count": 8
+  },
+  "summary": {
+    "min_planned_questions": 25,
+    "question_register_template": "docs/launch-readiness/forecast-question-register-template-2026-06-06.csv",
+    "pre_resolution_snapshot_template": "docs/launch-readiness/forecast-pre-resolution-snapshot-template-2026-06-06.csv",
+    "baseline_snapshot_template": "docs/launch-readiness/forecast-baseline-snapshot-template-2026-06-06.csv",
+    "question_register_column_count": 17,
+    "pre_resolution_snapshot_column_count": 14,
+    "baseline_snapshot_column_count": 11,
+    "accuracy_claim_allowed": false,
+    "world_class_prediction_claim_allowed": false
+  },
+  "required_owner_inputs": [
+    {
+      "artifact": "docs/launch-readiness/forecast-question-register-template-2026-06-06.csv",
+      "purpose": "Register forecast questions before outcomes are known.",
+      "minimum_rows": 25,
+      "required_columns": [
+        "question_id",
+        "title",
+        "question_text",
+        "niche",
+        "source_surface",
+        "created_at",
+        "forecast_opened_at",
+        "forecast_due_at",
+        "scheduled_close_at",
+        "resolution_criteria",
+        "expected_resolution_source_url",
+        "ambiguity_policy",
+        "exclusion_rule",
+        "decision_relevance",
+        "owner",
+        "public_or_private",
+        "notes"
+      ],
+      "owner_rule": "Every question needs resolution criteria, expected resolution source, ambiguity policy, exclusion rule, and decision relevance before the first app forecast snapshot is captured."
+    },
+    {
+      "artifact": "docs/launch-readiness/forecast-pre-resolution-snapshot-template-2026-06-06.csv",
+      "purpose": "Capture app/model/team probabilities before resolution.",
+      "minimum_rows": 25,
+      "required_columns": [
+        "snapshot_id",
+        "question_id",
+        "prediction_source",
+        "forecaster_type",
+        "model_or_team",
+        "probability",
+        "prediction_timestamp",
+        "evidence_bundle_ref",
+        "prompt_or_policy_version",
+        "retrieval_cutoff",
+        "source_cutoff",
+        "abstained",
+        "abstention_reason",
+        "notes"
+      ],
+      "owner_rule": "Every probability needs prediction_timestamp, evidence_bundle_ref, prompt_or_policy_version, retrieval_cutoff, and source_cutoff. Post-resolution or timestamp-missing rows cannot support accuracy claims."
+    },
+    {
+      "artifact": "docs/launch-readiness/forecast-baseline-snapshot-template-2026-06-06.csv",
+      "purpose": "Capture comparable baseline probabilities before resolution.",
+      "minimum_rows": 1,
+      "required_columns": [
+        "baseline_snapshot_id",
+        "question_id",
+        "baseline_type",
+        "label",
+        "probability",
+        "prediction_timestamp",
+        "source_url",
+        "sample_size",
+        "timestamp_policy",
+        "comparability_notes",
+        "notes"
+      ],
+      "owner_rule": "Every baseline probability needs source URL or documented source, timestamp policy, and comparability notes before benchmark comparison."
+    }
+  ],
+  "owner_action_order": [
+    "Choose at least 25 binary questions across the five commercial niches before outcomes are known.",
+    "Fill the question register with resolution criteria, expected resolution source, ambiguity policy, exclusion rule, and decision relevance.",
+    "Capture app/model/team probabilities in the pre-resolution snapshot template before each scheduled close/resolution.",
+    "Capture comparable human/community/pro/model/market baseline probabilities before resolution where available.",
+    "Freeze or archive the completed pre-resolution packet so later resolved exports can prove timestamp order and leakage boundaries.",
+    "After outcomes resolve, convert eligible rows into the approved resolved forecast export and run accuracy input, leakage, calibration, benchmark, science, claim consistency, and commercial confidence validators."
+  ],
+  "acceptance_gates": [
+    {
+      "gate": "pre_resolution_question_register_template_ready",
+      "status": "passed",
+      "proof_bucket": "repo_artifact",
+      "evidence": "17 required question-register columns generated.",
+      "next_action": "Owner fills at least 25 planned forecast questions before relying on pilot accuracy claims."
+    },
+    {
+      "gate": "pre_resolution_forecast_snapshot_template_ready",
+      "status": "passed",
+      "proof_bucket": "repo_artifact",
+      "evidence": "14 required pre-resolution snapshot columns generated.",
+      "next_action": "Capture each probability before scheduled close/resolution with retrieval and source cutoff timestamps."
+    },
+    {
+      "gate": "pre_resolution_baseline_snapshot_template_ready",
+      "status": "passed",
+      "proof_bucket": "repo_artifact",
+      "evidence": "11 baseline-snapshot columns generated.",
+      "next_action": "Capture comparable human, community, pro, market, or model baseline probabilities before resolution."
+    },
+    {
+      "gate": "resolved_scoring_boundary_preserved",
+      "status": "passed",
+      "proof_bucket": "repo_artifact",
+      "evidence": "The kit starts admissible evidence collection but does not mark any row resolved or score any claim.",
+      "next_action": "After outcomes resolve, convert owner-approved rows to the resolved export and run validation/scoring gates."
+    },
+    {
+      "gate": "forecast_execution_readiness_linked",
+      "status": "passed",
+      "proof_bucket": "repo_artifact",
+      "evidence": "docs/launch-readiness/forecast-evaluation-execution-readiness-2026-06-06.json status=forecast_evaluation_execution_ready_for_owner_export_no_real_outcomes; execution_ready_for_owner_resolved_export=true.",
+      "next_action": "Use this kit as the starting evidence register for the forecast execution-readiness lane."
+    }
+  ],
+  "next_commands_after_resolution": [
+    "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:accuracy:validate-inputs -- --forecast-csv <owner-approved-resolved-forecast-export.csv> --baseline-csv <real-human-community-pro-baseline.csv> --min-sample-size 25",
+    "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:forecast:leakage-review -- --register docs/launch-readiness/forecast-leakage-review-register-2026-06-06.csv --accuracy-input-validation <approved-accuracy-input-validation.json> --forecast-claim-governance docs/launch-readiness/forecast-claim-governance-2026-06-06.json",
+    "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:calibration:ledger -- --input <owner-approved-resolved-forecast-export.json-or-csv> --source-mode approved_export --min-sample-size 25 --bins 5",
+    "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:forecast:benchmark -- --ledger <approved-calibration-ledger.json> --baseline <real-human-community-pro-baseline.json-or-csv>",
+    "PATH=$HOME/.nvm/versions/node/v20.19.5/bin:$PATH npm run audit:forecast:validate-scoring && npm run audit:forecast:validate-science && npm run audit:commercial:confidence"
+  ],
+  "proof_boundary": {
+    "proves": [
+      "The repo now has a pre-resolution evidence packet for starting admissible forecast collection before outcomes are known.",
+      "The packet preserves timestamp, retrieval cutoff, source cutoff, resolution criteria, ambiguity, exclusion, and baseline comparability requirements."
+    ],
+    "does_not_prove": [
+      "Any forecast outcome, calibration score, Brier score, baseline superiority, hosted runtime proof, enterprise trust proof, buyer validation, or world-class prediction claim.",
+      "That any owner-filled pre-resolution rows currently exist."
+    ]
+  }
+}

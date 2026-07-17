@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { CheckCircle, XCircle, AlertTriangle, Clock, Eye, FileText, Users, TrendingUp, Table, AlertCircle, MessageSquare } from 'lucide-react';
-import { ENDPOINTS, getAuthHeaders, getUserAuthHeaders } from '../lib/supabase';
+import { ENDPOINTS, getAuthHeaders, getUserAuthHeaders, supabase } from '../lib/supabase';
 
 interface ReviewItem {
   id: string;
@@ -20,6 +20,7 @@ interface ReviewQueueResponse {
   reviews: ReviewItem[];
   total_pending: number;
   reviewer_prompt: string;
+  message?: string;
 }
 
 interface ReviewResponse {
@@ -29,6 +30,17 @@ interface ReviewResponse {
   review_id: string;
   reviewed_at: string;
   message?: string;
+}
+
+interface ExperimentSummary {
+  track: string;
+  active_variant: string;
+  bootstrap_status: 'pending' | 'running' | 'completed';
+  minimum_sample_size: number;
+  promotion_margin: number;
+  evaluationCount: number;
+  avgBrier: number | null;
+  latestEvaluationAt: string | null;
 }
 
 const HumanReview: React.FC = () => {
@@ -42,36 +54,98 @@ const HumanReview: React.FC = () => {
   const [editedData, setEditedData] = useState<Record<string, any>>({});
   const [recomputing, setRecomputing] = useState<string | null>(null);
   const [runningSensitivity, setRunningSensitivity] = useState<string | null>(null);
+  const [experimentSummaries, setExperimentSummaries] = useState<ExperimentSummary[]>([]);
+  const [experimentLoading, setExperimentLoading] = useState(true);
 
   useEffect(() => {
     fetchReviews();
+    fetchExperimentSummaries();
   }, []);
 
   const fetchReviews = async () => {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+
     try {
       setLoading(true);
+      setError(null);
       const headers = await getUserAuthHeaders();
       const response = await fetch(ENDPOINTS.HUMAN_REVIEW_QUEUE, {
         method: 'GET',
         headers,
+        signal: controller.signal,
       });
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
-        throw new Error(`Failed to fetch reviews: ${response.statusText}`);
+        const errText = await response.text().catch(() => response.statusText);
+        throw new Error(`HTTP ${response.status}: ${errText}`);
       }
 
       const data: ReviewQueueResponse = await response.json();
 
       if (!data.ok) {
-        throw new Error('API returned error');
+        throw new Error(data.message || 'API returned error');
       }
 
       setReviews(data.reviews);
     } catch (err) {
+      clearTimeout(timeoutId);
       console.error('Error fetching reviews:', err);
-      setError(err instanceof Error ? err.message : 'Failed to fetch reviews');
+      if (err instanceof Error && err.name === 'AbortError') {
+        setError('Request timed out. The review service may be unavailable.');
+      } else {
+        setError(err instanceof Error ? err.message : 'Failed to fetch reviews');
+      }
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchExperimentSummaries = async () => {
+    try {
+      setExperimentLoading(true);
+      const [{ data: states, error: stateError }, { data: evaluations, error: evaluationError }] = await Promise.all([
+        supabase
+          .from('whitebox_experiment_state')
+          .select('track, active_variant, bootstrap_status, minimum_sample_size, promotion_margin')
+          .in('track', ['prompt_policy', 'retrieval_policy']),
+        supabase
+          .from('whitebox_experiment_evaluations')
+          .select('track, brier_score, created_at')
+          .in('track', ['prompt_policy', 'retrieval_policy'])
+          .order('created_at', { ascending: false })
+          .limit(500),
+      ]);
+
+      if (stateError) throw stateError;
+      if (evaluationError) throw evaluationError;
+
+      const grouped = new Map<string, { count: number; sum: number; latest: string | null }>();
+      (evaluations || []).forEach((evaluation: any) => {
+        const current = grouped.get(evaluation.track) || { count: 0, sum: 0, latest: null };
+        current.count += 1;
+        current.sum += Number(evaluation.brier_score || 0);
+        current.latest = current.latest || evaluation.created_at || null;
+        grouped.set(evaluation.track, current);
+      });
+
+      const summaries = (states || []).map((state: any) => {
+        const aggregate = grouped.get(state.track) || { count: 0, sum: 0, latest: null };
+        return {
+          ...state,
+          evaluationCount: aggregate.count,
+          avgBrier: aggregate.count > 0 ? aggregate.sum / aggregate.count : null,
+          latestEvaluationAt: aggregate.latest,
+        } satisfies ExperimentSummary;
+      });
+
+      setExperimentSummaries(summaries);
+    } catch (err) {
+      console.warn('Unable to load experiment summaries:', err);
+      setExperimentSummaries([]);
+    } finally {
+      setExperimentLoading(false);
     }
   };
 
@@ -106,7 +180,7 @@ const HumanReview: React.FC = () => {
       setReviews(prev => prev.filter(r => r.id !== analysisId));
       setNotes(prev => { const newNotes = { ...prev }; delete newNotes[analysisId]; return newNotes; });
 
-      console.log(`Review ${action}d successfully:`, data);
+      if (import.meta.env.DEV) console.log(`Review ${action}d successfully:`, data);
     } catch (err) {
       console.error('Error submitting review:', err);
       setError(err instanceof Error ? err.message : 'Failed to submit review');
@@ -133,7 +207,7 @@ const HumanReview: React.FC = () => {
 
       const response = await fetch(`${ENDPOINTS.ANALYZE}?recompute=true`, {
         method: 'POST',
-        headers: getAuthHeaders(),
+        headers: await getUserAuthHeaders(),
         body: JSON.stringify(payload),
       });
 
@@ -144,7 +218,7 @@ const HumanReview: React.FC = () => {
       const data = await response.json();
       const newAnalysis = { ...editedJson, expected_value_ranking: data.expected_value_ranking || editedJson.expected_value_ranking };
       setEditedData(prev => ({ ...prev, [review.id]: newAnalysis }));
-      console.log('EV recomputed successfully');
+      if (import.meta.env.DEV) console.log('EV recomputed successfully');
     } catch (err) {
       console.error('Error recomputing EV:', err);
       setError(err instanceof Error ? err.message : 'Failed to recompute EV');
@@ -167,7 +241,7 @@ const HumanReview: React.FC = () => {
 
       const response = await fetch(`${ENDPOINTS.ANALYZE.replace('analyze-engine', 'sensitivity-analysis')}`, {
         method: 'POST',
-        headers: getAuthHeaders(),
+        headers: await getUserAuthHeaders(),
         body: JSON.stringify({
           analysis_id: review.id,
           base_params: baseParams
@@ -183,7 +257,7 @@ const HumanReview: React.FC = () => {
         ...prev,
         [review.id]: { ...editedJson, sensitivity_results: data.sensitivity_results }
       }));
-      console.log('Sensitivity analysis completed successfully');
+      if (import.meta.env.DEV) console.log('Sensitivity analysis completed successfully');
     } catch (err) {
       console.error('Error running sensitivity analysis:', err);
       setError(err instanceof Error ? err.message : 'Failed to run sensitivity analysis');
@@ -496,6 +570,51 @@ const HumanReview: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h2 className="text-lg font-semibold text-slate-200">Internal Governance</h2>
+            <p className="text-slate-400 text-sm mt-1">Prompt and retrieval challengers stay advisory until promotion thresholds clear.</p>
+          </div>
+          <div className="flex items-center space-x-2 text-slate-400 text-sm">
+            <Table className="w-4 h-4" />
+            <span>{experimentLoading ? 'Loading tracks…' : `${experimentSummaries.length} tracks`}</span>
+          </div>
+        </div>
+
+        {experimentLoading ? (
+          <div className="text-slate-400 text-sm">Loading challenger summaries…</div>
+        ) : experimentSummaries.length === 0 ? (
+          <div className="text-slate-400 text-sm">Experiment tables are empty or not initialized yet.</div>
+        ) : (
+          <div className="grid gap-4 md:grid-cols-2">
+            {experimentSummaries.map((summary) => (
+              <div key={summary.track} className="rounded-lg border border-slate-700 bg-slate-900/60 p-4">
+                <div className="flex items-center justify-between">
+                  <div className="text-slate-200 font-medium">{summary.track === 'prompt_policy' ? 'Prompt policy' : 'Retrieval policy'}</div>
+                  <span className={`px-2 py-1 rounded text-xs ${
+                    summary.bootstrap_status === 'completed'
+                      ? 'bg-emerald-500/15 text-emerald-300'
+                      : summary.bootstrap_status === 'running'
+                        ? 'bg-amber-500/15 text-amber-300'
+                        : 'bg-slate-700 text-slate-300'
+                  }`}>
+                    {summary.bootstrap_status}
+                  </span>
+                </div>
+                <div className="mt-3 space-y-2 text-sm text-slate-300">
+                  <div>Active variant: <span className="text-white">{summary.active_variant}</span></div>
+                  <div>Resolved evaluations: <span className="text-white">{summary.evaluationCount}</span></div>
+                  <div>Average Brier: <span className="text-white">{summary.avgBrier !== null ? summary.avgBrier.toFixed(4) : '—'}</span></div>
+                  <div>Promotion gate: <span className="text-white">{summary.minimum_sample_size} samples · {summary.promotion_margin.toFixed(3)} margin</span></div>
+                  <div>Latest evaluation: <span className="text-white">{summary.latestEvaluationAt ? new Date(summary.latestEvaluationAt).toLocaleString() : '—'}</span></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
       <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
         <div className="flex items-center justify-between">
           <div>

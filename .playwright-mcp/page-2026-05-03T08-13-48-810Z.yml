@@ -1,0 +1,106 @@
+- generic [ref=e3]:
+  - navigation [ref=e4]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - link "Strategy Console" [ref=e8] [cursor=pointer]:
+          - /url: /console
+          - img [ref=e9]
+          - generic [ref=e19]: Strategy Console
+        - 'button "Learning Mode: OFF" [ref=e21] [cursor=pointer]':
+          - img [ref=e22]
+          - text: "Learning Mode: OFF"
+      - generic [ref=e25]:
+        - link "Console" [ref=e26] [cursor=pointer]:
+          - /url: /console
+          - img [ref=e27]
+          - text: Console
+        - link "Templates" [ref=e29] [cursor=pointer]:
+          - /url: /templates
+          - img [ref=e30]
+          - text: Templates
+        - link "Forecasts" [ref=e33] [cursor=pointer]:
+          - /url: /forecasts
+          - img [ref=e34]
+          - text: Forecasts
+  - main [ref=e37]:
+    - generic [ref=e40]:
+      - generic [ref=e42]:
+        - generic [ref=e43]:
+          - img [ref=e44]
+          - generic [ref=e48]:
+            - heading "Forecast Registry" [level=2] [ref=e49]
+            - paragraph [ref=e50]: Public predictions powered by game theory
+        - button "Leaderboard" [ref=e52] [cursor=pointer]:
+          - img [ref=e53]
+          - text: Leaderboard
+      - generic [ref=e480]:
+        - button "← Back to Forecasts" [ref=e481] [cursor=pointer]
+        - generic [ref=e482]:
+          - generic [ref=e484]: geopolitical
+          - heading "Will the focal strategic outcome described in the scenario occur within 14 days?" [level=2] [ref=e485]
+          - paragraph [ref=e486]: "NATO burden sharing and US troop withdrawal consequences for Europe, Russia, and China Current public probability: 61.1%. Why it matters: Will the focal strategic outcome described in the scenario occur within 14 days? Primary caution: The question is scoreable, but later phases should tighten directional measurement where possible."
+          - generic [ref=e487]:
+            - generic [ref=e488]: Analysis-linked
+            - generic [ref=e489]: Review pending
+            - generic [ref=e490]: Fresh analysis
+          - button "Save to war room" [ref=e492] [cursor=pointer]
+          - generic [ref=e493]:
+            - generic [ref=e494]:
+              - generic [ref=e495]: Review state
+              - generic [ref=e496]: Review pending
+              - generic [ref=e497]: The linked analysis is still in the review queue.
+            - generic [ref=e498]:
+              - generic [ref=e499]: Evidence status
+              - generic [ref=e500]: Evidence-backed
+              - generic [ref=e501]: Evidence-backed provenance is present for the linked analysis.
+            - generic [ref=e502]:
+              - generic [ref=e503]: Consensus quality
+              - generic [ref=e504]: Consensus still forming
+              - generic [ref=e505]: Consensus quality becomes more precise once more scoring signal is available.
+          - generic [ref=e506]:
+            - generic [ref=e507]:
+              - generic [ref=e508]: Community Prediction
+              - generic [ref=e509]: 61%
+              - generic [ref=e510]: Based on 1 predictions
+            - generic [ref=e513]:
+              - generic [ref=e514]: 0% (No)
+              - generic [ref=e515]: 100% (Yes)
+          - generic [ref=e516]:
+            - generic [ref=e517]:
+              - generic [ref=e518]: Weighted Consensus
+              - generic [ref=e519]: —
+              - generic [ref=e520]: Failed to fetch
+            - generic [ref=e521]:
+              - generic [ref=e522]: Superforecaster View
+              - generic [ref=e523]: —
+              - generic [ref=e524]: Not enough signal yet
+            - generic [ref=e525]:
+              - generic [ref=e526]: Consensus Gap
+              - generic [ref=e527]: —
+              - generic [ref=e528]: Gap shown after weighted consensus loads
+          - generic [ref=e529]:
+            - generic [ref=e530]:
+              - generic [ref=e531]: Analysis Provenance
+              - generic [ref=e532]: 41eaa915-3df9-45b3-9e78-5b9397edffd0
+              - generic [ref=e533]: "Review status: under review"
+              - generic [ref=e534]: "geopolitical keywords: nato"
+              - generic [ref=e535]:
+                - generic [ref=e536]: Fresh analysis
+                - generic [ref=e537]: Linked analysis was generated within the last 24 hours.
+            - generic [ref=e538]:
+              - generic [ref=e539]: Engine Review
+              - generic [ref=e540]: Engine-linked forecast draft
+              - generic [ref=e541]: Structured forecast metadata available
+          - generic [ref=e542]:
+            - generic [ref=e543]:
+              - generic [ref=e544]: Resolution Criteria
+              - generic [ref=e545]: "Resolve yes if the event definition in the scenario is satisfied by the stated horizon using the cited authoritative public source; otherwise resolve no unless the event becomes ambiguous or canceled. Primary source: Authoritative official releases and public reporting cited by the platform. Fallback source: If the primary source becomes unavailable, use the first consistent official or archived public source covering the same event definition.."
+            - generic [ref=e546]:
+              - generic [ref=e547]: Resolution Date
+              - generic [ref=e548]:
+                - img [ref=e549]
+                - text: 5/17/2026
+  - contentinfo [ref=e91]:
+    - generic [ref=e93]:
+      - paragraph [ref=e94]: Strategy Console - Evidence-Backed Strategic Analysis
+      - paragraph [ref=e95]: Real citations. Real simulations. Real clarity.
